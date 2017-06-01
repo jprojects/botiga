@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="component" version="3.5" method="upgrade">
+	<name>Laundry</name>
+	<creationDate>2017-01-22</creationDate>
+	<author>Kim</author>
+	<authorEmail>kim@afi.cat</authorEmail>
+	<authorUrl>http://www.afi.cat</authorUrl>
+	<copyright>Copyright © 2017 - All rights reserved.</copyright>
+	<license>GNU/GPL</license>
+	<version>1.0.0</version>
+	<description><![CDATA[COM_BOTIGA_DESCRIPTION]]></description>
+    <files folder="frontend">
+		<filename>index.html</filename>
+		<filename>laundry.php</filename>
+		<filename>controller.php</filename>
+        <filename>metadata.xml</filename>
+		<folder>views/</folder>
+		<folder>models/</folder>
+		<folder>controllers/</folder>
+		<folder>assets/</folder>  
+	</files>
+	<!-- Language frontend -->
+	<languages folder="site/languages">
+		<language tag="en-GB">en-GB.com_botiga.ini</language>
+	</languages>
+        <install>
+		<sql>
+			<file driver="mysql" charset="utf8">sql/install.mysql.utf8.sql</file>
+		</sql>
+	</install>
+        <uninstall>
+		<sql>
+			<file driver="mysql" charset="utf8">sql/uninstall.mysql.utf8.sql</file>
+		</sql>
+	</uninstall>
+    <update>
+		<schemas>
+			<schemapath type="mysql">sql/updates/mysql</schemapath>
+		</schemas>
+	</update>
+	<administration>
+		<menu link="option=com_botiga&amp;view=items">COM_BOTIGA_MENU_NAME</menu>
+		<files folder="backend">
+			<filename>index.html</filename>
+			<filename>version.php</filename>
+			<filename>botiga.php</filename>
+			<filename>controller.php</filename>
+            <filename>config.xml</filename>
+            <filename>access.xml</filename>
+            <filename>license.txt</filename>
+            <folder>controllers/</folder>
+			<folder>views/</folder>
+            <folder>helpers/</folder>
+			<folder>models/</folder>
+			<folder>assets/</folder>
+			<folder>tables/</folder>
+			<folder>sql/</folder>
+		</files>
+		<languages folder="administrator/languages">
+			<language tag="en-GB">en-GB.com_botiga.ini</language>
+        </languages>
+	</administration>
+</extension>

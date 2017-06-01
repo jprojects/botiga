@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form
+        addrulepath="/administrator/components/com_laundry/models/rules"
+>
+	<fieldset name="details" addfieldpath="/administrator/components/com_laundry/models/fields">
+		<field name="id"  type="text" class="readonly" label="JGLOBAL_FIELD_ID_LABEL"
+			description ="JGLOBAL_FIELD_ID_DESC" size="10" default="0" readonly="true"  
+        />
+        <field name="published" type="list" label="JSTATUS"
+			description="JFIELD_PUBLISHED_DESC" class="inputbox"
+			filter="intval" size="1" default="1"
+		>
+			<option value="1">JPUBLISHED</option>
+			<option value="0">JUNPUBLISHED</option>
+		</field>
+        <field name="catid"
+			type="category"
+			label="COM_LAUNDRY_ITEM_CATID_LABEL"
+			description="COM_LAUNDRY_ITEM_CATID_DESC"
+			extension="com_laundry"
+			required="true"
+		/>
+		<field
+			name="name"
+			type="text"
+			label="COM_LAUNDRY_ITEM_NAME_LABEL"
+			description="COM_LAUNDRY_ITEM_NAME_DESC"
+			size="40"
+			class="inputbox"
+			default=""
+		/>
+		<field
+			name="ref"
+			type="text"
+			label="COM_LAUNDRY_ITEM_REF_LABEL"
+			description="COM_LAUNDRY_ITEM_REF_DESC"
+			size="40"
+			class="inputbox"
+			default=""
+		/>
+		<field
+			name="price1"
+			type="text"
+			label="COM_LAUNDRY_ITEM_PRICE1_LABEL"
+			description="COM_LAUNDRY_ITEM_PRICE_DESC"
+			size="40"
+			class="inputbox"
+			default=""
+		/>
+		<field
+			name="price2"
+			type="text"
+			label="COM_LAUNDRY_ITEM_PRICE2_LABEL"
+			description="COM_LAUNDRY_ITEM_PRICE_DESC"
+			size="40"
+			class="inputbox"
+			default=""
+		/>
+		<field
+			name="price3"
+			type="text"
+			label="COM_LAUNDRY_ITEM_PRICE3_LABEL"
+			description="COM_LAUNDRY_ITEM_PRICE_DESC"
+			size="40"
+			class="inputbox"
+			default=""
+		/>
+		<field
+			name="price4"
+			type="text"
+			label="COM_LAUNDRY_ITEM_PRICE4_LABEL"
+			description="COM_LAUNDRY_ITEM_PRICE_DESC"
+			size="40"
+			class="inputbox"
+			default=""
+		/>
+		<field
+			name="price5"
+			type="text"
+			label="COM_LAUNDRY_ITEM_PRICE5_LABEL"
+			description="COM_LAUNDRY_ITEM_PRICE_DESC"
+			size="40"
+			class="inputbox"
+			default=""
+		/>
+		<field 
+			name="fecha_fabricacion" 
+			type="text" 
+			default="" 
+			label="COM_LAUNDRY_ITEM_FECHA_FABRICACION_LABEL" 
+			description="COM_LAUNDRY_ITEM_FECHA_FABRICACION_DESC" 
+		/>
+        <field
+			name="marca"
+			type="brands"
+			label="COM_LAUNDRY_ITEM_MARCA_LABEL"
+			description="COM_LAUNDRY_ITEM_MARCA_DESC"
+			class="inputbox"
+			default=""
+		/>
+        <field name="image1"
+			type="media"
+			hide_none="1"
+			label="COM_LAUNDRY_ITEM_IMAGE_LABEL"
+			description="COM_LAUNDRY_ITEM_IMAGE_DESC"
+		/> 
+		<field name="image2"
+			type="media"
+			hide_none="1"
+			label="COM_LAUNDRY_ITEM_IMAGE_LABEL"
+			description="COM_LAUNDRY_ITEM_IMAGE_DESC"
+		/> 
+		<field name="image3"
+			type="media"
+			hide_none="1"
+			label="COM_LAUNDRY_ITEM_IMAGE_LABEL"
+			description="COM_LAUNDRY_ITEM_IMAGE_DESC"
+		/> 
+		<field name="image4"
+			type="media"
+			hide_none="1"
+			label="COM_LAUNDRY_ITEM_IMAGE_LABEL"
+			description="COM_LAUNDRY_ITEM_IMAGE_DESC"
+		/> 
+		<field name="image5"
+			type="media"
+			hide_none="1"
+			label="COM_LAUNDRY_ITEM_IMAGE_LABEL"
+			description="COM_LAUNDRY_ITEM_IMAGE_DESC"
+		/> 
+		<field name="pdf1"
+			type="filelist"
+			directory="images/pdf"
+			exclude="\.html$"
+			label="COM_LAUNDRY_ITEM_PDF_LABEL"
+			description="COM_LAUNDRY_ITEM_PDF_DESC"
+		/> 
+        <field
+			name="description"
+			type="editor"
+			label="COM_LAUNDRY_ITEM_DESCRIPTION_LABEL"
+			description="COM_LAUNDRY_ITEM_DESCRIPTION_DESC"
+			filter="safehtml"
+			buttons="false"
+		/>
+		<field
+			name="extrainfo"
+			type="editor"
+			label="COM_LAUNDRY_ITEM_EXTRAINFO_LABEL"
+			description="COM_LAUNDRY_ITEM_EXTRAINFO_DESC"
+			filter="safehtml"
+			buttons="false"
+		/>
+		<field 
+			name="language" 
+			type="language" 
+			client="site" 
+			default="en-GB" 
+			label="COM_LAUNDRY_ITEM_LANGUAGE_LABEL" 
+			description="COM_LAUNDRY_ITEM_LANGUAGE_DESC" 
+		/>		
+	</fieldset>
+        <fields name="params">
+		<fieldset
+			name="params"
+			label="JGLOBAL_FIELDSET_DISPLAY_OPTIONS"
+		>			
+		</fieldset>
+	</fields>
+</form>

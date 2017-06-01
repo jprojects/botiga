@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form
+        addrulepath="/administrator/components/com_laundry/models/rules"
+>
+	<fieldset name="details" addfieldpath="/administrator/components/com_laundry/models/fields">
+		<field name="id"  type="text" class="readonly" label="JGLOBAL_FIELD_ID_LABEL"
+			description ="JGLOBAL_FIELD_ID_DESC" size="10" default="0" readonly="true"  
+        />
+        <field name="published" type="list" label="JSTATUS"
+			description="JFIELD_PUBLISHED_DESC" class="inputbox"
+			filter="intval" size="1" default="1"
+		>
+			<option value="1">JPUBLISHED</option>
+			<option value="0">JUNPUBLISHED</option>
+		</field>
+        <field name="usergroup"
+			type="usergroup"
+			label="COM_LAUNDRY_USER_USERGROUP_LABEL"
+			description="COM_LAUNDRY_USER_USERGROUP_DESC"
+			required="true"
+		/>
+		<field name="userid"
+			type="user"
+			label="COM_LAUNDRY_USER_USERID_LABEL"
+			description="COM_LAUNDRY_USER_USERID_DESC"
+			required="true"
+		/>
+        <field
+			name="nom_empresa"
+			type="text"
+			label="COM_LAUNDRY_USER_NAME_LABEL"
+			description="COM_LAUNDRY_USER_NAME_DESC"
+			size="40"
+			default=""
+		/>
+		<field name="tarifa"
+			type="list"
+			label="COM_LAUNDRY_USER_TARIFA_LABEL"
+			description="COM_LAUNDRY_USER_TARIFA_DESC"
+			default="0"
+		>
+			<option value="0">Sin tarifa</option>
+			<option value="1">Cliente</option>
+			<option value="2">Distribuidor</option>
+		</field>
+		<field 
+			name="adreca" 
+			type="text" 
+			label="COM_LAUNDRY_USER_ADRECA_LABEL" 
+			description="COM_LAUNDRY_USER_ADRECA_DESC" 
+			size="40"
+			default=""
+		/>
+		<field 
+			name="cif" 
+			type="text" 
+			label="cif" 
+			description="" 
+			size="40"
+			default=""
+		/>
+		<field 
+			name="poblacio" 
+			type="text" 
+			label="COM_LAUNDRY_USER_POBLACIO_LABEL" 
+			description="COM_LAUNDRY_USER_POBLACIO_DESC" 
+			size="40"
+			default=""
+		/>	
+		<field 
+			name="provincia" 
+			type="text" 
+			label="COM_LAUNDRY_USER_PROVINCIA_LABEL" 
+			description="COM_LAUNDRY_USER_PROVINCIA_DESC" 
+			size="40"
+			default=""
+		/>	
+		<field 
+			name="pais" 
+			type="text" 
+			label="COM_LAUNDRY_USER_PAIS_LABEL" 
+			description="COM_LAUNDRY_USER_PAIS_DESC" 
+			size="40"
+			default=""
+		/>
+		<field 
+			name="telefon" 
+			type="text" 
+			label="COM_LAUNDRY_USER_PHONE_LABEL" 
+			description="COM_LAUNDRY_USER_PHONE_DESC" 
+			size="40"
+			default=""
+		/>
+		<field 
+			name="contacto"  
+			type="radio" 
+			label="Contacto"
+			description="" 
+			default="mail"  
+			required="true"		 
+        	>
+			<option value="mail">Mail</option>
+			<option value="phone">Teléfono</option>
+		</field>
+	</fieldset>
+        <fields name="params">
+		<fieldset
+			name="params"
+			label="JGLOBAL_FIELDSET_DISPLAY_OPTIONS"
+		>			
+		</fieldset>
+	</fields>
+</form>

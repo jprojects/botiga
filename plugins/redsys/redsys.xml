@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="3.5" type="plugin" group="buuks" method="upgrade">
+	<name>plg_ampa_redsys</name>
+	<author>Afi</author>
+	<creationDate>May 2015</creationDate>
+	<copyright>(C) 2005 - 2009 Open Source Matters. All rights reserved.</copyright>
+	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+	<authorEmail>kim@aficat.com</authorEmail>
+	<authorUrl>www.afi.cat</authorUrl>
+	<version>3.0</version>
+	<description>Redsys procesor for buuks component</description>
+	<files>
+		<filename plugin="ampa_redsys">ampa_redsys.php</filename>
+	</files>
+	<config>
+		<fields name="params">
+			<fieldset name="basic">
+			<field 
+				name="title"
+				type="text"
+				label="Title"
+				description=""
+				default="Redsys"
+			/>
+			<field 
+				name="alies"
+				type="text"
+				label="Alias"
+				description=""
+				default="Redsys"
+			/>
+			<field 
+				name="description"
+				type="text"
+				label="Description"
+				description=""
+				default=""
+			/>
+			<field 
+				name="sandbox"
+				type="radio"
+				label="Sandbox"
+				description=""
+				default="0"
+				class="btn-group"
+			>
+				<option value="0">JNO</option>
+				<option value="1">JYES</option>
+			</field>
+			<field 
+				name="signature"
+				type="text"
+				label="signature"
+				description=""
+				default=""
+			/>
+			<field 
+				name="code"
+				type="text"
+				label="code"
+				description=""
+				default=""
+			/>
+			<field 
+				name="successURL"
+				type="text"
+				label="success url"
+				description=""
+				default=""
+			/>
+			<field 
+				name="cancelURL"
+				type="text"
+				label="cancel url"
+				description=""
+				default=""
+			/>
+			</fieldset>	
+		</fields>
+	</config>
+</extension>

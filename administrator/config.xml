@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+  <fieldset name="settings" label="COM_BOTIGA_SETTINGS" description="COM_BOTIGA_SETTINGS_DESC"> 
+        <field 
+        	type="text" 
+        	name="width" 
+        	default="100" 
+        	label="COM_BOTIGA_IMAGE_WIDTH" 
+        	description="COM_BOTIGA_IMAGE_WIDTH_DESC" 
+        />
+        <field 
+        	type="text" 
+        	name="height" 
+        	default="100" 
+        	label="COM_BOTIGA_IMAGE_HEIGHT" 
+        	description="COM_BOTIGA_IMAGE_HEIGHT_DESC" 
+        />
+        <field 
+        	type="text" 
+        	name="mail" 
+        	default="" 
+        	label="COM_BOTIGA_MAIL" 
+        	description="COM_BOTIGA_MAIL_DESC" 
+        />
+	<field 
+        	type="radio" 
+        	name="access" 
+        	default="" 
+        	label="Privilegis" 
+        	description="Fer servir nivell d'acces per els documents?"
+	>
+	<option value="0">JNO</option>
+	<option value="1">JYES</option> 
+        </field>
+  </fieldset>
+  <fieldset
+		name="permissions"
+		label="JCONFIG_PERMISSIONS_LABEL"
+		description="JCONFIG_PERMISSIONS_DESC"
+	>
+		<field
+			name="rules"
+			type="rules"
+			label="JCONFIG_PERMISSIONS_LABEL"
+			class="inputbox"
+			validate="rules"
+			filter="rules"
+			component="com_botiga"
+			section="component"
+		/>
+	</fieldset>
+</config>

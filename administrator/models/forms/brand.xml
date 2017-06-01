@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form
+        addrulepath="/administrator/components/com_laundry/models/rules"
+>
+	<fieldset name="details" addfieldpath="/administrator/components/com_laundry/models/fields">
+		<field name="id"  type="text" class="readonly" label="JGLOBAL_FIELD_ID_LABEL"
+			description ="JGLOBAL_FIELD_ID_DESC" size="10" default="0" readonly="true"  
+        />
+        <field name="published" type="list" label="JSTATUS"
+			description="JFIELD_PUBLISHED_DESC" class="inputbox"
+			filter="intval" size="1" default="1"
+		>
+			<option value="1">JPUBLISHED</option>
+			<option value="0">JUNPUBLISHED</option>
+		</field>
+        <field
+			name="name"
+			type="text"
+			label="COM_LAUNDRY_BRAND_NAME_LABEL"
+			description="COM_LAUNDRY_BRAND_NAME_DESC"
+			size="40"
+			default=""
+		/>
+<field
+			name="factusol_codfte"
+			type="text"
+			label="Cod. Fte"
+			description="Factusol field"
+			size="40"
+			default=""
+		/>
+		<field 
+			name="language" 
+			type="language" 
+			client="site" 
+			default="ca-ES" 
+			label="COM_LAUNDRY_BRAND_LANGUAGE_LABEL" 
+			description="COM_LAUNDRY_BRAND_LANGUAGE_DESC" 
+		/>
+		<field name="image"
+			type="media"
+			hide_none="1"
+			label="COM_LAUNDRY_BRAND_IMAGE_LABEL"
+			description="COM_LAUNDRY_BRAND_IMAGE_DESC"
+		/>		
+	</fieldset>
+        <fields name="params">
+		<fieldset
+			name="params"
+			label="JGLOBAL_FIELDSET_DISPLAY_OPTIONS"
+		>			
+		</fieldset>
+	</fields>
+</form>
