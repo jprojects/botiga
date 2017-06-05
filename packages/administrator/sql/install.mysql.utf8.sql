@@ -22,9 +22,60 @@ CREATE TABLE `acj_botiga_brands` (
   `id_subfamilia` int(11) DEFAULT NULL,
   `factusol_codfte` int(11) DEFAULT '0',
   `ordering` int(11) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `afi_botiga_comandes`
+--
+
+CREATE TABLE `afi_botiga_comandes` (
+  `id` int(11) NOT NULL,
+  `data` datetime NOT NULL,
+  `userid` int(11) NOT NULL,
+  `status` smallint(1) NOT NULL DEFAULT '0',
+  `published` tinyint(1) NOT NULL DEFAULT '0',
+  `language` char(7) NOT NULL DEFAULT '0',
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `afi_botiga_comandesDetall`
+--
+
+CREATE TABLE `afi_botiga_comandesDetall` (
+  `id` int(11) NOT NULL,
+  `idComanda` int(11) NOT NULL,
+  `idItem` int(11) NOT NULL,
+  `price` float(10,2) NOT NULL DEFAULT '0.00',
+  `published` tinyint(1) NOT NULL DEFAULT '0',
+  `language` char(7) NOT NULL DEFAULT '0',
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `afi_botigas_rebuts`
+--
+
+CREATE TABLE `afi_botiga_rebuts` (
+  `id` int(11) NOT NULL,
+  `data` datetime NOT NULL,
+  `userid` int(11) NOT NULL DEFAULT '0',
+  `import` float(10,2) NOT NULL DEFAULT '0.00',
+  `recarrec` float(10,2) NOT NULL DEFAULT '0.00',
+  `importambrecarrec` float(10,2) NOT NULL DEFAULT '0.00',
+  `idComanda` int(11) NOT NULL DEFAULT '0',
+  `formaPag` varchar(1) NOT NULL DEFAULT '' COMMENT 'P->PayPal; C->Targeta; T->Transferencia',
+  `payment_status` varchar(10) NOT NULL DEFAULT '',
+  `titular` varchar(100) NOT NULL DEFAULT '',
+  `iban` varchar(50) NOT NULL DEFAULT '',
+  `paypal` varchar(50) NOT NULL DEFAULT '',
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Estructura de tabla para la tabla `acj_botiga_items`
@@ -34,45 +85,16 @@ CREATE TABLE `acj_botiga_items` (
   `id` int(11) NOT NULL,
   `catid` int(11) NOT NULL DEFAULT '0',
   `name` varchar(150) NOT NULL DEFAULT '',
-  `fecha_fabricacion` varchar(150) NOT NULL,
-  `diametro_rodillo` int(5) NOT NULL,
-  `marca` int(11) NOT NULL DEFAULT '0',
-  `anchura_rodillo` varchar(5) NOT NULL DEFAULT '',
-  `calefaccion` varchar(150) NOT NULL DEFAULT '',
-  `capacidad` varchar(150) NOT NULL DEFAULT '',
-  `carga` varchar(150) NOT NULL DEFAULT '',
-  `volcable` varchar(150) NOT NULL DEFAULT '',
-  `compartimentos` int(5) NOT NULL,
-  `tipo` smallint(1) NOT NULL,
-  `pinzas intro` int(5) NOT NULL,
-  `ancho_trabajo` int(5) NOT NULL DEFAULT '0',
-  `vias_trabajo` varchar(150) NOT NULL DEFAULT '',
-  `pliegues_trans` int(5) NOT NULL DEFAULT '0',
-  `pliegues_long` int(5) NOT NULL DEFAULT '0',
-  `pliegues_tipo` smallint(1) NOT NULL,
-  `vias_descarga` int(5) NOT NULL DEFAULT '0',
-  `sistema_transp` tinyint(1) NOT NULL DEFAULT '0',
-  `presion` int(5) NOT NULL,
-  `depositos` int(5) NOT NULL DEFAULT '0',
-  `filtros` varchar(150) NOT NULL DEFAULT '0',
+  `brand` int(11) NOT NULL DEFAULT '0',
+  `s_description` text NOT NULL,
   `description` text NOT NULL,
-  `extrainfo` text NOT NULL,
   `image1` varchar(150) NOT NULL DEFAULT '',
   `image2` varchar(150) NOT NULL DEFAULT '',
   `image3` varchar(150) NOT NULL DEFAULT '',
   `image4` varchar(150) NOT NULL DEFAULT '',
   `image5` varchar(150) NOT NULL DEFAULT '',
-  `pdf1` varchar(150) NOT NULL DEFAULT '',
-  `pdf2` varchar(150) NOT NULL,
-  `pdf3` varchar(150) NOT NULL,
-  `pdf4` varchar(150) NOT NULL,
-  `pdf5` varchar(150) NOT NULL,
-  `pdf6` varchar(150) NOT NULL,
-  `price1` float(10,2) NOT NULL,
-  `price2` float(10,2) NOT NULL,
-  `price3` float(10,2) NOT NULL,
-  `price4` float(10,2) NOT NULL,
-  `price5` float(10,2) NOT NULL,
+  `pdf` varchar(150) NOT NULL DEFAULT '',
+  `price` float(10,2) NOT NULL,
   `published` tinyint(1) NOT NULL DEFAULT '0',
   `language` char(7) NOT NULL DEFAULT '0',
   `ref` varchar(15) DEFAULT NULL,
