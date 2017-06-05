@@ -38,15 +38,13 @@
 		</schemas>
 	</update>
 	<administration>
-		<menu link="option=com_botiga&amp;view=items">COM_BOTIGA_MENU_NAME</menu>
+		<menu link="option=com_botiga&amp;view=items">Botiga</menu>
 		<files folder="administrator">
 			<filename>index.html</filename>
-			<filename>version.php</filename>
 			<filename>botiga.php</filename>
 			<filename>controller.php</filename>
             <filename>config.xml</filename>
             <filename>access.xml</filename>
-            <filename>license.txt</filename>
             <folder>controllers/</folder>
 			<folder>views/</folder>
             <folder>helpers/</folder>
