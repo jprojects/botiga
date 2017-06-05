@@ -14,7 +14,7 @@
 		<filename>helper.php</filename>
                 <folder>tmpl/</folder>
 	</files>
-        <languages>
+    <languages folder="languages/en-GB">
 		<language tag="en-GB">en-GB.mod_botiga_carrito.ini</language>
 	</languages>
 	
