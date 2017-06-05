@@ -111,7 +111,7 @@ CREATE TABLE IF NOT EXISTS `#__botiga_items` (
 CREATE TABLE `#__botiga_coupons` (
   `id` int(11) NOT NULL,
   `title` varchar(50) NOT NULL,
-  `coupon` varchar(50) NOT NULL,
+  `coupon` varchar(50) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
