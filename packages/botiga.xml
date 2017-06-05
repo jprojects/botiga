@@ -19,7 +19,7 @@
 		<folder>assets/</folder>  
 	</files>
 	<!-- Language frontend -->
-	<languages folder="site/languages">
+	<languages folder="site/languages/en-GB">
 		<language tag="en-GB">en-GB.com_botiga.ini</language>
 	</languages>
         <install>
@@ -55,7 +55,7 @@
 			<folder>tables/</folder>
 			<folder>sql/</folder>
 		</files>
-		<languages folder="administrator/languages">
+		<languages folder="administrator/languages/en-GB">
 			<language tag="en-GB">en-GB.com_botiga.ini</language>
         </languages>
 	</administration>
