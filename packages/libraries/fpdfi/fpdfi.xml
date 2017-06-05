@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="library" version="3.x" method="upgrade">
+    <name>FPDFI</name>
+    <libraryname>joomla</libraryname>
+    <author>Afi</author>
+    <creationDate>2015</creationDate>
+    <copyright>...</copyright>
+    <license>GNU LESSER GENERAL PUBLIC LICENSE Version 2</license>
+    <authorUrl>...</authorUrl>
+    <version>1.0</version>
+    <description>Addon to enable to render PDF</description>
+    <files>
+        <folder>fpdfi</folder>
+    </files>
+</extension>
