@@ -9,9 +9,8 @@
 	<license>GNU/GPL</license>
 	<version>1.0.0</version>
 	<description><![CDATA[COM_BOTIGA_DESCRIPTION]]></description>
-    <files folder="frontend">
-		<filename>index.html</filename>
-		<filename>laundry.php</filename>
+    <files folder="site">
+		<filename>botiga.php</filename>
 		<filename>controller.php</filename>
         <filename>metadata.xml</filename>
 		<folder>views/</folder>
@@ -40,7 +39,7 @@
 	</update>
 	<administration>
 		<menu link="option=com_botiga&amp;view=items">COM_BOTIGA_MENU_NAME</menu>
-		<files folder="backend">
+		<files folder="administrator">
 			<filename>index.html</filename>
 			<filename>version.php</filename>
 			<filename>botiga.php</filename>
