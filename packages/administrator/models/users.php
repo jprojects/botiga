@@ -75,7 +75,7 @@ class botigaModelUsers extends JModelList
 		$params = JComponentHelper::getParams('com_botiga');
 		$this->setState('params', $params);
                 
-        	$search = $this->getUserStateFromRequest($this->context.'.filter.search', 'filter_search');
+        $search = $this->getUserStateFromRequest($this->context.'.filter.search', 'filter_search');
 		$this->setState('filter.search', $search);
 
 		$city = $this->getUserStateFromRequest($this->context.'.filter.city', 'filter_city');
@@ -124,66 +124,41 @@ class botigaModelUsers extends JModelList
 	*/
 	protected function getListQuery()
 	{
-		// Create a new query object.		
+				
 		$db = JFactory::getDBO();
 
 		$query = $db->getQuery(true);
-		// Select some fields
-		$query->select(
-			'j_u.username, j_u.email AS jemail, '.
-			'l_u.id, l_u.userid, l_u.nom_empresa, l_u.tarifa, l_u.telefon, l_u.tipo, l_u.cif, '.
-			'l_u.poblacio, l_u.provincia, l_u.pais, l_u.published, l_u.usergroup, l_u.contacto, '.
-			'g.title');
+		
+		$query->select('u.*');
 
-		$query->from(
-			'#__botiga_users l_u LEFT JOIN '.
-			'#__users j_u ON l_u.userid=j_u.id LEFT JOIN '.
-			'#__usergroups g ON l_u.usergroup=g.id');
+		$query->from('#__botiga_users u');
                 
-        	// Filter by search in name.
+        // Filter by search in name.
 		$search = $this->getState('filter.search');
 		if (!empty($search)) {
 			$search = $db->Quote('%'.$db->escape($search, true).'%');
-			$query->where(
-				'(nom_empresa LIKE '.$search.' OR '.
-				'username LIKE '.$search.' OR '.
-				'telefon LIKE '.$search.') '
-				);
+			$query->where('(nom_empresa LIKE '.$search.')');
 		}
                 
-        	// Filter by city.
-    		$city = $this->getState('filter.city');
+        // Filter by city.
+    	$city = $this->getState('filter.city');
 		if (!empty($city) and $city!='*') {
 			$city = $db->Quote($db->escape($city, true));
 			$query->where('(poblacio='.$city.') ' );
 		}
 
 		// Filter by country.
-    		$country = $this->getState('filter.country');
+    	$country = $this->getState('filter.country');
 		if (!empty($country) and $country!='*') {
 			$country = $db->Quote($db->escape($country, true));
 			$query->where('(pais='.$country.') ' );
 		}
 		
-		// Filter by rate.
-    		$rate = $this->getState('filter.rate');
-		if (!empty($rate)) {
-			$query->where('(tarifa='.$rate.') ' );
-		}
-		
-		// Filter by rate.
-    		$rate = $this->getState('filter.rate');
-		if (!empty($rate)) {
-			$query->where('(tarifa='.$rate.') ' );
-		}
-		
 		// Filter by usergroup.
-    		$group = $this->getState('filter.group');
+    	$group = $this->getState('filter.group');
 		if (!empty($group)) {
 			$query->where('(g.id='.$group.') ' );
 		}
-		
-		$query->where('userid != 62');
 		
         // Add the list ordering clause.
 		$orderCol	= $this->state->get('list.ordering');
@@ -191,7 +166,7 @@ class botigaModelUsers extends JModelList
 
 		$query->order($db->escape($orderCol.' '.$orderDirn));
 
-                //echo $query;
+        //echo $query;
 		return $query;
 	}
 }

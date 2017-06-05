@@ -13,7 +13,7 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
-class laundryViewUsers extends JViewLegacy
+class botigaViewUsers extends JViewLegacy
 {
     protected $items;
 	protected $pagination;
@@ -30,7 +30,7 @@ class laundryViewUsers extends JViewLegacy
 			throw new Exception(implode("\n", $errors));
 		}
  
-		LaundryHelper::addSubmenu('users');
+		botigaHelper::addSubmenu('users');
 
         $this->addToolbar();
 
@@ -45,7 +45,7 @@ class laundryViewUsers extends JViewLegacy
 	*/
 	protected function addToolBar() 
 	{
-		$canDo = LaundryHelper::getActions();
+		$canDo = botigaHelper::getActions();
 		JToolBarHelper::title(JText::_('COM_BOTIGA_MANAGER_USERS'), 'users48');
 
 		if ($canDo->get('core.create')) 
@@ -67,7 +67,7 @@ class laundryViewUsers extends JViewLegacy
 		if ($canDo->get('core.admin')) 
 		{
             JToolBarHelper::divider();
-			JToolBarHelper::preferences('com_laundry');
+			JToolBarHelper::preferences('com_botiga');
 		}		
 		
 		//Set sidebar action - New in 3.0

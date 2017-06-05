@@ -5,8 +5,8 @@
  * @copyright   Copyright © 2010 - All rights reserved.
  * @license		GNU/GPL
  * @author		kim
- * @author mail administracion@joomlanetprojects.com
- * @website		http://www.joomlanetprojects.com
+ * @author mail kim@aficat.com
+ * @website		http://www.aficat.com
  *
  */
 
@@ -24,16 +24,15 @@ class botigaModelItems extends JModelList
 	*/
 	public function __construct($config = array())
 	{
-                if (empty($config['filter_fields'])) {
-				$config['filter_fields'] = array(
+    	if (empty($config['filter_fields'])) {
+			$config['filter_fields'] = array(
 				'id', 'id',
 				'ref', 'ref',
 				'catid', 'catid',
 				'name', 'name',
 				'published', 'published',
 				'language', 'language',
-				'price1', 'price1',
-				'price2', 'price2'
+				'price', 'price',
 			);
 		}
 		parent::__construct($config);
@@ -108,31 +107,25 @@ class botigaModelItems extends JModelList
 	 * @return	string	An SQL query
 	*/
 	protected function getListQuery()
-	{
-		// Create a new query object.		
+	{		
 		$db = JFactory::getDBO();
 
 		$query = $db->getQuery(true);
-		// Select some fields
-		$query->select('i.id,i.catid,i.ref,i.name,i.published,i.language,i.marca,b.name AS marca_name,i.price1,i.price2');
 
-		$query->from('#__botiga_items i INNER JOIN #__botiga_brands b ON i.marca=b.id');
+		$query->select('i.*');
+
+		$query->from('#__botiga_items i');
                 
         // Filter by search in name.
 		$search = $this->getState('filter.search');
 		if (!empty($search)) {
 			$search = $db->Quote('%'.$db->escape($search, true).'%');
-			$query->where('(i.name LIKE '.$search.') OR (i.description LIKE '.$search.') OR (i.ref LIKE '.$search.')');
+			$query->where('(i.name LIKE '.$search.') OR (i.ref LIKE '.$search.')');
 		}
 		
 		// Filter on the language.
 		if ($language = $this->getState('filter.language')) {
 			$query->where('i.language = ' . $db->quote($language));
-		}
-		
-		// Filter by brand.
-		if ($marca_name = $this->getState('filter.marca_name')) {
-			$query->where('b.name = ' . $db->quote($marca_name));
 		}
 		
 		// Filter by category.

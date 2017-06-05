@@ -119,9 +119,6 @@ if (!empty($this->extra_sidebar)) {
 						<?php echo JHtml::_('grid.sort',  'COM_BOTIGA_ITEMS_HEADING_PRICE_1', 'price1', $listDirn, $listOrder); ?>
 					</th>
 					<th>
-						<?php echo JHtml::_('grid.sort',  'COM_BOTIGA_ITEMS_HEADING_PRICE_2', 'price2', $listDirn, $listOrder); ?>
-					</th>
-					<th>
 						<?php echo JHtml::_('grid.sort',  'COM_BOTIGA_ITEMS_HEADING_BRAND', 'marca_name', $listDirn, $listOrder); ?>
 					</th> 
 					<th>
@@ -192,13 +189,10 @@ if (!empty($this->extra_sidebar)) {
 						<a href="index.php?option=com_botiga&task=item.edit&id=<?php echo $item->id; ?>"><?php echo $item->name; ?></a>
 					</td> 
 					<td style="text-align: right;">
-						<?php echo number_format($item->price1, 2, ',', '.').' €'; ?>
-					</td>
-					<td style="text-align: right;">
-						<?php echo number_format($item->price2, 2, ',', '.').' €'; ?>
+						<?php echo number_format($item->price, 2, ',', '.').' €'; ?>
 					</td>
 					<td>
-						<a href="index.php?option=com_botiga&task=item.edit&id=<?php echo $item->marca; ?>"><?php echo $item->marca_name; ?></a>
+						<a href="index.php?option=com_botiga&task=brand.edit&id=<?php echo $item->brand; ?>"><?php echo $item->brand; ?></a>
 					</td>  
 					<td>
 						<a href="index.php?option=com_categories&view=category&layout=edit&id=<?php echo $item->catid; ?>&extension=com_laundry"><?php echo $model->getCatName($item->catid); ?></a>

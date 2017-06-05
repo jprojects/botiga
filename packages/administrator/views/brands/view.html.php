@@ -13,7 +13,7 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
-class LaundryViewBrands extends JViewLegacy
+class botigaViewBrands extends JViewLegacy
 {
     protected $items;
 	protected $pagination;
@@ -30,7 +30,7 @@ class LaundryViewBrands extends JViewLegacy
 			throw new Exception(implode("\n", $errors));
 		}
  
-		LaundryHelper::addSubmenu('brands');
+		botigaHelper::addSubmenu('brands');
 
         $this->addToolbar();
 
@@ -45,7 +45,7 @@ class LaundryViewBrands extends JViewLegacy
 	*/
 	protected function addToolBar() 
 	{
-		$canDo = LaundryHelper::getActions();
+		$canDo = botigaHelper::getActions();
 		JToolBarHelper::title(JText::_('COM_BOTIGA_MANAGER_BRANDS'), 'joomla');
 
 		if ($canDo->get('core.create')) 

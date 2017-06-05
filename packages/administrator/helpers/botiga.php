@@ -28,7 +28,7 @@ abstract class botigaHelper
 		JHtmlSidebar::addEntry(JText::_('COM_BOTIGA_SUBMENU_PRODUCTS'), 'index.php?option=com_botiga&view=items', $submenu == 'products');
 		JHtmlSidebar::addEntry(JText::_('COM_BOTIGA_SUBMENU_USERS'), 'index.php?option=com_botiga&view=users', $submenu == 'users');
 		JHtmlSidebar::addEntry(JText::_('Pedidos'), 'index.php?option=com_botiga&view=orders', $submenu == 'orders');
-		JHtmlSidebar::addEntry(JText::_('Documents'), 'index.php?option=com_botiga&view=docs', $submenu == 'docs');
+		JHtmlSidebar::addEntry(JText::_('Coupons'), 'index.php?option=com_botiga&view=coupons', $submenu == 'coupons');
 				
 		if ($submenu == 'categories') 
 		{

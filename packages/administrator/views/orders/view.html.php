@@ -13,7 +13,7 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
-class LaundryViewOrders extends JViewLegacy
+class botigaViewOrders extends JViewLegacy
 {
     protected $items;
 	protected $pagination;
@@ -30,7 +30,7 @@ class LaundryViewOrders extends JViewLegacy
 			throw new Exception(implode("\n", $errors));
 		}
  
-		LaundryHelper::addSubmenu('orders');
+		botigaHelper::addSubmenu('orders');
 
         $this->addToolbar();
 
@@ -45,7 +45,7 @@ class LaundryViewOrders extends JViewLegacy
 	*/
 	protected function addToolBar() 
 	{
-		$canDo = LaundryHelper::getActions();
+		$canDo = botigaHelper::getActions();
 		JToolBarHelper::title(JText::_('Orders'), 'joomla');
 
 
@@ -57,7 +57,7 @@ class LaundryViewOrders extends JViewLegacy
 		if ($canDo->get('core.admin')) 
 		{
             JToolBarHelper::divider();
-			JToolBarHelper::preferences('com_laundry');
+			JToolBarHelper::preferences('com_botiga');
 		}
 		
 		//Set sidebar action - New in 3.0

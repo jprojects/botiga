@@ -56,7 +56,7 @@ class botigaViewBrand extends JViewLegacy
 		$user = JFactory::getUser();
 		$userId = $user->id;
 		$isNew = $this->item->id == 0;
-		$canDo = LaundryHelper::getActions($this->item->id);
+		$canDo = botigaHelper::getActions($this->item->id);
 		JToolBarHelper::title($isNew ? JText::_('COM_BOTIGA_MANAGER_BRAND_NEW') : JText::_('COM_BOTIGA_MANAGER_BRAND_EDIT'), 'brand48');
 		// Built the actions for new and existing records.
 		if ($isNew) 
