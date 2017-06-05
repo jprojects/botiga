@@ -9,10 +9,10 @@
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `acj_botiga_brands`
+-- Estructura de tabla para la tabla `#__botiga_brands`
 --
 
-CREATE TABLE `acj_botiga_brands` (
+CREATE TABLE IF NOT EXISTS `#__botiga_brands` (
   `id` int(11) NOT NULL,
   `name` varchar(150) NOT NULL DEFAULT '',
   `published` tinyint(1) NOT NULL DEFAULT '0',
@@ -27,42 +27,42 @@ CREATE TABLE `acj_botiga_brands` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `afi_botiga_comandes`
+-- Estructura de tabla para la tabla `#__botiga_comandes`
 --
 
-CREATE TABLE `afi_botiga_comandes` (
+CREATE TABLE IF NOT EXISTS `#__botiga_comandes` (
   `id` int(11) NOT NULL,
   `data` datetime NOT NULL,
   `userid` int(11) NOT NULL,
   `status` smallint(1) NOT NULL DEFAULT '0',
   `published` tinyint(1) NOT NULL DEFAULT '0',
-  `language` char(7) NOT NULL DEFAULT '0',
+  `language` char(7) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `afi_botiga_comandesDetall`
+-- Estructura de tabla para la tabla `#__botiga_comandesDetall`
 --
 
-CREATE TABLE `afi_botiga_comandesDetall` (
+CREATE TABLE IF NOT EXISTS `#__botiga_comandesDetall` (
   `id` int(11) NOT NULL,
   `idComanda` int(11) NOT NULL,
   `idItem` int(11) NOT NULL,
   `price` float(10,2) NOT NULL DEFAULT '0.00',
   `published` tinyint(1) NOT NULL DEFAULT '0',
-  `language` char(7) NOT NULL DEFAULT '0',
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `language` char(7) NOT NULL DEFAULT '0'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `afi_botigas_rebuts`
+-- Estructura de tabla para la tabla `#__botigas_rebuts`
 --
 
-CREATE TABLE `afi_botiga_rebuts` (
+CREATE TABLE IF NOT EXISTS `#__botiga_rebuts` (
   `id` int(11) NOT NULL,
   `data` datetime NOT NULL,
   `userid` int(11) NOT NULL DEFAULT '0',
@@ -74,14 +74,14 @@ CREATE TABLE `afi_botiga_rebuts` (
   `payment_status` varchar(10) NOT NULL DEFAULT '',
   `titular` varchar(100) NOT NULL DEFAULT '',
   `iban` varchar(50) NOT NULL DEFAULT '',
-  `paypal` varchar(50) NOT NULL DEFAULT '',
+  `paypal` varchar(50) NOT NULL DEFAULT ''
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
--- Estructura de tabla para la tabla `acj_botiga_items`
+-- Estructura de tabla para la tabla `#__botiga_items`
 --
 
-CREATE TABLE `acj_botiga_items` (
+CREATE TABLE IF NOT EXISTS `#__botiga_items` (
   `id` int(11) NOT NULL,
   `catid` int(11) NOT NULL DEFAULT '0',
   `name` varchar(150) NOT NULL DEFAULT '',
@@ -105,10 +105,10 @@ CREATE TABLE `acj_botiga_items` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `acj_botiga_coupons`
+-- Estructura de tabla para la tabla `#__botiga_coupons`
 --
 
-CREATE TABLE `acj_botiga_coupons` (
+CREATE TABLE `#__botiga_coupons` (
   `id` int(11) NOT NULL,
   `title` varchar(50) NOT NULL,
   `coupon` varchar(50) NOT NULL,
@@ -117,10 +117,10 @@ CREATE TABLE `acj_botiga_coupons` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `acj_botiga_users`
+-- Estructura de tabla para la tabla `#__botiga_users`
 --
 
-CREATE TABLE `acj_botiga_users` (
+CREATE TABLE `#__botiga_users` (
   `id` int(11) NOT NULL,
   `usergroup` int(11) DEFAULT NULL,
   `nom_empresa` varchar(255) DEFAULT NULL,
