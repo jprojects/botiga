@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="component" version="3.5" method="upgrade">
-	<name>Laundry</name>
+	<name>Botiga</name>
 	<creationDate>2017-01-22</creationDate>
 	<author>Kim</author>
 	<authorEmail>kim@afi.cat</authorEmail>
