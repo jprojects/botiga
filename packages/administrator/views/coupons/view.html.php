@@ -13,7 +13,7 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
-class botigaViewDocs extends JViewLegacy
+class botigaViewCoupons extends JViewLegacy
 {
     protected $items;
 	protected $pagination;

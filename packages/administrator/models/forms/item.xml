@@ -17,7 +17,7 @@
 			type="category"
 			label="COM_BOTIGA_ITEM_CATID_LABEL"
 			description="COM_BOTIGA_ITEM_CATID_DESC"
-			extension="com_laundry"
+			extension="com_botiga"
 			required="true"
 		/>
 		<field
@@ -66,24 +66,28 @@
 			hide_none="1"
 			label="COM_BOTIGA_ITEM_IMAGE_LABEL"
 			description="COM_BOTIGA_ITEM_IMAGE_DESC"
+			directory="sampledata/products"
 		/> 
 		<field name="image3"
 			type="media"
 			hide_none="1"
 			label="COM_BOTIGA_ITEM_IMAGE_LABEL"
 			description="COM_BOTIGA_ITEM_IMAGE_DESC"
+			directory="sampledata/products"
 		/> 
 		<field name="image4"
 			type="media"
 			hide_none="1"
 			label="COM_BOTIGA_ITEM_IMAGE_LABEL"
 			description="COM_BOTIGA_ITEM_IMAGE_DESC"
+			directory="sampledata/products"
 		/> 
 		<field name="image5"
 			type="media"
 			hide_none="1"
 			label="COM_BOTIGA_ITEM_IMAGE_LABEL"
 			description="COM_BOTIGA_ITEM_IMAGE_DESC"
+			directory="sampledata/products"
 		/> 
 		<field name="pdf"
 			type="filelist"

@@ -186,7 +186,7 @@ if (!empty($this->extra_sidebar)) {
 						<?php echo $item->ref; ?>
 					</td>
 					<td>
-						<a href="index.php?option=com_botiga&task=item.edit&id=<?php echo $item->id; ?>"><?php echo $item->name; ?></a>
+						<a href="index.php?option=com_botiga&task=item.edit&id=<?= $item->id; ?>"><?= $item->name; ?></a>
 					</td> 
 					<td style="text-align: right;">
 						<?php echo number_format($item->price, 2, ',', '.').' €'; ?>
@@ -195,7 +195,7 @@ if (!empty($this->extra_sidebar)) {
 						<a href="index.php?option=com_botiga&task=brand.edit&id=<?php echo $item->brand; ?>"><?php echo $item->brand; ?></a>
 					</td>  
 					<td>
-						<a href="index.php?option=com_categories&view=category&layout=edit&id=<?php echo $item->catid; ?>&extension=com_laundry"><?php echo $model->getCatName($item->catid); ?></a>
+						<a href="index.php?option=com_categories&view=category&layout=edit&id=<?php echo $item->catid; ?>&extension=com_botiga"><?php echo $item->catname; ?></a>
 					</td>               
 					<td class="center nowrap">
 						<?php if ($item->language == '*'):?>

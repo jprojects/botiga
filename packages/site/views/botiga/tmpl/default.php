@@ -12,16 +12,15 @@
   
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
-$model = $this->getModel('botiga');
-$user  = JFactory::getUser();
-$uri = JFactory::getURI(); 
-$uri = base64_encode($uri->toString());
+$model 		= $this->getModel('botiga');
+$user  		= JFactory::getUser();
+$uri 		= base64_encode(JFactory::getURI()->toString());
 $jinput		= JFactory::getApplication()->input;
 $modal 		= $jinput->get('m', 0);
-$lang = JFactory::getLanguage()->getTag();
+$lang 		= JFactory::getLanguage()->getTag();
 ?>
 
-<!-- Modal success -->
+<!-- start Modal success -->
 <div class="modal fade" id="success" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
 	<div class="modal-content">
@@ -34,32 +33,24 @@ $lang = JFactory::getLanguage()->getTag();
 	</div>
   </div>
 </div>
-
-<style>
-.thumbnail > img, .thumbnail > a > img { height: 250px; } 
-.btn-link, .btn-link:hover { border: 1px solid #1d1d1d; color: #1d1d1d; text-decoration:none; }
-.item .btn-black { margin-top:10px; }
-.price { font-size: 20px; }
-.item-title { height: 42px; }
-#budget input, #budget textarea { color: #fff; }
-</style>
+<!-- end Modal success -->
 
 <div>
 
 	<div id="page-header">
-		<h1><?= JText::_('COM_BOTIGA_PARTS'); ?></h1>
+		<h1><?= JText::_('COM_BOTIGA_ITEMS_TITLE'); ?></h1>
 	</div>
 	
 	<div class="clearfix"></div>
 	
-	<?php if($user->guest) : ?>
+	<?php if(botigaHelper::getParameter('show_prices', 0) == 1 && $user->guest) : ?>
 	<div class="alert alert-warning"><?= JText::_('COM_BOTIGA_PRICES_NOTICE'); ?></div>
 	<?php endif; ?>
 	
 	<?php foreach($this->items as $item) : ?>
 		<?php $item->image1 != '' ? $image = $item->image1 : $image = 'images/noimage.png'; ?>
-		<?php $price = $model->getTarifa($item->id); ?>
-		<?php $price < 1 ? $price = JText::_('COM_BOTIGA_A_CONSULTAR') : $price = $price.'&euro;'; ?>
+
+		<?php $item->price < 1 ? $price = JText::_('COM_BOTIGA_A_CONSULTAR') : $price = $item->price.'&euro;'; ?>
 		<div class="col-xs-12 col-sm-6 col-md-4 top20 item">
 			<div class="thumbnail">
 				<a href="<?= JRoute::_('index.php?option=com_botiga&view=item&id='.$item->id.'&Itemid='.$itemid); ?>">
@@ -67,11 +58,11 @@ $lang = JFactory::getLanguage()->getTag();
 				</a>
 			</div>	
 			<div class="text-center item-title"><strong><?= $item->name; ?></strong></div>
-			<div class="text-center"><?= $model->getBrandName($item->marca); ?>/<?= $model->getCategoryName($item->catid); ?></div>
+			<div class="text-center"><?= $item->brand; ?>/<?= $item->catid; ?></div>
 			<div class="text-center"><?= $item->ref; ?></div>
 			<div class="text-center bold blue price"><?= $price; ?></div>
 			<a <?php if(!$user->guest) : ?>href="index.php?option=com_botiga&task=botiga.setItem&id=<?= $item->id; ?>&return=<?= $uri; ?>"<?php endif; ?> class="btn btn-primary btn-block btn-black"><?= JText::_('COM_BOTIGA_BUY'); ?> <i class="fa fa-shopping-cart"></i></a>
-			<a data-toggle="modal" data-name="<?= $item->name; ?>" data-target="#budget" class="btn btn-primary btn-block btn-link"><?= JText::_('COM_BOTIGA_MORE_INFO'); ?></a>
+			<a data-toggle="modal" data-name="<?= $item->name; ?>" data-target="#budget" class="btn btn-primary btn-block"><?= JText::_('COM_BOTIGA_MORE_INFO'); ?></a>
 		</div>
 	<?php endforeach; ?>
 
@@ -89,7 +80,7 @@ $lang = JFactory::getLanguage()->getTag();
 			<h4 class="modal-title" id="myModalLabel"><strong><?= JText::_('COM_BOTIGA_BUDGET_TITLE'); ?></strong></h4>
 		  </div>
 		  <div class="modal-body">
-			<form id="budgetForm" name="budgetForm" action="index.php?option=com_laundry&task=sendModalEmail" method="post">
+			<form id="budgetForm" name="budgetForm" action="index.php?option=com_botiga&task=sendModalEmail" method="post">
 				<input type="hidden" name="url" value="<?= JUri::getInstance(); ?>" />
 				<div class="form-group">
 					<input type="text" name="maquina" id="modal-maquina" value="" />

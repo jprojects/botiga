@@ -13,7 +13,7 @@
 --
 
 CREATE TABLE IF NOT EXISTS `#__botiga_brands` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(150) NOT NULL DEFAULT '',
   `published` tinyint(1) NOT NULL DEFAULT '0',
   `language` char(7) NOT NULL DEFAULT '0',
@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `#__botiga_brands` (
 --
 
 CREATE TABLE IF NOT EXISTS `#__botiga_comandes` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `data` datetime NOT NULL,
   `userid` int(11) NOT NULL,
   `status` smallint(1) NOT NULL DEFAULT '0',
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS `#__botiga_comandes` (
 --
 
 CREATE TABLE IF NOT EXISTS `#__botiga_comandesDetall` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `idComanda` int(11) NOT NULL,
   `idItem` int(11) NOT NULL,
   `price` float(10,2) NOT NULL DEFAULT '0.00',
@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS `#__botiga_comandesDetall` (
 --
 
 CREATE TABLE IF NOT EXISTS `#__botiga_rebuts` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `data` datetime NOT NULL,
   `userid` int(11) NOT NULL DEFAULT '0',
   `import` float(10,2) NOT NULL DEFAULT '0.00',
@@ -82,7 +82,7 @@ CREATE TABLE IF NOT EXISTS `#__botiga_rebuts` (
 --
 
 CREATE TABLE IF NOT EXISTS `#__botiga_items` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `catid` int(11) NOT NULL DEFAULT '0',
   `name` varchar(150) NOT NULL DEFAULT '',
   `brand` int(11) NOT NULL DEFAULT '0',
@@ -109,7 +109,7 @@ CREATE TABLE IF NOT EXISTS `#__botiga_items` (
 --
 
 CREATE TABLE `#__botiga_coupons` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(50) NOT NULL,
   `coupon` varchar(50) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -121,7 +121,7 @@ CREATE TABLE `#__botiga_coupons` (
 --
 
 CREATE TABLE `#__botiga_users` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `usergroup` int(11) DEFAULT NULL,
   `nom_empresa` varchar(255) DEFAULT NULL,
   `mail_empresa` varchar(255) DEFAULT NULL,

@@ -112,9 +112,11 @@ class botigaModelItems extends JModelList
 
 		$query = $db->getQuery(true);
 
-		$query->select('i.*');
+		$query->select('i.*, c.title as catname');
 
 		$query->from('#__botiga_items i');
+		
+		$query->join('inner', '#__categories c on c.id = i.catid');
                 
         // Filter by search in name.
 		$search = $this->getState('filter.search');

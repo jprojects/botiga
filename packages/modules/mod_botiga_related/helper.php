@@ -18,7 +18,7 @@ abstract class modRelatedItemsHelper
 		$db	 = JFactory::getDbo();
 		$app = JFactory::getApplication();
 		
-		$id  = $app->input->get('id');
+		$id  = $app->input->get('id', 0);
 		
 		$db->setQuery('select catid from #__botiga_items where id = '.$id);
 		$catid = $db->loadResult();

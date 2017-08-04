@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="component" version="3.5" method="upgrade">
-	<name>Laundry</name>
+	<name>Botiga</name>
 	<creationDate>2017-01-22</creationDate>
 	<author>Kim</author>
 	<authorEmail>kim@afi.cat</authorEmail>
@@ -9,18 +9,18 @@
 	<license>GNU/GPL</license>
 	<version>1.0.0</version>
 	<description><![CDATA[COM_BOTIGA_DESCRIPTION]]></description>
-    <files folder="frontend">
-		<filename>index.html</filename>
-		<filename>laundry.php</filename>
+    <files folder="site">
+		<filename>botiga.php</filename>
 		<filename>controller.php</filename>
         <filename>metadata.xml</filename>
 		<folder>views/</folder>
 		<folder>models/</folder>
+		<folder>helpers/</folder>
 		<folder>controllers/</folder>
 		<folder>assets/</folder>  
 	</files>
 	<!-- Language frontend -->
-	<languages folder="site/languages">
+	<languages folder="site/languages/en-GB">
 		<language tag="en-GB">en-GB.com_botiga.ini</language>
 	</languages>
         <install>
@@ -39,15 +39,13 @@
 		</schemas>
 	</update>
 	<administration>
-		<menu link="option=com_botiga&amp;view=items">COM_BOTIGA_MENU_NAME</menu>
-		<files folder="backend">
+		<menu link="option=com_botiga&amp;view=items">Botiga</menu>
+		<files folder="administrator">
 			<filename>index.html</filename>
-			<filename>version.php</filename>
 			<filename>botiga.php</filename>
 			<filename>controller.php</filename>
             <filename>config.xml</filename>
             <filename>access.xml</filename>
-            <filename>license.txt</filename>
             <folder>controllers/</folder>
 			<folder>views/</folder>
             <folder>helpers/</folder>
@@ -56,7 +54,7 @@
 			<folder>tables/</folder>
 			<folder>sql/</folder>
 		</files>
-		<languages folder="administrator/languages">
+		<languages folder="administrator/languages/en-GB">
 			<language tag="en-GB">en-GB.com_botiga.ini</language>
         </languages>
 	</administration>

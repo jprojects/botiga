@@ -11,4 +11,11 @@ ul.menu.sidebar {
 }
 
 .empty { color: #514B4B; }
+
+.thumbnail > img, .thumbnail > a > img { height: 250px; } 
+.btn-link, .btn-link:hover { border: 1px solid #1d1d1d; color: #1d1d1d; text-decoration:none; }
+.item .btn-black { margin-top:10px; }
+.price { font-size: 20px; }
+.item-title { height: 42px; }
+#budget input, #budget textarea { color: #fff; }
 	

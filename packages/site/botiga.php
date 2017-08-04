@@ -17,6 +17,7 @@ define('DS', DIRECTORY_SEPARATOR);
 
 // Require the base controller
 JLoader::registerPrefix('botiga', JPATH_COMPONENT);
+require_once (JPATH_COMPONENT.DS.'helpers'.DS.'botiga.php');
 require_once (JPATH_COMPONENT.DS.'controller.php');
 
 JHTML::stylesheet('botiga.css', 'components/com_botiga/assets/css/', array('media'=>'all'));

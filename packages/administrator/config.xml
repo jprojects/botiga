@@ -1,36 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
-  <fieldset name="settings" label="COM_BOTIGA_SETTINGS" description="COM_BOTIGA_SETTINGS_DESC"> 
+  <fieldset name="botiga" label="COM_BOTIGA_SETTINGS" description="COM_BOTIGA_SETTINGS_DESC"> 
         <field 
         	type="text" 
-        	name="width" 
-        	default="100" 
-        	label="COM_BOTIGA_IMAGE_WIDTH" 
-        	description="COM_BOTIGA_IMAGE_WIDTH_DESC" 
+        	name="botiga_name" 
+        	default="Botiga" 
+        	label="COM_BOTIGA_SETTINGS_NAME_LBL" 
+        	description="COM_BOTIGA_SETTINGS_NAME_DSC" 
         />
         <field 
         	type="text" 
-        	name="height" 
-        	default="100" 
-        	label="COM_BOTIGA_IMAGE_HEIGHT" 
-        	description="COM_BOTIGA_IMAGE_HEIGHT_DESC" 
+        	name="botiga_cif" 
+        	default="Botiga" 
+        	label="COM_BOTIGA_SETTINGS_CIF_LBL" 
+        	description="COM_BOTIGA_SETTINGS_CIF_DSC" 
         />
         <field 
         	type="text" 
-        	name="mail" 
-        	default="" 
-        	label="COM_BOTIGA_MAIL" 
-        	description="COM_BOTIGA_MAIL_DESC" 
+        	name="botiga_address" 
+        	default="Botiga" 
+        	label="COM_BOTIGA_SETTINGS_ADDRESS_LBL" 
+        	description="COM_BOTIGA_SETTINGS_ADDRESS_DSC" 
         />
-	<field 
+		<field 
         	type="radio" 
-        	name="access" 
-        	default="" 
-        	label="Privilegis" 
-        	description="Fer servir nivell d'acces per els documents?"
-	>
-	<option value="0">JNO</option>
-	<option value="1">JYES</option> 
+        	name="show_prices" 
+        	default="1" 
+        	label="COM_BOTIGA_SETTINGS_PRICES_LBL" 
+        	description="COM_BOTIGA_SETTINGS_PRICES_DSC"
+		>
+		<option value="0">JNO</option>
+		<option value="1">JYES</option> 
         </field>
   </fieldset>
   <fieldset

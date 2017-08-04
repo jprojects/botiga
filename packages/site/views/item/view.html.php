@@ -26,9 +26,8 @@ class botigaViewItem extends JViewLegacy
         $app = JFactory::getApplication();
         $user = JFactory::getUser();
 
-        $this->item = $this->get('Item');
-        $this->params = $app->getParams('com_laundry');
-        $this->params       = $app->getParams('com_laundry');
+        $this->item 	= $this->get('Item');
+        $this->params 	= $app->getParams('com_botiga');
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {

@@ -106,7 +106,7 @@ class botigaModelBotiga extends JModelList
 		$marca   = JRequest::getInt('marca', '');
 		$ref     = JRequest::getVar('ref', '');
 
-		if($catid != '') {
+		if($catid != 0) {
 			$query->where('(catid = '.$catid.')');
 		}
 		
@@ -121,7 +121,7 @@ class botigaModelBotiga extends JModelList
 		$query->where('published = 1');
 		$query->where('language = '.$db->quote($def).' ORDER BY ref ASC');
 
-        $params = JComponentHelper::getParams( 'com_laundry' );
+        $params = JComponentHelper::getParams( 'com_botiga' );
 		//echo $query;
 		return $query;
 	}

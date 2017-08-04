@@ -16,7 +16,7 @@ defined('_JEXEC') or die('Restricted access');
 define('DS', 'DIRECTORY_SEPARATOR');
 
 // Access check.
-if (!JFactory::getUser()->authorise('core.manage', 'com_laundry'))
+if (!JFactory::getUser()->authorise('core.manage', 'com_botiga'))
 {
         return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
 }
