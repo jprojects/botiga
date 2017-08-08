@@ -14,6 +14,7 @@
    <file type="module" id="mod_botiga_carrito" client="site">mod_botiga_carrito.zip</file>
    <file type="module" id="mod_botiga_menu" client="site">mod_botiga_menu.zip</file>
    <file type="module" id="mod_botiga_related" client="site">mod_botiga_related.zip</file>
+   <file type="module" id="mod_botiga_megamenu" client="site">mod_botiga_megamenu.zip</file>
    <file type="library" id="fpdf">lib_fpdf.zip</file>
    <file type="library" id="fpdfi">lib_fpdfi.zip</file>
    <file type="plugin" id="plg_paypal" group="botiga">plg_paypal.zip</file>
