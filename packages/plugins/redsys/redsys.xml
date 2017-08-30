@@ -11,6 +11,7 @@
 	<description>Redsys procesor for botiga component</description>
 	<files>
 		<filename plugin="redsys">redsys.php</filename>
+		<folder>redsys</folder>
 	</files>
 	<config>
 		<fields name="params">

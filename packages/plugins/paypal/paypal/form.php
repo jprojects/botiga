@@ -1,7 +1,7 @@
 <?php defined('_JEXEC') or die(); ?>
 
 <p>
-<form action="<?php echo $data->url ?>"  method="post" id="paymentForm">
+<form action="<?php echo $data->url ?>"  method="post" id="paymentForm" name="paymentForm">
 	<input type="hidden" name="cmd" value="<?php echo $data->cmd ?>" />
 	<input type="hidden" name="business" value="<?php echo $data->merchant ?>" />
 	<input type="hidden" name="return" value="<?php echo $data->success ?>" />
@@ -42,5 +42,5 @@ window.setTimeout(function(){
 
         paymentForm.submit();
 
-    }, 1000);
+    }, 2000);
 </script>

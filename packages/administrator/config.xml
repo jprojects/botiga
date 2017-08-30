@@ -10,10 +10,24 @@
         />
         <field 
         	type="text" 
+        	name="botiga_mal" 
+        	default="" 
+        	label="COM_BOTIGA_SETTINGS_MAIL_LBL" 
+        	description="COM_BOTIGA_SETTINGS_MAIL_DSC" 
+        />
+        <field 
+        	type="text" 
         	name="botiga_cif" 
         	default="Botiga" 
         	label="COM_BOTIGA_SETTINGS_CIF_LBL" 
         	description="COM_BOTIGA_SETTINGS_CIF_DSC" 
+        />
+        <field 
+        	type="text" 
+        	name="total_shipment" 
+        	default="0" 
+        	label="COM_BOTIGA_SETTINGS_TOTAL_SHIPMENT_LBL" 
+        	description="COM_BOTIGA_SETTINGS_TOTAL_SHIPMENT_DSC" 
         />
         <field 
         	type="text" 
@@ -26,8 +40,20 @@
         	type="radio" 
         	name="show_prices" 
         	default="1" 
+        	class="btn-group"
         	label="COM_BOTIGA_SETTINGS_PRICES_LBL" 
         	description="COM_BOTIGA_SETTINGS_PRICES_DSC"
+		>
+		<option value="0">JNO</option>
+		<option value="1">JYES</option> 
+        </field>
+        <field 
+        	type="radio" 
+        	name="show_ask" 
+        	default="1" 
+        	class="btn-group"
+        	label="COM_BOTIGA_SETTINGS_ASK_LBL" 
+        	description="COM_BOTIGA_SETTINGS_ASK_DSC"
 		>
 		<option value="0">JNO</option>
 		<option value="1">JYES</option> 

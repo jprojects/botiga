@@ -5,8 +5,8 @@
  * @copyright   Copyright © 2010 - All rights reserved.
  * @license		GNU/GPL
  * @author		kim
- * @author mail administracion@joomlanetprojects.com
- * @website		http://www.joomlanetprojects.com
+ * @author mail kim@aficat.com
+ * @website		http://www.aficat.com
  *
 */
 
@@ -104,10 +104,10 @@ class botigaModelCheckout extends JModelList
 
 		$query = $db->getQuery(true);
 		
-		$query->select('cd.*, i.name, i.ref, i.image1, i.marca, i.catid');
+		$query->select('cd.*, i.name, i.ref, i.image1, i.brand, i.catid');
 		
 		$query->from('#__botiga_comandesDetall as cd');
-		$query->join('inner', '#__botiga_items as i on i.id = cd.itemid');
+		$query->join('inner', '#__botiga_items as i on i.id = cd.idItem');
 		$query->where('cd.idComanda = '.$idComanda);
 		
         $params = JComponentHelper::getParams( 'com_botiga' );
@@ -124,15 +124,60 @@ class botigaModelCheckout extends JModelList
 	public function getItems()
 	{
         $items	= parent::getItems();
-
 		return $items;
 	}
 	
-	public function getUserData($field)
+	/**
+	 * Get a shipment amount.
+	 * @params float $amount the total cart amount
+	 * @return	float
+	*/
+	public function getShipment($amount)
 	{
+		jimport( 'joomla.access.access' );
+		
 		$db = JFactory::getDbo();
 		$user = JFactory::getUser();
-		$db->setQuery("select $field from #__botiga_users where userid = ".$user->id);
-		return $db->loadResult();
+		$groups = JAccess::getGroupsByUser($user->id, false);
+		
+		$percent = botigaHelper::getParameter('total_shipment', 0);
+		
+		$db->setQuery('select * from #__botiga_shipments where published = 1 and usergroup in ('.implode(',', $groups).')');
+		$rows = $db->loadObjectList();
+		
+		foreach($rows as $row) {
+		
+			if($row->type == 1) {
+			
+				$db->setQuery('select pais, cp from #__botiga_users where userid = '.$user->id);
+				$usr = $db->loadObject();
+		
+				//type 1 is zip code method
+				$db->setQuery('select total, min, max from #__botiga_shipments where country = '.$usr->pais.' and type = 1 and published = 1');
+				foreach($db->loadObjectList() as $ship)
+				{
+					if($usr->cp >= $ship->min && $usr->cp <= $ship->max) {
+						$percent = $ship->total;
+						break;
+					}
+				}
+			}
+			
+			if($row->type == 3) {
+			
+				$db->setQuery('select pais from #__botiga_users where userid = '.$user->id);
+				$pais = $db->loadResult();
+		
+				//type 3 is zip code weight
+				$db->setQuery('select total from #__botiga_shipments where country = '.$pais.' and type = 3 and published = 1');
+				$percent = $db->loadResult();
+			}
+		
+			//ToDo::new methods by total amount, by weight...
+		}
+
+		$shipment = ($percent / 100) * $amount;
+		return number_format($shipment, 2);
+		
 	}
 }

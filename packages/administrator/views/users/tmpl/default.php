@@ -5,8 +5,8 @@
  * @copyright   Copyright © 2010 - All rights reserved.
  * @license		GNU/GPL
  * @author		kim
- * @author mail administracion@joomlanetprojects.com
- * @website		http://www.joomlanetprojects.com
+ * @author mail kim@aficat.com
+ * @website		http://www.aficat.com
  *
  */
 
@@ -125,10 +125,10 @@ if (!empty($this->extra_sidebar)) {
 						<?php echo JHtml::_('grid.sort',  'COM_BOTIGA_USERS_HEADING_COUNTRY', 'pais', $listDirn, $listOrder); ?>
 					</th>
 					<th width="13%">
-						<?php echo JHtml::_('grid.sort',  'CIF', 'cif', $listDirn, $listOrder); ?>
+						<?php echo JHtml::_('grid.sort',  'CP', 'cp', $listDirn, $listOrder); ?>
 					</th>
 					<th width="13%">
-						<?php echo JHtml::_('grid.sort',  'Tipologia', 'tipo', $listDirn, $listOrder); ?>
+						<?php echo JHtml::_('grid.sort',  'CIF', 'cif', $listDirn, $listOrder); ?>
 					</th>
 					<th width="13%">
 						<?php echo JHtml::_('grid.sort',  'COM_BOTIGA_USERS_HEADING_GROUP', 'title', $listDirn, $listOrder); ?>
@@ -192,10 +192,10 @@ if (!empty($this->extra_sidebar)) {
 					</td>
 		            <?php endif; ?>
 		            <td>
-						<a href="index.php?option=com_laundry&task=user.edit&id=<?php echo $item->id; ?>"><?php echo $item->nom_empresa; ?></a>
+						<a href="index.php?option=com_botiga&task=user.edit&id=<?= $item->id; ?>"><?= $item->nom_empresa; ?></a>
 					</td> 
 					<td>
-						<?php echo $item->username; ?>
+						<?php echo $item->mail_empresa; ?>
 					</td>
 					<td>
 						<?php echo $item->telefon; ?>
@@ -210,10 +210,10 @@ if (!empty($this->extra_sidebar)) {
 						<?php echo $item->pais; ?>
 					</td>
 					<td>
-						<?php echo $item->cif; ?>
+						<?php echo $item->cp; ?>
 					</td>
 					<td>
-						<?php echo $item->tipo; ?>
+						<?php echo $item->cif; ?>
 					</td>	
 					<td align="center">
 

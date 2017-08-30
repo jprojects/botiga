@@ -4,8 +4,8 @@
 		<field 
 			name="empresa"  
 			type="text" 
-			label="COM_LAUNDRY_REGISTER_NOMBRE_EMPRESA_LBL"
-			description="COM_LAUNDRY_REGISTER_NOMBRE_EMPRESA_DSC" 
+			label="COM_BOTIGA_REGISTER_NOMBRE_EMPRESA_LBL"
+			description="COM_BOTIGA_REGISTER_NOMBRE_EMPRESA_DSC" 
 			default="" 
 			class="form-control" 
 			required="true"
@@ -13,32 +13,17 @@
 		<field 
 			name="cif"  
 			type="text" 
-			label="COM_LAUNDRY_REGISTER_CIF_LBL"
-			description="COM_LAUNDRY_REGISTER_CIF_DSC" 
+			label="COM_BOTIGA_REGISTER_CIF_LBL"
+			description="COM_BOTIGA_REGISTER_CIF_DSC" 
 			default="" 
 			class="form-control" 
 			required="true"
         />        
 		<field 
-			name="tipo"  
-			type="list" 
-			label="COM_LAUNDRY_REGISTER_TIPOLOGIA_LBL"
-			description="COM_LAUNDRY_REGISTER_TIPOLOGIA_DESC" 
-			default=""
-			class="form-control"  
-			required="true"		 
-        	>
-			<option value="">COM_LAUNDRY_REGISTER_TIPOLOGIA_OPTION</option>
-			<option value="HOSTELERIA" class="required">COM_LAUNDRY_REGISTER_HOSTELERIA</option>
-			<option value="LAVANDERIA" class="required">COM_LAUNDRY_REGISTER_LAVANDERIA</option>
-			<option value="DISTRIBUIDOR" class="required">COM_LAUNDRY_REGISTER_DISTRIBUIDOR</option>
-			<option value="MECANICO" class="required">COM_LAUNDRY_REGISTER_MECANICO</option>
-		</field>
-		<field 
 			name="nombre"  
 			type="text" 
-			label="COM_LAUNDRY_REGISTER_NOMBRE_LBL"
-			description="COM_LAUNDRY_REGISTER_NOMBRE_DSC" 
+			label="COM_BOTIGA_REGISTER_NOMBRE_LBL"
+			description="COM_BOTIGA_REGISTER_NOMBRE_DSC" 
 			default="" 
 			class="form-control" 
 			required="true"
@@ -46,17 +31,55 @@
         <field 
 			name="phone"  
 			type="text" 
-			label="COM_LAUNDRY_REGISTER_PHONE_LBL"
-			description="COM_LAUNDRY_REGISTER_PHONE_DSC" 
+			label="COM_BOTIGA_REGISTER_PHONE_LBL"
+			description="COM_BOTIGA_REGISTER_PHONE_DSC" 
+			default="" 
+			class="form-control" 
+			required="true"
+        /> 
+        <field 
+			name="address"  
+			type="text" 
+			label="COM_BOTIGA_REGISTER_ADDRESS_LBL"
+			description="COM_BOTIGA_REGISTER_ADDRESS_DSC" 
 			default="" 
 			class="form-control" 
 			required="true"
         />
         <field 
+			name="city"  
+			type="text" 
+			label="COM_BOTIGA_REGISTER_CITY_LBL"
+			description="COM_BOTIGA_REGISTER_CITY_DSC" 
+			default="" 
+			class="form-control" 
+			required="true"
+        /> 
+        <field 
+			name="pais" 
+			type="sql" 
+			label="COM_BOTIGA_REGISTER_PAIS_LABEL" 
+			description="COM_BOTIGA_REGISTER_PAIS_DESC" 
+			size="40"
+			default=""
+			query="SELECT country_id, country_name FROM #__botiga_countries"
+    		key_field="country_id"
+    		value_field="country_name"
+		/>
+        <field 
+			name="cp"  
+			type="text" 
+			label="COM_BOTIGA_REGISTER_CP_LBL"
+			description="COM_BOTIGA_REGISTER_CP_DSC" 
+			default="" 
+			class="form-control" 
+			required="true"
+        />       
+        <field 
 			name="email1"  
 			type="text" 
-			label="COM_LAUNDRY_REGISTER_EMAIL_LBL"
-			description="COM_LAUNDRY_REGISTER_EMAIL_DSC" 
+			label="COM_BOTIGA_REGISTER_EMAIL_LBL"
+			description="COM_BOTIGA_REGISTER_EMAIL_DSC" 
 			default="" 
 			class="form-control validate-email" 
 			field="id"
@@ -68,8 +91,8 @@
         <field 
 			name="email2"  
 			type="text" 
-			label="COM_LAUNDRY_REGISTER_EMAIL2_LBL"
-			description="COM_LAUNDRY_REGISTER_EMAIL2_DSC" 
+			label="COM_BOTIGA_REGISTER_EMAIL2_LBL"
+			description="COM_BOTIGA_REGISTER_EMAIL2_DSC" 
 			default="" 
 			class="form-control validate-email" 
 			field="email1"
@@ -79,8 +102,8 @@
         <field 
 			name="password1"  
 			type="password" 
-			label="COM_LAUNDRY_REGISTER_PWD_LBL"
-			description="COM_LAUNDRY_REGISTER_PWD_DSC" 
+			label="COM_BOTIGA_REGISTER_PWD_LBL"
+			description="COM_BOTIGA_REGISTER_PWD_DSC" 
 			default="" 
 			class="form-control validate-password" 
 			autocomplete="off"
@@ -91,8 +114,8 @@
         <field 
 			name="password2"  
 			type="password" 
-			label="COM_LAUNDRY_REGISTER_PWD2_LBL"
-			description="COM_LAUNDRY_REGISTER_PWD2_DSC" 
+			label="COM_BOTIGA_REGISTER_PWD2_LBL"
+			description="COM_BOTIGA_REGISTER_PWD2_DSC" 
 			default="" 
 			class="form-control validate-password" 
 			autocomplete="off"
@@ -100,16 +123,5 @@
 			validate="equals"
 			required="true"
         />
-        <field 
-			name="contacto"  
-			type="radio" 
-			label="COM_LAUNDRY_REGISTER_CONTACTO_LBL"
-			description="COM_LAUNDRY_REGISTER_CONTACTO_DESC" 
-			default="mail"  
-			required="true"		 
-        	>
-			<option value="mail">COM_LAUNDRY_REGISTER_CONTACTO_MAIL</option>
-			<option value="phone">COM_LAUNDRY_REGISTER_CONTACTO_PHONE</option>
-		</field>
 	</fieldset>
 </form>

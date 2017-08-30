@@ -189,13 +189,13 @@ if (!empty($this->extra_sidebar)) {
 						<a href="index.php?option=com_botiga&task=item.edit&id=<?= $item->id; ?>"><?= $item->name; ?></a>
 					</td> 
 					<td style="text-align: right;">
-						<?php echo number_format($item->price, 2, ',', '.').' €'; ?>
+						<!-- ToDo: recoger precios -->
 					</td>
 					<td>
 						<a href="index.php?option=com_botiga&task=brand.edit&id=<?php echo $item->brand; ?>"><?php echo $item->brand; ?></a>
 					</td>  
 					<td>
-						<a href="index.php?option=com_categories&view=category&layout=edit&id=<?php echo $item->catid; ?>&extension=com_botiga"><?php echo $item->catname; ?></a>
+						<!-- ToDo: recoger categorias nombre -->
 					</td>               
 					<td class="center nowrap">
 						<?php if ($item->language == '*'):?>

@@ -14,29 +14,65 @@ $class_sfx	= htmlspecialchars($params->get('moduleclass_sfx'));
 $app        = JFactory::getApplication();
 $lang 		= $app->input->get('lang', 'ca');
 $marca 		= $app->input->get('marca', 0);
-$brands 	= modLaundryMenuHelper::getBrands();
-$itemid 	= modLaundryMenuHelper::getItemid();
+$catid 		= $app->input->get('catid', 0); 
+$brands 	= modBotigaMenuHelper::getBrands();
+$cats 	    = modBotigaMenuHelper::getCats();
 ?>
 
 <div class="show_body">
+
+<div class="products-title"><span class="caret"></span> <strong>Productos</strong></div>
 			
-<ul class="menu sidebar <?= $class_sfx; ?>">
+<ul class="menu sidebar products-sidebar <?= $class_sfx; ?>">
 
-<?php foreach( $brands as $brand ) : ?>
-
-	<li class="parent <?php if(count($cats)) : ?>deeper<?php endif; ?>" <?php if($footer == 1) : ?>style="padding:0;"<?php endif; ?>>
-		<a href="index.php?option=com_botiga&view="><?= strtoupper($brand->name); ?></a>
+<?php foreach( $cats as $cat ) : ?>
+	
+	<li class="parent <?php if(count($cats)) : ?>deeper<?php endif; ?> <?php if($cat->id == $catid) : ?>active<?php endif; ?>">
+		<a href="index.php?option=com_botiga&view=botiga&catid=<?= $cat->id; ?>&Itemid=112"><?= strtoupper($cat->title); ?></a>
 		<?php 
-		$categories = modLaundryMenuHelper::getCategoriesByBrand($brand->id);
-		if(count($categories) > 0 && $marca == $brand->id) : ?>
+		$subcats = modBotigaMenuHelper::getSubCats($cat->id);
+		if(count($subcats) > 0) : ?>
 			<ul>
 				<?php 
 				$i = 1;
-				foreach($categories as $cat) : 
-				$title = modLaundryMenuHelper::getCatName($cat->catid); 
-				if($title != '') : ?>
-				<li <?php if($count == $i) : ?>style="border:none;"<?php endif; ?>>
-					<a href="index.php?option=com_botiga&view="><?= $title; ?></a>
+				foreach($subcats as $subcat) : 
+				if($subcat->title != '') : ?>
+				<li <?php if($count == $i) : ?>style="border:none;"<?php endif; ?> <?php if($subcat->id == $catid) : ?>class="active"<?php endif; ?>>
+					<a href="index.php?option=com_botiga&view=botiga&catid=<?= $subcat->id; ?>&Itemid=112"><?= $subcat->title; ?></a>
+					<?php 
+					$subcats = modBotigaMenuHelper::getSubCats($subcat->id);
+					if(count($subcats) > 0) : ?>
+						<ul <?php if($subcat->id != $catid) : ?>style="display:none;"<?php endif; ?>>
+							<?php 
+							$i = 1;
+							foreach($subcats as $subcat) : 
+							if($subcat->title != '') : ?>
+							<li <?php if($count == $i) : ?>style="border:none;"<?php endif; ?> <?php if($subcat->id == $catid) : ?>class="active"<?php endif; ?>>
+								<a href="index.php?option=com_botiga&view=botiga&catid=<?= $subcat->id; ?>&Itemid=112"><?= $subcat->title; ?></a>
+								<?php 
+								$subcats = modBotigaMenuHelper::getSubCats($subcat->id);
+								if(count($subcats) > 0) : ?>
+									<ul <?php if($subcat->id != $catid || $subcat->parent_id != $catid) : ?>style="display:none;"<?php endif; ?>>
+										<?php 
+										$i = 1;
+										foreach($subcats as $subcat) : 
+										if($subcat->title != '') : ?>
+										<li <?php if($count == $i) : ?>style="border:none;"<?php endif; ?> <?php if($subcat->id == $catid) : ?>class="active"<?php endif; ?>>
+											<a href="index.php?option=com_botiga&view=botiga&catid=<?= $subcat->id; ?>&Itemid=112"><?= $subcat->title; ?></a>
+										</li>
+										<?php
+										endif; 
+										$i++;
+										endforeach; ?>
+									</ul>
+								<?php endif; ?>
+							</li>
+							<?php
+							endif; 
+							$i++;
+							endforeach; ?>
+						</ul>
+					<?php endif; ?>
 				</li>
 				<?php
 				endif; 
@@ -45,6 +81,20 @@ $itemid 	= modLaundryMenuHelper::getItemid();
 			</ul>
 		<?php endif; ?>
 		
+	</li>			
+
+<?php endforeach; ?>
+
+</ul>
+
+<div class="brands-title"><span class="caret"></span> <strong>Marcas</strong></div>
+
+<ul class="menu sidebar brands-sidebar <?= $class_sfx; ?>">
+
+<?php foreach( $brands as $brand ) : ?>
+	
+	<li class="parent <?php if($marca == $brand->id) : ?>active<?php endif; ?>">
+		<a href="index.php?option=com_botiga&view=botiga&catid=<?= $catid; ?>&marca=<?= $brand->id; ?>&Itemid=112"><?= $brand->name; ?></a>
 	</li>			
 
 <?php endforeach; ?>

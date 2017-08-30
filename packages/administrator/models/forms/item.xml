@@ -19,6 +19,7 @@
 			description="COM_BOTIGA_ITEM_CATID_DESC"
 			extension="com_botiga"
 			required="true"
+			multiple="true"
 		/>
 		<field
 			name="name"
@@ -38,11 +39,36 @@
 			class="inputbox"
 			default=""
 		/>
-		<field
+		<field 
 			name="price"
-			type="text"
-			label="COM_BOTIGA_ITEM_PRICE_LABEL"
+			type="repeatable"
+			icon="list"
 			description="COM_BOTIGA_ITEM_PRICE_DESC"
+			label="COM_BOTIGA_ITEM_PRICE_LABEL"
+			default='{"usergroup":["default"],
+			"pricing":["0.0"]}'
+			>
+			<fieldset hidden="true" name="price_modal" repeat="true">
+				<field 
+					name="usergroup"
+					label="COM_BOTIGA_ITEM_USERGROUP_LABEL"
+					size="30"
+					type="usergrouplist" 
+				/>
+				<field 
+					name="pricing"
+					label="COM_BOTIGA_ITEM_PRICE_LABEL"
+					description="COM_BOTIGA_ITEM_PRICE_DESC"
+					size="30"
+					type="text"
+				/>
+			</fieldset>
+		</field>
+		<field
+			name="pvp"
+			type="text"
+			label="COM_BOTIGA_ITEM_PVP_LABEL"
+			description="COM_BOTIGA_ITEM_PVP_DESC"
 			size="40"
 			class="inputbox"
 			default=""
@@ -89,6 +115,24 @@
 			description="COM_BOTIGA_ITEM_IMAGE_DESC"
 			directory="sampledata/products"
 		/> 
+		<field
+			name="garantia"
+			type="text"
+			label="COM_BOTIGA_ITEM_GARANTIA_LABEL"
+			description="COM_BOTIGA_ITEM_GARANTIA_DESC"
+			size="40"
+			class="inputbox"
+			default=""
+		/>
+		<field
+			name="envio"
+			type="text"
+			label="COM_BOTIGA_ITEM_ENVIO_LABEL"
+			description="COM_BOTIGA_ITEM_ENVIO_DESC"
+			size="40"
+			class="inputbox"
+			default=""
+		/>
 		<field name="pdf"
 			type="filelist"
 			directory="images/pdf"

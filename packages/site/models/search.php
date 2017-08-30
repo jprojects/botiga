@@ -56,14 +56,11 @@ class botigaModelSearch extends JModelList
 		$value = JRequest::getInt('limitstart', 0);
 		$this->setState('list.start', $value);
 		
-		$type = $this->getUserStateFromRequest($this->context.'.filter.type', 'filter_type');
-		$this->setState('filter.type', $type);
-		
 		$search = $this->getUserStateFromRequest($this->context.'.filter.search', 'filter_search');
 		$this->setState('filter.search', $search);
 
 		// Load the parameters.
-		$params = JComponentHelper::getParams('com_laundry');
+		$params = JComponentHelper::getParams('com_botiga');
 		$this->setState('params', $params);
 
 		// List state information.
@@ -102,15 +99,18 @@ class botigaModelSearch extends JModelList
 
 		$query  = $db->getQuery(true);
 		
-		$query->select('id, name, catid, marca, ref, subtitle as factusol_codart');
+		$query->select('*');
 		$query->from('#__botiga_items');
 		
 		$search = $this->getState('filter.search', '');
-		$type = $this->getState('filter.type', '');
+		
+		if($search != '') {
+			$query->where('(name LIKE "%'.$search.'%")');
+		}
 		
 		$query->where('published = 1');
 		$query->where("(language = ".$db->quote($lang)." OR language='*')");
-		//echo $query;
+		echo $query;
 		return $query;
 	}
 

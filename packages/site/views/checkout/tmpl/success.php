@@ -5,8 +5,8 @@
  * @copyright   Copyright © 2010 - All rights reserved.
  * @license		GNU/GPL
  * @author		kim
- * @author mail administracion@joomlanetprojects.com
- * @website		http://www.joomlanetprojects.com
+ * @author mail	kim@aficat.com
+ * @website		http://www.aficat.com
  *
 */
 
@@ -25,10 +25,10 @@ defined('_JEXEC') or die('Restricted access');
 }
 </style>
 
-<div class="container">
+<div>
 
 	<div class="block-msg">
-		<?= JText::_('COM_BOTIGA_PROCESS_CART'); ?>
+		<?= JText::_('COM_BOTIGA_PROCESS_CART_SUCCESS'); ?>
 	</div>
 
 </div>

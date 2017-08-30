@@ -5,8 +5,8 @@
  * @copyright   Copyright © 2010 - All rights reserved.
  * @license		GNU/GPL
  * @author		kim
- * @author mail administracion@joomlanetprojects.com
- * @website		http://www.joomlanetprojects.com
+ * @author mail kim@aficat.com
+ * @website		http://www.aficat.com
  *
  */
 
@@ -38,7 +38,7 @@ class botigaModelUsers extends JModelList
 				'tarifa', 'tarifa', 
 				'published', 'published',
 				'contacto', 'contacto',
-				'tipo', 'tipo',
+				'cp', 'cp',
 				'cif', 'cif',
 			);
 		}

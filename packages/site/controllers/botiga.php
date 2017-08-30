@@ -5,8 +5,8 @@
  * @copyright   Copyright © 2010 - All rights reserved.
  * @license		GNU/GPL
  * @author		kim
- * @author mail administracion@joomlanetprojects.com
- * @website		http://www.joomlanetprojects.com
+ * @author mail kim@afi.cat
+ * @website		http://www.afi.cat
  *
 */
 
@@ -40,29 +40,27 @@ class botigaControllerBotiga extends botigaController {
 
 		$jinput = JFactory::getApplication()->input;
 		$itemid = $jinput->get('id');
-		$price  = $this->getModel()->getTarifa($itemid);
+		$price  = botigaHelper::getUserPrice($itemid);
 		$return = base64_decode($jinput->getString('return', 'index.php'));
 		
 		//si no hi ha comanda creem una de nova...
 		$idComanda = $session->get('idComanda', '');
 		if($idComanda == '') { $idComanda = $this->setComanda(); }
 	
-		$db->setQuery('select id, qty from #__botiga_comandesDetall where itemId = '.$itemid.' and idComanda = '.$idComanda);
+		$db->setQuery('select id, qty from #__botiga_comandesDetall where idItem = '.$itemid.' and idComanda = '.$idComanda);
 		$row = $db->loadObject();
 		
-		$detall 			= new stdClass();
+		$detall = new stdClass();
 		
 		if(count($row) && $row->qty > 0) {
 			$detall->id 		= $row->id;
 			$detall->qty 		= $row->qty + 1;
-			$detall->total 		= $price * $row->qty;
 			$db->updateObject('#__botiga_comandesDetall', $detall, 'id');
 		} else {
 			$detall->idComanda 	= $idComanda;
-			$detall->itemid 	= $itemid;
+			$detall->idItem 	= $itemid;
 			$detall->price 		= $price;
 			$detall->qty 		= 1;
-			$detall->total		= $price;
 			$db->insertObject('#__botiga_comandesDetall', $detall);
 		}
 		
@@ -130,25 +128,40 @@ class botigaControllerBotiga extends botigaController {
 	}
 	
 	public function processCart() 
-     {
+    {
      	$db 		= JFactory::getDbo();
      	$session 	= JFactory::getSession();
-     	$user 		= JFactory::getUser();
      	$app        = JFactory::getApplication();
-     	$lang       = JFactory::getLanguage()->getTag();
      	
      	$data 	    = $app->input->getArray($_POST);
      	
      	$idComanda  = $session->get('idComanda');
      	
-     	$cp 		= $data['cp'];
-     	$direccion 	= $data['direccion'];
-     	$pais 		= $data['pais'];
+     	$subtotal 	= $data['subtotal'];
+     	$shipment 	= $data['shipment'];
+     	$total 		= $data['total'];
+     	$processor  = $data['processor'];
      	
-     	//actualitzem user
-     	$db->setQuery('update #__botiga_users set cp = '.$db->quote($cp).', adreca = '.$db->quote($direccion).', pais = '.$db->quote($pais).' where userid = '.$user->id);
+     	//actualitza comanda
+     	$db->setQuery('update #__botiga_comandes set subtotal = '.$db->quote($subtotal).', shipment = '.$db->quote($shipment).', total = '.$db->quote($total).' where id = '.$idComanda);
      	$db->query();
-     	//comanda passa a status 2 (finalitzada)
+     	
+     	//redirect to payment
+     	$this->setRedirect('index.php?option=com_botiga&view=checkout&layout=payment&Itemid=134&processor='.$processor); 
+     }
+     
+     public function processPayment()
+     {	
+     	$db 		= JFactory::getDbo();
+     	$session 	= JFactory::getSession();
+     	$user 		= JFactory::getUser();
+     	$app        = JFactory::getApplication();
+     	
+     	$data 	    = $app->input->getArray($_POST);
+     	
+     	$idComanda  = $session->get('idComanda');
+     	
+     	//actualitza comanda
      	$db->setQuery('update #__botiga_comandes set status = 2 where id = '.$idComanda);
      	$result = $db->query();
      	
@@ -161,8 +174,8 @@ class botigaControllerBotiga extends botigaController {
      		$items = $db->loadObjectList();
      		
      		$total     = 0;
-     		$subject   = "Acjsystems: nuevo pedido, pedido nº ".$idComanda;
-			$body      = "Se ha registrado un nuevo pedido en Acjsystems del usuario:";
+     		$subject   = "Nuevo pedido, pedido nº ".$idComanda;
+			$body      = "Se ha registrado un nuevo pedido en ".botigaHelper::getParameter('botiga_name')." del usuario:";
 			$body 	  .= "Usuario: <strong>".$user->username."</strong> :<br>";
 			$body 	  .= "Email: <strong>".$user->email."</strong> :<br>";
 			$body 	  .= "Teléfono: <strong>".$row->telefon."</strong> :<br>";
@@ -181,17 +194,17 @@ class botigaControllerBotiga extends botigaController {
 			
 			$body .= "<tr><td colspan='5' align='right'>".JText::_('COM_BOTIGA_CHECKOUT_TOTAL')." ".number_format($total, 2)."</td></tr></table>";
 			
-			$body2 = "<p>En breve nos pondremos en contacto contigo para cerrar el pedido.</p>";			
+			$body2 = "<p>Gracias.</p>";			
 	
 			//mail para el admin
-			$this->enviar($subject, $body, 'info@acjsystems.com');
+			$this->enviar($subject, $body, botigaHelper::getParameter('botiga_mail'));
 			//mail para el user
 			$this->enviar($subject, $body.$body2, $user->email);
 			
      		$session->clear('idComanda');
      	}
      	
-     	$this->setRedirect('index.php?option=com_botiga&view=laundry&Itemid='.$itemid.'&m=1', $type);     	
+     	$this->setRedirect('index.php?option=com_botiga&view=botiga&layout=success&Itemid=134', $type);     	
      }
      
      public function updateQty()
@@ -216,10 +229,7 @@ class botigaControllerBotiga extends botigaController {
      	}
      	
      	$db->setQuery('select * from #__botiga_comandesDetall where id = '.$id);
-     	$row = $db->loadObject();
- 
-     	$db->setQuery('update #__botiga_comandesDetall set total = '.$row->qty * $row->price.' where id = '.$id);
-     	$result = $db->query();
+     	$result = $db->loadObject();
      	
      	if($result) {
      		$msg = JText::_('COM_BOTIGA_QTY_UPDATED_SUCCESS');

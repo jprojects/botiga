@@ -57,21 +57,7 @@ class botigaViewBotiga extends JViewLegacy
             $this->document->setMetadata('robots', $this->params->get('robots'));
         }
 
-		$this->_prepareDocument();
-
 		parent::display($tpl);
-	}
-        
-    /**
-	 * Method to set up the document properties
-	 *
-	 * @return void
-	*/
-	protected function _prepareDocument()
-	{		
-        $document   = JFactory::getDocument();
-
-        $document->addStylesheet('components/com_botiga/assets/css/botiga.css');
 	}
 }
 ?>

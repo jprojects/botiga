@@ -15,93 +15,91 @@
 		</field>
         <field name="usergroup"
 			type="usergroup"
-			label="COM_LAUNDRY_USER_USERGROUP_LABEL"
-			description="COM_LAUNDRY_USER_USERGROUP_DESC"
+			label="COM_BOTIGA_USER_USERGROUP_LABEL"
+			description="COM_BOTIGA_USER_USERGROUP_DESC"
 			required="true"
 		/>
 		<field name="userid"
 			type="user"
-			label="COM_LAUNDRY_USER_USERID_LABEL"
-			description="COM_LAUNDRY_USER_USERID_DESC"
+			label="COM_BOTIGA_USER_USERID_LABEL"
+			description="COM_BOTIGA_USER_USERID_DESC"
 			required="true"
 		/>
         <field
 			name="nom_empresa"
 			type="text"
-			label="COM_LAUNDRY_USER_NAME_LABEL"
-			description="COM_LAUNDRY_USER_NAME_DESC"
+			label="COM_BOTIGA_USER_NAME_LABEL"
+			description="COM_BOTIGA_USER_NAME_DESC"
 			size="40"
 			default=""
 		/>
-		<field name="tarifa"
-			type="list"
-			label="COM_LAUNDRY_USER_TARIFA_LABEL"
-			description="COM_LAUNDRY_USER_TARIFA_DESC"
-			default="0"
-		>
-			<option value="0">Sin tarifa</option>
-			<option value="1">Cliente</option>
-			<option value="2">Distribuidor</option>
-		</field>
-		<field 
-			name="adreca" 
-			type="text" 
-			label="COM_LAUNDRY_USER_ADRECA_LABEL" 
-			description="COM_LAUNDRY_USER_ADRECA_DESC" 
+		<field
+			name="mail_empresa"
+			type="text"
+			label="COM_BOTIGA_USER_MAIL_LABEL"
+			description="COM_BOTIGA_USER_MAIL_DESC"
 			size="40"
 			default=""
 		/>
 		<field 
 			name="cif" 
 			type="text" 
-			label="cif" 
-			description="" 
+			label="COM_BOTIGA_USER_CIF_LABEL" 
+			description="COM_BOTIGA_USER_CIF_LABEL" 
+			size="40"
+			default=""
+		/>
+		<field 
+			name="adreca" 
+			type="text" 
+			label="COM_BOTIGA_USER_ADRECA_LABEL" 
+			description="COM_BOTIGA_USER_ADRECA_DESC" 
+			size="40"
+			default=""
+		/>
+		<field 
+			name="cp" 
+			type="text" 
+			label="COM_BOTIGA_USER_CP_LABEL" 
+			description="COM_BOTIGA_USER_CP_LABEL" 
 			size="40"
 			default=""
 		/>
 		<field 
 			name="poblacio" 
 			type="text" 
-			label="COM_LAUNDRY_USER_POBLACIO_LABEL" 
-			description="COM_LAUNDRY_USER_POBLACIO_DESC" 
+			label="COM_BOTIGA_USER_POBLACIO_LABEL" 
+			description="COM_BOTIGA_USER_POBLACIO_DESC" 
 			size="40"
 			default=""
 		/>	
 		<field 
 			name="provincia" 
 			type="text" 
-			label="COM_LAUNDRY_USER_PROVINCIA_LABEL" 
-			description="COM_LAUNDRY_USER_PROVINCIA_DESC" 
+			label="COM_BOTIGA_USER_PROVINCIA_LABEL" 
+			description="COM_BOTIGA_USER_PROVINCIA_DESC" 
 			size="40"
 			default=""
 		/>	
 		<field 
 			name="pais" 
-			type="text" 
-			label="COM_LAUNDRY_USER_PAIS_LABEL" 
-			description="COM_LAUNDRY_USER_PAIS_DESC" 
+			type="sql" 
+			label="COM_BOTIGA_USER_PAIS_LABEL" 
+			description="COM_BOTIGA_USER_PAIS_DESC" 
 			size="40"
 			default=""
+			query="SELECT country_id, country_name FROM #__botiga_countries"
+    		key_field="country_id"
+    		value_field="country_name"
 		/>
 		<field 
 			name="telefon" 
 			type="text" 
-			label="COM_LAUNDRY_USER_PHONE_LABEL" 
-			description="COM_LAUNDRY_USER_PHONE_DESC" 
+			label="COM_BOTIGA_USER_PHONE_LABEL" 
+			description="COM_BOTIGA_USER_PHONE_DESC" 
 			size="40"
 			default=""
 		/>
-		<field 
-			name="contacto"  
-			type="radio" 
-			label="Contacto"
-			description="" 
-			default="mail"  
-			required="true"		 
-        	>
-			<option value="mail">Mail</option>
-			<option value="phone">Teléfono</option>
-		</field>
 	</fieldset>
         <fields name="params">
 		<fieldset

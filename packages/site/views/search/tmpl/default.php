@@ -27,7 +27,7 @@ $search = JFactory::getApplication()->input->get('filter_search');
 		<?php foreach($this->items as $item) : ?>
 		<?php $link = JRoute::_('index.php?option=com_botiga&view=item&id='.$item->id.'&Itemid=135'); ?>
 			<tr>
-				<td><a href="<?= $link; ?>"><?= $model->highlight($search, $item->ref); ?> <?= $model->highlight($search, $item->name); ?></a></td>	
+				<td><a href="<?= $link; ?>"><?= $item->ref; ?> <?= $item->name; ?></a></td>	
 			</tr>
 		<?php endforeach; ?>
 		</table>

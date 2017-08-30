@@ -14,7 +14,7 @@ defined('_JEXEC') or die;
  * @subpackage	User.joomla
  * @since		1.5
  */
-class plgBotigapaypal extends JPlugin
+class plgBotigaPaypal extends JPlugin
 {
 	var $gateway = 'Paypal';
 	
@@ -32,13 +32,14 @@ class plgBotigapaypal extends JPlugin
 	 * @param $saldo
 	 * @return string
 	 */
-	public function onPaymentNew($paymentmethod, $user, $total, $idComanda)
+	public function onPaymentNew($paymentmethod, $total, $idComanda)
 	{
 		if($paymentmethod != $this->gateway) return false;
 		
-		$usuari = JFactory::getUser();
+		$user = JFactory::getUser();
+		$session = JFactory::getSession();
 		
-		$postback = 'index.php?option=com_botiga&view=callback&method=Paypal&userid='.$usuari->id.'&idComanda='.$idComanda;
+		$postback = 'index.php?option=com_botiga&view=callback&method=Paypal&userid='.$user->id.'&idComanda='.$idComanda;
 		
 		$this->params->get('sandbox') == 0 ? $url = 'https://www.paypal.com/cgi-bin/webscr' : $url = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
 
@@ -46,10 +47,10 @@ class plgBotigapaypal extends JPlugin
 			'url'			=> $url,
 			'merchant'		=> $this->params->get('merchantID',''),
 			'postback'		=> JURI::base().$postback,
-			'success'		=> $this->params->get('successURL',''),
-			'cancel'		=> $this->params->get('cancelURL',''),
+			'success'		=> JURI::base().$this->params->get('successURL',''),
+			'cancel'		=> JURI::base().$this->params->get('cancelURL',''),
 			'currency'		=> 'EUR',
-			'firstname'		=> $usuari->username,
+			'firstname'		=> $user->username,
 			'cmd'			=> '_xclick',
 			'recurring'		=> 0,
 			'idComanda'		=> $idComanda,
@@ -100,67 +101,23 @@ class plgBotigapaypal extends JPlugin
     	$newStatus == 'C' ? $pagat = 1 : $pagat = 2;
     	$amount = $data['mc_gross'];
 
-		require_once(JPATH_ROOT.DS.'components'.DS.'com_buuks'.DS.'helpers'.DS.'buuks.php');
-
-		//$cost_pagament_Paypal_fix 	= buuksHelpersBuuks::getParameter('cost_pagament_Paypal_fix');
-		//$cost_pagament_Paypal_perc 	= buuksHelpersBuuks::getParameter('cost_pagament_Paypal_perc');
-
-		//$recarrec 			= round(($amount * $cost_pagament_Paypal_perc) / 100,2) + $cost_pagament_Paypal_fix;
-
     	// Set the payment status to Pending
     	$rebut 					= new stdClass();
     	$rebut->data 			= date('Y-m-d');
     	$rebut->userid 			= $userid;
     	$rebut->import 			= $amount;
-		$rebut->recarrec		= 0;
-    	$rebut->importambrecarrec 	= $amount;
-    	$rebut->pagat 			= $pagat;
-    	$rebut->tipus 			= 'A';
     	$rebut->idComanda 		= $idComanda;
     	$rebut->formaPag 		= 'P';
     	$rebut->payment_status 	= $newStatus; 		
     		
-    	$db->insertObject('#__buuks_rebuts', $rebut);
+    	$db->insertObject('#__botiga_rebuts', $rebut);
     		
-    	$saldo = abs(BuuksHelpersBuuks::getUserSaldo($userid));
-			    		
-    	//prenem tot el saldo
-    	$rebut 					= new stdClass();
-    	$rebut->data 			= date('Y-m-d');
-    	$rebut->userid 			= $userid;
-    	$rebut->import 			= $saldo * -1;
-    	$rebut->importambrecarrec 	= $saldo * -1;
-    	$rebut->pagat 			= $pagat;
-    	$rebut->tipus 			= 'C';
-    	$rebut->idComanda 		= $idComanda;
-    	$rebut->formaPag 		= 'P';
-    	$rebut->payment_status 	= 'C'; 
-    		
-    	$db->insertObject('#__buuks_rebuts', $rebut);
-    		
-    	//actualitzar estat comanda a pagada (4)
-		$db->setQuery('update #__buuks_compres set Estat = 4, Data = '.$db->quote(date('Y-m-d H:i:s')).' WHERE id = '.$idComanda);
+    	//actualitzar estat comanda a pagada (3)
+		$db->setQuery('update #__botiga_comandes set status = 3, data = '.$db->quote(date('Y-m-d H:i:s')).' WHERE id = '.$idComanda);
 		$db->query();
-
-		//actualitzar num factura i data factura
-		$db->setQuery('SELECT Factura, DataEnviament FROM #__buuks_compres WHERE id = '.$idComanda);
-		$row = $db->loadObject();
-		if($row->Factura == 1) {
-			$db->setQuery('SELECT MAX(Factura_Num) FROM #__buuks_compres');
-			$numf = $db->loadResult() + 1;
-			$dataf = date('Y-m-d');
-			$db->setQuery('update #__buuks_compres set Factura_Num = '.$numf.', Factura_Data = '.$db->quote($dataf).' where id = '.$idComanda);
-			$db->query();
-		}
 		
-		//asociem els llibres desde la funcio del controller base de Buuks
-		$controller = JControllerLegacy::getInstance('buuks');		
-		$db->setQuery( 'SELECT * FROM #__buuks_compres_detall WHERE idVendaDetall=0 AND idComanda=' . $idComanda );
-		$detalls = $db->loadObjectList();
-		foreach($detalls as $detall) {
-			BuuksHelpersBuuks::customLog('dintre loop');
-			$controller->asociar($detall->idComanda, $detall->id, $detall->idMotherBook, $detall->idEstat, $row->DataEnviament, $item->Urgent);
-		}
+		//tanquem comanda
+		$session->set('idComanda', null);
 					
 		return true;
 	}

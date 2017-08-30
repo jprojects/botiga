@@ -97,9 +97,11 @@ class botigaModelBotiga extends JModelList
 
 		$query = $db->getQuery(true);
 		
-		$query->select('*');
+		$query->select('i.*, .b.name as brandname');
 		
-		$query->from('#__botiga_items');
+		$query->from('#__botiga_items as i');
+		
+		$query->join('inner', '#__botiga_brands as b ON b.id = i.brand');
 
         // Filters
        	$catid   = JRequest::getInt('catid', 0);
@@ -107,19 +109,19 @@ class botigaModelBotiga extends JModelList
 		$ref     = JRequest::getVar('ref', '');
 
 		if($catid != 0) {
-			$query->where('(catid = '.$catid.')');
+			$query->where('(FIND_IN_SET ('.$catid.', i.catid))');
 		}
 		
 		if($marca != '') {
-			$query->where('(marca = '.$marca.')');
+			$query->where('(i.brand = '.$marca.')');
 		}
 		
 		if($ref != '') {
-			$query->where('(ref = '.$db->quote($ref).')');
+			$query->where('(i.ref = '.$db->quote($ref).')');
 		}
 
-		$query->where('published = 1');
-		$query->where('language = '.$db->quote($def).' ORDER BY ref ASC');
+		$query->where('i.published = 1');
+		$query->where('i.language = '.$db->quote($def).' ORDER BY i.ref ASC');
 
         $params = JComponentHelper::getParams( 'com_botiga' );
 		//echo $query;

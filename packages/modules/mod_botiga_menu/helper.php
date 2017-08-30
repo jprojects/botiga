@@ -21,12 +21,20 @@ class modBotigaMenuHelper
 		return $db->loadObjectList();
 	}
 	
-	public static function getCatName($catid) {
+	public static function getCats() {
 	
 		$db   = JFactory::getDbo();
 		
-		$db->setQuery('select title from #__categories where id = '.$catid);
-		return $db->loadResult();
+		$db->setQuery('select id, title, parent_id from #__categories where extension = '.$db->quote('com_botiga').' and parent_id = 1 and published = 1');
+		return $db->loadObjectList();
+	}
+	
+	public static function getSubCats($id) {
+	
+		$db   = JFactory::getDbo();
+		
+		$db->setQuery('select id, title, parent_id from #__categories where parent_id = '.$id.' and published = 1');
+		return $db->loadObjectList();
 	}
 	
 	public static function getCategoriesByBrand($brand) {

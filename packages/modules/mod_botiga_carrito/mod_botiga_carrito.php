@@ -12,6 +12,8 @@ defined('_JEXEC') or die('Acceso Restringido');
 
 require_once (dirname(__FILE__).DS.'helper.php');
 
+JHtml::stylesheet('modules/mod_botiga_carrito/assets/css/mod_botiga_carrito.css');
+
 require( JModuleHelper::getLayoutPath( 'mod_botiga_carrito', 'default') );
 
 ?>

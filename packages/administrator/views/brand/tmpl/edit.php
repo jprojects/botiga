@@ -5,8 +5,8 @@
  * @copyright   Copyright © 2010 - All rights reserved.
  * @license		GNU/GPL
  * @author		kim
- * @author mail administracion@joomlanetprojects.com
- * @website		http://www.joomlanetprojects.com
+ * @author mail kim@aficat.com
+ * @website		http://www.aficat.com
  *
  */
 
@@ -49,7 +49,7 @@ else{
 	<div class="row-fluid">
         <div class="span6 form-horizontal">
             <fieldset class="adminform">
-			<legend><?php echo JText::_( 'COM_LAUNDRY_BRAND_DETAILS' ); ?></legend>
+			<legend><?php echo JText::_( 'COM_BOTIGA_BRAND_DETAILS' ); ?></legend>
 			<?php foreach($this->form->getFieldset('details') as $field): ?>
 						<div class="control-group">
 						<div class="control-label"><?php echo $field->label; ?></div>

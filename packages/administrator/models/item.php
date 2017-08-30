@@ -76,11 +76,44 @@ class botigaModelItem extends JModelAdmin
 	{
 		// Check the session for previously entered form data.
 		$data = JFactory::getApplication()->getUserState('com_botiga.edit.item.data', array());
-		if (empty($data)) 
-		{
+		if (empty($data)) {
 			$data = $this->getItem();
+			$data->catid = explode(',',$data->catid);
 		}
 		return $data;
+	}
+	
+	/**
+	 * method to store data into the database
+	 * @param boolean
+	*/
+    function store()
+	{		
+		$row =& $this->getTable();
+		
+		$post_data  = JRequest::get( 'post' );
+   		$data       = $post_data["jform"];
+		$data['id'] = JRequest::getInt('id', 0, 'get');
+
+		if($data['id'] != 0) {
+	    	
+	    	$categories = array();
+	    	foreach($data['catid'] as $k) {
+	    		$categories[] = $k;
+	    	}
+			
+	    	$data['catid'] = implode(',', $categories);
+		
+			if (!$row->bind( $data )) {
+				return JError::raiseWarning( 500, $row->getError() );
+			}
+
+			if (!$row->store()) {
+				return JError::raiseError(500, $row->getError() );
+			}
+		}
+		return true;
+
 	}
 	
 	/**

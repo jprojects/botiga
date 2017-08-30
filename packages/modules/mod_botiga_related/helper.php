@@ -9,40 +9,17 @@
 // no direct access
 defined('_JEXEC') or die;
 
-require_once JPATH_SITE.'/components/com_content/helpers/route.php';
+require_once JPATH_SITE.'/components/com_botiga/helpers/botiga.php';
 
-abstract class modRelatedItemsHelper
+abstract class modRelatedItemsHelper extends botigaHelper
 {
 	public static function getItems()
 	{
 		$db	 = JFactory::getDbo();
-		$app = JFactory::getApplication();
 		
-		$id  = $app->input->get('id', 0);
-		
-		$db->setQuery('select catid from #__botiga_items where id = '.$id);
-		$catid = $db->loadResult();
-		
-		$db->setQuery('select * from #__botiga_items where catid = '.$catid.' order by rand() limit 3');
+		$db->setQuery('select * from #__botiga_items where published = 1 order by rand() limit 4');
 		return $db->loadObjectList();
 
-	}
-	
-	/**
-	 * Method to get the category name
-	 * 
-	 * @return array
-	*/
-	function getCategoryName($id)
-	{	
-		$db   = JFactory::getDBO();
-		
-		$query = "SELECT title FROM #__categories WHERE id = ".$id;
-		
-		$db->setQuery($query);
-		$row = $db->loadResult();
-
-		return $row;
 	}
 	
 	/**

@@ -27,8 +27,10 @@ class modBotigaHelper
 		
 		$idComanda = $session->get('idComanda', '');
 
-		$db->setQuery('select cd.*, i.name, i.image1 from #__botiga_comandesDetall cd inner join #__botiga_items i on i.id = cd.itemId where idComanda = '.$idComanda);
-		return $db->loadObjectList();
+		if($idComanda != '') {
+			$db->setQuery('select cd.*, i.name, i.image1 from #__botiga_comandesDetall cd inner join #__botiga_items i on i.id = cd.idItem where cd.idComanda = '.$idComanda);
+			return $db->loadObjectList();
+		}
 	}
 }
 

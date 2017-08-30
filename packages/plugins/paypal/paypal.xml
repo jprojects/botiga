@@ -11,6 +11,7 @@
 	<description>Paypal procesor for botiga component</description>
 	<files>
 		<filename plugin="paypal">paypal.php</filename>
+		<folder>paypal</folder>
 	</files>
 	<config>
 		<fields name="params">

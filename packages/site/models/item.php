@@ -29,7 +29,7 @@ class botigaModelItem extends JModelItem
         
         $id  = $app->input->get('id');
         
-        $db->setQuery('select * from #__botiga_items where id = '.$id);
+        $db->setQuery('select i.*, b.image as bimage, b.name as bname from #__botiga_items as i inner join #__botiga_brands as b on b.id = i.brand where i.id = '.$id);
         return $db->loadObject();
 	}
 }

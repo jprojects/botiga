@@ -26,7 +26,7 @@ class botigaViewSearch extends JViewLegacy
         $app		= JFactory::getApplication();
 		$this->state		= $this->get('State');
 		$this->items		= $this->get('Items');
-        $this->pagination = $this->get('Pagination');
+        $this->pagination  = $this->get('Pagination');
 		$this->params       = $app->getParams('com_botiga');
 
 		// Check for errors.

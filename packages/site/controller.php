@@ -69,13 +69,14 @@ class botigaController extends JControllerLegacy
 				$acjuser->userid    	= $userid;
 			    $acjuser->usergroup 	= 2;
 			    $acjuser->nom_empresa	= $data['empresa'];
+			    $acjuser->mail_empresa	= $data['email1'];
 			    $acjuser->telefon		= $data['phone'];
-			    $acjuser->tipo			= $data['tipo'];
-			    //se decide que todo usuario empieze como cliente viendo los precios mas altos
-				$acjuser->tarifa		= 1;
+			    $acjuser->adreca		= $data['address'];
+			    $acjuser->cp			= $data['zip'];
+			    $acjuser->poblacio		= $data['city'];
+			    $acjuser->pais   		= $data['pais'];	
 			    $acjuser->cif   		= $data['cif'];	
 			    $acjuser->published	    = 1;
-			    $acjuser->contacto	    = $data['contacto'];
 			    
 			    $db->insertObject('#__laundry_users', $acjuser);    	        	
 			    
@@ -109,17 +110,43 @@ class botigaController extends JControllerLegacy
 	}
     
 	/**
-	 * method to get component parameters
-	 * @param string $param
-	 * @param mixed $default
-	 * @return mixed 
+	 * method to set item to favorites
+	 * @return bool 
 	 */
-     function getParameter($param, $default="")
+     function setFavorite()
      {
-            $params = &JComponentHelper::getParams( 'com_botiga' );
-            $param = $params->get( $param, $default );
-            
-            return $param;
+     	$db   = JFactory::getDbo();
+     	$user = JFactory::getUser();
+     	
+     	$jinput  = JFactory::getApplication()->input;
+     	$id  = $jinput->get('id');
+     	
+     	$favorite = new stdClass();
+     	
+     	$favorite->itemid = $id;
+     	$favorite->userid = $user->id;
+     	
+     	$db->insertObject('#__botiga_favorites', $favorite);
+     	
+     	$this->setRedirect('index.php?option=com_botiga&view=favorites&Itemid=116', JText::_('COM_BOTIGA_SET_FAVORITE_SUCCESS'), 'info');
+     }
+     
+     /**
+	 * method to unset item from favorites
+	 * @return bool 
+	 */
+     function unsetFavorite()
+     {
+     	$db   = JFactory::getDbo();
+     	$user = JFactory::getUser();
+     	
+     	$jinput  = JFactory::getApplication()->input;
+     	$id  = $jinput->get('id');
+     	
+     	$db->setQuery('DELETE FROM #__botiga_favorites WHERE itemid = '.$id);
+     	$db->query();
+     	
+     	$this->setRedirect('index.php?option=com_botiga&view=favorites&Itemid=116', JText::_('COM_BOTIGA_UNSET_FAVORITE_SUCCESS'), 'info');
      }
 
 	function sincronitza() {

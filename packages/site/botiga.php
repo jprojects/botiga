@@ -20,7 +20,10 @@ JLoader::registerPrefix('botiga', JPATH_COMPONENT);
 require_once (JPATH_COMPONENT.DS.'helpers'.DS.'botiga.php');
 require_once (JPATH_COMPONENT.DS.'controller.php');
 
-JHTML::stylesheet('botiga.css', 'components/com_botiga/assets/css/', array('media'=>'all'));
+JHtml::_('jquery.framework');
+
+JHTML::stylesheet('components/com_botiga/assets/css/botiga.css');
+JHTML::script('components/com_botiga/assets/js/botiga.js');
 
 // Perform the Request task
 $controller	= JControllerLegacy::getInstance('botiga');

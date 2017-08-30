@@ -12,7 +12,8 @@
 	<files>
 		<filename module="mod_botiga_carrito">mod_botiga_carrito.php</filename>
 		<filename>helper.php</filename>
-                <folder>tmpl/</folder>
+        <folder>tmpl/</folder>
+        <folder>assets/</folder>
 	</files>
     <languages folder="languages/en-GB">
 		<language tag="en-GB">en-GB.mod_botiga_carrito.ini</language>
