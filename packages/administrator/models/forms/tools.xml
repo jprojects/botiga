@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form
+        addrulepath="/administrator/components/com_laundry/models/rules"
+>
+	<fieldset name="details" addfieldpath="/administrator/components/com_laundry/models/fields">
+		<field
+			name="dbhost"
+			type="text"
+			label="Database host"
+			description=""
+			size="40"
+			class="inputbox"
+			default=""
+		/>	
+		<field
+			name="dbuser"
+			type="text"
+			label="Database user"
+			description=""
+			size="40"
+			class="inputbox"
+			default=""
+		/>
+		<field
+			name="dbpass"
+			type="text"
+			label="Database password"
+			description=""
+			size="40"
+			class="inputbox"
+			default=""
+		/>
+		<field
+			name="dbname"
+			type="text"
+			label="Database name"
+			description=""
+			size="40"
+			class="inputbox"
+			default=""
+		/>
+		<field
+			name="dbprefix"
+			type="text"
+			label="Database prefix"
+			description=""
+			size="40"
+			class="inputbox"
+			default=""
+		/>
+	</fieldset>
+        <fields name="params">
+		<fieldset
+			name="params"
+			label="JGLOBAL_FIELDSET_DISPLAY_OPTIONS"
+		>			
+		</fieldset>
+	</fields>
+</form>

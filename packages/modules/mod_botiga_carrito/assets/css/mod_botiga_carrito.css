@@ -1,0 +1,13 @@
+#sidebar {
+	padding: 10px;
+}
+.mini { height: 50px; }
+
+#scroller {
+    height: auto;
+    max-height: 350px;
+    overflow-x: hidden;
+    color: #000;
+}
+
+.bold { font-weight: bold; }

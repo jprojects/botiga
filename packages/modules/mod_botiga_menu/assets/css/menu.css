@@ -1,0 +1,24 @@
+.sidebar {
+	padding: 0 17px;
+}
+.sidebar, .sidebar ul {
+	list-style:none;
+	padding: 0 10px;
+}
+.sidebar li.parent a {
+	display: block;
+	border-bottom: 1px solid #ccc;
+	color: #000;
+}
+.sidebar li.parent ul li a {
+	display: block;
+	border: none;
+	color: #000;
+}
+.sidebar li.active a {
+	color: #bd0000 !important;
+	font-weight: 500;
+}
+.sidebar li.active ul li a {
+	color: #000  !important;
+}

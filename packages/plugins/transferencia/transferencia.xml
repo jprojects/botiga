@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="3.5" type="plugin" group="botiga" method="upgrade">
+	<name>Botiga Ttransferencia</name>
+	<author>Afi</author>
+	<creationDate>May 2015</creationDate>
+	<copyright>(C) 2005 - 2009 Open Source Matters. All rights reserved.</copyright>
+	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+	<authorEmail>kim@aficat.com</authorEmail>
+	<authorUrl>www.afi.cat</authorUrl>
+	<version>3.0</version>
+	<description>Transferencia procesor for botiga component</description>
+	<files>
+		<filename plugin="transferencia">transferencia.php</filename>
+	</files>
+	<config>
+		<fields name="params">
+			<fieldset name="basic">
+			<field 
+				name="title"
+				type="text"
+				label="Title"
+				description=""
+				default="Transferència"
+			/>
+			<field 
+				name="alies"
+				type="text"
+				label="Alias"
+				description=""
+				default="Transferencia"
+			/>
+			<field 
+				name="account"
+				type="text"
+				label="Compte bancari"
+				description="Compte bancari amb IBAN"
+				default=""
+			/>
+			<field 
+				name="beneficiari"
+				type="text"
+				label="Beneficiari"
+				description=""
+				default=""
+			/>
+			</fieldset>
+		</fields>
+	</config>
+</extension>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form
+        addrulepath="/administrator/components/com_botiga/models/rules"
+>
+	<fieldset name="details" addfieldpath="/administrator/components/com_botiga/models/fields">
+		<field name="id"  type="text" class="readonly" label="JGLOBAL_FIELD_ID_LABEL"
+			description ="JGLOBAL_FIELD_ID_DESC" size="10" default="0" readonly="true"  
+        />
+        <field name="published" type="list" label="JSTATUS"
+			description="JFIELD_PUBLISHED_DESC" class="inputbox"
+			filter="intval" size="1" default="1"
+		>
+			<option value="1">JPUBLISHED</option>
+			<option value="0">JUNPUBLISHED</option>
+		</field>
+		<field name="usergroup"
+			type="usergroup"
+			label="COM_BOTIGA_SHIPMENT_USERGROUP_LABEL"
+			description="COM_BOTIGA_SHIPMENT_USERGROUP_DESC"
+			required="true"
+		/>
+		<field
+			name="name"
+			type="text"
+			label="COM_BOTIGA_SHIPMENT_NAME_LABEL"
+			description="COM_BOTIGA_SHIPMENT_NAME_DESC"
+			size="40"
+			class="inputbox"
+			default=""
+		/>
+		<field
+			name="country"
+			type="sql"
+			label="COM_BOTIGA_SHIPMENT_COUNTRY_LABEL"
+			description="COM_BOTIGA_SHIPMENT_COUNTRY_DESC"
+			size="40"
+			class="inputbox"
+			default=""
+			query="SELECT country_id, country_name FROM #__botiga_countries"
+    		key_field="country_id"
+    		value_field="country_name"
+		/>
+		<field
+			name="type"
+			type="list"
+			label="COM_BOTIGA_SHIPMENT_TYPE_LABEL"
+			description="COM_BOTIGA_SHIPMENT_TYPE_DESC"
+			size="40"
+			class="inputbox"
+			default=""
+		>
+		<option value="">COM_BOTIGA_SELECT_SHIPMENT</option>
+		<option value="1">COM_BOTIGA_SELECT_SHIPMENT_ZIP</option>
+		<option value="2">COM_BOTIGA_SELECT_SHIPMENT_WEIGHT</option>
+		<option value="3">COM_BOTIGA_SELECT_SHIPMENT_COUNTRY</option>
+		<option value="4">COM_BOTIGA_SELECT_SHIPMENT_TOTAL_AMOUNT</option>
+		</field>
+		<field
+			name="min"
+			type="text"
+			label="COM_BOTIGA_SHIPMENT_MIN_LABEL"
+			description="COM_BOTIGA_SHIPMENT_MAX_DESC"
+			size="40"
+			class="inputbox"
+			default=""
+		/>
+		<field
+			name="max"
+			type="text"
+			label="COM_BOTIGA_SHIPMENT_MAX_LABEL"
+			description="COM_BOTIGA_SHIPMENT_MAX_DESC"
+			size="40"
+			class="inputbox"
+			default=""
+		/>
+		<field
+			name="total_weight"
+			type="text"
+			label="COM_BOTIGA_SHIPMENT_TOTAL_WEIGHT_LABEL"
+			description="COM_BOTIGA_SHIPMENT_TOTAL_WEIGHT_DESC"
+			size="40"
+			class="inputbox"
+			default=""
+		/>
+		<field
+			name="total"
+			type="text"
+			label="COM_BOTIGA_SHIPMENT_TOTAL_LABEL"
+			description="COM_BOTIGA_SHIPMENT_TOTAL_DESC"
+			size="40"
+			class="inputbox"
+			default=""
+		/>
+	</fieldset>
+        <fields name="params">
+		<fieldset
+			name="params"
+			label="JGLOBAL_FIELDSET_DISPLAY_OPTIONS"
+		>			
+		</fieldset>
+	</fields>
+</form>
