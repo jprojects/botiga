@@ -127,6 +127,7 @@ CREATE TABLE IF NOT EXISTS `#__botiga_shipments` (
   `country` int(11) NOT NULL DEFAULT '0',
   `min` varchar(50) NOT NULL DEFAULT '',
   `max` varchar(50) NOT NULL DEFAULT '',
+  `operator` varchar(5) NOT NULL DEFAULT '%',
   `total` int(5) NOT NULL DEFAULT '0',
   `country` int(5) NOT NULL DEFAULT '0',
   `ordering` int(11) NOT NULL,

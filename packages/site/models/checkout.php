@@ -140,7 +140,8 @@ class botigaModelCheckout extends JModelList
 		$user = JFactory::getUser();
 		$groups = JAccess::getGroupsByUser($user->id, false);
 		
-		$percent = botigaHelper::getParameter('total_shipment', 0);
+		$total    = botigaHelper::getParameter('total_shipment', 0);
+		$operator = '%';
 		
 		$db->setQuery('select * from #__botiga_shipments where published = 1 and usergroup in ('.implode(',', $groups).')');
 		$rows = $db->loadObjectList();
@@ -153,11 +154,12 @@ class botigaModelCheckout extends JModelList
 				$usr = $db->loadObject();
 		
 				//type 1 is zip code method
-				$db->setQuery('select total, min, max from #__botiga_shipments where country = '.$usr->pais.' and type = 1 and published = 1');
+				$db->setQuery('select total, min, max, operator from #__botiga_shipments where country = '.$usr->pais.' and type = 1 and published = 1');
 				foreach($db->loadObjectList() as $ship)
 				{
 					if($usr->cp >= $ship->min && $usr->cp <= $ship->max) {
-						$percent = $ship->total;
+						$total = $ship->total;
+						$operator = $ship->operator;
 						break;
 					}
 				}
@@ -169,14 +171,20 @@ class botigaModelCheckout extends JModelList
 				$pais = $db->loadResult();
 		
 				//type 3 is zip code weight
-				$db->setQuery('select total from #__botiga_shipments where country = '.$pais.' and type = 3 and published = 1');
-				$percent = $db->loadResult();
+				$db->setQuery('select total, operator from #__botiga_shipments where country = '.$pais.' and type = 3 and published = 1');
+				$total = $db->loadResult();
 			}
 		
 			//ToDo::new methods by total amount, by weight...
 		}
 
-		$shipment = ($percent / 100) * $amount;
+		//check operator
+		if($operator == '%') {
+			$shipment = ($total / 100) * $amount;
+		}
+		if($operator == '+') {
+			$shipment = $total;
+		}
 		return number_format($shipment, 2);
 		
 	}

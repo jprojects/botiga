@@ -74,6 +74,19 @@
 			default=""
 		/>
 		<field
+			name="operator"
+			type="list"
+			label="COM_BOTIGA_SHIPMENT_OPERATOR_LABEL"
+			description="COM_BOTIGA_SHIPMENT_OPERATOR_DESC"
+			size="40"
+			class="inputbox"
+			default=""
+		>
+		<option value="">COM_BOTIGA_SELECT_OPERATOR</option>
+		<option value="%">COM_BOTIGA_SELECT_OPERATOR_PERCENT</option>
+		<option value="+">COM_BOTIGA_SELECT_OPERATOR_PLUS</option>
+		</field>
+		<field
 			name="total_weight"
 			type="text"
 			label="COM_BOTIGA_SHIPMENT_TOTAL_WEIGHT_LABEL"
