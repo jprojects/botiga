@@ -19,71 +19,92 @@ $brands 	= modBotigaMenuHelper::getBrands();
 $cats 	    = modBotigaMenuHelper::getCats();
 ?>
 
+<script>
+jQuery(document).ready(function() {
+	jQuery('.tree-toggle').click(function (e) {
+		e.preventDefault();
+		var id    = jQuery(this).attr('data-id');
+		var href  = jQuery(this).attr('href');
+		var level = jQuery(this).attr('data-level');
+		
+		if(level == 1) { 		
+			jQuery.removeCookie('BotigaMenu1'); 
+			jQuery.removeCookie('BotigaMenu2'); 
+			jQuery.removeCookie('BotigaMenu3'); 
+			jQuery.cookie("BotigaMenu1", id);
+		}
+		
+		if(level == 2) { 		
+			jQuery.cookie("BotigaMenu2", id);
+		}
+		
+		if(level == 3) { 		
+			jQuery.cookie("BotigaMenu3", id);
+		}
+		
+		//jQuery(this).addClass('active');
+		//jQuery(this).parent().children('ul.tree').toggle(200);	
+		document.location.href = href;	
+	});
+});
+</script>
+
 <div class="show_body">
 
 <div class="products-title"><span class="caret"></span> <strong>Productos</strong></div>
 			
 <ul class="menu sidebar products-sidebar <?= $class_sfx; ?>">
 
-<?php foreach( $cats as $cat ) : ?>
-	
-	<li class="parent <?php if(count($cats)) : ?>deeper<?php endif; ?> <?php if($cat->id == $catid) : ?>active<?php endif; ?>">
-		<a href="index.php?option=com_botiga&view=botiga&catid=<?= $cat->id; ?>&Itemid=112"><?= strtoupper($cat->title); ?></a>
-		<?php 
-		$subcats = modBotigaMenuHelper::getSubCats($cat->id);
-		if(count($subcats) > 0) : ?>
-			<ul>
-				<?php 
-				$i = 1;
-				foreach($subcats as $subcat) : 
-				if($subcat->title != '') : ?>
-				<li <?php if($count == $i) : ?>style="border:none;"<?php endif; ?> <?php if($subcat->id == $catid) : ?>class="active"<?php endif; ?>>
-					<a href="index.php?option=com_botiga&view=botiga&catid=<?= $subcat->id; ?>&Itemid=112"><?= $subcat->title; ?></a>
-					<?php 
-					$subcats = modBotigaMenuHelper::getSubCats($subcat->id);
-					if(count($subcats) > 0) : ?>
-						<ul <?php if($subcat->id != $catid) : ?>style="display:none;"<?php endif; ?>>
-							<?php 
-							$i = 1;
-							foreach($subcats as $subcat) : 
-							if($subcat->title != '') : ?>
-							<li <?php if($count == $i) : ?>style="border:none;"<?php endif; ?> <?php if($subcat->id == $catid) : ?>class="active"<?php endif; ?>>
-								<a href="index.php?option=com_botiga&view=botiga&catid=<?= $subcat->id; ?>&Itemid=112"><?= $subcat->title; ?></a>
-								<?php 
-								$subcats = modBotigaMenuHelper::getSubCats($subcat->id);
-								if(count($subcats) > 0) : ?>
-									<ul <?php if($subcat->id != $catid || $subcat->parent_id != $catid) : ?>style="display:none;"<?php endif; ?>>
-										<?php 
+	<div class="row">
+  		<div>
+    		<div>
+        		<div>
+        			<?php foreach( $cats as $cat ) : ?>
+            		<ul class="sidebar">
+            		
+               			<li class="parent"><a data-id="<?= $cat->id; ?>" data-level="1" href="index.php?option=com_botiga&view=botiga&catid=<?= $cat->id; ?>&Itemid=112" class="tree-toggle <?php if($_COOKIE['BotigaMenu1'] == $cat->id) : ?>active<?php endif; ?>"><?= $cat->title; ?></a>
+               				<?php 
+               				//second level
+							$subcats = modBotigaMenuHelper::getSubCats($cat->id);
+							if(count($subcats) > 0) : ?>
+                    		<ul class="tree" <?php if($_COOKIE['BotigaMenu1'] != $cat->id) : ?>style="display:none;"<?php endif; ?>>
+                    			<?php 
+								$i = 1;
+								foreach($subcats as $subcat) : 
+								if($subcat->title != '') : ?>
+                        		<li><a data-id="<?= $subcat->id; ?>" data-level="2" href="index.php?option=com_botiga&view=botiga&catid=<?= $subcat->id; ?>&Itemid=112" class="tree-toggle <?php if($_COOKIE['BotigaMenu2'] == $subcat->id) : ?>active<?php endif; ?>"><?= $subcat->title; ?></a>
+                        		<?php endif; 
+                        			 
+									//third level
+									$subcats = modBotigaMenuHelper::getSubCats($subcat->id);
+									if(count($subcats) > 0) : ?>
+                            		<ul class="tree" <?php if($_COOKIE['BotigaMenu2'] != $subcat->id) : ?>style="display:none;"<?php endif; ?>>
+                            			<?php 
 										$i = 1;
 										foreach($subcats as $subcat) : 
 										if($subcat->title != '') : ?>
-										<li <?php if($count == $i) : ?>style="border:none;"<?php endif; ?> <?php if($subcat->id == $catid) : ?>class="active"<?php endif; ?>>
-											<a href="index.php?option=com_botiga&view=botiga&catid=<?= $subcat->id; ?>&Itemid=112"><?= $subcat->title; ?></a>
-										</li>
-										<?php
-										endif; 
-										$i++;
-										endforeach; ?>
-									</ul>
-								<?php endif; ?>
-							</li>
-							<?php
-							endif; 
-							$i++;
-							endforeach; ?>
-						</ul>
-					<?php endif; ?>
-				</li>
-				<?php
-				endif; 
-				$i++;
-				endforeach; ?>
-			</ul>
-		<?php endif; ?>
-		
-	</li>			
-
-<?php endforeach; ?>
+                                		<li><a data-id="<?= $subcat->id; ?>" data-level="3" href="index.php?option=com_botiga&view=botiga&catid=<?= $subcat->id; ?>&Itemid=112" class="<?php if($_COOKIE['BotigaMenu3'] == $subcat->id) : ?>active<?php endif; ?>"><?= $subcat->title; ?></a></li>
+                                		<?php 
+                                		endif; 
+                                		$i++;
+                                		endforeach; ?>
+                            		</ul>
+                            		<?php endif;
+                            		
+                        		$i++;
+                        		endforeach; ?>									
+                            		
+                        		</li>
+                   			</ul>
+                   			<?php endif; ?>
+                		</li>
+                		
+               		</ul>
+               		<?php endforeach; ?>
+        		</div>
+    		</div>
+    	</div>
+	</div>
 
 </ul>
 
