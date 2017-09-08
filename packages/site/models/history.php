@@ -97,7 +97,7 @@ class botigaModelHistory extends JModelList
 
 		$query = $db->getQuery(true);
 		
-		$query->select('c.id, c.data, c.status, sum(cd.total) as suma');
+		$query->select('c.id, c.data, c.status, sum(cd.price) as suma');
 		$query->from('#__botiga_comandes as c');
 		$query->join('inner', '#__botiga_comandesDetall as cd on c.id = cd.idComanda');
 		$query->where('c.userid = '.$user->id.' group by c.id, c.data, c.status');
