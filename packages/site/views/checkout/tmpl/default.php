@@ -148,6 +148,9 @@ if($user->guest) {
 			<input type="hidden" name="shipment" value="<?= $shipment; ?>">
 			<input type="hidden" name="total" value="<?= $total; ?>">
 			<div class="form-group">
+				<input type="text" name="observa" class="form-control" placeholder="<?= JText::_('COM_BOTIGA_CHECKOUT_OBSERVA'); ?>" />
+			</div>
+			<div class="form-group">
 				<select name="processor" id="processor" class="form-control">
 				<option value="">Selecciona un mètode de pagament</option>
 				<?php 
@@ -161,6 +164,7 @@ if($user->guest) {
 			<button type="submit" disabled="true" class="btn btn-primary submit pull-right"><?= JText::_('COM_BOTIGA_FINISH_CART'); ?></button>
 			<a href="index.php?option=com_botiga&view=botiga&catid=20&Itemid=128" class="btn btn-primary"><?= JText::_('COM_BOTIGA_CONTINUE_SHOPPING'); ?></a>
 			<a href="index.php?option=com_botiga&task=botiga.removeCart" class="btn btn-primary"><?= JText::_('COM_BOTIGA_DELETE_CART'); ?></a>	
+			<a href="index.php?option=com_botiga&task=botiga.saveCart" class="btn btn-primary"><?= JText::_('COM_BOTIGA_SAVE_CART'); ?></a>	
 		</form>
 	</div>
 	<?php else : ?>

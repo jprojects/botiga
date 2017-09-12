@@ -16,3 +16,4 @@ DROP TABLE IF EXISTS `#__botiga_users`;
 DROP TABLE IF EXISTS `#__botiga_shipments`;
 DROP TABLE IF EXISTS `#__botiga_countries`;
 DROP TABLE IF EXISTS `#__botiga_favorites`;
+DROP TABLE IF EXISTS `#__botiga_savedCarts`;

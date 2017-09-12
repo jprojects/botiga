@@ -100,11 +100,26 @@ class botigaModelHistory extends JModelList
 		$query->select('c.id, c.data, c.status, sum(cd.price) as suma');
 		$query->from('#__botiga_comandes as c');
 		$query->join('inner', '#__botiga_comandesDetall as cd on c.id = cd.idComanda');
-		$query->where('c.userid = '.$user->id.' group by c.id, c.data, c.status');
+		$query->where('c.userid = '.$user->id.' and c.status = 3 group by c.id, c.data, c.status');
 		
         $params = JComponentHelper::getParams( 'com_botiga' );
 
 		return $query;
+	}
+	
+	/**
+	 * Gets a list of saved carts
+	 *
+	 * @return	array	An array of banner objects.
+	 * @since	1.6
+	*/
+	public function getSavedCarts()
+	{
+    	$user 	= JFactory::getUser();      
+		$db   	= JFactory::getDbo();
+
+		$db->setQuery('select * from #__botiga_savedCarts where userid = '.$user->id);
+		return $db->loadObjectList();
 	}
 	
 	/**

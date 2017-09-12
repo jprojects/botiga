@@ -43,6 +43,8 @@ class botigaControllerBotiga extends botigaController {
 		$price  = botigaHelper::getUserPrice($itemid);
 		$return = base64_decode($jinput->getString('return', 'index.php'));
 		
+		$qty    = $jinput->getInt('qty', 1);
+		
 		//si no hi ha comanda creem una de nova...
 		$idComanda = $session->get('idComanda', '');
 		if($idComanda == '') { $idComanda = $this->setComanda(); }
@@ -54,13 +56,13 @@ class botigaControllerBotiga extends botigaController {
 		
 		if(count($row) && $row->qty > 0) {
 			$detall->id 		= $row->id;
-			$detall->qty 		= $row->qty + 1;
+			$detall->qty 		= $row->qty + $qty;
 			$db->updateObject('#__botiga_comandesDetall', $detall, 'id');
 		} else {
 			$detall->idComanda 	= $idComanda;
 			$detall->idItem 	= $itemid;
 			$detall->price 		= $price;
-			$detall->qty 		= 1;
+			$detall->qty 		= $qty;
 			$db->insertObject('#__botiga_comandesDetall', $detall);
 		}
 		
@@ -108,8 +110,6 @@ class botigaControllerBotiga extends botigaController {
 	
 		$db 	 = JFactory::getDbo();
 		$session = JFactory::getSession();
-		$user 	 = JFactory::getUser();
-		$lang    = JFactory::getLanguage()->getTag();
 		
 		$idComanda = $session->get('idComanda', '');
 		
@@ -121,9 +121,95 @@ class botigaControllerBotiga extends botigaController {
 		
 		if($result && $result2) {
 			$session->set('idComanda', '');		
-			$this->setRedirect('index.php?option=com_botiga&view=laundry', JText::_('COM_BOTIGA_CART_REMOVED_SUCCESS'), '');
+			$this->setRedirect('index.php?option=com_botiga&view=botiga', JText::_('COM_BOTIGA_CART_REMOVED_SUCCESS'), '');
 		} else {
 			$this->setRedirect('index.php?option=com_botiga&view=checkout', JText::_('COM_BOTIGA_CART_REMOVED_ERROR'), 'error');
+		}
+	}
+	
+	public function saveCart() {
+	
+		$db 	 = JFactory::getDbo();
+		$session = JFactory::getSession();
+		$user 	 = JFactory::getUser();
+		
+		$idComanda = $session->get('idComanda', '');	
+		
+		$db->setQuery('select idItem, price, qty from #__botiga_comandesDetall where idComanda = '.$idComanda);
+		$rows = $db->loadObjectList();
+		
+		$cart 			 = new stdClass();
+		$cart->idComanda = $idComanda;
+		$cart->data 	 = date('Y-m-d H:i:s');
+		$cart->userid    = $user->id;	
+		$cart->cart      = serialize($rows);
+		
+		$result = $db->insertObject('#__botiga_savedCarts', $cart);
+		
+		if($result) {	
+			$this->setRedirect('index.php?option=com_botiga&view=checkout', JText::_('COM_BOTIGA_CART_SAVED_SUCCESS'), '');
+		} else {
+			$this->setRedirect('index.php?option=com_botiga&view=checkout', JText::_('COM_BOTIGA_CART_SAVED_ERROR'), 'error');
+		}
+	}
+	
+	public function getSavedCart() {
+	
+		$db 	 = JFactory::getDbo();
+		$session = JFactory::getSession();		
+		$app     = JFactory::getApplication();	
+		$user    = JFactory::getUser();
+			
+		$id      = $app->input->get('id');
+		
+		$db->setQuery('select cart from #__botiga_savedCarts where id = '.$id);
+		$row = $db->loadObject();
+		
+		$items = unserialize($row->cart);
+		
+		//insert cart data
+		$cart 			 = new stdClass();
+		$cart->data 	 = date('Y-m-d H:i:s');
+		$cart->userid    = $user->id;	
+		$cart->status    = 1;
+		
+		$result = $db->insertObject('#__botiga_comandes', $cart);
+		$insertid = $db->insertid();
+		
+		//insert cart details
+		foreach($items as $item) {
+			$detall = new stdClass();
+			$detall->idComanda = $insertid;
+			$detall->idItem    = $item->idItem;
+			$detall->price     = $item->price;
+			$detall->qty       = $item->qty;
+			$detall->published = 1;
+			$db->insertObject('#__botiga_comandesDetall', $detall);
+			
+		}
+		
+		if($result) {	
+			$idComanda = $session->set('idComanda', $insertid);
+			$this->setRedirect('index.php?option=com_botiga&view=checkout', JText::_('COM_BOTIGA_CART_SAVED_SUCCESS'), '');
+		} else {
+			$this->setRedirect('index.php?option=com_botiga&view=checkout', JText::_('COM_BOTIGA_CART_SAVED_ERROR'), 'error');
+		}
+	}
+	
+	public function removeSavedCart() {
+	
+		$db 	 = JFactory::getDbo();
+		$app     = JFactory::getApplication();
+		
+		$id      = $app->input->get('id');
+		
+		$db->setQuery('delete from #__botiga_savedCarts where id = '.$id);
+		$result = $db->query();
+		
+		if($result) {		
+			$this->setRedirect('index.php?option=com_botiga&view=history', JText::_('COM_BOTIGA_HISTORY_REMOVE_SAVED_CART_SUCCESS'), '');
+		} else {
+			$this->setRedirect('index.php?option=com_botiga&view=history', JText::_('COM_BOTIGA_HISTORY_REMOVE_SAVED_CART_ERROR'), 'error');
 		}
 	}
 	
@@ -141,9 +227,10 @@ class botigaControllerBotiga extends botigaController {
      	$shipment 	= $data['shipment'];
      	$total 		= $data['total'];
      	$processor  = $data['processor'];
+     	$observa    = $data['observa'];
      	
      	//actualitza comanda
-     	$db->setQuery('update #__botiga_comandes set subtotal = '.$db->quote($subtotal).', shipment = '.$db->quote($shipment).', total = '.$db->quote($total).' where id = '.$idComanda);
+     	$db->setQuery('update #__botiga_comandes set subtotal = '.$db->quote($subtotal).', shipment = '.$db->quote($shipment).', total = '.$db->quote($total).', observa = '.$db->quote($observa).' where id = '.$idComanda);
      	$db->query();
      	
      	//redirect to payment

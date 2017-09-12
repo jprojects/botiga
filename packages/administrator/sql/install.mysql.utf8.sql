@@ -199,6 +199,21 @@ CREATE TABLE `#__botiga_users` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `#__botiga_savedCarts`
+--
+
+CREATE TABLE `#__botiga_savedCarts` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `idComanda` int(11) DEFAULT NULL,
+  `data` datetime DEFAULT NULL,
+  `userid` int(11) NOT NULL,
+  `cart` text NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 --
 -- Volcado de datos para la tabla `afi_virtuemart_countries`
 --
