@@ -225,12 +225,14 @@ class botigaControllerBotiga extends botigaController {
      	
      	$subtotal 	= $data['subtotal'];
      	$shipment 	= $data['shipment'];
+     	$iva_percent = botigaHelper::getParameter('iva', '21');
+     	$iva_total  = ($iva_percent / 100) * ($subtotal + $shipment);
      	$total 		= $data['total'];
      	$processor  = $data['processor'];
      	$observa    = $data['observa'];
      	
      	//actualitza comanda
-     	$db->setQuery('update #__botiga_comandes set subtotal = '.$db->quote($subtotal).', shipment = '.$db->quote($shipment).', total = '.$db->quote($total).', observa = '.$db->quote($observa).' where id = '.$idComanda);
+     	$db->setQuery('update #__botiga_comandes set subtotal = '.$db->quote($subtotal).', shipment = '.$db->quote($shipment).', iva_percent = '.$db->quote($iva_percent).', iva_total = '.$db->quote($iva_total).', total = '.$db->quote($total).', observa = '.$db->quote($observa).' where id = '.$idComanda);
      	$db->query();
      	
      	//redirect to payment
@@ -266,17 +268,17 @@ class botigaControllerBotiga extends botigaController {
 			$body 	  .= "Usuario: <strong>".$user->username."</strong> :<br>";
 			$body 	  .= "Email: <strong>".$user->email."</strong> :<br>";
 			$body 	  .= "Teléfono: <strong>".$row->telefon."</strong> :<br>";
-			$body 	  .= "Dirección: <strong>".$row->adreca." ".$row->poblacio." ".$row->provincia." (".$row->pais.")</strong> :<br>";
+			$body 	  .= "Dirección: <strong>".$row->adreca." ".$row->poblacio." ".$row->provincia."</strong> :<br>";
 			$body     .= "<table class='table'>";
 			
 			foreach($items as $item) {
 				$item->image1 != '' ? $image = JURI::base().$item->image1 : $image = JURI::base().'images/noimage.png';
-				$total    += $item->total;
+				$total     = $item->total;
 				$body     .= "<tr><td width='10%'><img src='".$image."' style='max-width:100px;' alt='' /></td>";
 				$body     .= "<td width='45%'>".$item->name." - ".$item->ref."</td>";
 				$body     .= "<td width='4%'><strong>".$item->price."&euro;</strong></td>";
 				$body     .= "<td width='25%' align='center'>".$item->qty."</td>";
-				$body     .= "<td width='20%' align='right'><strong>".$item->total."&euro;</strong></td></tr>";
+				$body     .= "<td width='20%' align='right'><strong>".$item->subtotal."&euro;</strong></td></tr>";
 			}
 			
 			$body .= "<tr><td colspan='5' align='right'>".JText::_('COM_BOTIGA_CHECKOUT_TOTAL')." ".number_format($total, 2)."</td></tr></table>";

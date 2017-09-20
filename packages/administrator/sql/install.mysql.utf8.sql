@@ -36,6 +36,8 @@ CREATE TABLE IF NOT EXISTS `#__botiga_comandes` (
   `status` smallint(1) NOT NULL DEFAULT '0' COMMENT '1-Pending;2-Pending payment;3-Completed',
   `subtotal` float(10,2) NOT NULL DEFAULT '0.00',
   `shipment` float(10,2) NOT NULL DEFAULT '0.00',
+  `iva_percent` int(5) NOT NULL DEFAULT '0',
+  `iva_total` float(10,2) NOT NULL DEFAULT '0.00',
   `total` float(10,2) NOT NULL DEFAULT '0.00',
   `published` tinyint(1) NOT NULL DEFAULT '0',
   `ordering` int(11) NOT NULL DEFAULT '0',
@@ -127,7 +129,6 @@ CREATE TABLE IF NOT EXISTS `#__botiga_shipments` (
   `country` int(11) NOT NULL DEFAULT '0',
   `min` varchar(50) NOT NULL DEFAULT '',
   `max` varchar(50) NOT NULL DEFAULT '',
-  `operator` varchar(5) NOT NULL DEFAULT '%',
   `total` int(5) NOT NULL DEFAULT '0',
   `country` int(5) NOT NULL DEFAULT '0',
   `ordering` int(11) NOT NULL,
@@ -196,21 +197,6 @@ CREATE TABLE `#__botiga_users` (
   `pais` varchar(50) DEFAULT NULL,
   `telefon` varchar(50) DEFAULT NULL,
   `published` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `#__botiga_savedCarts`
---
-
-CREATE TABLE `#__botiga_savedCarts` (
-  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `idComanda` int(11) DEFAULT NULL,
-  `data` datetime DEFAULT NULL,
-  `userid` int(11) NOT NULL,
-  `cart` text NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 

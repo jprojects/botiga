@@ -91,8 +91,19 @@ if($user->guest) {
 		<td width="20%"></td>
 		<td width="20%"></td>
 		<td></td>
+		<?php 
+		$iva_percent = botigaHelper::getParameter('iva', '21');
+     	$iva_total  = ($iva_percent / 100) * ($subtotal + $shipment); 
+     	?>
+		<td><strong><?= 'IVA '.$iva_percent.'%'; ?></strong></td>
+		<td width="20%"><span class="blue bold size20 total text-right"><?= number_format($iva_total, 2); ?>&euro;</span></td>
+	</tr>
+	<tr>
+		<td width="20%"></td>
+		<td width="20%"></td>
+		<td></td>
 		<td><strong><?= JText::_('COM_BOTIGA_CHECKOUT_TOTAL'); ?></strong></td>
-		<?php $total = number_format(($subtotal + $shipment), 2); ?>
+		<?php $total = number_format(($subtotal + $shipment + $iva_total), 2); ?>
 		<td width="20%"><span class="blue bold size20 total text-right"><?= number_format($total, 2); ?>&euro;</span></td>
 	</tr>
 	</table>
@@ -136,6 +147,10 @@ if($user->guest) {
 			<span class="blue bold size20 total"><?= $shipment; ?>&euro;</span>
 		</div>
 		<div class="col-xs-12 text-right">
+			<strong>IVA <?= $iva_percent; ?>%</strong>
+			<span class="blue bold size20 total"><?= number_format($iva_total, 2); ?>&euro;</span>
+		</div>
+		<div class="col-xs-12 text-right">
 			<strong><?= JText::_('COM_BOTIGA_CHECKOUT_TOTAL'); ?></strong>
 			<span class="blue bold size20 total"><?= number_format($total, 2); ?>&euro;</span>
 		</div>
@@ -157,7 +172,7 @@ if($user->guest) {
 				foreach(botigaHelper::getPaymentPlugins() as $plugin) : 
 				$params = json_decode($plugin->params);
 				?>
-				<option value="<?= $params->alies; ?>"><?= $params->title; ?></option>
+				<option value="<?= $params->alies; ?>" <?php if($processor == $params->alies) : ?>selected<?php endif; ?>><?= $params->title; ?></option>
 				<?php endforeach; ?>
 				</select>
 			</div>

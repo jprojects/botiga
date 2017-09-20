@@ -36,6 +36,13 @@
         	label="COM_BOTIGA_SETTINGS_ADDRESS_LBL" 
         	description="COM_BOTIGA_SETTINGS_ADDRESS_DSC" 
         />
+        <field 
+        	type="text" 
+        	name="iva" 
+        	default="21" 
+        	label="COM_BOTIGA_SETTINGS_IVA_LBL" 
+        	description="COM_BOTIGA_SETTINGS_IVA_DSC" 
+        />
 		<field 
         	type="radio" 
         	name="show_prices" 

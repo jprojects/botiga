@@ -618,39 +618,49 @@ class botigaController extends JControllerLegacy
 		
 		$pdf->AddPage();
 		
-		$pdf->setSourceFile(JPATH_COMPONENT.DS.'assets'.DS.'pdf'.DS.'albaran.pdf');
+		$pdf->setSourceFile(JPATH_COMPONENT.DS.'assets'.DS.'pdf'.DS.'invoice.pdf');
 		
 		$tplIdx = $pdf->importPage(1);
 		$pdf->useTemplate($tplIdx, 0, 0, 0, 0, true);
 
 		define('EURO', chr(128));
 
-		$db 	= JFactory::getDbo();
-		$db->setQuery('SELECT c.data as fecha FROM #__laundry_comandes c WHERE c.id = '.$id);
-		$fecha = $db->loadResult();
+		$db = JFactory::getDbo();
+		$db->setQuery('SELECT c.*, u.mail_empresa as email, u.cif, u.telefon, u.metodo_pago FROM #__botiga_comandes c INNER JOIN #__botiga_users u ON u.userid = c.userid WHERE c.id = '.$id);
+		$com = $db->loadObject();
 
-		$db->setQuery('SELECT cd.*, i.name, i.ref as referencia FROM #__laundry_comandesDetall cd INNER JOIN #__laundry_items i ON cd.itemId = i.id WHERE cd.idComanda = '.$id);
+		$db->setQuery('SELECT cd.*, i.name, i.ref as referencia, i.image1 as image FROM #__botiga_comandesDetall cd INNER JOIN #__botiga_items i ON cd.iditem = i.id WHERE cd.idComanda = '.$id);
 		$db->query();
 		$num_rows = $db->getNumRows();
 		$detalls  = $db->loadObjectList();
 		
-		$height = 63;
+		$height = 45;
 		
 		$pdf->SetFont('Arial', '', '10');
 		
 		if($num_rows >= 12) { $pag = 2; } else { $pag = 1; }
 		
+		//user
+		$pdf->SetXY(170, $height); 
+		$pdf->Cell(15, 5, $com->telefon, 0, 0, 'R');
+		$height += 4;
+		$pdf->SetXY(121, $height); 
+		$pdf->Cell(16, 5, $com->cif, 0, 0, 'R');
+		$pdf->SetXY(170, $height); 
+		$pdf->Cell(15, 5, $com->email, 0, 0, 'R');
+		
 		//metadata
-		$pdf->SetXY(140, $height); 
+		$height = 71;
+		$pdf->SetXY(20, $height); 
 		$pdf->Cell(15, 5, 'WEB00'.$id, 0, 0, 'R');
-		$pdf->SetXY(160, $height);
+		$pdf->SetXY(40, $height);
 		$pdf->Cell(15, 5, 'Pag. 1/'.$pag, 0, 0, 'R');
-		$pdf->SetXY(185, $height);
-		$pdf->Cell(15, 5, date('d-m-Y', strtotime($fecha)), 0, 0, 'R');
+		$pdf->SetXY(80, $height);
+		$pdf->Cell(15, 5, date('d-m-Y', strtotime($com->data)), 0, 0, 'R');
 		
 		//detall
 		$total   = 0;		
-		$height  = 100;
+		$height  = 85;
 		$counter = 0;
 		
 		foreach($detalls as $detall) {
@@ -660,56 +670,58 @@ class botigaController extends JControllerLegacy
 				$pdf->setSourceFile(JPATH_COMPONENT.DS.'assets'.DS.'pdf'.DS.'albaran.pdf');
 				$tplIdx2 = $pdf->importPage(1);
 				$pdf->useTemplate($tplIdx2, 0, 0, 0, 0, true);
-				$height = 63;		
+				$height = 71;		
 				$pdf->SetFont('Arial', '', '10');
-				$pdf->SetXY(140, $height); 
+				$pdf->SetXY(20, $height); 
 				$pdf->Cell(15, 5, 'WEB00'.$id, 0, 0, 'R');
-				$pdf->SetXY(160, $height);
+				$pdf->SetXY(40, $height);
 				$pdf->Cell(15, 5, 'Pag. 2/2', 0, 0, 'R');
-				$pdf->SetXY(185, $height);
-				$pdf->Cell(15, 5, date('d-m-Y', strtotime($fecha)), 0, 0, 'R');
-				$height  = 100;
+				$pdf->SetXY(80, $height);
+				$pdf->Cell(15, 5, date('d-m-Y', strtotime($com->data)), 0, 0, 'R');
+				$height  = 85;
 			}
-					
-			$pdf->SetXY(6, $height);  
+	
+			$pdf->SetXY(20, $height);  
 			$pdf->Cell(30, 5, $detall->referencia, 0, 0, '');
-			$pdf->SetXY(35, $height);  
-			$pdf->Cell(90, 5, utf8_decode($detall->name), 0, 0, '');	
-			$pdf->SetXY(125, $height);
-			if($detall->price > 0) { 
-				$pdf->Cell(20, 5, number_format($detall->price, 2, ',', '.').EURO, 0, 0, '');
-			} else {
-				$pdf->Cell(20, 5, JText::_('COM_BOTIGA_A_CONSULTAR'), 0, 0, '');
-			}
-			$pdf->SetXY(140, $height); 
-			$pdf->Cell(20, 5, $detall->qty, 0, 0, 'R');
-			$pdf->SetXY(155, $height); 
+			$pdf->SetXY(60, $height);  
+			$pdf->Cell(90, 5, utf8_decode($detall->name), 0, 0, '');
+			$pdf->SetXY(110, $height); 
+			$pdf->Cell(20, 5, $detall->qty, 0, 0, 'R');	
+			$pdf->SetXY(145, $height);
+			$pdf->Cell(20, 5, number_format($detall->price, 2, ',', '.').EURO, 0, 0, '');
+			$pdf->SetXY(150, $height); 
 			$pdf->Cell(20, 5, 0, 0, 0, 'R');
-			$pdf->SetXY(185, $height); 
-			if($detall->total > 0) { 
-				$pdf->Cell(15, 5, number_format($detall->total, 2, ',', '.').EURO, 0, 0, '');
-			} else {
-				$pdf->Cell(15, 5, JText::_('COM_BOTIGA_A_CONSULTAR'), 0, 0, '');
-			}
-		
-			$total += $detall->total;
+			$pdf->SetXY(172, $height); 
+			$pdf->Cell(15, 5, number_format(($detall->price * $detall->qty), 2, ',', '.').EURO, 0, 0, '');
 			
 			$height += 6;
 			$counter++;
 		}
 		
-		$height = 210;
+		$height = 243;
 		$pdf->SetFont('Arial', 'B', '10');
-		$pdf->SetXY(125, $height);  
-		$pdf->Cell(30, 5, number_format($total, 2, ',', '.').EURO, 0, 0, 'R');
-		$pdf->SetXY(145, $height); 
-		$pdf->Cell(30, 5, '21%', 0, 0, 'R');
+		$pdf->SetXY(55, $height);  
+		$pdf->Cell(30, 5, number_format($com->subtotal, 2, ',', '.').EURO, 0, 0, 'R');
+		$pdf->SetXY(75, $height); 
+		$pdf->Cell(30, 5, $com->iva_percent.'%', 0, 0, 'R');
+		$pdf->SetXY(95, $height);
+		$pdf->Cell(30, 5, number_format($com->iva_total, 2, ',', '.').EURO, 0, 0, 'R');
 
-		$height = 227;
-		$pdf->SetXY(165, $height); 
-		$pdf->Cell(30, 5, number_format($total, 2, ',', '.').EURO, 0, 0, 'R');
+		$pdf->SetXY(163, $height); 
+		$pdf->Cell(30, 5, number_format(($com->total), 2, ',', '.').EURO, 0, 0, 'R');
+		
+		$height += 10;
+		
+		$pdf->SetXY(35, $height); 
+		$com->metodo_pago == '' ? $metodo_pago = 'Pago habitual' : $metodo_pago = $com->metodo_pago;
+		$pdf->Cell(30, 5, utf8_decode($metodo_pago), 0, 0, 'R');
+		
+		$height += 12;
+		
+		$pdf->SetXY(125, $height); 
+		$pdf->Cell(30, 5, utf8_decode($com->observa), 0, 0, 'R');
 
-		$pdf->Output('albaran_n_'.$id.'.pdf', 'D');
+		$pdf->Output('presupuesto_'.$id.'.pdf', 'D');
 		die();
 	}
 }

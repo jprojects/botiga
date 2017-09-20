@@ -13,6 +13,7 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 $model = $this->getModel('history');
+$user  = JFactory::getUser();
 ?>
 
 <div class="container">
@@ -33,14 +34,15 @@ $model = $this->getModel('history');
   	
   		<div role="tabpanel" class="tab-pane active" id="tab1">
 			<?php if(count($this->items)) : ?>
-			<table class="table table-striped">
+			<table class="table table-striped" style="margin-top:30px;">
 			<?php foreach($this->items as $item) : ?>
+			<?php $iva = (21 / 100) * $item->subtotal; ?>
 			<?php $item->status == 3 ? $status = JText::_('COM_BOTIGA_HISTORY_STATUS_FINISHED') : $status = JText::_('COM_BOTIGA_HISTORY_STATUS_PENDING'); ?>
 			<tr>
 				<td><?= JText::_('COM_BOTIGA_HISTORY_NUM'); ?> <?= $item->id; ?></td>
 				<td><?= $item->data; ?></td>
 				<td><?= $status; ?></td>
-				<td align="right"><div class="blue bold"><?= $item->suma; ?>&euro;</div></td>
+				<td align="right"><div class="blue bold"><?= number_format(($item->total), 2); ?>&euro;</div></td>
 				<td align="right">
 					<a href="index.php?option=com_botiga&task=genPdf&id=<?= $item->id; ?>" target="_blank"><i class="fa fa-file-pdf-o"></i></a>
 				</td>
@@ -51,12 +53,30 @@ $model = $this->getModel('history');
 			<div><?= JText::_('COM_BOTIGA_HISTORY_NO_ORDERS'); ?></div>
 			<?php endif; ?>
 		</div>
-		<div role="tabpanel" class="tab-pane" id="tab2">...</div>
+		<div role="tabpanel" class="tab-pane" id="tab2">
+			<div style="margin-top:30px;">
+				<form action="index.php?option=com_botiga&task=history.saveConfig" method="post" name="config">
+					<div class="form-group">
+    					<select name="jform[processor]" id="processor" class="form-control">
+							<option value="">Seleciona un método de pago</option>
+							<?php 
+							foreach(botigaHelper::getPaymentPlugins() as $plugin) : 
+							$params = json_decode($plugin->params);
+							$processor = botigaHelper::getUserData('metodo_pago', $user->id);
+							?>
+							<option value="<?= $params->alies; ?>" <?php if($processor == $params->alies) : ?>selected<?php endif; ?>><?= $params->title; ?></option>
+							<?php endforeach; ?>
+						</select>
+  					</div>
+  					<button type="submit" class="btn btn-primary">GUARDAR</button>
+				</form>
+			</div>
+		</div>
 		<div role="tabpanel" class="tab-pane" id="tab3">
 			<?php 
 			$carts = $model->getSavedCarts();
 			if(count($carts)) : ?>
-			<table class="table table-striped">
+			<table class="table table-striped" style="margin-top:30px;">
 			<?php foreach($carts as $cart) : ?>
 			<tr>
 				<td><?= JText::_('COM_BOTIGA_CART'); ?>-<?= $cart->idComanda; ?></td>

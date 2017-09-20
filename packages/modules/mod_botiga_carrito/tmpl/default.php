@@ -24,7 +24,7 @@ $total = 0;
 		<td><img src="<?= $image; ?>" class="img-responsive mini" alt="<?= $item->name; ?>" /></td>
 		<td><?= $item->name; ?><br/><div class="bold blue text-right">x<?= $item->qty; ?> - <?= $item->price; ?> &euro;</div></td>
 	</tr>			
-	<?php $total += $item->price; ?>
+	<?php $total += $item->price * $item->qty; ?>
 <?php endforeach; ?>
 	
 </table>
