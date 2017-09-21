@@ -171,8 +171,9 @@ if($user->guest) {
 				<?php 
 				foreach(botigaHelper::getPaymentPlugins() as $plugin) : 
 				$params = json_decode($plugin->params);
+				$metodo_pago = botigaHelper::getUserData('metodo_pago', $user->id);
 				?>
-				<option value="<?= $params->alies; ?>" <?php if($processor == $params->alies) : ?>selected<?php endif; ?>><?= $params->title; ?></option>
+				<option value="<?= $params->alies; ?>" <?php if($processor == $params->alies || $metodo_pago == $params->alies) : ?>selected<?php endif; ?>><?= $params->title; ?></option>
 				<?php endforeach; ?>
 				</select>
 			</div>

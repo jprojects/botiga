@@ -25,7 +25,7 @@ $user  = JFactory::getUser();
 	<!-- Nav tabs -->
   	<ul class="nav nav-tabs" role="tablist">
 		<li role="presentation" class="active"><a href="#tab1" aria-controls="tab1" role="tab" data-toggle="tab">Mis pedidos</a></li>
-		<li role="presentation"><a href="#tab2" aria-controls="tab2" role="tab" data-toggle="tab">Mis Datos</a></li>
+		<li role="presentation"><a href="#tab2" aria-controls="tab2" role="tab" data-toggle="tab">Mis preferencias</a></li>
 		<li role="presentation"><a href="#tab3" aria-controls="tab3" role="tab" data-toggle="tab">Mis pedidos guardados</a></li>
   	</ul>
   
