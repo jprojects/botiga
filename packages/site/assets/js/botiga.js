@@ -8,11 +8,11 @@ jQuery(document).ready(function() {
 		} 
 	});
 	
-	$('.tos').click(function() {
-		if($(this).is(':checked')) {  
-            $('.submit').removeAttr('disabled');  
+	jQuery('.tos').click(function() {
+		if(jQuery(this).is(':checked')) {  
+            jQuery('.submit').removeAttr('disabled');  
         } else {  
-            $('.submit').attr('disabled', 'disabled');  
+            jQuery('.submit').attr('disabled', 'disabled');  
         } 
     });
 });
