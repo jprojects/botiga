@@ -15,4 +15,10 @@ jQuery(document).ready(function() {
             jQuery('.submit').attr('disabled', 'disabled');  
         } 
     });
+	
+	jQuery('.zoom').hover(function() {
+		jQuery('.botiga-btns').hide();
+		jQuery(this).find('.botiga-btns').show();
+	});		
+
 });
