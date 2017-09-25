@@ -104,8 +104,8 @@ CREATE TABLE IF NOT EXISTS `#__botiga_items` (
   `pdf` varchar(150) NOT NULL DEFAULT '',
   `price` varchar(150) NOT NULL,
   `pvp` float(10,2) NOT NULL,
-  'garantia' varchar(150) NOT NULL DEFAULT '',
-  'envio' varchar(150) NOT NULL DEFAULT '',
+  `garantia` varchar(150) NOT NULL DEFAULT '',
+  `envio` varchar(150) NOT NULL DEFAULT '',
   `published` tinyint(1) NOT NULL DEFAULT '0',
   `language` char(7) NOT NULL DEFAULT '0',
   `ref` varchar(15) DEFAULT NULL,
@@ -130,7 +130,6 @@ CREATE TABLE IF NOT EXISTS `#__botiga_shipments` (
   `min` varchar(50) NOT NULL DEFAULT '',
   `max` varchar(50) NOT NULL DEFAULT '',
   `total` int(5) NOT NULL DEFAULT '0',
-  `country` int(5) NOT NULL DEFAULT '0',
   `ordering` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -204,7 +203,7 @@ CREATE TABLE `#__botiga_users` (
 -- Volcado de datos para la tabla `afi_virtuemart_countries`
 --
 
-INSERT INTO `afi_botiga_countries` (`country_id`, `country_name`, `country_code`, `ordering`, `published`) VALUES
+INSERT INTO `#__botiga_countries` (`country_id`, `country_name`, `country_code`, `ordering`, `published`) VALUES
 (1, 'Afghanistan', 'AFG', 0, 1),
 (2, 'Albania', 'ALB', 0, 1),
 (3, 'Algeria', 'DZA', 0, 1),
