@@ -1,48 +1,35 @@
 @CHARSET "UTF-8";
 
-.pagination {
-    text-align: center;
-    width: 100%;
-}
-
 .empty { color: #514B4B; }
 
+.items { margin-top: 40px; }
 .item {
-	margin-bottom: 20px;
+	margin-bottom: 50px;
 }
 
 .zoom {
-  	position: relative;
   	display: inline-block;
   	background-color: #fff;
   	-webkit-transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
   	transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
-.zoom::after {
-  content: "";
-  position: absolute;
-  z-index: 1;
-  top: 0;
-  left: 0;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-  opacity: 0;
-  -webkit-transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
-  transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
-}
-
 .zoom:hover {
-  -webkit-transform: scale(1.25, 1.25);
-  transform: scale(1.25, 1.25);
-  z-index: 1500;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  	border: 1px solid #b7b7b7;
+  	box-shadow: 0 0.5em 1em rgba(0,0,0,0.25);
 }
 
-.zoom:hover::after {
-    opacity: 1;
+.zoom:hover > .wrapper {
+  	border: 1px solid #b7b7b7;
+  	box-shadow: 0 0.5em 1em rgba(0,0,0,0.25);
 }
+
+.botiga-btns { background-color: #000; height: 54px; }
 
 .botiga-img { position: relative; }
+.item .botiga-img { position: relative; height: 300px; }
+.item .botiga-img img { max-height: 250px; margin: 0 auto; }
+
 .pvp-badge {
     position: absolute;
     top: 5px;
@@ -61,6 +48,7 @@
     color: #fff;
 }
 .big {
+    right: 15px;
     width: 100px;
     height: 100px;
     border-radius: 50px;
@@ -70,6 +58,7 @@
 }
 
 .thumbnail > img, .thumbnail > a > img { height: 250px; } 
+.additional-img a { display: inline-block; }
 .additional-img img {
 	width: 150px;
 	height: 150px;
@@ -80,7 +69,7 @@ span.rollover {
 	-o-transition-duration: 1s;
 	-moz-transition-duration: 1s;
 	-webkit-transition: -webkit-transform 1s;
-	background:url(../images/glass.png) center center no-repeat #999;
+	background:url(../images/glass.png) center center no-repeat #ccc;
 	cursor: pointer;
 	height: 100%;
 	width: 100%;
@@ -94,16 +83,18 @@ span.rollover:hover {
 	-o-transition-duration: 1s;
 	-moz-transition-duration: 1s;
 	-webkit-transition: -webkit-transform 1s;
-	-webkit-box-shadow: 0px 0px 4px #000;
-	-moz-box-shadow: 0px 0px 4px #000;
-	box-shadow: 0px 0px 4px #000;
 }
 
 .btn-link, .btn-link:hover { border: 1px solid #1d1d1d; color: #1d1d1d; text-decoration:none; }
 .item .btn-black { margin-top:10px; }
 .price { font-size: 20px; }
-.item-title { height: 42px; }
+.item-title, .text-left.item-title { height: 42px; }
 #budget input, #budget textarea { color: #fff; }
+
+.brand { text-align: right; }
+.brand img { height: 50px; }
+
+.addtocart { margin: 20px 0; }
 
 .product-extra {
 	margin-top:20px;
@@ -113,4 +104,15 @@ span.rollover:hover {
 
 .bold { font-weight: bold; }
 .faded { color: #ccc; }
+
+#number {
+    width: 50px;
+    height: 34px;
+}
+
+.paginacion { width: 100%; text-align: center; }
+.pagination>li>a, .pagination>li>span {
+    color: #BD0000 !important;
+    border: none !important;
+}
 	
