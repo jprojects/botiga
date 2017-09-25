@@ -97,11 +97,9 @@ class botigaModelBotiga extends JModelList
 
 		$query = $db->getQuery(true);
 		
-		$query->select('i.*, .b.name as brandname');
+		$query->select('i.*');
 		
 		$query->from('#__botiga_items as i');
-		
-		$query->join('inner', '#__botiga_brands as b ON b.id = i.brand');
 
         // Filters
        	$catid   = JRequest::getInt('catid', 0);
