@@ -149,6 +149,18 @@ CREATE TABLE `#__botiga_countries` (
   PRIMARY KEY (`country_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+--
+-- Estructura de tabla para la tabla `#__botiga_savedCarts`
+--
+
+CREATE TABLE `#__botiga_savedCarts` (
+  `id` int(11) NOT NULL,
+  `idComanda` int(11) NOT NULL,
+  `data` datetime NOT NULL,
+  `userid` int(11) NOT NULL,
+  `cart` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- --------------------------------------------------------
 
 --
