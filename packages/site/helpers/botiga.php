@@ -56,7 +56,7 @@ class botigaHelper {
 	 * @params string $field database field request
 	 * @return mixed
 	*/
-    public function getUserData($field, $userid)
+    public static function getUserData($field, $userid)
 	{
 		$db = JFactory::getDbo();
 		$db->setQuery("select $field from #__botiga_users where userid = ".$userid);
@@ -68,11 +68,26 @@ class botigaHelper {
 	 * @params string $field database field request
 	 * @return mixed
 	*/
-    public function getComandaData($field, $idComanda)
+    public static function getComandaData($field, $idComanda)
 	{
 		$db = JFactory::getDbo();
 		$db->setQuery("select $field from #__botiga_comandes where id = ".$idComanda);
 		return $db->loadResult();
+	}
+	
+	/**
+	 * method to know if item is favorite
+	 * @params string $field database field request
+	 * @return mixed
+	*/
+    public static function isFavorite($itemid)
+	{
+		$db   = JFactory::getDbo();
+		$user = JFactory::getUser();
+		
+		$db->setQuery("select id from #__botiga_favorites where itemid = ".$itemid." and userid = ".$user->id);
+		if($id = $db->loadResult()) { return true; }
+		return false;
 	}
 	
 	/**

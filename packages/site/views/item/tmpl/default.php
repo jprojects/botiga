@@ -13,16 +13,14 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 $this->item->image1 != '' ? $image = $this->item->image1 : $image = 'components/com_botiga/assets/images/noimage128.jpg';
-$model = $this->getModel('item');
-$user  = JFactory::getUser();
-$doc   = JFactory::getDocument();
-$precio = botigaHelper::getUserPrice($this->item->id);
+$model 		= $this->getModel('item');
+$user  		= JFactory::getUser();
+$doc   		= JFactory::getDocument();
+$precio 	= botigaHelper::getUserPrice($this->item->id);
 $precio < 1 ? $price = JText::_('COM_BOTIGA_A_CONSULTAR') : $price = $precio;
-$category = $this->item->catid;
-$uri = JFactory::getURI(); 
-$uri = base64_encode($uri->toString());
+$uri 		= base64_encode(JFactory::getURI()->toString());
 $show_prices = botigaHelper::getParameter('show_prices', 1);
-$show_ask = botigaHelper::getParameter('show_ask', 1);
+$show_ask 	= botigaHelper::getParameter('show_ask', 1);
 
 $js = '{
   "@context": "http://schema.org/",
@@ -51,14 +49,14 @@ $doc->addStylesheet('components/com_botiga/assets/css/jquery.fancybox.css');
 <div>
 	
 	<?php if($show_prices == 1 && $user->guest) : ?>
-	<div class="alert alert-warning"><?= JText::_('COM_BOTIGA_PRICES_NOTICE'); ?></div>
+	<div class="alert alert-danger"><?= JText::_('COM_BOTIGA_PRICES_NOTICE'); ?></div>
 	<?php endif; ?>
 
-	<div class="col-xs-12 col-md-6">
+	<div class="col-xs-12 col-md-5">
 	
 		<div id="page-header">
-			<h1><?= $this->item->name; ?></h1>
-			<span></span>
+			<h2><?= $this->item->name; ?></h2>
+			<span><?= $this->item->s_description; ?></span>
 		</div>
 		
 		<div class="botiga-img">
@@ -94,7 +92,7 @@ $doc->addStylesheet('components/com_botiga/assets/css/jquery.fancybox.css');
 			<?php endif; ?>
 		</div>
 	</div>
-	<div class="col-xs-12 col-md-3">
+	<div class="col-xs-12 col-md-5">
 	
 		<div class="brand">
 		<?php if($this->item->bimage != '') : ?>
@@ -104,17 +102,44 @@ $doc->addStylesheet('components/com_botiga/assets/css/jquery.fancybox.css');
 		<?php endif; ?>
 		</div>
 		
-		<?php if($show_prices == 1) : ?>
-		<div class="text-left bold price"><?= $price; ?> &euro;</div>
-		<?php if(!$user->guest) : ?>
-		<div class="text-left faded pvp">PVP <strike><?= $this->item->pvp; ?> &euro;</strike></div>
-		<?php endif; ?>
-		<?php endif; ?>		
-
-        <a <?php if(!$user->guest) : ?>href="index.php?option=com_botiga&task=botiga.setItem&id=<?= $this->item->id; ?>&return=<?= $uri; ?>"<?php endif; ?> class="btn btn-primary btn-block btn-green"><?= JText::_('COM_BOTIGA_BUY'); ?> <i class="fa fa-shopping-cart"></i></a>
+		<div class="addtocart-block">
+		<div class="col-xs-12 col-md-4 text-left nopadding">
+			<?php if($show_prices == 1) : ?>
+			<div class="text-left bold price"><?= $price; ?> &euro;</div>
+			<?php if(!$user->guest) : ?>
+			<div class="text-left faded pvp">PVP <strike><?= $this->item->pvp; ?> &euro;</strike></div>
+			<?php endif; ?>
+			<?php endif; ?>		
+		</div>
+		<div class="col-xs-12 col-md-8 nopadding">
+			<div class="addtocart">
+			<form name="addtocart" action="index.php?option=com_botiga&task=botiga.setItem" method="get" class="form-inline">
+				<input type="hidden" name="option" value="com_botiga" />
+				<input type="hidden" name="task" value="botiga.setItem" />
+				<input type="hidden" name="id" value="<?= $this->item->id; ?>" />
+				<input type="hidden" name="return" value="<?= $uri; ?>" />
+				<div class="col-md-3">
+					<div class="form-group">
+						<input type="number" name="qty" value="1" min="1" id="number" />
+					</div>
+				</div>
+				<div class="col-md-9 nopadding">
+					<div class="btn-group" role="group">
+						<button class="btn btn-group btn-success"><?= JText::_('COM_BOTIGA_BUY'); ?> <i class="fa fa-shopping-cart"></i></button>
+						<?php if(!botigaHelper::isFavorite($this->item->id)) : ?>
+						<a href="index.php?option=com_botiga&task=setFavorite&id=<?= $this->item->id; ?>&return=<?= $uri; ?>" class="btn btn-group btn-primary"><span class="glyphicon glyphicon-heart"></span></a>
+						<?php else : ?>
+						<a href="index.php?option=com_botiga&task=unsetFavorite&id=<?= $this->item->id; ?>&return=<?= $uri; ?>" class="btn btn-group btn-primary"><span class="glyphicon glyphicon-heart red"></span></a>
+						<?php endif; ?>
+					</div>
+		    	</div>
+		    </form>
+		    </div>
+        </div>
+        </div>
+        <div class="clearfix"></div>
         
-		<div class="text-left item-title"><strong><?= $this->item->name; ?></strong></div>
-		<div class="text-left"><?= $category; ?></div>
+		<div class="text-left item-title-item"><strong><?= $this->item->name; ?></strong></div>
 		<div class="text-left"><?= $this->item->ref; ?></div>
 		
 		<div class="product-extra"><span class="caret"></span> <strong>Descripción</strong></div>
@@ -124,16 +149,21 @@ $doc->addStylesheet('components/com_botiga/assets/css/jquery.fancybox.css');
 		<div class="product-extra"><span class="caret"></span> <strong>Envío</strong></div>
 		<?= $this->item->envio; ?>
 		<div class="product-extra"><span class="caret"></span> <strong>Documentación extra</strong></div>
-		
+		<?php if(file_exists('images/pdf/'.$this->item->ref.' F.pdf')) : ?>
+		<a href="images/pdf/<?= $this->item->ref.' F.pdf'; ?>" target="_blank">Ficha técnica</a><br>
+		<?php endif; ?>
+		<?php if(file_exists('images/products/'.strtolower($this->item->ref).'-f.jpg')) : ?>
+		<a href="images/products/<?= strtolower($this->item->ref).'-f.jpg'; ?>" target="_blank">Dibujo técnico</a>
+		<?php endif; ?>
 		<?php if($show_ask == 1) : ?>
 		<a data-toggle="modal" data-name="<?= $this->item->name; ?>" data-target="#budget" class="btn btn-primary btn-block"><?= JText::_('COM_BOTIGA_MORE_INFO'); ?></a>
 		<?php endif; ?>
 		<!--<a href="<?= JRoute::_('index.php?option=com_botiga&view=botiga&catid=20&Itemid=128'); ?>" class="btn btn-primary btn-block btn-black"><?= JText::_('COM_BOTIGA_CONTINUE_SHOPPING'); ?></a>-->
 	</div>
 	
-	<div class="col-md-4 hidden-xs">
+	<div class="col-md-2 hidden-xs">
 		<!-- Modulo presupuesto -->
-
+		<img src="images/banner.jpg" alt="info" />
 	</div>
 	
 	<div class="clearfix"></div>

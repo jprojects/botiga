@@ -118,8 +118,12 @@ class botigaController extends JControllerLegacy
      	$db   = JFactory::getDbo();
      	$user = JFactory::getUser();
      	
+     	if($user->guest) { return; }
+     	
      	$jinput  = JFactory::getApplication()->input;
      	$id  = $jinput->get('id');
+     	$return  = $jinput->getString('return');
+     	$url = base64_decode($return);
      	
      	$favorite = new stdClass();
      	
@@ -128,7 +132,7 @@ class botigaController extends JControllerLegacy
      	
      	$db->insertObject('#__botiga_favorites', $favorite);
      	
-     	$this->setRedirect('index.php?option=com_botiga&view=favorites&Itemid=116', JText::_('COM_BOTIGA_SET_FAVORITE_SUCCESS'), 'info');
+     	$this->setRedirect($url, JText::_('COM_BOTIGA_SET_FAVORITE_SUCCESS'), 'info');
      }
      
      /**
@@ -140,13 +144,17 @@ class botigaController extends JControllerLegacy
      	$db   = JFactory::getDbo();
      	$user = JFactory::getUser();
      	
+     	if($user->guest) { return; }
+     	
      	$jinput  = JFactory::getApplication()->input;
      	$id  = $jinput->get('id');
+     	$return  = $jinput->getString('return');
+     	$url = base64_decode($return);
      	
      	$db->setQuery('DELETE FROM #__botiga_favorites WHERE itemid = '.$id);
      	$db->query();
      	
-     	$this->setRedirect('index.php?option=com_botiga&view=favorites&Itemid=116', JText::_('COM_BOTIGA_UNSET_FAVORITE_SUCCESS'), 'info');
+     	$this->setRedirect($url, JText::_('COM_BOTIGA_UNSET_FAVORITE_SUCCESS'), 'info');
      }
 
 	function sincronitza() {

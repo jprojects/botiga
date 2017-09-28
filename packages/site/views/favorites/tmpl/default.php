@@ -17,7 +17,20 @@ $user  		= JFactory::getUser();
 $uri 		= base64_encode(JFactory::getURI()->toString());
 $jinput		= JFactory::getApplication()->input;
 $lang 		= JFactory::getLanguage()->getTag();
+$showprices = botigaHelper::getParameter('show_prices', 1);
 ?>
+
+<style>
+.item {
+	margin-bottom: 50px;
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+}
+.item-wrap {
+	padding-left: 10px;
+	padding-right: 10px;
+}
+</style>
 
 <div>
 
@@ -31,48 +44,70 @@ $lang 		= JFactory::getLanguage()->getTag();
 	<div class="alert alert-warning"><?= JText::_('COM_BOTIGA_PRICES_NOTICE'); ?></div>
 	<?php endif; ?>
 	
+	<div class="items">
 	<?php 
 	if(count($this->items)) :
+	$i = 0;
 	foreach($this->items as $item) : ?>
 		<?php $item->image1 != '' ? $image = $item->image1 : $image = 'images/noimage.png'; ?>
 
 		<?php 
 		$precio = botigaHelper::getUserPrice($item->id);
-		$precio < 1 ? $price = JText::_('COM_BOTIGA_A_CONSULTAR') : $price = $precio; 
+		$precio < 1 ? $price = '' : $price = $precio; 
+		if($i == 4) { echo '<div class="clearfix"></div>'; $i = 0; }
 		?>
 		<div class="col-xs-12 col-sm-6 col-md-3 item zoom">
-			<div class="botiga-img">
-				<a href="<?= JRoute::_('index.php?option=com_botiga&view=item&id='.$item->id); ?>&Itemid=115">
-					<?php if(!$user->guest && $item->pvp > 0 && botigaHelper::getParameter('show_prices', 1) == 1) : ?>
-					<div class="pvp-badge"><span><?= botigaHelper::getPercentDiff($item->pvp, $price); ?> %</span></div>
-					<?php endif; ?>
-					<img src="<?= $image; ?>" class="img-responsive" alt="<?= $item->name; ?>" />
-				</a>
+		<div class="wrapper">
+			<div class="item-wrap">
+				<div class="botiga-img">
+					<a href="<?= JRoute::_('index.php?option=com_botiga&view=item&id='.$item->id); ?>&Itemid=115">
+						<?php if(!$user->guest && $item->pvp > 0 && $showprices == 1) : ?>
+						<div class="pvp-badge"><span><?= botigaHelper::getPercentDiff($item->pvp, $price); ?> %</span></div>
+						<?php endif; ?>
+						<img src="<?= $image; ?>" class="img-responsive" alt="<?= $item->name; ?>" />
+					</a>
 				
-			</div>	
-			<div class="text-left item-title"><strong><?= $item->name; ?></strong></div>
-			<div class="text-left"><?= $item->brand; ?>/<?= $item->catid; ?></div>
-			<div class="text-left"><?= $item->ref; ?></div>
-			<div class="text-left"><?= $item->brandname; ?></div>
-			<?php if(botigaHelper::getParameter('show_prices', 1) == 1) : ?>
-			<div class="text-left bold price"><?= $price; ?> &euro;</div>
-			<?php if(!$user->guest) : ?>
-			<div class="text-left faded pvp">PVP <strike><?= $item->pvp; ?> &euro;</strike></div>
-			<?php endif; ?>
-			<?php endif; ?>
-			<div class="botiga-btns">
-				<a <?php if(!$user->guest) : ?>href="index.php?option=com_botiga&task=botiga.setItem&id=<?= $item->id; ?>&return=<?= $uri; ?>"<?php endif; ?> class="btn btn-primary btn-block btn-primary"><?= JText::_('COM_BOTIGA_BUY'); ?> <i class="fa fa-shopping-cart"></i></a>
-				<a href="index.php?option=com_botiga&task=unsetFavorite&id=<?= $item->id; ?>" class="btn btn-primary btn-block btn-primary"><?= JText::_('COM_BOTIGA_UNSET_FAVORITE'); ?> <i class="fa fa-heart"></i></a>
+				</div>	
+				<div class="text-left item-title"><strong><?= $item->name; ?></strong></div>
+				<div class="text-left"><?= $item->ref; ?></div>
+				<div class="text-left"><?= $item->brandname; ?></div>
+				<?php if($showprices == 1) : ?>
+				<div class="text-left bold price"><?php if(!$user->guest) : ?><?= $price; ?>&euro;<?php endif; ?></div>
+				<?php if(!$user->guest) : ?>
+				<div class="text-left faded pvp"><?php if(!$user->guest) : ?>PVP <strike><?= $item->pvp; ?> &euro;</strike><?php endif; ?></div>
+				<?php endif; ?>
+				<?php endif; ?>
 			</div>
-			<hr>
+			<div class="botiga-btns" style="display:none;">
+			
+				<div class="btn-group btn-group-justified" role="group">
+				  <a href="<?= JRoute::_('index.php?option=com_botiga&view=item&id='.$item->id.'&Itemid=115'); ?>" class="btn btn-primary"><i class="fa fa-eye"></i><br><?= JText::_('Ver'); ?></a>
+				  <a <?php if(!$user->guest) : ?>href="index.php?option=com_botiga&task=botiga.setItem&id=<?= $item->id; ?>&return=<?= $uri; ?>"<?php endif; ?> class="btn btn-primary"><i class="fa fa-shopping-cart"></i><br><?= JText::_('Comprar'); ?></a>
+				  	<?php if(!botigaHelper::isFavorite($item->id)) : ?>
+						<a href="index.php?option=com_botiga&task=setFavorite&id=<?= $item->id; ?>&return=<?= $uri; ?>" class="btn btn-group btn-primary"><span class="glyphicon glyphicon-heart"></span><br>Favorito</a>
+					<?php else : ?>
+						<a href="index.php?option=com_botiga&task=unsetFavorite&id=<?= $item->id; ?>&return=<?= $uri; ?>" class="btn btn-group btn-primary"><span class="glyphicon glyphicon-heart red"></span><br>No Favorito</a>
+					<?php endif; ?>
+				</div>
+				
+				
+				<?php if(botigaHelper::getParameter('show_ask', 1) == 1) : ?>
+				<a data-toggle="modal" data-name="<?= $item->name; ?>" data-target="#budget" class="btn btn-default btn-block"><?= JText::_('COM_BOTIGA_MORE_INFO'); ?></a>
+				<?php endif; ?>
+				
+			</div>
 		</div>
-	<?php 
+		</div>
+	<?php
+	$i++;
 	endforeach; 
 	endif;
 	?>
+	</div>
 
-
-	<div class="pagination">
+	<div class="clearfix"></div>
+	
+	<div class="paginacion">
 		<?php echo $this->pagination->getPagesLinks(); ?>
 	</div>
 	

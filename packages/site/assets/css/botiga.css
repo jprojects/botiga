@@ -1,11 +1,14 @@
 @CHARSET "UTF-8";
 
 .empty { color: #514B4B; }
+.nopadding { padding: 0 !important; }
 
 .items { margin-top: 40px; }
 .item {
 	margin-bottom: 50px;
 }
+
+.red { color: #bd0000; }
 
 .zoom {
   	display: inline-block;
@@ -15,13 +18,13 @@
 }
 
 .zoom:hover {
-  	border: 1px solid #b7b7b7;
-  	box-shadow: 0 0.5em 1em rgba(0,0,0,0.25);
+  	border: 1px solid #f2f2f2;
+  	box-shadow: 0 0.5em 1em #f2f2f2;
 }
 
 .zoom:hover > .wrapper {
-  	border: 1px solid #b7b7b7;
-  	box-shadow: 0 0.5em 1em rgba(0,0,0,0.25);
+  	border: 1px solid #f2f2f2;
+  	box-shadow: 0 0.5em 1em #f2f2f2;
 }
 
 .botiga-btns { background-color: #000; height: 54px; }
@@ -49,8 +52,8 @@
 }
 .big {
     right: 15px;
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
     border-radius: 50px;
 }
 .big span {
@@ -89,12 +92,13 @@ span.rollover:hover {
 .item .btn-black { margin-top:10px; }
 .price { font-size: 20px; }
 .item-title, .text-left.item-title { height: 42px; }
+.item-title-item { height: 30px; margin-top: 20px; }
 #budget input, #budget textarea { color: #fff; }
 
-.brand { text-align: right; }
-.brand img { height: 50px; }
+.brand { text-align: right; margin-top: 15px; }
+.brand img { height: 40px; }
 
-.addtocart { margin: 20px 0; }
+.addtocart-block { margin: 20px 0; }
 
 .product-extra {
 	margin-top:20px;

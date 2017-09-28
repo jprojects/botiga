@@ -95,11 +95,9 @@ class botigaModelFavorites extends JModelList
 
 		$query = $db->getQuery(true);
 		
-		$query->select('i.*, .b.name as brandname');
+		$query->select('i.*');
 		
 		$query->from('#__botiga_items as i');
-		
-		$query->join('inner', '#__botiga_brands as b ON b.id = i.brand');
 		
 		$query->join('inner', '#__botiga_favorites as f ON f.itemid = i.id');
 

@@ -91,26 +91,33 @@ class botigaModelSearch extends JModelList
 	 * @since	1.6
 	*/
 	function getListQuery()
-	{
-    	$user = JFactory::getUser();
-    	$lang = JFactory::getLanguage()->getTag();
-   
+	{						
+		$user = JFactory::getUser();
+    	$lang = JFactory::getLanguage(); 
+		$def  = $lang->getTag();
+        
 		$db   = $this->getDbo();
 
-		$query  = $db->getQuery(true);
+		$query = $db->getQuery(true);
 		
-		$query->select('*');
-		$query->from('#__botiga_items');
+		$query->select('i.*, .b.name as brandname');
 		
-		$search = $this->getState('filter.search', '');
+		$query->from('#__botiga_items as i');
 		
+		$query->join('inner', '#__botiga_brands as b ON b.id = i.brand');
+
+        // Filters
+       	$search = $this->getState('filter.search', '');
+
 		if($search != '') {
-			$query->where('(name LIKE "%'.$search.'%")');
+			$query->where('(i.name LIKE "%'.$search.'%" OR ref LIKE "%'.$search.'%")');
 		}
-		
-		$query->where('published = 1');
-		$query->where("(language = ".$db->quote($lang)." OR language='*')");
-		echo $query;
+
+		$query->where('i.published = 1');
+		$query->where('i.language = '.$db->quote($def).' ORDER BY i.ref ASC');
+
+        $params = JComponentHelper::getParams( 'com_botiga' );
+		//echo $query;
 		return $query;
 	}
 
