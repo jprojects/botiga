@@ -161,6 +161,19 @@ CREATE TABLE `#__botiga_savedCarts` (
   `cart` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Estructura de tabla para la tabla `#__botiga_docs`
+--
+
+CREATE TABLE `#__botiga_docs` (
+  `id` int(11) NOT NULL,
+  `name` varchar(150) NOT NULL DEFAULT '',
+  `category` varchar(150) NOT NULL DEFAULT '',
+  `pdf` varchar(150) NOT NULL DEFAULT '',
+  `ordering` int(2) NOT NULL DEFAULT '0',
+  `published` tinyint(1) NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- --------------------------------------------------------
 
 --
