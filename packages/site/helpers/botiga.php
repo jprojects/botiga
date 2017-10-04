@@ -100,8 +100,10 @@ class botigaHelper {
 		$user   = JFactory::getUser();
 		$db		= JFactory::getDbo();
 		
+		$login_prices = botigaHelper::getParameter('login_prices');
+		
 		//if user is guest hide price
-		if($user->guest) { return '0.00'; }
+		if($login_prices == 1 && $user->guest) { return '0.00'; }
 		
 		$groups = JAccess::getGroupsByUser($user->id, false);
 		
@@ -117,7 +119,8 @@ class botigaHelper {
       	}
       	
       	foreach ($result as $index=>$value) 
-		{   
+		{ 
+			if($user->guest) { $groups = array(2); }  
     		if(in_array($value[0], $groups)) { $result = $value[1]; }
 		}
 		
