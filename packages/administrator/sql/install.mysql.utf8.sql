@@ -166,7 +166,7 @@ CREATE TABLE `#__botiga_savedCarts` (
 --
 
 CREATE TABLE `#__botiga_docs` (
-  `id` int(11) NOT NULL,
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` varchar(150) NOT NULL DEFAULT '',
   `category` varchar(150) NOT NULL DEFAULT '',
   `pdf` varchar(150) NOT NULL DEFAULT '',
