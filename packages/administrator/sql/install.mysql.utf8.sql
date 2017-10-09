@@ -154,11 +154,12 @@ CREATE TABLE `#__botiga_countries` (
 --
 
 CREATE TABLE `#__botiga_savedCarts` (
-  `id` int(11) NOT NULL,
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `idComanda` int(11) NOT NULL,
   `data` datetime NOT NULL,
   `userid` int(11) NOT NULL,
-  `cart` text NOT NULL
+  `cart` text NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -172,6 +173,7 @@ CREATE TABLE `#__botiga_docs` (
   `pdf` varchar(150) NOT NULL DEFAULT '',
   `ordering` int(2) NOT NULL DEFAULT '0',
   `published` tinyint(1) NOT NULL DEFAULT '1'
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
