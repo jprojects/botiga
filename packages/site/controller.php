@@ -64,7 +64,7 @@ class botigaController extends JControllerLegacy
 			
 			if($valid) {
 			
-				//create acj user
+				//create botiga user
 				$acjuser            	= new stdClass();
 				$acjuser->userid    	= $userid;
 			    $acjuser->usergroup 	= 2;
@@ -78,7 +78,7 @@ class botigaController extends JControllerLegacy
 			    $acjuser->cif   		= $data['cif'];	
 			    $acjuser->published	    = 1;
 			    
-			    $db->insertObject('#__laundry_users', $acjuser);    	        	
+			    $db->insertObject('#__botiga_users', $acjuser);    	        	
 			    
 				//create usergroups
 				$group              = new stdClass();
@@ -206,11 +206,11 @@ class botigaController extends JControllerLegacy
 			foreach($nodes as $brand) {
 				$marca[] = $brand->factusol_codfte;
 				$update_query = 
-					"UPDATE #__laundry_brands " .
+					"UPDATE #__botiga_brands " .
 					"SET name = " . $db->quote($brand->name) .
 					" WHERE factusol_codfte = " . $brand->factusol_codfte . " AND @factusol_codfte:=factusol_codfte";
 				$insert_query =
-					"INSERT #__laundry_brands(name,published,language,factusol_codfte) " .
+					"INSERT #__botiga_brands(name,published,language,factusol_codfte) " .
 					"VALUES (" . $db->quote($brand->name) . ", 1, 'ca-ES', " . $brand->factusol_codfte . ")";
 				$db->setQuery('SET @factusol_codfte := 0;');
 				$db->query();
@@ -239,8 +239,8 @@ class botigaController extends JControllerLegacy
 			}
 
 			//esborrar marques...
-			fputs( $log, "DELETE FROM #__laundry_brands WHERE factusol_codfte NOT IN (" . implode( ",", $marca ) . ")\n" );
-			$db->setQuery( "DELETE FROM #__laundry_brands WHERE factusol_codfte NOT IN (" . implode( ",", $marca ) . " )" );
+			fputs( $log, "DELETE FROM #__botiga_brands WHERE factusol_codfte NOT IN (" . implode( ",", $marca ) . ")\n" );
+			$db->setQuery( "DELETE FROM #__botiga_brands WHERE factusol_codfte NOT IN (" . implode( ",", $marca ) . " )" );
 			$db->query();
 			$deletes_brands = $db->getAffectedRows();
 			
@@ -268,9 +268,9 @@ class botigaController extends JControllerLegacy
 				$select_query = 
 					"SELECT catid " .
 					"FROM #__categories " .
-					"INNER JOIN #__laundry_categories_cod ON #__categories.id = #__laundry_categories_cod.catid " .
-					"WHERE #__categories.extension='com_laundry' AND LOWER(#__categories.language) = " . $db->quote(strtolower($cat->language)) . 
-						" AND #__laundry_categories_cod.factusol_codfam = " . $db->quote($cat->factusol_codfam);
+					"INNER JOIN #__botiga_categories_cod ON #__categories.id = #__botiga_categories_cod.catid " .
+					"WHERE #__categories.extension='com_botiga' AND LOWER(#__categories.language) = " . $db->quote(strtolower($cat->language)) . 
+						" AND #__botiga_categories_cod.factusol_codfam = " . $db->quote($cat->factusol_codfam);
 				// comprovem si la categoria existeix
 				$db->setQuery($select_query);
 				$db->execute();
@@ -280,6 +280,7 @@ class botigaController extends JControllerLegacy
 					$update_query = 
 						"UPDATE #__categories " .
 						"SET title = " . $db->quote($cat->title) .
+						",parent_id = ".$cat->parent.
 						" WHERE id = " . $catid; 
 					$db->setQuery( $update_query );
 					if ($db->execute()) {
@@ -290,18 +291,19 @@ class botigaController extends JControllerLegacy
 						fputs( $log, $update_query . "\n");
 						$errors_categories_detalls[] = $cat->title;	
 					}
-				} else { // la categoria no existeix. fem un insert a #__categories i a #__laundry_categories_codç
+				} else { // la categoria no existeix. fem un insert a #__categories i a #__botiga_categories_codç
 					$insert_query1 =
-						"INSERT #__categories(extension,title,language) " .
+						"INSERT #__categories(extension,title,parent_id,language) " .
 						"VALUES (" .
-							$db->quote('com_laundry')  . ", " .
+							$db->quote('com_botiga')  . ", " .
 							$db->quote($cat->title)    . ", " .
+							$parent    . ", " .
 							$db->quote($cat->language) . ")";
 					$db->setQuery( $insert_query1 );
 					if ($db->query()) {
 						$catid = $db->insertid();
 						$insert_query2 =
-							"INSERT #__laundry_categories_cod(catid,factusol_codfam) " .
+							"INSERT #__botiga_categories_cod(catid,factusol_codfam) " .
 							"VALUES (" .
 								$catid . ", " .
 								$db->quote($cat->factusol_codfam) . ")";
@@ -323,14 +325,14 @@ class botigaController extends JControllerLegacy
 
 			//esborrar categories...
 			// eliminem les categories que no pertanyin a cap de les famílies que figuren en l'XML
-			// en primer lloc, esborrem de la taula #__laundry_categories_cod. 
-			// en segon lloc, esborrem totes les categories de la taula #_categories que no tinguin correspondència amb #_laundry_categories_cod
+			// en primer lloc, esborrem de la taula #__botiga_categories_cod. 
+			// en segon lloc, esborrem totes les categories de la taula #_categories que no tinguin correspondència amb #_botiga_categories_cod
 			fputs( $log, 
-				"DELETE FROM #__laundry_categories_cod WHERE factusol_codfam NOT IN ('" . implode( "','", $categoria ) . "')\n" .
-				"DELETE #__categories FROM #__categories LEFT JOIN #__laundry_categories_cod ON #__categories.id = #__laundry_categories_cod.catid WHERE #__categories.extension='com_laundry' AND #__laundry_categories_cod.catid IS NULL" );
-			$db->setQuery( "DELETE FROM #__laundry_categories_cod WHERE factusol_codfam NOT IN ('" . implode( "','", $categoria ) . "')" );
+				"DELETE FROM #__botiga_categories_cod WHERE factusol_codfam NOT IN ('" . implode( "','", $categoria ) . "')\n" .
+				"DELETE #__categories FROM #__categories LEFT JOIN #__botiga_categories_cod ON #__categories.id = #__botiga_categories_cod.catid WHERE #__categories.extension='com_botiga' AND #__botiga_categories_cod.catid IS NULL" );
+			$db->setQuery( "DELETE FROM #__botiga_categories_cod WHERE factusol_codfam NOT IN ('" . implode( "','", $categoria ) . "')" );
 			$db->query();	
-			$db->setQuery( "DELETE #__categories FROM #__categories LEFT JOIN #__laundry_categories_cod ON #__categories.id = #__laundry_categories_cod.catid WHERE #__categories.extension='com_laundry' AND #__laundry_categories_cod.catid IS NULL" );
+			$db->setQuery( "DELETE #__categories FROM #__categories LEFT JOIN #__botiga_categories_cod ON #__categories.id = #__botiga_categories_cod.catid WHERE #__categories.extension='com_botiga' AND #__botiga_categories_cod.catid IS NULL" );
 			$db->query();
 			
 			$deletes_categories = $db->getAffectedRows();
@@ -352,21 +354,21 @@ class botigaController extends JControllerLegacy
 			$deletes_items=0;
 			$errors_items=0;
 			$errors_items_detalls = array();
-			$db->setQuery( "UPDATE #__laundry_items SET sincronitzat=0" );
+			$db->setQuery( "UPDATE #__botiga_items SET sincronitzat=0" );
 			if ($db->query()) {
 				foreach($nodes as $item) {
-					$db->setQuery( "SELECT catid FROM #__categories INNER JOIN #__laundry_categories_cod ON #__categories.id=#__laundry_categories_cod.catid WHERE #__categories.extension='com_laundry' AND LOWER(#__categories.language)=" . $db->quote(strtolower($item->language)) . " AND #__laundry_categories_cod.factusol_codfam=" . $db->quote($item->factusol_codfam) );
+					$db->setQuery( "SELECT catid FROM #__categories INNER JOIN #__botiga_categories_cod ON #__categories.id=#__botiga_categories_cod.catid WHERE #__categories.extension='com_botiga' AND LOWER(#__categories.language)=" . $db->quote(strtolower($item->language)) . " AND #__botiga_categories_cod.factusol_codfam=" . $db->quote($item->factusol_codfam) );
 					$db->execute();
 					$num_files_cat = $db->getNumRows();
 					$catid = $db->loadResult();
 					if ($num_files_cat>0) {
-						$db->setQuery( "SELECT id FROM #__laundry_brands WHERE LOWER(language)='ca-es' AND factusol_codfte=" . $item->factusol_codfte );
+						$db->setQuery( "SELECT id FROM #__botiga_brands WHERE LOWER(language)='ca-es' AND factusol_codfte=" . $item->factusol_codfte );
 						$db->execute();
 						$num_brands_cat = $db->getNumRows();
 						$brandid = $db->loadResult();
 						if ($num_brands_cat>0) {
 							$update_query = 
-								"UPDATE #__laundry_items " .
+								"UPDATE #__botiga_items " .
 								"SET " .
 									"catid = " . $catid . ", " .
 									"marca = " . $brandid . ", " .
@@ -378,7 +380,7 @@ class botigaController extends JControllerLegacy
 									"image1 = " . $db->quote($item->image1) .  
 								" WHERE LOWER(language) = " . $db->quote(strtolower($item->language)) . " AND factusol_codart = " . $db->quote($item->ref) . " AND @factusol_codart:=LENGTH(factusol_codart)";
 							$insert_query =
-								"INSERT #__laundry_items(catid,marca,name,image1,price1,price2,published,ref,factusol_codart,language,sincronitzat) " .
+								"INSERT #__botiga_items(catid,marca,name,image1,price1,price2,published,ref,factusol_codart,language,sincronitzat) " .
 								"VALUES (" .
 									$catid . ", " .
 									$brandid . ", " .
@@ -432,8 +434,8 @@ class botigaController extends JControllerLegacy
 				}
 
 				//esborrar items...
-				fputs( $log, "DELETE FROM #__laundry_items WHERE sincronitzat=0\n" );
-				$db->setQuery( "DELETE FROM #__laundry_items WHERE sincronitzat=0" );
+				fputs( $log, "DELETE FROM #__botiga_items WHERE sincronitzat=0\n" );
+				$db->setQuery( "DELETE FROM #__botiga_items WHERE sincronitzat=0" );
 				$db->query();	
 				$deletes_items = $db->getAffectedRows();
 				fprintf( $log, 
@@ -455,20 +457,20 @@ class botigaController extends JControllerLegacy
 			$deletes_prices=0;
 			$errors_prices=0;
 			$errors_prices_detalls = array(); 
-			$db->setQuery( "UPDATE #__laundry_items_userprices SET sincronitzat=0" );
+			$db->setQuery( "UPDATE #__botiga_items_userprices SET sincronitzat=0" );
 			if ($db->query()) {
 				foreach($nodes as $price) {
 					$db->setQuery('select id from #__users where username = '.$db->quote($price['username']));
 					$userid = $db->loadResult();
 					$update_query = 
-						"UPDATE #__laundry_items_userprices " .
+						"UPDATE #__botiga_items_userprices " .
 						"SET price = " . $price->price . ", " .
 							" sincronitzat = 1 " .
 						"WHERE factusol_codart = " . $db->quote($price->ref) . " AND userid = " . $userid . " AND @factusol_codart:=LENGTH(factusol_codart)";
 					$insert_query = 
-						"INSERT INTO #__laundry_items_userprices( itemid, userid, price, factusol_codart, sincronitzat ) " .
+						"INSERT INTO #__botiga_items_userprices( itemid, userid, price, factusol_codart, sincronitzat ) " .
 						"SELECT id, " . $userid . ", " . $price->price . ", " . $db->quote($price->ref) . ", 1 " .
-						"FROM #__laundry_items " .
+						"FROM #__botiga_items " .
 						"WHERE factusol_codart = " . $db->quote($price->ref);
 					$db->setQuery('SET @factusol_codart := 0;');
 					$db->query();
@@ -496,8 +498,8 @@ class botigaController extends JControllerLegacy
 					}
 				}
 				//esborrar preus...
-				fputs( $log, "DELETE FROM #__laundry_items_userprices WHERE sincronitzat=0\n" );
-				$db->setQuery("DELETE FROM #__laundry_items_userprices WHERE sincronitzat=0");
+				fputs( $log, "DELETE FROM #__botiga_items_userprices WHERE sincronitzat=0\n" );
+				$db->setQuery("DELETE FROM #__botiga_items_userprices WHERE sincronitzat=0");
 				$db->query();
 				$deletes_prices = $db->getAffectedRows();
 				fprintf( $log, 
