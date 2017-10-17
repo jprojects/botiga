@@ -33,6 +33,9 @@ class botigaController extends JControllerLegacy
 		$data 	   	= $app->input->post->get('jform', array(), 'array');
 		$valid      = true;
 		
+		$uparams = JComponentHelper::getParams( 'com_users' );
+		$new_user_type = $uparams->get('new_usertype', 2);
+		
 		if($data['password1'] !== $data['password2']) {
 			$msg  = JText::_('COM_BOTIGA_REGISTER_PASSWORD_NOT_MATCH');
 			$type = 'danger';
@@ -56,7 +59,8 @@ class botigaController extends JControllerLegacy
 			$user->password         = $password;
 			$user->email            = $data['email1'];
 			$user->registerDate     = date('Y-m-d H:i:s');
-			$user->block 			= 0;
+			//si esta configurat per activar desde administració (7) bloquejar user si no res
+			$user->block 			= $new_user_type == 7 ? 1 : 0;
 			
 			$valid = $db->insertObject('#__users', $user);
 			
@@ -64,7 +68,7 @@ class botigaController extends JControllerLegacy
 			
 			if($valid) {
 			
-				//create botiga user
+				//create acj user
 				$acjuser            	= new stdClass();
 				$acjuser->userid    	= $userid;
 			    $acjuser->usergroup 	= 2;
@@ -75,7 +79,8 @@ class botigaController extends JControllerLegacy
 			    $acjuser->cp			= $data['zip'];
 			    $acjuser->poblacio		= $data['city'];
 			    $acjuser->pais   		= $data['pais'];	
-			    $acjuser->cif   		= $data['cif'];	
+			    $acjuser->cif   		= $data['cif'];
+			    $acjuser->telefon   	= $data['telefon'];	
 			    $acjuser->published	    = 1;
 			    
 			    $db->insertObject('#__botiga_users', $acjuser);    	        	
@@ -84,19 +89,32 @@ class botigaController extends JControllerLegacy
 				$group              = new stdClass();
 				$group->user_id     = $userid;
 				$group->group_id    = 2; //group registered
-				$db->insertObject('#__user_usergroup_map', $group);		
-
+				$db->insertObject('#__user_usergroup_map', $group);
+				
 				//send email to the user with his credentials...
 				$mail = JFactory::getMailer();
 				$sender[]  	= $config->get('fromname');
 				$sender[]	= $config->get('mailfrom');
 				$mail->setSender( $sender );
-			    $mail->addRecipient( $data['email1'] );
-			    $mail->setSubject( JText::_('COM_BOTIGA_REGISTER_SUBJECT') );
-				$mail->setBody( JText::sprintf('COM_BOTIGA_REGISTER_BODY', $data['email1'], $data['password1']) );
+				
+				if($new_user_type == 2) {		
+				
+					$mail->addRecipient( $data['email1'] );
+					$mail->setSubject( JText::_('COM_BOTIGA_REGISTER_SUBJECT') );
+					$mail->setBody( JText::sprintf('COM_BOTIGA_REGISTER_BODY', $data['email1'], $data['password1']) );
+					
+				} else {
+
+					$mail->addRecipient( $data['email1'] );
+					$mail->setSubject( JText::_('COM_BOTIGA_REGISTER_ADMIN_SUBJECT') );
+					$mail->setBody( JText::_('COM_BOTIGA_REGISTER_ADMIN_BODY') );
+				}
+				
+				//ToDo::send email to admin needed??
+				
 				$mail->IsHTML(true);
 				$mail->Send();
-			
+				
 				$msg  = JText::_('COM_BOTIGA_REGISTER_SUCCESS');
 				$type = '';
 			
