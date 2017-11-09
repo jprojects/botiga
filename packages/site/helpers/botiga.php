@@ -76,6 +76,37 @@ class botigaHelper {
 	}
 	
 	/**
+	 * method to get category name
+	 * @return mixed
+	*/
+    public static function getCategoryName()
+	{
+		$db = JFactory::getDbo();
+		$app = JFactory::getApplication();
+		
+		$catid = $app->input->get('catid');
+		
+		$db->setQuery("select title from #__categories where id = ".$catid);
+		return $db->loadResult();
+	}
+	
+	/**
+	 * method to get item name
+	 * @params string $field database field request
+	 * @return mixed
+	*/
+    public static function getItemName()
+	{
+		$db = JFactory::getDbo();
+		$app = JFactory::getApplication();
+		
+		$id = $app->input->get('id');
+		
+		$db->setQuery("select name from #__botiga_items where id = ".$id);
+		return $db->loadResult();
+	}
+	
+	/**
 	 * method to know if item is favorite
 	 * @params string $field database field request
 	 * @return mixed
@@ -100,10 +131,8 @@ class botigaHelper {
 		$user   = JFactory::getUser();
 		$db		= JFactory::getDbo();
 		
-		$login_prices = botigaHelper::getParameter('login_prices');
-		
 		//if user is guest hide price
-		if($login_prices == 1 && $user->guest) { return '0.00'; }
+		if($user->guest) { return '0.00'; }
 		
 		$groups = JAccess::getGroupsByUser($user->id, false);
 		
@@ -119,12 +148,47 @@ class botigaHelper {
       	}
       	
       	foreach ($result as $index=>$value) 
-		{ 
-			if($user->guest) { $groups = array(2); }  
+		{   
     		if(in_array($value[0], $groups)) { $result = $value[1]; }
 		}
 		
-		return number_format($result, 2);
+		return number_format($result, 2, '.', '');
 		
+	}
+	
+	public static function getDibujoTecnico($ref)
+	{
+		if(file_exists('images/products/'.strtolower($ref).'-f.jpg')) {
+			return $ref.'-f.jpg';
+		}
+		if(file_exists('images/products/'.strtolower($ref).' f.jpg')) {
+			return $ref.' f.jpg';
+		}
+		if(file_exists('images/products/'.strtolower($ref).'-F.jpg')) {
+			return $ref.'-F.jpg';
+		}
+		if(file_exists('images/products/'.strtolower($ref).' F.jpg')) {
+			return $ref.' F.jpg';
+		}
+		
+		return false;
+	}
+	
+	public static function getFichaTecnica($ref)
+	{
+		if(file_exists('images/pdf/'.strtolower($ref).'-f.jpg')) {
+			return $ref.'-f.jpg';
+		}
+		if(file_exists('images/pdf/'.strtolower($ref).' f.jpg')) {
+			return $ref.' f.jpg';
+		}
+		if(file_exists('images/pdf/'.strtolower($ref).'-F.jpg')) {
+			return $ref.'-F.jpg';
+		}
+		if(file_exists('images/pdf/'.strtolower($ref).' F.jpg')) {
+			return $ref.' F.jpg';
+		}
+		
+		return false;
 	}
 }

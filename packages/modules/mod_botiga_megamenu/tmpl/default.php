@@ -27,77 +27,65 @@ $user = JFactory::getUser();
 					<ul class="dropdown-menu mega-dropdown-menu">
 						<li class="col-sm-3 hidden-xs">
 							<ul>
-								<li class="dropdown-header"><?= $cat->title; ?></li>   
-								<?php if(count($products)) : ?>                         
-		                        <div id="slider<?= $i; ?>" class="carousel slide" data-ride="carousel">
-		                          <div class="carousel-inner">
-		                          	<?php 
-		                          	$j = 0;
-		                          	foreach($products as $prod) : ?>
-		                            <div class="item <?php if($j == 0) : ?>active<?php endif; ?>">
-		                                <a href="#"><img src="<?= $prod->image1; ?>" class="img-responsive" alt="<?= $prod->name; ?>"></a>
-		                                <h4><small><?= $prod->s_description; ?></small></h4>  
-		                                <?php $user->guest ? $link = '#' : $link = 'index.php?option=com_botiga&task=botiga.setItem&id='.$prod->id.'&return='.$uri; ?>
-		                                <a href="<?= $link; ?>" class="btn btn-primary"><?= modBotigaMegamenuHelper::getUserPrice($prod->id); ?> €</a> <a href="index.php?option=com_botiga&task=setFavorite&id=<?= $prod->id; ?>" class="btn btn-default"><span class="glyphicon glyphicon-heart"></span> Favoritos</a>       
-		                            </div><!-- End Item -->
-		                            <?php 
-		                            $j++;
-		                            endforeach; ?>             
-		                          </div>
-		                         
-		                          <a class="left carousel-control" href="#slider<?= $i; ?>" role="button" data-slide="prev">
-		                            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-		                            <span class="sr-only">Previous</span>
-		                          </a>
-		                          <a class="right carousel-control" href="#slider<?= $i; ?>" role="button" data-slide="next">
-		                            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-		                            <span class="sr-only">Next</span>
-		                          </a>
-		                        </div>
-		                        <?php else : ?>
+								<li class="dropdown-header"><?= $cat->title; ?></li>  								 
 		                        <?php $p = json_decode($cat->params); ?>
 		                        <a href="index.php?option=com_botiga&view=botiga&catid=<?= $cat->id; ?>&Itemid=112">
 		                        	<img src="<?= $p->image; ?>" class="img-responsive" alt="">
 		                        </a>
-		                        <?php endif; ?>
-		                        <li class="divider"></li>
-		                        <li class=" hidden-xs"><a href="index.php?option=com_botiga&view=botiga&catid=<?= $cat->id; ?>&Itemid=112">Ver colección <span class="glyphicon glyphicon-chevron-right pull-right"></span></a></li>
+		                        <?php //endif; ?>
 							</ul>
 						</li>
 					
 						<li class="col-sm-3">
 							<ul>
-								<li class="dropdown-header hidden-xs">Categorias</li>
-								<?php foreach(modBotigaMegamenuHelper::getSubCats($cat->id) as $sub) : ?>
+								<li class="dropdown-header hidden-xs"><a href="index.php?option=com_botiga&view=botiga&catid=<?= $cat->id; ?>&Itemid=112">Ver todo</a></li>
+								<?php 
+								$i = 0;
+								foreach(modBotigaMegamenuHelper::getSubCats($cat->id) as $sub) : ?>
+								<?php if($i == 4) { echo '</ul></li><li class="col-sm-3"><ul><li class="dropdown-header hidden-xs">&nbsp;</li>'; $i = 0; } ?>
 								<li><a href="index.php?option=com_botiga&view=botiga&catid=<?= $sub->id; ?>&Itemid=112"><?= $sub->title; ?></a></li>
-								<?php endforeach; ?>	
+								<?php 
+								$i++;
+								endforeach; ?>	
 							</ul>
 						</li>
 								
 					</ul>												
-				</li>
+				</li>			
 			<?php 
 			endif;
 			$i++;
 			endforeach; ?>
 			<?php
 			$modules = JModuleHelper::getModules('jpf-inside-menu');
-			if (count($modules)) {
-			    $i = 1;
-			    foreach ($modules as $module) {
-			        echo '<li class="dropdown pull-right hidden-xs"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="badge-text">'.$module->title.'</span> <span class="badge">'.modBotigaMegamenuHelper::getCarritoCount().'</span> <span class="caret"></span></a>';
-			        echo '<ul class="dropdown-menu">
-			        	<li>
-			              <div class="container-cart">
-			                    '.JModuleHelper::renderModule($module).'
-			              </div>
-			            </li>
-			        </ul></li>';
-			        $i++;
-			    }
+			$counter = modBotigaMegamenuHelper::getCarritoCount();
+			
+			if (count($modules) && !$user->guest) {
+				$i = 1;
+				foreach ($modules as $module) {
+				    echo '<li class="dropdown pull-right hidden-xs carrito-list"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="badge-text">'.$module->title.'</span> <span class="badge cart-count">'.$counter.'</span> <span class="caret"></span></a>';
+				    if($counter >= 0) {
+						echo '<ul class="dropdown-menu">
+							<li>
+						      <div class="container-cart">
+						            '.JModuleHelper::renderModule($module).'
+						      </div>
+						    </li>
+						</ul>';
+				    }
+				    echo '</li>';
+				    $i++;
+				}
 			}
+			
 			?>
-			<li class="visible-xs"><a href="index.php?option=com_botiga&view=checkout&Itemid=114"><span class="badge-text">Carrito</span> <span class="badge"><?= modBotigaMegamenuHelper::getCarritoCount(); ?></span></a>
+			<?php $countfavs = modBotigaMegamenuHelper::getFavsCount(); ?>
+			<?php if(!$user->guest) : ?>
+			<li class="hidden-xs pull-right"><a href="index.php?option=com_botiga&view=favorites&Itemid=116"><span class="badge-text">Favoritos</span> <span class="fav-count badge"><?= $countfavs; ?></span> </a></li>
+			<?php endif; ?>
+			<li class="visible-xs"><a href="index.php?option=com_botiga&view=favorites&Itemid=116"><span class="badge-text">Favoritos</span><span class="badge"><?= $countfavs; ?></span> </a></li>
+			<li class="visible-xs"><a href="index.php?option=com_botiga&view=checkout&Itemid=114"><span class="badge-text">Carrito</span> <span class="badge"><?= $counter; ?></span></a>
+			<li class="visible-xs"><a href="index.php?option=com_users&task=user.logout&<?= JSession::getFormToken(); ?>=1">Salir</a></li>
 		</ul>
 	</div><!-- /.nav-collapse -->
   </nav>

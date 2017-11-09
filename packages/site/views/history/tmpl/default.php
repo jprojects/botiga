@@ -16,7 +16,7 @@ $model = $this->getModel('history');
 $user  = JFactory::getUser();
 ?>
 
-<div class="container">
+<div>
 
 	<div id="page-header">
 		<h1><?= JText::_('COM_BOTIGA_HISTORY_TITLE'); ?></h1>
@@ -24,9 +24,9 @@ $user  = JFactory::getUser();
 	
 	<!-- Nav tabs -->
   	<ul class="nav nav-tabs" role="tablist">
-		<li role="presentation" class="active"><a href="#tab1" aria-controls="tab1" role="tab" data-toggle="tab">Mis pedidos</a></li>
-		<li role="presentation"><a href="#tab2" aria-controls="tab2" role="tab" data-toggle="tab">Mis preferencias</a></li>
-		<li role="presentation"><a href="#tab3" aria-controls="tab3" role="tab" data-toggle="tab">Mis pedidos guardados</a></li>
+		<li role="presentation" class="active"><a href="#tab1" aria-controls="tab1" role="tab" data-toggle="tab"><?= JText::_('COM_BOTIGA_HISTORY_MY_ORDERS'); ?></a></li>
+		<li role="presentation"><a href="#tab2" aria-controls="tab2" role="tab" data-toggle="tab"><?= JText::_('COM_BOTIGA_HISTORY_MY_SETTINGS'); ?></a></li>
+		<li role="presentation"><a href="#tab3" aria-controls="tab3" role="tab" data-toggle="tab"><?= JText::_('COM_BOTIGA_HISTORY_MY_CARTS'); ?></a></li>
   	</ul>
   
   	<!-- Tab panes -->
@@ -39,7 +39,7 @@ $user  = JFactory::getUser();
 			<?php $iva = (21 / 100) * $item->subtotal; ?>
 			<?php $item->status == 3 ? $status = JText::_('COM_BOTIGA_HISTORY_STATUS_FINISHED') : $status = JText::_('COM_BOTIGA_HISTORY_STATUS_PENDING'); ?>
 			<tr>
-				<td><?= JText::_('COM_BOTIGA_HISTORY_NUM'); ?> <?= $item->id; ?></td>
+				<td><?= JText::_('COM_BOTIGA_HISTORY_NUM'); ?> <?= $item->uniqid; ?></td>
 				<td><?= $item->data; ?></td>
 				<td><?= $status; ?></td>
 				<td align="right"><div class="blue bold"><?= number_format(($item->total), 2); ?>&euro;</div></td>

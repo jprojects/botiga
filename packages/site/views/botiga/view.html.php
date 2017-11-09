@@ -41,6 +41,9 @@ class botigaViewBotiga extends JViewLegacy
 		$pathway = $app->getPathway();
 		$menu    = $menus->getActive();
 		
+		$pathway->setPathway($array);
+		$pathway->addItem(botigaHelper::getCategoryName(),'');
+		
 		$title = $this->params->get('page_title', '');
 
         $this->document->setTitle($title);

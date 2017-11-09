@@ -69,6 +69,52 @@ class botigaControllerBotiga extends botigaController {
 		$this->setRedirect($return);
 	}
 	
+	public function setItemAjax() {
+		
+		$db = JFactory::getDbo();
+		$session = JFactory::getSession();
+
+		$jinput = JFactory::getApplication()->input;
+		$itemid = $jinput->get('id');
+		$price  = botigaHelper::getUserPrice($itemid);
+		
+		$qty    = $jinput->getInt('qty', 1);
+		
+		//si no hi ha comanda creem una de nova...
+		$idComanda = $session->get('idComanda', '');
+		if($idComanda == '') { $idComanda = $this->setComanda(); }
+	
+		$db->setQuery('select cd.* from #__botiga_comandesDetall cd where cd.idItem = '.$itemid.' and cd.idComanda = '.$idComanda);
+		$row = $db->loadObject();
+		
+		$detall = new stdClass();
+		
+		if(count($row) && $row->qty > 0) {
+			$detall->id 		= $row->id;
+			$detall->qty 		= $row->qty + $qty;
+			$db->updateObject('#__botiga_comandesDetall', $detall, 'id');
+		} else {
+			$detall->idComanda 	= $idComanda;
+			$detall->idItem 	= $itemid;
+			$detall->price 		= $price;
+			$detall->qty 		= $qty;
+			$db->insertObject('#__botiga_comandesDetall', $detall);
+		}
+		
+		$db->setQuery('select name, image1 from #__botiga_items where id = '.$itemid);
+		$item = $db->loadObject();
+		
+		$result 			= array();
+		$result['id'] 		= $detall->id;
+		$result['qty'] 		= $detall->qty;
+		$result['idItem']   = $itemid;
+		$result['nombre']   = $item->name;
+		$result['imagen'] 	= $item->image1;
+		$result['price'] 	= $price;
+		
+		echo json_encode($result);
+	}
+	
 	public function removeItem() {
 	
 		$db = JFactory::getDbo();
@@ -93,6 +139,7 @@ class botigaControllerBotiga extends botigaController {
 		$user 		= JFactory::getUser();
 		
 		$comanda = new stdClass();
+		$comanda->uniqid = substr(uniqid('', true), -5);
 		$comanda->userid = $user->id;
 		$comanda->data = date('Y-m-d H:i:s');
 		$comanda->status = 1;
@@ -120,10 +167,10 @@ class botigaControllerBotiga extends botigaController {
 		$result2 = $db->query();
 		
 		if($result && $result2) {
-			$session->set('idComanda', '');		
-			$this->setRedirect('index.php?option=com_botiga&view=botiga', JText::_('COM_BOTIGA_CART_REMOVED_SUCCESS'), '');
+			$session->set('idComanda', null);		
+			$this->setRedirect('index.php', JText::_('COM_BOTIGA_CART_REMOVED_SUCCESS'), '');
 		} else {
-			$this->setRedirect('index.php?option=com_botiga&view=checkout', JText::_('COM_BOTIGA_CART_REMOVED_ERROR'), 'error');
+			$this->setRedirect('index.php?option=com_botiga&view=checkout&Itemid=134', JText::_('COM_BOTIGA_CART_REMOVED_ERROR'), 'error');
 		}
 	}
 	
@@ -235,6 +282,8 @@ class botigaControllerBotiga extends botigaController {
      	$db->setQuery('update #__botiga_comandes set subtotal = '.$db->quote($subtotal).', shipment = '.$db->quote($shipment).', iva_percent = '.$db->quote($iva_percent).', iva_total = '.$db->quote($iva_total).', total = '.$db->quote($total).', observa = '.$db->quote($observa).' where id = '.$idComanda);
      	$db->query();
      	
+     	$this->processPayment();
+     	
      	//redirect to payment
      	$this->setRedirect('index.php?option=com_botiga&view=checkout&layout=payment&Itemid=134&processor='.$processor); 
      }
@@ -259,29 +308,46 @@ class botigaControllerBotiga extends botigaController {
      		$db->setQuery('select * from #__botiga_users where userid = '.$user->id);
      		$row = $db->loadObject();
      	
-     		$db->setQuery('select cd.*, i.name, i.ref, i.image1 from #__botiga_comandesDetall as cd inner join #__botiga_items as i on i.id = cd.itemId where cd.idComanda = '.$idComanda);
+     		$db->setQuery('select  c.subtotal, c.shipment, c.iva_total, c.total, c.observa, cd.*, i.name, i.ref, i.image1 from #__botiga_comandes as c inner join #__botiga_comandesDetall as cd on c.id = cd.idComanda inner join #__botiga_items as i on i.id = cd.idItem where cd.idComanda = '.$idComanda);
      		$items = $db->loadObjectList();
      		
-     		$total     = 0;
-     		$subject   = "Nuevo pedido, pedido nº ".$idComanda;
+     		$subtotal     = 0;     	
+     		$subject   = "Nuevo pedido, pedido nº ".botigaHelper::getComandaData('uniqid', $idComanda);
 			$body      = "Se ha registrado un nuevo pedido en ".botigaHelper::getParameter('botiga_name')." del usuario:";
-			$body 	  .= "Usuario: <strong>".$user->username."</strong> :<br>";
-			$body 	  .= "Email: <strong>".$user->email."</strong> :<br>";
-			$body 	  .= "Teléfono: <strong>".$row->telefon."</strong> :<br>";
-			$body 	  .= "Dirección: <strong>".$row->adreca." ".$row->poblacio." ".$row->provincia."</strong> :<br>";
-			$body     .= "<table class='table'>";
+						
+			$body     .= "<table class='table' style='border:1px solid #999;padding:10px;font-family:Arial;'>";
+			
+			$body 	  .= "<tr><td width='40%'><img src='".JURI::base()."images/logo.png' alt='Dicohotel' /></td>";
+			$body     .= "<td width='20%' style='font-size:10px'>DICO MOLAS<br>CAPDEVILA<br>SL<br>DEL PUJOL 3<br>08506 CALLDETENES<br>BARCELONA<br>CIF B-62769831</td>";
+			$body     .= "<td width='10%'></td><td width='10%'></td><td width='20%'></td></tr>";
+			
+			$body     .= "<tr><td colspan='2' style='background-color:#ccc;text-align:center;font-size:20px;'><strong>PROFORMA</strong></td>";
+			$body     .= "<td colspan='3'>CLI: <strong>".$user->username."</strong><br>";
+			$body 	  .= "Email: <strong>".$user->email."</strong><br>";
+			$body 	  .= "Teléfono: <strong>".$row->telefon."</strong><br>";
+			$body 	  .= "Dirección: <strong>".$row->adreca." ".$row->poblacio." ".$row->provincia."</strong><br>";
+			$body 	  .= "Observacions: <strong>".$row->observa."</strong><br></td></tr>";
+			
+			$body     .= "<tr><td width='10%'></td>";
+			$body     .= "<td width='45%'><strong>COD</strong></td>";
+			$body     .= "<td width='4%'><strong>EUR</strong></td>";
+			$body     .= "<td width='25%' align='center'><strong>CANT</strong></td>";
+			$body     .= "<td width='20%' align='right'><strong>NETO</strong></td></tr>";
 			
 			foreach($items as $item) {
 				$item->image1 != '' ? $image = JURI::base().$item->image1 : $image = JURI::base().'images/noimage.png';
-				$total     = $item->total;
-				$body     .= "<tr><td width='10%'><img src='".$image."' style='max-width:100px;' alt='' /></td>";
+				$subtotal += $item->price * $item->qty;
+				$body     .= "<tr><td width='10%'><img src='".$image."' width='100' height='100'  alt='' /></td>";
 				$body     .= "<td width='45%'>".$item->name." - ".$item->ref."</td>";
 				$body     .= "<td width='4%'><strong>".$item->price."&euro;</strong></td>";
 				$body     .= "<td width='25%' align='center'>".$item->qty."</td>";
-				$body     .= "<td width='20%' align='right'><strong>".$item->subtotal."&euro;</strong></td></tr>";
+				$body     .= "<td width='20%' align='right'><strong>".$subtotal."&euro;</strong></td></tr>";
 			}
 			
-			$body .= "<tr><td colspan='5' align='right'>".JText::_('COM_BOTIGA_CHECKOUT_TOTAL')." ".number_format($total, 2)."</td></tr></table>";
+			$body .= "<tr><td colspan='5' align='right'><strong>".JText::_('Subtotal')."</strong> ".number_format($item->subtotal, 2)."</td></tr>";
+			$body .= "<tr><td colspan='5' align='right'><strong>".JText::_('Envío')."</strong> ".number_format($item->shipment, 2)."</td></tr>";
+			$body .= "<tr><td colspan='5' align='right'><strong>".JText::_('IVA')."</strong> ".number_format($item->iva_total, 2)."</td></tr>";
+			$body .= "<tr><td colspan='5' align='right'><strong>".JText::_('COM_BOTIGA_CHECKOUT_TOTAL')."</strong> ".number_format($item->total, 2)."</td></tr></table>";
 			
 			$body2 = "<p>Gracias.</p>";			
 	
@@ -289,11 +355,7 @@ class botigaControllerBotiga extends botigaController {
 			$this->enviar($subject, $body, botigaHelper::getParameter('botiga_mail'));
 			//mail para el user
 			$this->enviar($subject, $body.$body2, $user->email);
-			
-     		$session->clear('idComanda');
-     	}
-     	
-     	$this->setRedirect('index.php?option=com_botiga&view=botiga&layout=success&Itemid=134', $type);     	
+     	}    	
      }
      
      public function updateQty()
@@ -333,7 +395,7 @@ class botigaControllerBotiga extends botigaController {
      
     public function enviar($subject, $body, $email) 
 	{
-		$mail 		= JFactory::getMailer();
+		$mailer 	= JFactory::getMailer();
 		$config 	= JFactory::getConfig();
 
 		$fromname  	= $config->get('fromname');
@@ -342,12 +404,13 @@ class botigaControllerBotiga extends botigaController {
 		$sender[]  	= $fromname;
 		$sender[]	= $mailfrom;	
 		
-        $mail->setSender( $sender );
-        $mail->addRecipient( $email );
-        $mail->setSubject( $subject );
-        $mail->setBody( $body );
-        $mail->IsHTML(true);
+        $mailer->setSender( $sender );
+        $mailer->addRecipient( $email );
+        $mailer->setSubject( $subject );
+        $mailer->isHTML(true);
+        $mailer->Encoding = 'base64';
+        $mailer->setBody( $body );        
         
-		return $mail->Send();			
+		return $mailer->Send();			
 	}
 }

@@ -26,13 +26,13 @@ class botigaModelItems extends JModelList
 	{
     	if (empty($config['filter_fields'])) {
 			$config['filter_fields'] = array(
-				'id', 'id',
-				'ref', 'ref',
-				'catid', 'catid',
-				'name', 'name',
-				'published', 'published',
-				'language', 'language',
-				'price', 'price',
+				'id', 'i.id',
+				'ref', 'i.ref',
+				'catid', 'i.catid',
+				'name', 'i.name',
+				'published', 'i.published',
+				'language', 'i.language',
+				'price', 'i.price',
 			);
 		}
 		parent::__construct($config);
@@ -76,6 +76,9 @@ class botigaModelItems extends JModelList
 		
 		$catid = $this->getUserStateFromRequest($this->context.'.filter.catid', 'filter_catid', '');
 		$this->setState('filter.catid', $catid);
+		
+		$published = $this->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '');
+		$this->setState('filter.published', $published);
 
 		// List state information.
 		parent::populateState('i.id', 'asc');
@@ -125,6 +128,12 @@ class botigaModelItems extends JModelList
 			$query->where('(i.name LIKE '.$search.') OR (i.ref LIKE '.$search.')');
 		}
 		
+		// Filter on the published.
+		$published = $this->getState('filter.published');
+		if ($published != '') {
+			$query->where('i.published = ' . $published);
+		}
+		
 		// Filter on the language.
 		if ($language = $this->getState('filter.language')) {
 			$query->where('i.language = ' . $db->quote($language));
@@ -140,7 +149,7 @@ class botigaModelItems extends JModelList
 		$orderDirn	= $this->state->get('list.direction', 'ASC');
 
 		$query->order($db->escape($orderCol.' '.$orderDirn));
-                
+        //echo $query;  
 		return $query;
 	}
 }

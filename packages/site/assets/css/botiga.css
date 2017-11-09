@@ -33,6 +33,8 @@
 .item .botiga-img { position: relative; height: 300px; }
 .item .botiga-img img { max-height: 250px; margin: 0 auto; }
 
+#page-header h2, #page-header h1 { font-size: 20px !important; }
+
 .pvp-badge {
     position: absolute;
     top: 5px;
@@ -44,7 +46,7 @@
 }
 .pvp-badge span {
     position: absolute;
-    top: 35%;
+    top: 33%;
     left: 25%;
     font-size: 12px;
     font-weight: bold;
@@ -52,19 +54,19 @@
 }
 .big {
     right: 15px;
-    width: 80px;
-    height: 80px;
+    width: 70px;
+    height: 70px;
     border-radius: 50px;
 }
 .big span {
-    font-size: 22px;
+    font-size: 18px;
 }
 
 .thumbnail > img, .thumbnail > a > img { height: 250px; } 
 .additional-img a { display: inline-block; }
 .additional-img img {
-	width: 150px;
-	height: 150px;
+	width: 80px;
+	height: 100px;
 }
 
 span.rollover {
@@ -72,8 +74,8 @@ span.rollover {
 	-o-transition-duration: 1s;
 	-moz-transition-duration: 1s;
 	-webkit-transition: -webkit-transform 1s;
-	background:url(../images/glass.png) center center no-repeat #ccc;
-	cursor: pointer;
+	background-color: #ccc;
+	cursor:zoom-in;
 	height: 100%;
 	width: 100%;
 	position: absolute;
@@ -91,11 +93,13 @@ span.rollover:hover {
 .btn-link, .btn-link:hover { border: 1px solid #1d1d1d; color: #1d1d1d; text-decoration:none; }
 .item .btn-black { margin-top:10px; }
 .price { font-size: 20px; }
-.item-title, .text-left.item-title { height: 42px; }
-.item-title-item { height: 30px; margin-top: 20px; }
+.item-ref { font-size: 10px; }
+.item-divider { height: 10px; }
+.item-title-item { height: 30px; }
+.item-title-ref { margin-top: 20px; }
 #budget input, #budget textarea { color: #fff; }
 
-.brand { text-align: right; margin-top: 15px; }
+.brand { margin-top: 50px; }
 .brand img { height: 40px; }
 
 .addtocart-block { margin: 20px 0; }
@@ -107,16 +111,20 @@ span.rollover:hover {
 }
 
 .bold { font-weight: bold; }
-.faded { color: #ccc; }
+.faded { color: #999; }
+
+.item-favorite { margin-top: 20px; }
 
 #number {
     width: 50px;
     height: 34px;
+    text-align: center;
 }
 
 .paginacion { width: 100%; text-align: center; }
 .pagination>li>a, .pagination>li>span {
-    color: #BD0000 !important;
+    color: #000 !important;
     border: none !important;
 }
+span.pagenav { font-weight: bold; }
 	

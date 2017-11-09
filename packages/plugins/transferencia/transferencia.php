@@ -50,20 +50,22 @@ class plgBotigaTransferencia extends JPlugin
 		$rebut->formaPag = 'T';
 		$rebut->payment_status = 'P'; 		
 		
-		//$db->insertObject('#__botiga_rebuts', $rebut);
+		$db->insertObject('#__botiga_rebuts', $rebut);
 		
 		$total = abs($total);
 			
 		$account = $this->params->get('account','');
 		$benef   = $this->params->get('beneficiari','');
 		
-		$html  = "<h2>Heu triat pagament per transferència</h2>";
+		$html  = "<div class='alert alert-danger'>Pedido en gestión.<br>Nos pondremos en contacto para confirmar el pedido.</div>";
+		
+		$html .= "<div id='page-header'><h1>Ha escogido pago por transferencia</h1></div>";
 		$html .= "<table class='table'>";
-		$html .= "<tr><td><strong>Import a ingressar</strong></td><td>{AMOUNT}€</td></tr>";
-		$html .= "<tr><td><strong>Indicar a concepte</strong></td><td> la id de la comanda (WEB".$idComanda.")</td></tr>";
-		$html .= "<tr><td><strong>CC on fer ingrés</strong></td><td>".$account."</td></tr>";
+		$html .= "<tr><td><strong>Importe a ingressar</strong></td><td>{AMOUNT}€</td></tr>";
+		$html .= "<tr><td><strong>Indicar el concepto</strong></td><td> la id de la comanda (WEB".$idComanda.")</td></tr>";
+		$html .= "<tr><td><strong>IBAN</strong></td><td>".$account."</td></tr>";
 		$html .= "</table>";
-		$html .= "<p>IMPORTANT: No podrem preparar la comanda fins rebre el pagament.</p>";
+		$html .= "<p>IMPORTANTE: No se prepara el pedido hasta recibir el pago.</p>";
 		$html .= "<p></p>";
 
 		$html = str_replace('{AMOUNT}', $total, $html);

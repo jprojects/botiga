@@ -10,7 +10,7 @@
         />
         <field 
         	type="text" 
-        	name="botiga_mal" 
+        	name="botiga_mail" 
         	default="" 
         	label="COM_BOTIGA_SETTINGS_MAIL_LBL" 
         	description="COM_BOTIGA_SETTINGS_MAIL_DSC" 
@@ -50,17 +50,6 @@
         	class="btn-group"
         	label="COM_BOTIGA_SETTINGS_PRICES_LBL" 
         	description="COM_BOTIGA_SETTINGS_PRICES_DSC"
-		>
-		<option value="0">JNO</option>
-		<option value="1">JYES</option> 
-        </field>
-        <field 
-        	type="radio" 
-        	name="login_prices" 
-        	default="0" 
-        	class="btn-group"
-        	label="COM_BOTIGA_SETTINGS_LOGIN_PRICES_LBL" 
-        	description="COM_BOTIGA_SETTINGS_LOGIN_PRICES_DSC"
 		>
 		<option value="0">JNO</option>
 		<option value="1">JYES</option> 

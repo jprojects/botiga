@@ -11,7 +11,6 @@
 	    	<option value="history" name="History" msg="Esta es la vista del componente que genera el historial del usuario." />
 	    	<option value="coupons" name="Coupons" msg="Esta es la vista del componente que genera el el listado de documentos." />
 	    	<option value="favorites" name="Favorites" msg="Esta es la vista del componente que genera el el listado de favoritos." />
-	    	<option value="docs" name="Documentos" msg="Esta es la vista del componente que genera el el listado de documentos." />
         </options>
     </menu>
 </metadata>

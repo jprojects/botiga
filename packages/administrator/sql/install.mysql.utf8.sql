@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS `#__botiga_brands` (
 
 CREATE TABLE IF NOT EXISTS `#__botiga_comandes` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `uniqid` varchar(50) NOT NULL DEFAULT '',
   `data` datetime NOT NULL,
   `userid` int(11) NOT NULL,
   `status` smallint(1) NOT NULL DEFAULT '0' COMMENT '1-Pending;2-Pending payment;3-Completed',
@@ -104,14 +105,13 @@ CREATE TABLE IF NOT EXISTS `#__botiga_items` (
   `pdf` varchar(150) NOT NULL DEFAULT '',
   `price` varchar(150) NOT NULL,
   `pvp` float(10,2) NOT NULL,
-  `garantia` varchar(150) NOT NULL DEFAULT '',
-  `envio` varchar(150) NOT NULL DEFAULT '',
+  'garantia' varchar(150) NOT NULL DEFAULT '',
+  'envio' varchar(150) NOT NULL DEFAULT '',
   `published` tinyint(1) NOT NULL DEFAULT '0',
   `language` char(7) NOT NULL DEFAULT '0',
   `ref` varchar(15) DEFAULT NULL,
   `factusol_codart` varchar(13) DEFAULT NULL,
   `sincronitzat` int(11) DEFAULT '0',
-  `ordering` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -131,6 +131,7 @@ CREATE TABLE IF NOT EXISTS `#__botiga_shipments` (
   `min` varchar(50) NOT NULL DEFAULT '',
   `max` varchar(50) NOT NULL DEFAULT '',
   `total` int(5) NOT NULL DEFAULT '0',
+  `country` int(5) NOT NULL DEFAULT '0',
   `ordering` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -149,33 +150,6 @@ CREATE TABLE `#__botiga_countries` (
   `published` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`country_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
---
--- Estructura de tabla para la tabla `#__botiga_savedCarts`
---
-
-CREATE TABLE `#__botiga_savedCarts` (
-  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `idComanda` int(11) NOT NULL,
-  `data` datetime NOT NULL,
-  `userid` int(11) NOT NULL,
-  `cart` text NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Estructura de tabla para la tabla `#__botiga_docs`
---
-
-CREATE TABLE `#__botiga_docs` (
-  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `name` varchar(150) NOT NULL DEFAULT '',
-  `category` varchar(150) NOT NULL DEFAULT '',
-  `pdf` varchar(150) NOT NULL DEFAULT '',
-  `ordering` int(2) NOT NULL DEFAULT '0',
-  `published` tinyint(1) NOT NULL DEFAULT '1'
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -231,7 +205,7 @@ CREATE TABLE `#__botiga_users` (
 -- Volcado de datos para la tabla `afi_virtuemart_countries`
 --
 
-INSERT INTO `#__botiga_countries` (`country_id`, `country_name`, `country_code`, `ordering`, `published`) VALUES
+INSERT INTO `afi_botiga_countries` (`country_id`, `country_name`, `country_code`, `ordering`, `published`) VALUES
 (1, 'Afghanistan', 'AFG', 0, 1),
 (2, 'Albania', 'ALB', 0, 1),
 (3, 'Algeria', 'DZA', 0, 1),

@@ -17,7 +17,17 @@ abstract class modRelatedItemsHelper extends botigaHelper
 	{
 		$db	 = JFactory::getDbo();
 		
-		$db->setQuery('select * from #__botiga_items where published = 1 order by rand() limit 4');
+		$id = JFactory::getApplication()->input->get('id');
+		
+		$db->setQuery('select catid, collection from #__botiga_items where id = '.$id);
+		$row = $db->loadObject();
+		
+		if($row->collection != '') {
+			$db->setQuery('select * from #__botiga_items where published = 1 and collection = '.$db->quote($row->collection).' order by rand() limit 4');
+		} else {		
+			$db->setQuery('select * from #__botiga_items where published = 1 and catid IN('.$db->quote($row->catid).') order by rand() limit 4');
+		}
+		
 		return $db->loadObjectList();
 
 	}

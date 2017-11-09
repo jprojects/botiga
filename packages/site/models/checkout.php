@@ -185,7 +185,7 @@ class botigaModelCheckout extends JModelList
 		if($operator == '+') {
 			$shipment = $total;
 		}
-		return number_format($shipment, 2);
+		return number_format($shipment, 2, '.', '');
 		
 	}
 }

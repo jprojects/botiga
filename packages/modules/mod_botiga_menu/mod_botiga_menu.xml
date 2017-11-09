@@ -22,6 +22,14 @@
 	<config>
         <fields name="params">
 	    <fieldset name="settings" group="settings" label="Settings">
+	    		<field name="brands" type="radio" class="btn-group" default="1" label="Marcas" description="Activar menu marcas">
+					<option value="0">JNO</option>
+                	<option value="1">JYES</option>
+            	</field>
+            	<field name="collections" type="radio" class="btn-group" default="1" label="Colecciones" description="Activar menu colecciones">
+					<option value="0">JNO</option>
+                	<option value="1">JYES</option>
+            	</field>
             	<field name="cache" type="list" default="0" label="MOD_JPF_CACHE_LABEL" description="MOD_JPF_CACHE_DESC">
 					<option value="0">JNO</option>
                 	<option value="1">JYES</option>

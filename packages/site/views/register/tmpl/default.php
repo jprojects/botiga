@@ -5,8 +5,8 @@
  * @copyright   Copyright © 2010 - All rights reserved.
  * @license		GNU/GPL
  * @author		kim
- * @author mail administracion@joomlanetprojects.com
- * @website		http://www.joomlanetprojects.com
+ * @author mail kim@aficat.com
+ * @website		http://www.aficat.com
  *
 */
 
@@ -20,25 +20,10 @@ $link = '';
 
 <style>#page-header { border: none; }</style>
 
-<div class="container">
+<div> 
 
 	<div class="page-header">
-		<h2><?= JText::_('COM_BOTIGA_LOGIN_TITLE'); ?></h2>
-		<hr>
-		<p><?= JText::_('COM_BOTIGA_LOGIN_SUBTITLE'); ?></p>
-	</div>
-	
-	<?php
-	jimport('joomla.application.module.helper');
-
-	$modules = JModuleHelper::getModules('login');
-	foreach ($modules as $module) {
-		echo JModuleHelper::renderModule($module);
-	}
-	?> 
-
-	<div class="page-header">
-		<h2><?= JText::_('COM_BOTIGA_REGISTER_TITLE'); ?></h2>
+		<h3><?= JText::_('COM_BOTIGA_REGISTER_TITLE'); ?></h3>
 		<hr>
 		<p><?= JText::_('COM_BOTIGA_REGISTER_SUBTITLE'); ?></p>
 	</div>
@@ -50,8 +35,8 @@ $link = '';
 				<?php foreach($this->form->getFieldset('register') as $field): ?>
 				<div class="control-group">
 				<div class="form-group">
-						<label class="col-sm-3 control-label"><?php echo $field->label; ?></label>
-						<div class="col-sm-9"><?php echo $field->input ?></div>
+						<label class="col-sm-2 control-label"><?php echo $field->label; ?></label>
+						<div class="col-sm-10"><?php echo $field->input ?></div>
 				</div>
 				</div>
 				<?php endforeach; ?>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form
+        addrulepath="/administrator/components/com_botiga/models/rules"
+>
+	<fieldset name="details" addfieldpath="/administrator/components/com_botiga/models/fields">
+		<field name="id"  type="text" class="readonly" label="JGLOBAL_FIELD_ID_LABEL"
+			description ="JGLOBAL_FIELD_ID_DESC" size="10" default="0" readonly="true"  
+        />
+        <field 
+        	name="published" 
+        	type="list" 
+        	label="JSTATUS"
+			description="JFIELD_PUBLISHED_DESC" class="inputbox"
+			filter="intval" size="1" default="1"
+		>
+			<option value="1">JPUBLISHED</option>
+			<option value="0">JUNPUBLISHED</option>
+		</field>
+		<field 
+			name="name"
+			type="text"
+			label="COM_BOTIGA_DOC_NAME_LABEL"
+			description="COM_BOTIGA_DOC_NAME_DESC"
+			required="true"
+		/>      
+		<field 
+			name="category" 
+			type="list" 
+			label="COM_BOTIGA_DOC_CATEGORY_LABEL" 
+			description="COM_BOTIGA_DOC_CATEGORY_DESC" 
+			default=""
+		>
+			<option value="">COM_BOTIGA_SELECT_AN_OPTION</option>				
+			<option value="Aspiradoras">Aspiradoras</option>
+			<option value="Equipos Humidificación">Equipos Humidificación</option>
+			<option value="Grupos Motor Bomba">Grupos Motor Bomba</option>
+			<option value="Hidrolimpiadoras">Hidrolimpiadoras</option>	
+			<option value="Lavamoquetas">Lavamoquetas</option>
+		</field>
+		<field name="pdf"
+			type="filelist"
+			directory="images/pdf"
+			exclude="\.html$"
+			label="COM_BOTIGA_DOC_PDF_LABEL"
+			description="COM_BOTIGA_DOC_PDF_DESC"
+		/> 
+	</fieldset>
+        <fields name="params">
+		<fieldset
+			name="params"
+			label="JGLOBAL_FIELDSET_DISPLAY_OPTIONS"
+		>			
+		</fieldset>
+	</fields>
+</form>

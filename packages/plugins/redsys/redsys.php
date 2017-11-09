@@ -124,9 +124,7 @@ class plgBotigaRedsys extends JPlugin
 			    	$rebut->formaPag 		= 'C';
 			    	$rebut->payment_status 	= 'C'; 		
 			    		
-			    	$db->insertObject('#__botiga_rebuts', $rebut);	
-			    		
-			    	$db->insertObject('#__buuks_rebuts', $rebut);
+			    	$db->insertObject('#__botiga_rebuts', $rebut);				
 			    		
 			    	//actualitzar estat comanda a pagada (3)
 			    	$db->setQuery('update #__botiga_comandes set status = 3, data = '.$db->quote(date('Y-m-d H:i:s')).' WHERE id = '.$idComanda);

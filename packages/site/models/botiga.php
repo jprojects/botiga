@@ -5,8 +5,8 @@
  * @copyright   Copyright © 2010 - All rights reserved.
  * @license		GNU/GPL
  * @author		kim
- * @author mail administracion@joomlanetprojects.com
- * @website		http://www.joomlanetprojects.com
+ * @author mail kim@aficat.com
+ * @website		http://www.aficat.com
  *
 */
 
@@ -49,11 +49,11 @@ class botigaModelBotiga extends JModelList
 
         // List state information
 		//$value = $app->getUserStateFromRequest('global.list.limit', 'limit', $app->getCfg('list_limit'));
-		$value = JRequest::getInt('limit', $app->getCfg('list_limit', 0));
+		$value = $app->input->getInt('limit', 24);
 		$this->setState('list.limit', $value);
 
 		//$value = $app->getUserStateFromRequest($this->context.'.limitstart', 'limitstart', 0);
-		$value = JRequest::getInt('limitstart', 0);
+		$value = $app->input->getInt('limitstart', 0);
 		$this->setState('list.start', $value);
 
 		// Load the parameters.
@@ -106,16 +106,24 @@ class botigaModelBotiga extends JModelList
 
         // Filters
        	$catid   = $app->input->getInt('catid', 0);
-		$marca   = $app->input->getInt('marca', '');
+		$marca   = $app->input->getInt('marca', 0);
+		$collection   = $app->input->getString('collection', '');
 		$ref     = $app->input->get('ref', '');
-		$orderby = $app->input->get('orderby', 'id');
+		$orderby = $app->input->get('orderby', 'ref');
+		
+		$limit = $app->input->getInt('limit', 24);
+		$this->setState('list.limit', $limit);
 
 		if($catid != 0) {
 			$query->where('(FIND_IN_SET ('.$catid.', i.catid))');
 		}
 		
-		if($marca != '') {
+		if($marca != 0) {
 			$query->where('(i.brand = '.$marca.')');
+		}
+		
+		if($collection != '') {
+			$query->where('(i.collection = '.$db->quote($collection).')');
 		}
 		
 		if($ref != '') {
@@ -141,5 +149,19 @@ class botigaModelBotiga extends JModelList
         $items	= parent::getItems();
 
 		return $items;
+	}
+	
+	public function getNumItems() {
+	
+		$db = JFactory::getDbo();
+		$id = JFactory::getApplication()->input->get('id');
+		
+		$count = count($this->getItems());
+		
+		$db->setQuery($this->getListQuery());
+		
+		$total = count($db->loadObjectList());
+		
+		return JText::sprintf('COM_BOTIGA_TOTAL_ITEMS', $count, $total);
 	}
 }

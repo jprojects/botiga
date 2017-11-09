@@ -18,7 +18,7 @@ class modBotigaMegamenuHelper extends botigaHelper
 	
 		$db   = JFactory::getDbo();
 		
-		$db->setQuery('select id, title, params from #__categories where extension = '.$db->quote('com_botiga').' and parent_id = 1 and published = 1');
+		$db->setQuery('select id, title, params from #__categories where extension = '.$db->quote('com_botiga').' and parent_id = 1 and published = 1 order by lft');
 		return $db->loadObjectList();
 	}
 	
@@ -26,7 +26,7 @@ class modBotigaMegamenuHelper extends botigaHelper
 	
 		$db   = JFactory::getDbo();
 		
-		$db->setQuery('select id, title from #__categories where parent_id = '.$id.' and published = 1');
+		$db->setQuery('select id, title from #__categories where parent_id = '.$id.' and published = 1 order by lft');
 		return $db->loadObjectList();
 	}
 	
@@ -59,6 +59,17 @@ class modBotigaMegamenuHelper extends botigaHelper
    		} else {
    			return 0;
    		}
+    }
+    
+    public static function getFavsCount() 
+    {
+   		$db 	 = JFactory::getDbo();
+   		$user 	 = JFactory::getUser();
+   		
+   		if($user->guest) { return 0; }
+		
+   		$db->setQuery('select count(id) from #__botiga_favorites where userid = '.$user->id);
+   		return $db->loadResult();
     }
 }
 

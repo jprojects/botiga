@@ -21,11 +21,27 @@ class modBotigaMenuHelper
 		return $db->loadObjectList();
 	}
 	
+	public static function getCollections() {
+				
+		$db   = JFactory::getDbo();
+		$lang = JFactory::getLanguage()->getTag();
+		$app  = JFactory::getApplication();
+		
+		$marca = $app->input->get('marca', 0);
+		
+		$sql = 'select distinct(collection) from #__botiga_items where published = 1 and language = '.$db->quote($lang).' ';
+		if($marca != 0) { $sql .= 'and brand = '.$marca.' '; } 
+		$sql .= 'order by collection ASC';
+
+		$db->setQuery($sql);
+		return $db->loadObjectList();
+	}
+	
 	public static function getCats() {
 	
 		$db   = JFactory::getDbo();
 		
-		$db->setQuery('select id, title, parent_id from #__categories where extension = '.$db->quote('com_botiga').' and parent_id = 1 and published = 1');
+		$db->setQuery('select id, title, parent_id from #__categories where extension = '.$db->quote('com_botiga').' and parent_id = 1 and published = 1 order by lft');
 		return $db->loadObjectList();
 	}
 	
@@ -33,7 +49,7 @@ class modBotigaMenuHelper
 	
 		$db   = JFactory::getDbo();
 		
-		$db->setQuery('select id, title, parent_id from #__categories where parent_id = '.$id.' and published = 1');
+		$db->setQuery('select id, title, parent_id from #__categories where parent_id = '.$id.' and published = 1 order by lft');
 		return $db->loadObjectList();
 	}
 	

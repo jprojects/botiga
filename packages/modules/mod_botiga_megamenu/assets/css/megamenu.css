@@ -35,10 +35,10 @@
 .mega-dropdown-menu > li ul > li > a:focus {
   text-decoration: none;
 }
-.mega-dropdown-menu .dropdown-header {
+.mega-dropdown-menu .dropdown-header, .mega-dropdown-menu .dropdown-header a {
   font-size: 18px;
-  color: #ff3546;
-  padding: 5px 60px 5px 5px;
+  color: #B5001C;
+  padding: 5px 60px 5px 0px;
   line-height: 30px;
 }
 

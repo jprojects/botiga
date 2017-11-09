@@ -47,16 +47,16 @@ if($user->guest) {
 		<div class="alert alert-info hidden-xs hidden-sm"><?= JText::_('COM_BOTIGA_A_CONSULTAR_NOTICE'); ?></div>
 		<?php endif; ?>
 		</td>
-		<td width="4%">
+		<td width="5%">
 		<div class="blue bold size20">
 		<?php if($item->price == 0) { echo JText::_('COM_BOTIGA_A_CONSULTAR'); } else { echo $item->price.'&euro;'; } ?>
 		</div>
 		</td>
-		<td width="25%">
+		<td width="20%">
 		<div class="col-md-12">
 			<div class="input-group">
 				<span class="input-group-btn"><a href="index.php?option=com_botiga&task=botiga.updateQty&id=<?= $item->id; ?>&type=minus" class="btn btn-default value-control"><span class="glyphicon glyphicon-minus"></span></a></span>
-				<input type="text" name="qty-<?= $item->id; ?>" value="<?= $item->qty; ?>" class="form-control" id="qty-<?= $item->id; ?>">
+				<input type="text" name="qty-<?= $item->id; ?>" value="<?= $item->qty; ?>" class="form-control text-center" id="qty-<?= $item->id; ?>">
 				<span class="input-group-btn"><a href="index.php?option=com_botiga&task=botiga.updateQty&id=<?= $item->id; ?>&type=plus" class="btn btn-default value-control"><span class="glyphicon glyphicon-plus"></span></a></span>
 			</div>
 		</div>
@@ -68,7 +68,7 @@ if($user->guest) {
 		?>
 		</div>
 		</td>
-		<td width="5%"><a href="index.php?option=com_botiga&task=botiga.removeItem&id=<?= $item->id; ?>"><?= JText::_('COM_BOTIGA_CHECKOUT_DELETE'); ?></a></td>
+		<td width="5%"><a href="index.php?option=com_botiga&task=botiga.removeItem&id=<?= $item->id; ?>"><i class="fa fa-trash-o fa-2x" title="<?= JText::_('COM_BOTIGA_CHECKOUT_DELETE'); ?>"></i></a></td>
 	</tr>
 	<?php $subtotal += $total_row; ?>
 	<?php endforeach; ?>
@@ -77,7 +77,7 @@ if($user->guest) {
 		<td width="20%"></td>
 		<td></td>
 		<td><strong><?= JText::_('COM_BOTIGA_CHECKOUT_SUBTOTAL'); ?></strong></td>
-		<td width="20%"><span class="blue bold size20 total text-right"><?= number_format($subtotal, 2); ?>&euro;</span></td>
+		<td width="20%"><span class="blue bold size20 total text-right"><?= number_format($subtotal, 2, '.', ''); ?>&euro;</span></td>
 	</tr>
 	<tr>
 		<td width="20%"></td>
@@ -96,15 +96,15 @@ if($user->guest) {
      	$iva_total  = ($iva_percent / 100) * ($subtotal + $shipment); 
      	?>
 		<td><strong><?= 'IVA '.$iva_percent.'%'; ?></strong></td>
-		<td width="20%"><span class="blue bold size20 total text-right"><?= number_format($iva_total, 2); ?>&euro;</span></td>
+		<td width="20%"><span class="blue bold size20 total text-right"><?= number_format($iva_total, 2, '.', ''); ?>&euro;</span></td>
 	</tr>
 	<tr>
 		<td width="20%"></td>
 		<td width="20%"></td>
 		<td></td>
 		<td><strong><?= JText::_('COM_BOTIGA_CHECKOUT_TOTAL'); ?></strong></td>
-		<?php $total = number_format(($subtotal + $shipment + $iva_total), 2); ?>
-		<td width="20%"><span class="blue bold size20 total text-right"><?= number_format($total, 2); ?>&euro;</span></td>
+		<?php $total = $subtotal + $shipment + $iva_total; ?>
+		<td width="20%"><span class="blue bold size20 total text-right"><?= number_format($total, 2, '.', ''); ?>&euro;</span></td>
 	</tr>
 	</table>
 	
@@ -131,7 +131,7 @@ if($user->guest) {
 				<div class="blue bold size20 item-total-<?= $item->id; ?>">
 				<?php 
 				$total_row = $item->price * $item->qty;
-				echo number_format($total_row, 2) . ' &euro;'; 
+				echo number_format($total_row, 2, '.', '') . ' &euro;'; 
 				?>
 				</div>
 			</div>		
@@ -140,7 +140,7 @@ if($user->guest) {
 		<div class="clearfix"></div>
 		<div class="col-xs-12 text-right">
 			<strong><?= JText::_('COM_BOTIGA_CHECKOUT_SUBTOTAL'); ?></strong>
-			<span class="blue bold size20 total"><?= number_format($subtotal, 2); ?>&euro;</span>
+			<span class="blue bold size20 total"><?= number_format($subtotal, 2, '.', ''); ?>&euro;</span>
 		</div>
 		<div class="col-xs-12 text-right">
 			<strong><?= JText::_('COM_BOTIGA_CHECKOUT_TOTAL-SHIPMENT'); ?></strong>
@@ -148,16 +148,15 @@ if($user->guest) {
 		</div>
 		<div class="col-xs-12 text-right">
 			<strong>IVA <?= $iva_percent; ?>%</strong>
-			<span class="blue bold size20 total"><?= number_format($iva_total, 2); ?>&euro;</span>
+			<span class="blue bold size20 total"><?= number_format($iva_total, 2, '.', ''); ?>&euro;</span>
 		</div>
 		<div class="col-xs-12 text-right">
 			<strong><?= JText::_('COM_BOTIGA_CHECKOUT_TOTAL'); ?></strong>
-			<span class="blue bold size20 total"><?= number_format($total, 2); ?>&euro;</span>
+			<span class="blue bold size20 total"><?= number_format($total, 2, '.', ''); ?>&euro;</span>
 		</div>
 	</div>
 	
-	<div id="userData">
-		<p><?= JText::_('COM_BOTIGA_FINISH_ADD_DATA'); ?></p>
+	<div id="userData">		
 		<form name="finishCart" id="finishCart" action="index.php?option=com_botiga&task=botiga.processCart" method="post">
 			<input type="hidden" name="subtotal" value="<?= $subtotal; ?>">
 			<input type="hidden" name="shipment" value="<?= $shipment; ?>">
@@ -165,19 +164,20 @@ if($user->guest) {
 			<div class="form-group">
 				<input type="text" name="observa" class="form-control" placeholder="<?= JText::_('COM_BOTIGA_CHECKOUT_OBSERVA'); ?>" />
 			</div>
+			<p><?= JText::_('COM_BOTIGA_FINISH_ADD_DATA'); ?></p>
 			<div class="form-group">
 				<select name="processor" id="processor" class="form-control">
-				<option value="">Selecciona un mètode de pagament</option>
+				<option value=""><?= JText::_('COM_BOTIGA_SELECT_PAYMENT_METHOD'); ?></option>
 				<?php 
-				foreach(botigaHelper::getPaymentPlugins() as $plugin) : 
-				$params = json_decode($plugin->params);
 				$metodo_pago = botigaHelper::getUserData('metodo_pago', $user->id);
+				foreach(botigaHelper::getPaymentPlugins() as $plugin) : 
+				$params = json_decode($plugin->params);				
 				?>
 				<option value="<?= $params->alies; ?>" <?php if($processor == $params->alies || $metodo_pago == $params->alies) : ?>selected<?php endif; ?>><?= $params->title; ?></option>
 				<?php endforeach; ?>
 				</select>
 			</div>
-			<button type="submit" disabled="true" class="btn btn-primary submit pull-right"><?= JText::_('COM_BOTIGA_FINISH_CART'); ?></button>
+			<button type="submit" <?php if($metodo_pago == '') : ?>disabled="true"<?php endif; ?> class="btn btn-primary submit pull-right"><?= JText::_('COM_BOTIGA_FINISH_CART'); ?></button>
 			<a href="index.php?option=com_botiga&view=botiga&catid=20&Itemid=128" class="btn btn-primary"><?= JText::_('COM_BOTIGA_CONTINUE_SHOPPING'); ?></a>
 			<a href="index.php?option=com_botiga&task=botiga.removeCart" class="btn btn-primary"><?= JText::_('COM_BOTIGA_DELETE_CART'); ?></a>	
 			<a href="index.php?option=com_botiga&task=botiga.saveCart" class="btn btn-primary"><?= JText::_('COM_BOTIGA_SAVE_CART'); ?></a>	

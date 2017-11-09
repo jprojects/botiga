@@ -92,7 +92,7 @@ if (!empty($this->extra_sidebar)) {
 		</div>        
 		<div class="clearfix"> </div>
 		
-		<table class="table table-striped" class="adminList">
+		<table class="table table-striped" id="adminList">
 			<thead>
 				<tr>
 					<?php if (isset($this->items[0]->ordering)): ?>
@@ -103,9 +103,9 @@ if (!empty($this->extra_sidebar)) {
 					<th width="1%" class="hidden-phone">
 						<input type="checkbox" name="checkall-toggle" value="" title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)" />
 					</th>
-                	<?php if (isset($this->items[0]->state)): ?>
+                	<?php if (isset($this->items[0]->published)): ?>
 					<th width="1%" class="nowrap center">
-						<?php echo JHtml::_('grid.sort', 'JSTATUS', 'a.state', $listDirn, $listOrder); ?>
+						<?php echo JHtml::_('grid.sort', 'JSTATUS', 'a.published', $listDirn, $listOrder); ?>
 					</th>
                		<?php endif; ?>			
 					<th>
@@ -173,7 +173,7 @@ if (!empty($this->extra_sidebar)) {
 					<td class="center hidden-phone">
 							<?php echo JHtml::_('grid.id', $i, $item->id); ?>
 					</td>
-		            <?php if (isset($this->items[0]->state)): ?>
+		            <?php if (isset($this->items[0]->published)): ?>
 					<td class="center">
 							<?php echo JHtml::_('jgrid.published', $item->published, $i, 'brands.', $canChange, 'cb'); ?>
 					</td>

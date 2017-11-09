@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form
-        addrulepath="/administrator/components/com_botiga/models/rules"
+        addrulepath="/administrator/components/com_laundry/models/rules"
 >
-	<fieldset name="details" addfieldpath="/administrator/components/com_botiga/models/fields">
+	<fieldset name="details" addfieldpath="/administrator/components/com_laundry/models/fields">
 		<field
 			name="dbhost"
 			type="text"

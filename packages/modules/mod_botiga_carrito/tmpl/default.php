@@ -16,13 +16,14 @@ $total = 0;
 
 <div id="sidebar">
 <div id="scroller">
-<?php if(count($cart)) : ?>
+
 <table class="table carrito table-responsive <?= $class_sfx; ?>">
 <?php foreach($cart as $item ) : ?>
 	<?php $item->image1 != '' ? $image = $item->image1 : $image = 'images/noimage.png'; ?>
-	<tr>
+	<tr class="row-<?= $item->idItem; ?>" id="row-<?= $item->id; ?>">
 		<td><img src="<?= $image; ?>" class="img-responsive mini" alt="<?= $item->name; ?>" /></td>
-		<td><?= $item->name; ?><br/><div class="bold blue text-right">x<?= $item->qty; ?> - <?= $item->price; ?> &euro;</div></td>
+		<td><?= $item->name; ?><br/><div class="bold blue text-right">x<span class="cart-qty"><?= $item->qty; ?></span> - <span class="cart-price"><?= $item->price; ?></span> &euro;</div></td>
+		<td><a href="#" class="cart-delete" data-id="<?= $item->id; ?>" data-price="<?= $item->qty * $item->price; ?>"><i class="fa fa-trash-o"></i></a></td>
 	</tr>			
 	<?php $total += $item->price * $item->qty; ?>
 <?php endforeach; ?>
@@ -32,10 +33,10 @@ $total = 0;
 <table class="table">
 <tr>
 	<td><?= JText::_('MOD_BOTIGA_CARRITO_TOTAL'); ?></td>
-	<td><div class="bold blue text-right"><?= number_format($total, 2); ?> &euro;</div></td>
+	<td><div class="bold blue text-right"><span id="total"><?= number_format($total, 2); ?></span> &euro;</div></td>
 </tr>
 </table>
 <a href="index.php?option=com_botiga&view=checkout&Itemid=134" class="btn btn-block btn-primary"><?= JText::_('MOD_BOTIGA_CARRITO_CHECKOUT'); ?></a>
-<?php endif; ?>
+
 </div>
 </div>

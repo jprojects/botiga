@@ -49,7 +49,7 @@ else{
 	<div class="row-fluid">
         <div class="span6 form-horizontal">
             <fieldset class="adminform">
-			<legend><?php echo JText::_( 'COM_BOTIGA_USER_DETAILS' ); ?></legend>
+			<legend><?php echo JText::_( 'COM_LAUNDRY_USER_DETAILS' ); ?></legend>
 			
 				<?php foreach($this->form->getFieldset('details') as $field): ?>
 						<div class="control-group">

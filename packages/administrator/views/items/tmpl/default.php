@@ -5,8 +5,8 @@
  * @copyright   Copyright © 2010 - All rights reserved.
  * @license		GNU/GPL
  * @author		kim
- * @author mail administracion@joomlanetprojects.com
- * @website		http://www.joomlanetprojects.com
+ * @author mail kim@aficat.com
+ * @website		http://www.aficat.com
  *
  */
 
@@ -21,7 +21,7 @@ $user		= JFactory::getUser();
 $userId		= $user->get('id');
 $listOrder	= $this->state->get('list.ordering');
 $listDirn	= $this->state->get('list.direction');
-$canOrder	= $user->authorise('core.edit.state', 'com_laundry');
+$canOrder	= $user->authorise('core.edit.state', 'com_botiga');
 $saveOrder	= $listOrder == 'a.ordering';
 $model		= $this->getModel();
 if ($saveOrder)
@@ -104,25 +104,25 @@ if (!empty($this->extra_sidebar)) {
 					<th width="1%" class="hidden-phone">
 						<input type="checkbox" name="checkall-toggle" value="" title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)" />
 					</th>
-		        	<?php if (isset($this->items[0]->state)): ?>
+		        	<?php if (isset($this->items[0]->published)): ?>
 					<th width="1%" class="nowrap center">
-						<?php echo JHtml::_('grid.sort', 'JSTATUS', 'a.state', $listDirn, $listOrder); ?>
+						<?php echo JHtml::_('grid.sort', 'JSTATUS', 'a.published', $listDirn, $listOrder); ?>
 					</th>
 		       		<?php endif; ?>
 					<th width="40">
-						<?php echo JHtml::_('grid.sort',  'COM_BOTIGA_ITEMS_HEADING_REF', 'ref', $listDirn, $listOrder); ?>
+						<?php echo JHtml::_('grid.sort',  'COM_BOTIGA_ITEMS_HEADING_REF', 'a.ref', $listDirn, $listOrder); ?>
 					</th>
 					<th>
-						<?php echo JHtml::_('grid.sort',  'COM_BOTIGA_ITEMS_HEADING_NAME', 'name', $listDirn, $listOrder); ?>
+						<?php echo JHtml::_('grid.sort',  'COM_BOTIGA_ITEMS_HEADING_NAME', 'a.name', $listDirn, $listOrder); ?>
 					</th>
 					<th>
-						<?php echo JHtml::_('grid.sort',  'COM_BOTIGA_ITEMS_HEADING_PRICE_1', 'price1', $listDirn, $listOrder); ?>
+						<?php echo JHtml::_('grid.sort',  'COM_BOTIGA_ITEMS_HEADING_PRICE_1', 'a.price1', $listDirn, $listOrder); ?>
 					</th>
 					<th>
-						<?php echo JHtml::_('grid.sort',  'COM_BOTIGA_ITEMS_HEADING_BRAND', 'marca_name', $listDirn, $listOrder); ?>
+						<?php echo JHtml::_('grid.sort',  'COM_BOTIGA_ITEMS_HEADING_BRAND', 'a.marca_name', $listDirn, $listOrder); ?>
 					</th> 
 					<th>
-						<?php echo JHtml::_('grid.sort',  'COM_BOTIGA_ITEMS_HEADING_CAT', 'catid', $listDirn, $listOrder); ?>
+						<?php echo JHtml::_('grid.sort',  'COM_BOTIGA_ITEMS_HEADING_CAT', 'a.catid', $listDirn, $listOrder); ?>
 					</th>         
 					<th width="5%">
 						<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_LANGUAGE', 'a.language', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
@@ -177,7 +177,7 @@ if (!empty($this->extra_sidebar)) {
 					<td class="center hidden-phone">
 							<?php echo JHtml::_('grid.id', $i, $item->id); ?>
 					</td>
-		            <?php if (isset($this->items[0]->state)): ?>
+		            <?php if (isset($this->items[0]->published)): ?>
 					<td class="center">
 							<?php echo JHtml::_('jgrid.published', $item->published, $i, 'items.', $canChange, 'cb'); ?>
 					</td>

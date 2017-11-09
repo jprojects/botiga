@@ -73,7 +73,12 @@ class botigaViewItem extends JViewLegacy
 		$menus      = $app->getMenu();
 		$title      = null;
 		
-		$document->addStylesheet('components/com_botiga/assets/css/botiga.css');
+		$catid      = $app->input->get('catid', '');
+		
+		$pathway = $app->getPathway();
+		$pathway->setPathway($array);
+		$pathway->addItem(botigaHelper::getCategoryName(), 'index.php?option=com_botiga&view=botiga&catid='.$catid.'&Itemid=112');
+		$pathway->addItem(botigaHelper::getItemName(), '');
 
 		// Because the application sets a default page title,
 		// we need to get it from the menu item itself

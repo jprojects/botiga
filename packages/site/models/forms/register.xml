@@ -60,11 +60,12 @@
 			type="sql" 
 			label="COM_BOTIGA_REGISTER_PAIS_LABEL" 
 			description="COM_BOTIGA_REGISTER_PAIS_DESC" 
-			size="40"
 			default=""
 			query="SELECT country_id, country_name FROM #__botiga_countries"
     		key_field="country_id"
     		value_field="country_name"
+    		class="form-control" 
+			required="true"
 		/>
         <field 
 			name="cp"  

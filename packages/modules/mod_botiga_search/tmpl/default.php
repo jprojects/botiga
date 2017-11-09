@@ -21,7 +21,7 @@ $class_sfx	= htmlspecialchars($params->get('moduleclass_sfx'));
 			<input type="hidden" name="view" value="search">
             <div id="custom-search-input">
                 <div class="input-group col-md-12">
-                    <input type="text" name="filter_search" class="form-control" placeholder="Buscar" />
+                    <input type="text" name="filter_search" class="form-control" placeholder="Buscar..." />
                     <span class="input-group-btn">
                         <button class="btn btn-info" type="button">
                             <i class="glyphicon glyphicon-search"></i>

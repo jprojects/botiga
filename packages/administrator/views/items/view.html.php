@@ -84,7 +84,7 @@ class botigaViewItems extends JViewLegacy
 
 			'filter_published',
 
-			JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), "value", "text", $this->state->get('filter.state'), true)
+			JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), "value", "text", $this->state->get('filter.published'), true)
 
 		);
 		

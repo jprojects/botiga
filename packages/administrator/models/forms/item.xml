@@ -86,53 +86,79 @@
 			hide_none="1"
 			label="COM_BOTIGA_ITEM_IMAGE_LABEL"
 			description="COM_BOTIGA_ITEM_IMAGE_DESC"
+			directory="products"
 		/> 
 		<field name="image2"
 			type="media"
 			hide_none="1"
 			label="COM_BOTIGA_ITEM_IMAGE_LABEL"
 			description="COM_BOTIGA_ITEM_IMAGE_DESC"
-			directory="sampledata/products"
+			directory="products"
 		/> 
 		<field name="image3"
 			type="media"
 			hide_none="1"
 			label="COM_BOTIGA_ITEM_IMAGE_LABEL"
 			description="COM_BOTIGA_ITEM_IMAGE_DESC"
-			directory="sampledata/products"
+			directory="products"
 		/> 
 		<field name="image4"
 			type="media"
 			hide_none="1"
 			label="COM_BOTIGA_ITEM_IMAGE_LABEL"
 			description="COM_BOTIGA_ITEM_IMAGE_DESC"
-			directory="sampledata/products"
+			directory="products"
 		/> 
 		<field name="image5"
 			type="media"
 			hide_none="1"
 			label="COM_BOTIGA_ITEM_IMAGE_LABEL"
 			description="COM_BOTIGA_ITEM_IMAGE_DESC"
-			directory="sampledata/products"
+			directory="products"
 		/> 
 		<field
 			name="garantia"
-			type="text"
+			type="list"
 			label="COM_BOTIGA_ITEM_GARANTIA_LABEL"
 			description="COM_BOTIGA_ITEM_GARANTIA_DESC"
+			default=""
+		>
+			<option value="">Selecciona una opción</option>
+			<option value="COM_BOTIGA_1_YEAR">1 Año</option>
+			<option value="COM_BOTIGA_2_YEAR">2 Años</option>
+			<option value="COM_BOTIGA_3_YEAR">3 Años</option>
+			<option value="COM_BOTIGA_4_YEAR">4 Años</option>
+			<option value="COM_BOTIGA_5_YEAR">5 Años</option>
+			<option value="COM_BOTIGA_6_YEAR">6 Años</option>
+			<option value="COM_BOTIGA_7_YEAR">7 Años</option>
+			<option value="COM_BOTIGA_8_YEAR">8 Años</option>
+			<option value="COM_BOTIGA_9_YEAR">9 Años</option>
+			<option value="COM_BOTIGA_10_YEAR">10 Años</option>
+		</field>
+		<field
+			name="collection"
+			type="text"
+			label="Colección"
+			description=""
 			size="40"
 			class="inputbox"
 			default=""
 		/>
 		<field
 			name="envio"
-			type="text"
+			type="list"
 			label="COM_BOTIGA_ITEM_ENVIO_LABEL"
 			description="COM_BOTIGA_ITEM_ENVIO_DESC"
-			size="40"
-			class="inputbox"
 			default=""
-		/>
+		>
+			<option value="">Selecciona una opción</option>
+			<option value="COM_BOTIGA_2_3_DAY">2-3 días</option>
+			<option value="COM_BOTIGA_3_5_DAY">3-5 días</option>
+			<option value="COM_BOTIGA_1_WEEK">1 semana</option>
+			<option value="COM_BOTIGA_2_WEEK">2 semanas</option>
+			<option value="COM_BOTIGA_3_WEEK">3 semanas</option>
+			<option value="COM_BOTIGA_4_WEEK">4 semanas</option>
+		</field>
 		<field name="pdf"
 			type="filelist"
 			directory="images/pdf"
