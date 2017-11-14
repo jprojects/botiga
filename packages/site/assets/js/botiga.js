@@ -25,29 +25,30 @@ jQuery(document).ready(function() {
 				//open dropdown
 				jQuery('.carrito-list').addClass('open');
 				
+				//calculate new row total
+        		var new_price = parseFloat(result.price);
+        		new_price = Math.round(new_price * 100) / 100;
+				
 				//add item to cart
-				if(jQuery('#row-'+id).length) {
+				if(jQuery('.row-'+id).length) {
 					//edit row
-					var qty       = parseInt(jQuery('#row-'+result.id).find('.cart-qty').html());
-					var price     = parseFloat(jQuery('#row-'+result.id).find('.cart-price').html());
+					var qty       = parseInt(jQuery('.row-'+id).find('.cart-qty').html());
+					var price     = parseFloat(jQuery('.row-'+id).find('.cart-price').html());
 					var new_qty   = qty + 1;
-					var new_price = price + parseFloat(result.price);
-					new_price = Math.round(new_price * 100) / 100;
-					jQuery('#row-'+result.id).find('.cart-qty').html(new_qty);
-					jQuery('#row-'+result.id).find('.cart-price').html(new_price);
+					jQuery('.row-'+id).find('.cart-qty').html(new_qty);
 				} else {
 					//badge counter
         			var count = parseInt(jQuery('.cart-count').html())+1;
-        			jQuery('.cart-count').html(count);
-        			//add new row
-        			var new_price = parseInt(result.qty) * parseFloat(result.price);
-        			new_price = Math.round(new_price * 100) / 100;
-        			jQuery('.carrito').append('<tr class="row-'+result.idItem+'" id="row-'+result.id+'"><td><img src="'+result.imagen+'" class="img-responsive mini" alt="'+result.nombre+'" /></td><td>'+result.nombre+'<br/><div class="bold blue text-right">x<span class="cart-qty">'+result.qty+'</span> - <span class="cart-price">'+result.price+'</span> &euro;</div></td><td><a href="#" class="cart-delete" data-id="'+result.id+'" data-price="'+new_price+'"><i class="fa fa-trash-o"></i></a></td></tr>');
+        			jQuery('.cart-count').html(count);    
+        			//add new row   			
+        			jQuery('.carrito').append('<tr class="row-'+result.idItem+'" id="row-'+id+'"><td><img src="'+result.imagen+'" class="img-responsive mini" alt="'+result.nombre+'" /></td><td>'+result.nombre+'<br/><div class="bold blue text-right">x<span class="cart-qty">'+result.qty+'</span> - <span class="cart-price">'+result.price+'</span> &euro;</div></td><td><a href="#" class="cart-delete" data-id="'+id+'" data-price="'+new_price+'"><i class="fa fa-trash-o"></i></a></td></tr>');
         		}
         		
         		//add price to total
         		var total = jQuery('#total').html();
-        		jQuery('#total').html(parseFloat(total) + parseFloat(new_price));
+        		var new_total = parseFloat(total) + parseFloat(new_price);
+        		new_total = Math.round(new_total * 100) / 100;
+        		jQuery('#total').html(new_total);
     		},
     		error: function(result) {
             	console.log(result.id);
