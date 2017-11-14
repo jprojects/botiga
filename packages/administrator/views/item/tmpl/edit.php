@@ -47,10 +47,13 @@ else{
 
 <form action="<?php echo JRoute::_('index.php?option=com_botiga&view=item&layout=edit&id='.(int) $this->item->id); ?>" method="post" name="adminForm" id="item-form" class="form-validate">
  
+ 	<?php echo JHtml::_('bootstrap.startTabSet', 'myTab', array('active' => 'details')); ?>
+ 	
+ 	<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'details', JText::_('COM_BOTIGA_ITEM_TAB_DETAILS')); ?>
+ 	
 	<div class="row-fluid">
         <div class="span6 form-horizontal">
             <fieldset class="adminform">
-			<legend><?php echo JText::_( 'COM_LAUNDRY_PRODUCT_DETAILS' ); ?></legend>
 			
 				<?php foreach($this->form->getFieldset('details') as $field): ?>
 						<div class="control-group">
@@ -61,6 +64,28 @@ else{
 
 		</fieldset>
 	</div>
+	
+	<?php echo JHtml::_('bootstrap.endTab'); ?>
+
+	<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'metas', JText::_('COM_BOTIGA_ITEM_TAB_METAS')); ?>
+	
+	<div class="row-fluid">
+        <div class="span6 form-horizontal">
+            <fieldset class="adminform">
+			
+				<?php foreach($this->form->getFieldset('metas') as $field): ?>
+						<div class="control-group">
+						<div class="control-label"><?php echo $field->label; ?></div>
+						<div class="controls"><?php echo $field->input ?></div>
+						</div>
+	    		<?php endforeach; ?>
+
+		</fieldset>
+	</div>
+	
+	<?php echo JHtml::_('bootstrap.endTab'); ?>
+
+	<?php echo JHtml::_('bootstrap.endTabSet'); ?>
 
 		<input type="hidden" name="task" value="item.edit" />
 		<?php echo JHtml::_('form.token'); ?>

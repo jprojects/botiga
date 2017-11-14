@@ -111,6 +111,8 @@ CREATE TABLE IF NOT EXISTS `#__botiga_items` (
   `language` char(7) NOT NULL DEFAULT '0',
   `ref` varchar(15) DEFAULT NULL,
   `factusol_codart` varchar(13) DEFAULT NULL,
+  `metadescription` varchar(255) NOT NULL DEFAULT '',
+  `metatags` varchar(150) NOT NULL DEFAULT '',
   `sincronitzat` int(11) DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
