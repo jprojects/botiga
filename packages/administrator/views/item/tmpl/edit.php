@@ -61,7 +61,27 @@ else{
 						<div class="controls"><?php echo $field->input ?></div>
 						</div>
 	    		<?php endforeach; ?>
+	    		
+			</div>
+		</fieldset>
+	</div>
+	
+	<?php echo JHtml::_('bootstrap.endTab'); ?>
 
+	<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'desc', JText::_('COM_BOTIGA_ITEM_TAB_DESC')); ?>
+	
+	<div class="row-fluid">
+        <div class="span6 form-horizontal">
+            <fieldset class="adminform">
+			
+				<?php foreach($this->form->getFieldset('desc') as $field): ?>
+						<div class="control-group">
+						<div class="control-label"><?php echo $field->label; ?></div>
+						<div class="controls"><?php echo $field->input ?></div>
+						</div>
+	    		<?php endforeach; ?>
+	    		
+			</div>
 		</fieldset>
 	</div>
 	
@@ -79,7 +99,8 @@ else{
 						<div class="controls"><?php echo $field->input ?></div>
 						</div>
 	    		<?php endforeach; ?>
-
+	    		
+			</div>
 		</fieldset>
 	</div>
 	
