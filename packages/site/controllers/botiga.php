@@ -304,59 +304,180 @@ class botigaControllerBotiga extends botigaController {
      	$result = $db->query();
      	
      	if($result) {
-     	
-     		$db->setQuery('select * from #__botiga_users where userid = '.$user->id);
-     		$row = $db->loadObject();
-     	
-     		$db->setQuery('select  c.subtotal, c.shipment, c.iva_total, c.total, c.observa, cd.*, i.name, i.ref, i.image1 from #__botiga_comandes as c inner join #__botiga_comandesDetall as cd on c.id = cd.idComanda inner join #__botiga_items as i on i.id = cd.idItem where cd.idComanda = '.$idComanda);
-     		$items = $db->loadObjectList();
      		
-     		$subtotal     = 0;     	
+     		//ToDo:: add subject and text to component config   	
      		$subject   = "Nuevo pedido, pedido nº ".botigaHelper::getComandaData('uniqid', $idComanda);
-			$body      = "Se ha registrado un nuevo pedido en ".botigaHelper::getParameter('botiga_name')." del usuario:";
-						
-			$body     .= "<table class='table' style='border:1px solid #999;padding:10px;font-family:Arial;'>";
+			$body      = "<div style='font-family:Arial;font-size:7px;'>Vuestro pedido está en gestión, nos pondremos en contacto para confirmar stock y plazo de entrega.<br>";
+			$body     .= "Adjuntamos factura proforma."; 
+			$body     .= "<p>*Portes pendientes de valoración para envíos fuera de España a excepción de las Islas Canarias.</p>"; 
+			$body     .= "Gracias por confiar en DICOHOTEL<p></p>";   
+			$body     .= "<span style='font-family:Arial;font-size:7px;'><strong>ESTEL NOGUER</strong></span><br>"; 
+			$body     .= "<span style='font-family:Arial;font-size:7px;'><strong>MARKETING & COMUNICATION</strong></span>"; 
+			$body     .= "<p><img src='http://www.dicohotel.com/images/Firma_Dicohotel.jpg' alt='' /></p></div>";
 			
-			$body 	  .= "<tr><td width='40%'><img src='".JURI::base()."images/logo.png' alt='Dicohotel' /></td>";
-			$body     .= "<td width='20%' style='font-size:10px'>DICO MOLAS<br>CAPDEVILA<br>SL<br>DEL PUJOL 3<br>08506 CALLDETENES<br>BARCELONA<br>CIF B-62769831</td>";
-			$body     .= "<td width='10%'></td><td width='10%'></td><td width='20%'></td></tr>";
+			$body2     = "<div style='font-family:Arial;font-size:7px;'>Ha llegado un nuevo pedido desde la web de Dicohotel.<br>";
+			$body2    .= "Adjuntamos factura proforma.</div>"; 
 			
-			$body     .= "<tr><td colspan='2' style='background-color:#ccc;text-align:center;font-size:20px;'><strong>PROFORMA</strong></td>";
-			$body     .= "<td colspan='3'>CLI: <strong>".$user->username."</strong><br>";
-			$body 	  .= "Email: <strong>".$user->email."</strong><br>";
-			$body 	  .= "Teléfono: <strong>".$row->telefon."</strong><br>";
-			$body 	  .= "Dirección: <strong>".$row->adreca." ".$row->poblacio." ".$row->provincia."</strong><br>";
-			$body 	  .= "Observacions: <strong>".$row->observa."</strong><br></td></tr>";
-			
-			$body     .= "<tr><td width='10%'></td>";
-			$body     .= "<td width='45%'><strong>COD</strong></td>";
-			$body     .= "<td width='4%'><strong>EUR</strong></td>";
-			$body     .= "<td width='25%' align='center'><strong>CANT</strong></td>";
-			$body     .= "<td width='20%' align='right'><strong>NETO</strong></td></tr>";
-			
-			foreach($items as $item) {
-				$item->image1 != '' ? $image = JURI::base().$item->image1 : $image = JURI::base().'images/noimage.png';
-				$subtotal += $item->price * $item->qty;
-				$body     .= "<tr><td width='10%'><img src='".$image."' width='100' height='100'  alt='' /></td>";
-				$body     .= "<td width='45%'>".$item->name." - ".$item->ref."</td>";
-				$body     .= "<td width='4%'><strong>".$item->price."&euro;</strong></td>";
-				$body     .= "<td width='25%' align='center'>".$item->qty."</td>";
-				$body     .= "<td width='20%' align='right'><strong>".$subtotal."&euro;</strong></td></tr>";
-			}
-			
-			$body .= "<tr><td colspan='5' align='right'><strong>".JText::_('Subtotal')."</strong> ".number_format($item->subtotal, 2)."</td></tr>";
-			$body .= "<tr><td colspan='5' align='right'><strong>".JText::_('Envío')."</strong> ".number_format($item->shipment, 2)."</td></tr>";
-			$body .= "<tr><td colspan='5' align='right'><strong>".JText::_('IVA')."</strong> ".number_format($item->iva_total, 2)."</td></tr>";
-			$body .= "<tr><td colspan='5' align='right'><strong>".JText::_('COM_BOTIGA_CHECKOUT_TOTAL')."</strong> ".number_format($item->total, 2)."</td></tr></table>";
-			
-			$body2 = "<p>Gracias.</p>";			
-	
-			//mail para el admin
-			$this->enviar($subject, $body, botigaHelper::getParameter('botiga_mail'));
+			$this->genPdf('F', $idComanda); 			
+		
 			//mail para el user
-			$this->enviar($subject, $body.$body2, $user->email);
+			$this->enviar($subject, $body, $user->email, $idComanda);
+			//mail para el admin
+			$this->enviar($subject, $body2, botigaHelper::getParameter('botiga_mail'), $idComanda);
+			
+			unlink(JPATH_ROOT.'/proforma_'.$idComanda.'.pdf');
      	}    	
      }
+     
+     public function genPdf($mode = 'D', $uid = '')
+	 {
+		jimport('fpdf.fpdf');
+		jimport('fpdfi.fpdi');
+		
+		$jinput = JFactory::getApplication()->input;
+		$id     = $jinput->get('id', $uid);
+
+		$pdf 	= new FPDI();
+		
+		$pdf->AddPage();
+		
+		$pdf->setSourceFile(JPATH_COMPONENT.DS.'assets'.DS.'pdf'.DS.'invoice.pdf');
+		
+		$tplIdx = $pdf->importPage(1);
+		$pdf->useTemplate($tplIdx, 0, 0, 0, 0, true);
+
+		define('EURO', chr(128));
+
+		$db = JFactory::getDbo();
+		$db->setQuery('SELECT c.*, u.mail_empresa as email, u.nom_empresa, u.cif, u.telefon, u.adreca, u.cp, u.poblacio, u.metodo_pago FROM #__botiga_comandes c INNER JOIN #__botiga_users u ON u.userid = c.userid WHERE c.id = '.$id);
+		$com = $db->loadObject();
+
+		$db->setQuery('SELECT cd.*, i.name, i.ref as referencia, i.image1 as image, i.description FROM #__botiga_comandesDetall cd INNER JOIN #__botiga_items i ON cd.iditem = i.id WHERE cd.idComanda = '.$id);
+		$db->query();
+		$num_rows = $db->getNumRows();
+		$detalls  = $db->loadObjectList();
+		
+		$uniqid = $com->uniqid;
+		
+		$height = 38;
+		
+		$pdf->SetFont('Arial', '', '10');
+		
+		if($num_rows >= 12) { $pag = 2; } else { $pag = 1; }
+		
+		$pdf->SetXY(175, $height); 
+		$pdf->Cell(25, 5, '1/'.$pag, 0, 0, 'R');
+		
+		$height = 45;
+		
+		//user
+		$pdf->SetXY(170, $height); 
+		$pdf->Cell(15, 5, $com->telefon, 0, 0, 'R');
+		$height += 4;
+		$pdf->SetXY(121, $height); 
+		$pdf->Cell(16, 5, $com->cif, 0, 0, 'R');
+		$pdf->SetXY(170, $height); 
+		$pdf->Cell(15, 5, $com->email, 0, 0, 'R');
+		
+		$height = 60;
+		
+		//adreça
+		$pdf->SetXY(107, $height); 
+		$pdf->Cell(15, 5, $com->nom_empresa, 0, 0);
+		$height += 4;
+		$pdf->SetXY(107, $height); 
+		$pdf->Cell(15, 5, $com->adreca, 0, 0);
+		$height += 4;
+		$pdf->SetXY(107, $height); 
+		$pdf->Cell(15, 5, $com->cp.' '.$com->poblacio, 0, 0);
+		
+		//metadata
+		$height = 71;
+		$pdf->SetXY(35, $height);
+		$pdf->Cell(15, 5, $com->observa, 0, 0, 'R');
+		$pdf->SetXY(50, $height);
+		$pdf->Cell(15, 5, $uniqid, 0, 0, 'R');
+		$pdf->SetXY(80, $height);
+		$pdf->Cell(15, 5, date('d/m/Y', strtotime($com->data)), 0, 0, 'R');
+		
+		//detall
+		$total   = 0;		
+		$height  = 85;
+		$counter = 0;
+		
+		foreach($detalls as $detall) {
+		
+			if($counter == 5) {
+				$pdf->AddPage();
+				$pdf->setSourceFile(JPATH_COMPONENT.DS.'assets'.DS.'pdf'.DS.'albaran.pdf');
+				$tplIdx2 = $pdf->importPage(1);
+				$pdf->useTemplate($tplIdx2, 0, 0, 0, 0, true);
+				$pdf->SetFont('Arial', '', '10');
+				
+				$height = 38;
+				$pdf->SetXY(175, $height); 
+				$pdf->Cell(25, 5, '2/'.$pag, 0, 0, 'R');
+				
+				$height = 71;		
+				
+				$pdf->SetXY(35, $height);
+				$pdf->Cell(15, 5, $com->observa, 0, 0, 'R');
+				$pdf->SetXY(50, $height);
+				$pdf->Cell(15, 5, $uniqid, 0, 0, 'R');
+				$pdf->SetXY(80, $height);
+				$pdf->Cell(15, 5, date('d-m-Y', strtotime($com->data)), 0, 0, 'R');
+				$height  = 85;
+			}
+			
+			
+	
+			$pdf->SetXY(20, $height);  
+			$pdf->Cell(30, 5, $detall->referencia, 0, 0, '');
+			$new_height = $height+4;
+			$pdf->SetXY(20, $new_height);  
+			$pdf->Cell(30, 5, $pdf->WriteHTML('<img src="'.$detall->image.'" alt="" width="50" height="50" />'), 0, 0, '');
+			
+			$pdf->SetXY(60, $height);  
+			$pdf->Cell(90, 5, utf8_decode($detall->name), 0, 0, '');
+			$pdf->SetXY(110, $height); 
+			$pdf->Cell(20, 5, $detall->qty, 0, 0, 'R');	
+			$pdf->SetXY(145, $height);
+			$pdf->Cell(20, 5, number_format($detall->price, 2, ',', '.'), 0, 0, '');
+			$pdf->SetXY(150, $height); 
+			$pdf->Cell(20, 5, '', 0, 0, 'R');
+			$pdf->SetXY(172, $height); 
+			$pdf->Cell(15, 5, number_format(($detall->price * $detall->qty), 2, ',', '.').EURO, 0, 0, '');
+			
+			$height += 20;
+			$counter++;
+		}
+		
+		$height = 244;
+		$pdf->SetFont('Arial', 'B', '10');
+		$pdf->SetXY(55, $height);  
+		$pdf->Cell(30, 5, number_format($com->subtotal, 2, ',', '.').EURO, 0, 0, 'R');
+		$pdf->SetXY(75, $height); 
+		$pdf->Cell(30, 5, $com->iva_percent, 0, 0, 'R');
+		$pdf->SetXY(95, $height);
+		$pdf->Cell(30, 5, number_format($com->iva_total, 2, ',', '.').EURO, 0, 0, 'R');
+
+		$pdf->SetXY(163, $height); 
+		$pdf->Cell(30, 5, number_format(($com->total), 2, ',', '.').EURO, 0, 0, 'R');
+		
+		$height += 10;
+		
+		$pdf->SetXY(35, $height); 
+		$com->metodo_pago == '' ? $metodo_pago = 'Pago habitual' : $metodo_pago = $com->metodo_pago;
+		$pdf->Cell(30, 5, utf8_decode($metodo_pago), 0, 0, 'R');
+		
+		$height += 12;
+		
+		$pdf->SetXY(125, $height); 
+		$pdf->Cell(30, 5, utf8_decode($com->observa), 0, 0, 'R');
+
+		$pdf->Output('proforma_'.$id.'.pdf', $mode);
+		if($uid == '') { die(); }
+	 }
      
      public function updateQty()
      {
@@ -393,7 +514,7 @@ class botigaControllerBotiga extends botigaController {
      	$this->setRedirect('index.php?option=com_botiga&view=checkout&Itemid=134', $msg, $type);     	     	
      }
      
-    public function enviar($subject, $body, $email) 
+    public function enviar($subject, $body, $email, $attach='') 
 	{
 		$mailer 	= JFactory::getMailer();
 		$config 	= JFactory::getConfig();
@@ -409,7 +530,11 @@ class botigaControllerBotiga extends botigaController {
         $mailer->setSubject( $subject );
         $mailer->isHTML(true);
         $mailer->Encoding = 'base64';
-        $mailer->setBody( $body );        
+        $mailer->setBody( $body );   
+        
+        if(attach != '') {
+        	$mailer->addAttachment(JPATH_ROOT.'/proforma_'.$attach.'.pdf');     
+        }
         
 		return $mailer->Send();			
 	}

@@ -9,8 +9,10 @@
 	    	<option value="search" name="Búsqueda" msg="Esta es la vista del componente que genera el listado de resultados de búsqueda." />
 	    	<option value="item" name="Item" msg="Esta es la vista del componente que genera el detalle del producto." />
 	    	<option value="history" name="History" msg="Esta es la vista del componente que genera el historial del usuario." />
-	    	<option value="coupons" name="Coupons" msg="Esta es la vista del componente que genera el el listado de documentos." />
-	    	<option value="favorites" name="Favorites" msg="Esta es la vista del componente que genera el el listado de favoritos." />
+	    	<option value="coupons" name="Coupons" msg="Esta es la vista del componente que genera el listado de documentos." />
+	    	<option value="favorites" name="Favorites" msg="Esta es la vista del componente que genera el listado de favoritos." />
+	    	<option value="Profile" name="Profile" msg="Esta es la vista del componente que genera el formulario de edicón de datos del usuario." />
+        </options>
         </options>
     </menu>
 </metadata>

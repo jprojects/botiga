@@ -44,9 +44,13 @@ class botigaViewItem extends JViewLegacy
 
         $this->document->setTitle($title);
 
-        $this->document->setDescription($this->item->metadescription);
+        if ($this->params->get('menu-meta_description')) {
+            $this->document->setDescription($this->params->get('menu-meta_description'));
+        }
 
-        $this->document->setMetadata('keywords', $this->item->metatags);
+        if ($this->params->get('menu-meta_keywords')) {
+            $this->document->setMetadata('keywords', $this->params->get('menu-meta_keywords'));
+        }
 
         if ($this->params->get('robots')) {
             $this->document->setMetadata('robots', $this->params->get('robots'));

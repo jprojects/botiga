@@ -30,7 +30,7 @@ class botigaViewOrder extends JViewLegacy
 			throw new Exception(implode("\n", $errors));
 		}
  
-		LaundryHelper::addSubmenu('orders');
+		botigaHelper::addSubmenu('orders');
 
         $this->addToolbar();
 
@@ -45,7 +45,7 @@ class botigaViewOrder extends JViewLegacy
 	*/
 	protected function addToolBar() 
 	{
-		$canDo = LaundryHelper::getActions();
+		$canDo = botigaHelper::getActions();
 		JToolBarHelper::title(JText::_('Order'), 'joomla');
 
 		if ($canDo->get('core.delete')) 

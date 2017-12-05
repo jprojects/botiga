@@ -4,6 +4,22 @@ $uri = base64_encode($uri->toString());
 $user = JFactory::getUser();
 ?>
 
+<script>
+jQuery(document).ready(function() {
+	jQuery('.mega-link').click(function (e) {
+		e.preventDefault();
+		var id    = jQuery(this).attr('data-id');
+		var catid    = jQuery(this).attr('data-catid');
+		var href  = jQuery(this).attr('href');
+		
+ 		jQuery.cookie("BotigaMenu1", catid);
+		jQuery.cookie("BotigaMenu2", id);
+			
+		document.location.href = href;	
+	});
+});
+</script>
+
 <div class="megamenu">
   <nav class="navbar navbar-inverse fixed">
     <div class="navbar-header">
@@ -29,7 +45,7 @@ $user = JFactory::getUser();
 							<ul>
 								<li class="dropdown-header"><?= $cat->title; ?></li>  								 
 		                        <?php $p = json_decode($cat->params); ?>
-		                        <a href="index.php?option=com_botiga&view=botiga&catid=<?= $cat->id; ?>&Itemid=112">
+		                        <a class="mega-link" data-id="<?= $cat->id; ?>" href="index.php?option=com_botiga&view=botiga&catid=<?= $cat->id; ?>&Itemid=112">
 		                        	<img src="<?= $p->image; ?>" class="img-responsive" alt="">
 		                        </a>
 		                        <?php //endif; ?>
@@ -43,7 +59,7 @@ $user = JFactory::getUser();
 								$i = 0;
 								foreach(modBotigaMegamenuHelper::getSubCats($cat->id) as $sub) : ?>
 								<?php if($i == 4) { echo '</ul></li><li class="col-sm-3"><ul><li class="dropdown-header hidden-xs">&nbsp;</li>'; $i = 0; } ?>
-								<li><a href="index.php?option=com_botiga&view=botiga&catid=<?= $sub->id; ?>&Itemid=112"><?= $sub->title; ?></a></li>
+								<li><a class="mega-link" data-catid="<?= $cat->id; ?>" data-id="<?= $sub->id; ?>" href="index.php?option=com_botiga&view=botiga&catid=<?= $sub->id; ?>&Itemid=112"><?= $sub->title; ?></a></li>
 								<?php 
 								$i++;
 								endforeach; ?>	

@@ -25,6 +25,14 @@
 			description="COM_BOTIGA_USER_USERID_DESC"
 			required="true"
 		/>
+		<field
+			name="cargo"
+			type="text"
+			label="Cargo"
+			description="Cargo en la empresa"
+			size="40"
+			default=""
+		/>
         <field
 			name="nom_empresa"
 			type="text"

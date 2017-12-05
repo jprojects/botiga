@@ -136,11 +136,14 @@ class botigaModelCheckout extends JModelList
 	{
 		jimport( 'joomla.access.access' );
 		
-		$db = JFactory::getDbo();
-		$user = JFactory::getUser();
+		$db 	= JFactory::getDbo();
+		$user 	= JFactory::getUser();
 		$groups = JAccess::getGroupsByUser($user->id, false);
 		
-		$total    = botigaHelper::getParameter('total_shipment', 0);
+		//if amount > config free shipment return 0
+		$free     = botigaHelper::getParameter('total_shipment', 250);
+		if($amount > $free) { return 0; }
+		
 		$operator = '%';
 		
 		$db->setQuery('select * from #__botiga_shipments where published = 1 and usergroup in ('.implode(',', $groups).')');
@@ -157,26 +160,36 @@ class botigaModelCheckout extends JModelList
 				$db->setQuery('select total, min, max, operator from #__botiga_shipments where country = '.$usr->pais.' and type = 1 and published = 1');
 				foreach($db->loadObjectList() as $ship)
 				{
+					//9999 throw a message...
+					if($ship->total == 9999) { return 9999; }
+					
 					if($usr->cp >= $ship->min && $usr->cp <= $ship->max) {
 						$total = $ship->total;
-						$operator = $ship->operator;
+						$operator = $ship->operator;						
 						break;
 					}
 				}
 			}
 			
+			
 			if($row->type == 3) {
 			
 				$db->setQuery('select pais from #__botiga_users where userid = '.$user->id);
 				$pais = $db->loadResult();
-		
-				//type 3 is zip code weight
+			/*
+				//type 3 is country
 				$db->setQuery('select total, operator from #__botiga_shipments where country = '.$pais.' and type = 3 and published = 1');
-				$total = $db->loadResult();
+				$result   = $db->loadObject();
+				$operator = $result->operator;
+				$total    = $result->total;	
+			*/
+				//195 not spain -> 9999 throw a message...
+				if($pais != 195) { return 9999; }			
 			}
+			
 		
 			//ToDo::new methods by total amount, by weight...
-		}
+		}		
 
 		//check operator
 		if($operator == '%') {

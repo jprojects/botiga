@@ -31,7 +31,7 @@ $total = 0;
 </table>
 <hr>
 <table class="table">
-<tr>
+<tr class="total-cart">
 	<td><?= JText::_('MOD_BOTIGA_CARRITO_TOTAL'); ?></td>
 	<td><div class="bold blue text-right"><span id="total"><?= number_format($total, 2); ?></span> &euro;</div></td>
 </tr>

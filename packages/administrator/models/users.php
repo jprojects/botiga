@@ -31,7 +31,8 @@ class botigaModelUsers extends JModelList
 			$config['filter_fields'] = array(
 				'id', 'id',
 				'nom_empresa', 'nom_empresa',
-				'username', 'username',
+				'cargo', 'cargo',
+				'mail_empresa', 'mail_empresa',
 				'telefon', 'telefon', 
 				'poblacio', 'poblacio',
 				'pais', 'pais',
@@ -89,6 +90,9 @@ class botigaModelUsers extends JModelList
 		
 		$group = $this->getUserStateFromRequest($this->context.'.filter.group', 'filter_group');
 		$this->setState('filter.group', $group);
+		
+		$published = $this->getUserStateFromRequest($this->context.'.filter.published', 'filter_published');
+		$this->setState('filter.published', $published);
 
 		// List state information.
 		parent::populateState('id', 'asc');
@@ -113,6 +117,7 @@ class botigaModelUsers extends JModelList
 		$id	.= ':'.$this->getState('filter.city');
 		$id	.= ':'.$this->getState('filter.country');
 		$id	.= ':'.$this->getState('filter.group');
+		$id	.= ':'.$this->getState('filter.published');
 
 		return parent::getStoreId($id);
 	}
@@ -137,27 +142,13 @@ class botigaModelUsers extends JModelList
 		$search = $this->getState('filter.search');
 		if (!empty($search)) {
 			$search = $db->Quote('%'.$db->escape($search, true).'%');
-			$query->where('(nom_empresa LIKE '.$search.')');
-		}
-                
-        // Filter by city.
-    	$city = $this->getState('filter.city');
-		if (!empty($city) and $city!='*') {
-			$city = $db->Quote($db->escape($city, true));
-			$query->where('(poblacio='.$city.') ' );
-		}
-
-		// Filter by country.
-    	$country = $this->getState('filter.country');
-		if (!empty($country) and $country!='*') {
-			$country = $db->Quote($db->escape($country, true));
-			$query->where('(pais='.$country.') ' );
+			$query->where('(u.nom_empresa LIKE '.$search.' OR u.mail_empresa LIKE '.$search.')');
 		}
 		
-		// Filter by usergroup.
-    	$group = $this->getState('filter.group');
-		if (!empty($group)) {
-			$query->where('(g.id='.$group.') ' );
+		// Filter by published.
+    	$published = $this->getState('filter.published');
+		if ($published != '') {
+			$query->where('(u.published = '.$published.')');
 		}
 		
         // Add the list ordering clause.

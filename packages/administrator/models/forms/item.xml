@@ -166,16 +166,6 @@
 			label="COM_BOTIGA_ITEM_PDF_LABEL"
 			description="COM_BOTIGA_ITEM_PDF_DESC"
 		/> 
-		<field 
-			name="language" 
-			type="language" 
-			client="site" 
-			default="en-GB" 
-			label="COM_BOTIGA_ITEM_LANGUAGE_LABEL" 
-			description="COM_BOTIGA_ITEM_LANGUAGE_DESC" 
-		/>
-	</fieldset>
-	<fieldset name="desc">
         <field
 			name="description"
 			type="editor"
@@ -191,29 +181,16 @@
 			description="COM_BOTIGA_ITEM_SDESCRIPTION_DESC"
 			filter="safehtml"
 			buttons="false"
-		/>	
+		/>
+		<field 
+			name="language" 
+			type="language" 
+			client="site" 
+			default="en-GB" 
+			label="COM_BOTIGA_ITEM_LANGUAGE_LABEL" 
+			description="COM_BOTIGA_ITEM_LANGUAGE_DESC" 
+		/>		
 	</fieldset>
-	<fieldset name="metas">
-		<field
-			name="metatags"
-			type="text"
-			label="COM_BOTIGA_ITEM_METATAGS_LABEL"
-			description="COM_BOTIGA_ITEM_METATAGS_DESC"
-			size="40"
-			class="inputbox"
-			default=""
-		/>	
-		<field
-			name="metadescription"
-			type="textarea"
-			label="COM_BOTIGA_ITEM_METADESC_LABEL"
-			description="COM_BOTIGA_ITEM_METADESC_DESC"
-			cols="10"
-			rows="5"
-			class="inputbox"
-			default=""
-		/>	
-	</fieldset>	
         <fields name="params">
 		<fieldset
 			name="params"

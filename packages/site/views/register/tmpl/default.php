@@ -50,7 +50,7 @@ $link = '';
 				
 				<div id="form-login-submit" class="control-group">
 					<div class="controls text-right">
-						<button disabled="true" type="submit" class="btn btn-primary validate submit"><?= JText::_('COM_BOTIGA_REGISTER'); ?></button>
+						<button disabled="disabled" type="submit" class="btn btn-primary validate submit"><?= JText::_('COM_BOTIGA_REGISTER'); ?></button>
 					</div>
 				</div>
 				<input type="hidden" name="option" value="com_botiga" />

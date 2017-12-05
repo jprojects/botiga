@@ -31,6 +31,7 @@ class botigaModelOrder extends JModelList
 				'qty', 'qty',
 				'price', 'price',
 				'name', 'name',
+				'ref', 'ref',
 			);
 		}
 		parent::__construct($config);
@@ -70,7 +71,7 @@ class botigaModelOrder extends JModelList
 		$this->setState('filter.search', $search);
 
 		// List state information.
-		parent::populateState('a.ordering', 'asc');
+		parent::populateState('a.id', 'asc');
 	}
         
     /**
@@ -106,11 +107,11 @@ class botigaModelOrder extends JModelList
 		
 		$id = JFactory::getApplication()->input->get('id');
 	
-		$query->select('a.*, i.name');
+		$query->select('a.*, i.name, i.ref');
 
 		$query->from('#__botiga_comandesDetall as a');
 		
-		$query->join('inner', '#__botiga_items as i on a.itemId = i.id');
+		$query->join('inner', '#__botiga_items as i on a.idItem = i.id');
                 
         // Filter by search in name.
 		$search = $this->getState('filter.search');
@@ -122,7 +123,7 @@ class botigaModelOrder extends JModelList
 		$query->where('a.idComanda = '.$id);
                 
         // Add the list ordering clause.
-		$orderCol	= $this->state->get('list.ordering', 'a.ordering');
+		$orderCol	= $this->state->get('list.ordering', 'a.id');
 		$orderDirn	= $this->state->get('list.direction', 'ASC');
 
 		$query->order($db->escape($orderCol.' '.$orderDirn));

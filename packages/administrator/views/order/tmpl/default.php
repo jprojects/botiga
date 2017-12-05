@@ -21,8 +21,8 @@ $user		= JFactory::getUser();
 $userId		= $user->get('id');
 $listOrder	= $this->state->get('list.ordering');
 $listDirn	= $this->state->get('list.direction');
-$canOrder	= $user->authorise('core.edit.state', 'com_laundry');
-$saveOrder	= $listOrder == 'a.ordering';
+$canOrder	= $user->authorise('core.edit.state', 'com_botiga');
+$saveOrder	= $listOrder == 'a.id';
 if ($saveOrder)
 {
 	$saveOrderingUrl = 'index.php?option=com_botiga&task=order.saveOrderAjax&tmpl=component';
@@ -104,7 +104,10 @@ if (!empty($this->extra_sidebar)) {
 						<input type="checkbox" name="checkall-toggle" value="" title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)" />
 					</th>
 					<th width="1%" class="nowrap center">
-						<?php echo JHtml::_('grid.sort', 'Order', 'a.idComanda', $listDirn, $listOrder); ?>
+						<?php echo JHtml::_('grid.sort', 'Ref', 'a.ref', $listDirn, $listOrder); ?>
+					</th>
+					<th width="1%" class="nowrap center">
+						<?php echo JHtml::_('grid.sort', 'Comanda', 'a.idComanda', $listDirn, $listOrder); ?>
 					</th>		
 					<th>
 						<?php echo JHtml::_('grid.sort',  'Item', 'i.name', $listDirn, $listOrder); ?>
@@ -113,7 +116,7 @@ if (!empty($this->extra_sidebar)) {
 						<?php echo JHtml::_('grid.sort',  'Quantity', 'a.qty', $listDirn, $listOrder); ?>
 					</th>
 					<th>
-						<?php echo JHtml::_('grid.sort', 'Price', 'a.price', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
+						<?php echo JHtml::_('grid.sort', 'Price', 'a.price', $listDirn, $listOrder); ?>
 					</th>
 
 					<?php if (isset($this->items[0]->id)): ?>
@@ -140,11 +143,11 @@ if (!empty($this->extra_sidebar)) {
 			</tfoot>
 			<tbody>
 				<?php foreach ($this->items as $i => $item) :
-				$ordering   = ($listOrder == 'a.ordering');
-                $canCreate	= $user->authorise('core.create',		'com_laundry');
-                $canEdit	= $user->authorise('core.edit',			'com_laundry');
-                $canCheckin	= $user->authorise('core.manage',		'com_laundry');
-                $canChange	= $user->authorise('core.edit.state',	'com_laundry');
+				$ordering   = ($listOrder == 'a.id');
+                $canCreate	= $user->authorise('core.create',		'com_botiga');
+                $canEdit	= $user->authorise('core.edit',			'com_botiga');
+                $canCheckin	= $user->authorise('core.manage',		'com_botiga');
+                $canChange	= $user->authorise('core.edit.state',	'com_botiga');
 				?>
 				<tr class="row<?php echo $i % 2; ?>">
                     
@@ -170,6 +173,9 @@ if (!empty($this->extra_sidebar)) {
 		            <?php endif; ?>
 					<td class="center hidden-phone">
 							<?php echo JHtml::_('grid.id', $i, $item->id); ?>
+					</td>
+					<td class="center">
+							<?php echo $item->ref; ?>
 					</td>
 					<td class="center">
 							<?php echo $item->idComanda; ?>

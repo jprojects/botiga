@@ -107,9 +107,21 @@ class botigaModelBotiga extends JModelList
         // Filters
        	$catid   = $app->input->getInt('catid', 0);
 		$marca   = $app->input->getInt('marca', 0);
-		$collection   = $app->input->getString('collection', '');
+		$coll    = $app->input->getString('collection', '');
 		$ref     = $app->input->get('ref', '');
 		$orderby = $app->input->get('orderby', 'ref');
+		
+		//order by pice
+		if($orderby == 'pvp') {
+			$groups  = JAccess::getGroupsByUser($user->id, false);
+			if(in_array(10, $groups)) {
+				$orderby = 'CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(i.price, \'pricing":["\',-1), \'"\', -2), \'"\', 1) AS double(10,2))'; //hotusa
+			} else {
+				$orderby = 'CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(i.price, \'pricing":["\',-1), \'","\', 1) AS double(10,2))'; //registered
+			}
+		} else {
+			$orderby = 'i.'.$orderby;
+		}
 		
 		$limit = $app->input->getInt('limit', 24);
 		$this->setState('list.limit', $limit);
@@ -123,7 +135,7 @@ class botigaModelBotiga extends JModelList
 		}
 		
 		if($collection != '') {
-			$query->where('(i.collection = '.$db->quote($collection).')');
+			$query->where('(i.collection = '.$db->quote($coll).')');
 		}
 		
 		if($ref != '') {
@@ -131,7 +143,7 @@ class botigaModelBotiga extends JModelList
 		}
 
 		$query->where('i.published = 1');
-		$query->where('i.language = '.$db->quote($def).' ORDER BY i.'.$orderby.' ASC');
+		$query->where('i.language = '.$db->quote($def).' ORDER BY '.$orderby.' ASC');
 
         $params = JComponentHelper::getParams( 'com_botiga' );
 		//echo $query;
@@ -147,7 +159,7 @@ class botigaModelBotiga extends JModelList
 	public function getItems()
 	{
         $items	= parent::getItems();
-
+		
 		return $items;
 	}
 	

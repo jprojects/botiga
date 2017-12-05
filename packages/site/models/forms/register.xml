@@ -29,6 +29,15 @@
 			required="true"
         />
         <field 
+			name="cargo"  
+			type="text" 
+			label="COM_BOTIGA_REGISTER_CARGO_LBL"
+			description="COM_BOTIGA_REGISTER_CARGO_DSC" 
+			default="" 
+			class="form-control" 
+			required="true"
+        />
+        <field 
 			name="phone"  
 			type="text" 
 			label="COM_BOTIGA_REGISTER_PHONE_LBL"
@@ -47,6 +56,15 @@
 			required="true"
         />
         <field 
+			name="cp"  
+			type="text" 
+			label="COM_BOTIGA_REGISTER_CP_LBL"
+			description="COM_BOTIGA_REGISTER_CP_DSC" 
+			default="" 
+			class="form-control" 
+			required="true"
+        />
+        <field 
 			name="city"  
 			type="text" 
 			label="COM_BOTIGA_REGISTER_CITY_LBL"
@@ -60,22 +78,13 @@
 			type="sql" 
 			label="COM_BOTIGA_REGISTER_PAIS_LABEL" 
 			description="COM_BOTIGA_REGISTER_PAIS_DESC" 
-			default=""
+			default="195"
 			query="SELECT country_id, country_name FROM #__botiga_countries"
     		key_field="country_id"
     		value_field="country_name"
     		class="form-control" 
 			required="true"
-		/>
-        <field 
-			name="cp"  
-			type="text" 
-			label="COM_BOTIGA_REGISTER_CP_LBL"
-			description="COM_BOTIGA_REGISTER_CP_DSC" 
-			default="" 
-			class="form-control" 
-			required="true"
-        />       
+		/>       
         <field 
 			name="email1"  
 			type="text" 

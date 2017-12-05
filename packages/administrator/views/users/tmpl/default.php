@@ -113,7 +113,10 @@ if (!empty($this->extra_sidebar)) {
 						<?php echo JHtml::_('grid.sort',  'COM_BOTIGA_USERS_HEADING_NAME', 'nom_empresa', $listDirn, $listOrder); ?>
 					</th>
 					<th width="10%">
-						<?php echo JHtml::_('grid.sort',  'COM_BOTIGA_USERS_HEADING_LOGIN_NAME', 'username', $listDirn, $listOrder); ?>
+						<?php echo JHtml::_('grid.sort',  'Cargo', 'cargo', $listDirn, $listOrder); ?>
+					</th>
+					<th width="10%">
+						<?php echo JHtml::_('grid.sort',  'COM_BOTIGA_USERS_HEADING_LOGIN_NAME', 'mail_empresa', $listDirn, $listOrder); ?>
 					</th>
 					<th width="10%">
 						<?php echo JHtml::_('grid.sort',  'COM_BOTIGA_USERS_HEADING_PHONE', 'telefon', $listDirn, $listOrder); ?>
@@ -193,9 +196,12 @@ if (!empty($this->extra_sidebar)) {
 		            <?php endif; ?>
 		            <td>
 						<a href="index.php?option=com_botiga&task=user.edit&id=<?= $item->id; ?>"><?= $item->nom_empresa; ?></a>
+					</td>
+					<td>
+						<?php echo $item->cargo; ?>
 					</td> 
 					<td>
-						<?php echo $item->mail_empresa; ?>
+						<a target="_blank" href="mailto:<?= $item->mail_empresa; ?>"><?= $item->mail_empresa; ?></a>
 					</td>
 					<td>
 						<?php echo $item->telefon; ?>

@@ -44,7 +44,7 @@ $user  = JFactory::getUser();
 				<td><?= $status; ?></td>
 				<td align="right"><div class="blue bold"><?= number_format(($item->total), 2); ?>&euro;</div></td>
 				<td align="right">
-					<a href="index.php?option=com_botiga&task=genPdf&id=<?= $item->id; ?>" target="_blank"><i class="fa fa-file-pdf-o"></i></a>
+					<a href="index.php?option=com_botiga&task=botiga.genPdf&id=<?= $item->id; ?>" target="_blank"><i class="fa fa-file-pdf-o"></i></a>
 				</td>
 			</tr>
 			<?php endforeach; ?>

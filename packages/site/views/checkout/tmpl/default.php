@@ -80,11 +80,16 @@ if($user->guest) {
 		<td width="20%"><span class="blue bold size20 total text-right"><?= number_format($subtotal, 2, '.', ''); ?>&euro;</span></td>
 	</tr>
 	<tr>
-		<td width="20%"></td>
+		<?php 
+		$shipment = $model->getShipment($subtotal);
+		$msg = '';
+		if($shipment == 0) { $shipment = '0.00'; $msg = 'Envío gratis por compras superiores a 250€'; }
+		if($shipment == 9999) { $shipment = '0.00'; $msg = 'Costes de transporte pendientes de valoración'; }
+		?>
+		<td width="20%"><span class="red"><?= $msg; ?></span></td>
 		<td width="20%"></td>
 		<td></td>
-		<td><strong><?= JText::_('COM_BOTIGA_CHECKOUT_TOTAL_SHIPMENT'); ?></strong></td>
-		<?php $shipment = $model->getShipment($subtotal); ?>
+		<td><strong><?= JText::_('COM_BOTIGA_CHECKOUT_TOTAL_SHIPMENT'); ?></strong></td>		
 		<td width="20%"><span class="blue bold size20 total text-right"><?= $shipment; ?>&euro;</span></td>
 	</tr>
 	<tr>
@@ -161,23 +166,35 @@ if($user->guest) {
 			<input type="hidden" name="subtotal" value="<?= $subtotal; ?>">
 			<input type="hidden" name="shipment" value="<?= $shipment; ?>">
 			<input type="hidden" name="total" value="<?= $total; ?>">
+			
 			<div class="form-group">
 				<input type="text" name="observa" class="form-control" placeholder="<?= JText::_('COM_BOTIGA_CHECKOUT_OBSERVA'); ?>" />
 			</div>
+			
+			<?php
+			$plugins = botigaHelper::getPaymentPlugins();
+			if(count($plugins) > 1) : ?>
 			<p><?= JText::_('COM_BOTIGA_FINISH_ADD_DATA'); ?></p>
 			<div class="form-group">
 				<select name="processor" id="processor" class="form-control">
 				<option value=""><?= JText::_('COM_BOTIGA_SELECT_PAYMENT_METHOD'); ?></option>
 				<?php 
 				$metodo_pago = botigaHelper::getUserData('metodo_pago', $user->id);
-				foreach(botigaHelper::getPaymentPlugins() as $plugin) : 
+				foreach($plugins as $plugin) : 
 				$params = json_decode($plugin->params);				
 				?>
 				<option value="<?= $params->alies; ?>" <?php if($processor == $params->alies || $metodo_pago == $params->alies) : ?>selected<?php endif; ?>><?= $params->title; ?></option>
 				<?php endforeach; ?>
 				</select>
 			</div>
-			<button type="submit" <?php if($metodo_pago == '') : ?>disabled="true"<?php endif; ?> class="btn btn-primary submit pull-right"><?= JText::_('COM_BOTIGA_FINISH_CART'); ?></button>
+			<?php else : 
+			foreach($plugins as $plugin) : 
+			$params = json_decode($plugin->params); ?>
+			<input type="hidden" name="processor" value="<?= $params->alies; ?>">
+			<?php endforeach; ?>
+			<?php endif; ?>
+			
+			<button type="submit" <?php if($metodo_pago == '' && count($plugins) > 1) : ?>disabled="true"<?php endif; ?> class="btn btn-primary submit pull-right"><?= JText::_('COM_BOTIGA_FINISH_CART'); ?></button>
 			<a href="index.php?option=com_botiga&view=botiga&catid=20&Itemid=128" class="btn btn-primary"><?= JText::_('COM_BOTIGA_CONTINUE_SHOPPING'); ?></a>
 			<a href="index.php?option=com_botiga&task=botiga.removeCart" class="btn btn-primary"><?= JText::_('COM_BOTIGA_DELETE_CART'); ?></a>	
 			<a href="index.php?option=com_botiga&task=botiga.saveCart" class="btn btn-primary"><?= JText::_('COM_BOTIGA_SAVE_CART'); ?></a>	

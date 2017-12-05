@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <metadata>
-	<layout title="Items Layout">
+	<layout title="Register Layout">
 		<message>
-			<![CDATA[Items Layout]]>
+			<![CDATA[Register Layout]]>
 		</message>
 	</layout>
-        <fields name="request">
-		
+    <fields name="request">
+
 	</fields>
 </metadata>

@@ -113,6 +113,7 @@ $doc->addStylesheet('components/com_botiga/assets/css/jquery.fancybox.css');
 		</div>
 		<div class="col-xs-12 col-md-8 nopadding">
 			<div class="addtocart">
+			<?php if(!$user->guest) : ?>
 			<form name="addtocart" action="index.php?option=com_botiga&task=botiga.setItem" method="get" class="form-inline">
 				<input type="hidden" name="option" value="com_botiga" />
 				<input type="hidden" name="task" value="botiga.setItem" />
@@ -122,11 +123,10 @@ $doc->addStylesheet('components/com_botiga/assets/css/jquery.fancybox.css');
 					<div class="form-group">
 						<input type="number" name="qty" value="1" min="1" id="number" />
 					</div>
-					<?php if(!$user->guest) : ?>
-						<button class="btn btn-group btn-success"><?= JText::_('COM_BOTIGA_BUY'); ?> <i class="fa fa-shopping-cart"></i></button>					
-		    	<?php endif; ?>
+						<button class="btn btn-group btn-success"><?= JText::_('COM_BOTIGA_BUY'); ?> <i class="fa fa-shopping-cart"></i></button>							    
 				</div>				
 		    </form>
+		    <?php endif; ?>
 		    </div>
         </div>
         </div>

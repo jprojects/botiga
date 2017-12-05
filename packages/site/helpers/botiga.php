@@ -158,16 +158,16 @@ class botigaHelper {
 	
 	public static function getDibujoTecnico($ref)
 	{
-		if(file_exists('images/products/'.strtolower($ref).'-f.jpg')) {
+		if(file_exists('images/products/'.$ref.'-f.jpg')) {
 			return $ref.'-f.jpg';
 		}
-		if(file_exists('images/products/'.strtolower($ref).' f.jpg')) {
+		if(file_exists('images/products/'.$ref.' f.jpg')) {
 			return $ref.' f.jpg';
 		}
-		if(file_exists('images/products/'.strtolower($ref).'-F.jpg')) {
+		if(file_exists('images/products/'.$ref.'-F.jpg')) {
 			return $ref.'-F.jpg';
 		}
-		if(file_exists('images/products/'.strtolower($ref).' F.jpg')) {
+		if(file_exists('images/products/'.$ref.' F.jpg')) {
 			return $ref.' F.jpg';
 		}
 		
@@ -176,17 +176,17 @@ class botigaHelper {
 	
 	public static function getFichaTecnica($ref)
 	{
-		if(file_exists('images/pdf/'.strtolower($ref).'-f.jpg')) {
-			return $ref.'-f.jpg';
+		if(file_exists('images/pdf/'.$ref.'-f.pdf')) {
+			return $ref.'-f.pdf';
 		}
-		if(file_exists('images/pdf/'.strtolower($ref).' f.jpg')) {
-			return $ref.' f.jpg';
+		if(file_exists('images/pdf/'.$ref.' f.pdf')) {
+			return $ref.' f.pdf';
 		}
-		if(file_exists('images/pdf/'.strtolower($ref).'-F.jpg')) {
-			return $ref.'-F.jpg';
+		if(file_exists('images/pdf/'.$ref.'-F.pdf')) {
+			return $ref.'-F.pdf';
 		}
-		if(file_exists('images/pdf/'.strtolower($ref).' F.jpg')) {
-			return $ref.' F.jpg';
+		if(file_exists('images/pdf/'.$ref.' F.pdf')) {
+			return $ref.' F.pdf';
 		}
 		
 		return false;
