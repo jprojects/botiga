@@ -131,13 +131,26 @@ class botigaHelper {
 		$user   = JFactory::getUser();
 		$db		= JFactory::getDbo();
 		
+		$login_prices = botigaHelper::getParameter('login_prices');
+		
 		//if user is guest hide price
-		if($user->guest) { return '0.00'; }
+		if($login_prices == 1 && $user->guest) { return '0.00'; }
 		
 		$groups = JAccess::getGroupsByUser($user->id, false);
 		
-		$db->setQuery('select price from #__botiga_items where id = '.$itemid);
-		$prices = json_decode($db->loadResult());
+		$db->setQuery('select price, catid from #__botiga_items where id = '.$itemid);
+		$row = $db->loadObject();
+		
+		//check category marked as hidden for guests...
+		if($user->guest) {
+			$catid_prices = botigaHelper::getParameter('catid_prices');
+			$cats = explode(',', $row->catid);
+			foreach($cats as $cat) {
+				if(in_array($cat, $catid_prices)) { return '0.00'; }
+			}
+		}
+		
+		$prices = json_decode($row->price);
 		
 		foreach ($prices as $sub) 
       	{
@@ -148,47 +161,12 @@ class botigaHelper {
       	}
       	
       	foreach ($result as $index=>$value) 
-		{   
+		{ 
+			if($user->guest) { $groups = array(2); }  
     		if(in_array($value[0], $groups)) { $result = $value[1]; }
 		}
 		
-		return number_format($result, 2, '.', '');
+		return number_format($result, 2);
 		
-	}
-	
-	public static function getDibujoTecnico($ref)
-	{
-		if(file_exists('images/products/'.$ref.'-f.jpg')) {
-			return $ref.'-f.jpg';
-		}
-		if(file_exists('images/products/'.$ref.' f.jpg')) {
-			return $ref.' f.jpg';
-		}
-		if(file_exists('images/products/'.$ref.'-F.jpg')) {
-			return $ref.'-F.jpg';
-		}
-		if(file_exists('images/products/'.$ref.' F.jpg')) {
-			return $ref.' F.jpg';
-		}
-		
-		return false;
-	}
-	
-	public static function getFichaTecnica($ref)
-	{
-		if(file_exists('images/pdf/'.$ref.'-f.pdf')) {
-			return $ref.'-f.pdf';
-		}
-		if(file_exists('images/pdf/'.$ref.' f.pdf')) {
-			return $ref.' f.pdf';
-		}
-		if(file_exists('images/pdf/'.$ref.'-F.pdf')) {
-			return $ref.'-F.pdf';
-		}
-		if(file_exists('images/pdf/'.$ref.' F.pdf')) {
-			return $ref.' F.pdf';
-		}
-		
-		return false;
 	}
 }
