@@ -7,6 +7,13 @@
 --
 
 DROP TABLE IF EXISTS `#__botiga_brands`;
+DROP TABLE IF EXISTS `#__botiga_categories`;
+DROP TABLE IF EXISTS `#__botiga_comandes`;
+DROP TABLE IF EXISTS `#__botiga_comandesDetall`;
+DROP TABLE IF EXISTS `#__botiga_rebuts`;
 DROP TABLE IF EXISTS `#__botiga_items`;
+DROP TABLE IF EXISTS `#__botiga_shipments`;
+DROP TABLE IF EXISTS `#__botiga_countries`;
+DROP TABLE IF EXISTS `#__botiga_favorites`;
 DROP TABLE IF EXISTS `#__botiga_coupons`;
 DROP TABLE IF EXISTS `#__botiga_users`;

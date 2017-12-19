@@ -26,6 +26,19 @@ CREATE TABLE IF NOT EXISTS `#__botiga_brands` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `#__botiga_categories`
+--
+
+CREATE TABLE IF NOT EXISTS `#__botiga_categories` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `catid` int(11) NOT NULL,
+  `factusol_codfam` varchar(10) NOT NULL,
+   PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `#__botiga_comandes`
 --
 
