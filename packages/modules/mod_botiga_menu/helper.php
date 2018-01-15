@@ -15,7 +15,6 @@ class modBotigaMenuHelper
 	public static function getBrands() {
 				
 		$db   = JFactory::getDbo();
-		$lang = JFactory::getLanguage()->getTag();
 
 		$db->setQuery('select id, name from #__botiga_brands where published = 1 order by ordering asc');
 		return $db->loadObjectList();
@@ -40,16 +39,18 @@ class modBotigaMenuHelper
 	public static function getCats() {
 	
 		$db   = JFactory::getDbo();
+		$lang = JFactory::getLanguage()->getTag();
 		
-		$db->setQuery('select id, title, parent_id from #__categories where extension = '.$db->quote('com_botiga').' and parent_id = 1 and published = 1 order by lft');
+		$db->setQuery('select id, title, parent_id from #__categories where extension = '.$db->quote('com_botiga').' and language = '.$db->quote($lang).' and parent_id = 1 and published = 1 order by lft');
 		return $db->loadObjectList();
 	}
 	
 	public static function getSubCats($id) {
 	
 		$db   = JFactory::getDbo();
+		$lang = JFactory::getLanguage()->getTag();
 		
-		$db->setQuery('select id, title, parent_id from #__categories where parent_id = '.$id.' and published = 1 order by lft');
+		$db->setQuery('select id, title, parent_id from #__categories where parent_id = '.$id.' and language = '.$db->quote($lang).' and published = 1 order by lft');
 		return $db->loadObjectList();
 	}
 	
