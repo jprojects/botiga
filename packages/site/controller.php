@@ -33,6 +33,9 @@ class botigaController extends JControllerLegacy
 		$data 	   	= $app->input->post->get('jform', array(), 'array');
 		$valid      = true;
 		
+		$uparams = JComponentHelper::getParams( 'com_users' );
+		$new_user_type = $uparams->get('new_usertype', 2);
+		
 		if($data['password1'] !== $data['password2']) {
 			$msg  = JText::_('COM_BOTIGA_REGISTER_PASSWORD_NOT_MATCH');
 			$type = 'danger';
@@ -40,12 +43,6 @@ class botigaController extends JControllerLegacy
 		}
 		if($data['email1'] !== $data['email2']) {
 			$msg  = JText::_('COM_BOTIGA_REGISTER_EMAIL_NOT_MATCH');
-			$type = 'danger';
-			$valid = false;
-		}
-		
-		if($data['empresa'] == '' || $data['cif'] == '' || $data['nombre'] == '' || $data['cargo'] == '' || $data['phone'] == '' || $data['address'] == '' || $data['city'] == '' || $data['email1'] == '' || $data['email2'] == '' || $data['password1'] == '' || $data['password2'] == '') {
-			$msg  = JText::_('Todos los campos son obligatorios.');
 			$type = 'danger';
 			$valid = false;
 		}
@@ -62,7 +59,8 @@ class botigaController extends JControllerLegacy
 			$user->password         = $password;
 			$user->email            = $data['email1'];
 			$user->registerDate     = date('Y-m-d H:i:s');
-			$user->block 			= 1;
+			//si esta configurat per activar desde administració (7) bloquejar user si no res
+			$user->block 			= $new_user_type == 7 ? 1 : 0;
 			
 			$valid = $db->insertObject('#__users', $user);
 			
@@ -70,19 +68,19 @@ class botigaController extends JControllerLegacy
 			
 			if($valid) {
 			
-				//create botiga user
+				//create acj user
 				$acjuser            	= new stdClass();
 				$acjuser->userid    	= $userid;
 			    $acjuser->usergroup 	= 2;
 			    $acjuser->nom_empresa	= $data['empresa'];
 			    $acjuser->mail_empresa	= $data['email1'];
 			    $acjuser->telefon		= $data['phone'];
-			    $acjuser->cargo			= $data['cargo'];
 			    $acjuser->adreca		= $data['address'];
 			    $acjuser->cp			= $data['zip'];
 			    $acjuser->poblacio		= $data['city'];
 			    $acjuser->pais   		= $data['pais'];	
-			    $acjuser->cif   		= $data['cif'];	
+			    $acjuser->cif   		= $data['cif'];
+			    $acjuser->telefon   	= $data['telefon'];	
 			    $acjuser->published	    = 1;
 			    
 			    $db->insertObject('#__botiga_users', $acjuser);    	        	
@@ -91,19 +89,35 @@ class botigaController extends JControllerLegacy
 				$group              = new stdClass();
 				$group->user_id     = $userid;
 				$group->group_id    = 2; //group registered
-				$db->insertObject('#__user_usergroup_map', $group);		
-
+				$db->insertObject('#__user_usergroup_map', $group);
+				
 				//send email to the user with his credentials...
 				$mail = JFactory::getMailer();
 				$sender[]  	= $config->get('fromname');
 				$sender[]	= $config->get('mailfrom');
+				
+				$botiga_name = botigaHelper::getParameter('botiga_name');
+				
 				$mail->setSender( $sender );
-			    $mail->addRecipient( $data['email1'] );
-			    $mail->setSubject( JText::_('COM_BOTIGA_REGISTER_SUBJECT') );
-				$mail->setBody( JText::sprintf('COM_BOTIGA_REGISTER_BODY', $data['email1'], $data['password1']) );
+				
+				if($new_user_type == 2) {		
+				
+					$mail->addRecipient( $data['email1'] );
+					$mail->setSubject( JText::sprintf('COM_BOTIGA_REGISTER_SUBJECT', $botiga_name) );
+					$mail->setBody( JText::sprintf('COM_BOTIGA_REGISTER_BODY', $data['email1'], $data['password1']) );
+					
+				} else {
+
+					$mail->addRecipient( $data['email1'] );
+					$mail->setSubject( JText::sprintf('COM_BOTIGA_REGISTER_ADMIN_SUBJECT', $botiga_name) );
+					$mail->setBody( JText::_('COM_BOTIGA_REGISTER_ADMIN_BODY') );
+				}
+				
+				//ToDo::send email to admin needed??
+				
 				$mail->IsHTML(true);
 				$mail->Send();
-			
+				
 				$msg  = JText::_('COM_BOTIGA_REGISTER_SUCCESS');
 				$type = '';
 			
@@ -115,50 +129,6 @@ class botigaController extends JControllerLegacy
 		
 		$this->setRedirect('index.php?option=com_botiga&view=register&Itemid=116', $msg, $type);
 	}
-	
-	/**
-	 * method to set item to favorites
-	 * @return bool 
-	 */
-     function setFavoriteAjax()
-     {
-     	$db   = JFactory::getDbo();
-     	$user = JFactory::getUser();
-     	
-     	if($user->guest) { return; }
-     	
-     	$jinput  = JFactory::getApplication()->input;
-     	$id  = $jinput->get('id');
-     	
-     	$favorite = new stdClass();
-     	
-     	$favorite->itemid = $id;
-     	$favorite->userid = $user->id;
-     	
-     	$db->insertObject('#__botiga_favorites', $favorite);
-     	
-     	echo 1;
-     }
-     
-     /**
-	 * method to unset item from favorites
-	 * @return bool 
-	 */
-     function unsetFavoriteAjax()
-     {
-     	$db   = JFactory::getDbo();
-     	$user = JFactory::getUser();
-     	
-     	if($user->guest) { return; }
-     	
-     	$jinput  = JFactory::getApplication()->input;
-     	$id  = $jinput->get('id');
-     	
-     	$db->setQuery('DELETE FROM #__botiga_favorites WHERE itemid = '.$id);
-     	$db->query();
-     	
-     	echo 1;
-     }
     
 	/**
 	 * method to set item to favorites
@@ -207,12 +177,66 @@ class botigaController extends JControllerLegacy
      	
      	$this->setRedirect($url, JText::_('COM_BOTIGA_UNSET_FAVORITE_SUCCESS'), 'info');
      }
+     
+     function sendPdf()
+     {
+     	$user   = JFactory::getUser();
+     	$config = JFactory::getConfig();
+     	$mailer = JFactory::getMailer();
+     	$app    = JFactory::getApplication(); 
+     	$db     = JFactory::getDbo();
+     	
+     	$result1 = false;
+     	$result2 = false; 
+     	
+     	$botiga_mail = botigaHelper::getParameter('botiga_mail');   	
+     	
+		$menu = $app->getMenu();
+		$menuItem = $menu->getItems( 'link', 'index.php?option=com_botiga&view=docs', true );
+     	
+     	$data = $app->input->post->get('jform', array(), 'array');   
+     	
+     	//generate link
+     	$db->setQuery('select pdf from #__botiga_docs where id = '.$data['id']);
+     	$pdf  = $db->loadResult(); 
+     	$link = JURI::base().'images/pdf/'.$pdf;	
+
+		$sender = array( 
+    		$config->get( 'mailfrom' ),
+    		$config->get( 'fromname' ) 
+		);
+
+		$mailer->setSender($sender);
+		$mailer->isHtml(true);
+		
+		//mail to user
+		$mailer->addRecipient($data['email']);
+		$mailer->setSubject(JText::_('COM_BOTIGA_DOCS_SUBJECT_USER'));
+		$mailer->setBody(JText::sprintf('COM_BOTIGA_DOCS_BODY_USER', $link));
+		$result1 = $mailer->Send();
+		
+		//mail to admin
+		$mailer->addRecipient($botiga_mail);
+		$mailer->setSubject(JText::_('COM_BOTIGA_DOCS_SUBJECT_ADMIN'));
+		$mailer->setBody(JText::sprintf('COM_BOTIGA_DOCS_BODY_ADMIN', $data['name'], $data['email']));
+		$result2 = $mailer->Send();
+		
+		if($result1 && $result2) {
+			$msg = JText::_('COM_BOTIGA_DOCS_SUCCESS');
+			$type = 'message';
+		} else {
+			$msg = JText::_('COM_BOTIGA_DOCS_ERROR');
+			$type = 'error';
+		}
+		
+		$this->setRedirect(JRoute::_('index.php?option=com_botiga&view=docs&Itemid='.$menuItem->id), $msg, $type);
+     }
 
 	function sincronitza() {
 
 		$db = JFactory::getDbo();
  
-		$log = fopen ( $_SERVER['DOCUMENT_ROOT'].'/sincro/log.txt' , 'w' );
+		$log = fopen ( JPATH_ROOT.'/sincro/log.txt' , 'w' );
 		fprintf( $log, "INICI PROCÉS: %s\n\n", date("d-m-Y H:i:s") );
 		
 		$integritat = true;
@@ -257,12 +281,12 @@ class botigaController extends JControllerLegacy
 			foreach($nodes as $brand) {
 				$marca[] = $brand->factusol_codfte;
 				$update_query = 
-					"UPDATE #__laundry_brands " .
+					"UPDATE #__botiga_brands " .
 					"SET name = " . $db->quote($brand->name) .
 					" WHERE factusol_codfte = " . $brand->factusol_codfte . " AND @factusol_codfte:=factusol_codfte";
 				$insert_query =
-					"INSERT #__laundry_brands(name,published,language,factusol_codfte) " .
-					"VALUES (" . $db->quote($brand->name) . ", 1, 'ca-ES', " . $brand->factusol_codfte . ")";
+					"INSERT #__botiga_brands(name,published,language,factusol_codfte) " .
+					"VALUES (" . $db->quote($brand->name) . ", 1, 'es-ES', " . $brand->factusol_codfte . ")";
 				$db->setQuery('SET @factusol_codfte := 0;');
 				$db->query();
 				$db->setQuery( $update_query );
@@ -290,10 +314,14 @@ class botigaController extends JControllerLegacy
 			}
 
 			//esborrar marques...
-			fputs( $log, "DELETE FROM #__laundry_brands WHERE factusol_codfte NOT IN (" . implode( ",", $marca ) . ")\n" );
-			$db->setQuery( "DELETE FROM #__laundry_brands WHERE factusol_codfte NOT IN (" . implode( ",", $marca ) . " )" );
-			$db->query();
-			$deletes_brands = $db->getAffectedRows();
+			if (count($marca)>0) {
+				fputs( $log, "DELETE FROM #__botiga_brands WHERE factusol_codfte NOT IN (" . implode( ",", $marca ) . ")\n" );
+				$db->setQuery( "DELETE FROM #__botiga_brands WHERE factusol_codfte NOT IN (" . implode( ",", $marca ) . " )" );
+				$db->query();
+				$deletes_brands = $db->getAffectedRows();
+			} else {
+				$deletes_brands = 0;
+			}
 			
 			fprintf( $log, 
 				"INSERTS: %d\nUPDATES: %d\nDELETES: %d\nERRORS: %d\nERRORS EN: %s\n\n", 
@@ -316,22 +344,17 @@ class botigaController extends JControllerLegacy
 			foreach($nodes as $cat) {
 				$categoria[] = $cat->factusol_codfam;
 				$catid = 0;
-				$select_query = 
-					"SELECT catid " .
-					"FROM #__categories " .
-					"INNER JOIN #__laundry_categories_cod ON #__categories.id = #__laundry_categories_cod.catid " .
-					"WHERE #__categories.extension='com_laundry' AND LOWER(#__categories.language) = " . $db->quote(strtolower($cat->language)) . 
-						" AND #__laundry_categories_cod.factusol_codfam = " . $db->quote($cat->factusol_codfam);
+				$parent = $this->getCatIdFromFactusol($cat->parent, $cat->language);
+				if (!$parent) $parent=0;
 				// comprovem si la categoria existeix
-				$db->setQuery($select_query);
-				$db->execute();
-				$num_files = $db->getNumRows();
-				$catid = $db->loadResult();
-				if ($num_files > 0) { // la categoria existeix. fem un update
+				$catid = $this->getCatIdFromFactusol($cat->factusol_codfam, $cat->language, $log);
+				if ($catid) { // la categoria existeix. fem un update
 					$update_query = 
 						"UPDATE #__categories " .
 						"SET title = " . $db->quote($cat->title) .
+						",parent_id = ".$parent.
 						" WHERE id = " . $catid; 
+					fputs( $log, 'DEBUG: ' . $update_query . "\n");
 					$db->setQuery( $update_query );
 					if ($db->execute()) {
 						$updates_categories++;
@@ -341,18 +364,20 @@ class botigaController extends JControllerLegacy
 						fputs( $log, $update_query . "\n");
 						$errors_categories_detalls[] = $cat->title;	
 					}
-				} else { // la categoria no existeix. fem un insert a #__categories i a #__laundry_categories_codç
+				} else { // la categoria no existeix. fem un insert a #__categories i a #__botiga_categories
 					$insert_query1 =
-						"INSERT #__categories(extension,title,language) " .
+						"INSERT #__categories(extension,title,parent_id,access,published,language) " .
 						"VALUES (" .
-							$db->quote('com_laundry')  . ", " .
+							$db->quote('com_botiga')  . ", " .
 							$db->quote($cat->title)    . ", " .
+							$parent . ", 1, 1, " .
 							$db->quote($cat->language) . ")";
+					fputs( $log, 'DEBUG: ' . $insert_query1 . "\n");
 					$db->setQuery( $insert_query1 );
 					if ($db->query()) {
 						$catid = $db->insertid();
 						$insert_query2 =
-							"INSERT #__laundry_categories_cod(catid,factusol_codfam) " .
+							"INSERT #__botiga_categories(catid,factusol_codfam) " .
 							"VALUES (" .
 								$catid . ", " .
 								$db->quote($cat->factusol_codfam) . ")";
@@ -374,14 +399,14 @@ class botigaController extends JControllerLegacy
 
 			//esborrar categories...
 			// eliminem les categories que no pertanyin a cap de les famílies que figuren en l'XML
-			// en primer lloc, esborrem de la taula #__laundry_categories_cod. 
-			// en segon lloc, esborrem totes les categories de la taula #_categories que no tinguin correspondència amb #_laundry_categories_cod
+			// en primer lloc, esborrem de la taula #__botiga_categories. 
+			// en segon lloc, esborrem totes les categories de la taula #_categories que no tinguin correspondència amb #_botiga_categories
 			fputs( $log, 
-				"DELETE FROM #__laundry_categories_cod WHERE factusol_codfam NOT IN ('" . implode( "','", $categoria ) . "')\n" .
-				"DELETE #__categories FROM #__categories LEFT JOIN #__laundry_categories_cod ON #__categories.id = #__laundry_categories_cod.catid WHERE #__categories.extension='com_laundry' AND #__laundry_categories_cod.catid IS NULL" );
-			$db->setQuery( "DELETE FROM #__laundry_categories_cod WHERE factusol_codfam NOT IN ('" . implode( "','", $categoria ) . "')" );
+				"DELETE FROM #__botiga_categories WHERE factusol_codfam NOT IN ('" . implode( "','", $categoria ) . "')\n" .
+				"DELETE #__categories FROM #__categories LEFT JOIN #__botiga_categories ON #__categories.id = #__botiga_categories.catid WHERE #__categories.extension='com_botiga' AND #__botiga_categories.catid IS NULL" );
+			$db->setQuery( "DELETE FROM #__botiga_categories WHERE factusol_codfam NOT IN ('" . implode( "','", $categoria ) . "')" );
 			$db->query();	
-			$db->setQuery( "DELETE #__categories FROM #__categories LEFT JOIN #__laundry_categories_cod ON #__categories.id = #__laundry_categories_cod.catid WHERE #__categories.extension='com_laundry' AND #__laundry_categories_cod.catid IS NULL" );
+			$db->setQuery( "DELETE #__categories FROM #__categories LEFT JOIN #__botiga_categories ON #__categories.id = #__botiga_categories.catid WHERE #__categories.extension='com_botiga' AND #__botiga_categories.catid IS NULL" );
 			$db->query();
 			
 			$deletes_categories = $db->getAffectedRows();
@@ -403,40 +428,42 @@ class botigaController extends JControllerLegacy
 			$deletes_items=0;
 			$errors_items=0;
 			$errors_items_detalls = array();
-			$db->setQuery( "UPDATE #__laundry_items SET sincronitzat=0" );
+			$db->setQuery( "UPDATE #__botiga_items SET sincronitzat=0" );
 			if ($db->query()) {
 				foreach($nodes as $item) {
-					$db->setQuery( "SELECT catid FROM #__categories INNER JOIN #__laundry_categories_cod ON #__categories.id=#__laundry_categories_cod.catid WHERE #__categories.extension='com_laundry' AND LOWER(#__categories.language)=" . $db->quote(strtolower($item->language)) . " AND #__laundry_categories_cod.factusol_codfam=" . $db->quote($item->factusol_codfam) );
+					$db->setQuery( "SELECT catid FROM #__categories INNER JOIN #__botiga_categories ON #__categories.id=#__botiga_categories.catid WHERE #__categories.extension='com_botiga' AND LOWER(#__categories.language)=" . $db->quote(strtolower($item->language)) . " AND #__botiga_categories.factusol_codfam=" . $db->quote($item->factusol_codfam) );
 					$db->execute();
 					$num_files_cat = $db->getNumRows();
 					$catid = $db->loadResult();
 					if ($num_files_cat>0) {
-						$db->setQuery( "SELECT id FROM #__laundry_brands WHERE LOWER(language)='ca-es' AND factusol_codfte=" . $item->factusol_codfte );
+						$db->setQuery( "SELECT id FROM #__botiga_brands WHERE LOWER(language)='es-es' AND factusol_codfte=" . $item->factusol_codfte );
 						$db->execute();
 						$num_brands_cat = $db->getNumRows();
 						$brandid = $db->loadResult();
 						if ($num_brands_cat>0) {
+						
+							//creem preu en format json
+							$jsonprice = '{"usergroup":["2"],"pricing":["'.$item->price1.'"]}';
+							
 							$update_query = 
-								"UPDATE #__laundry_items " .
+								"UPDATE #__botiga_items " .
 								"SET " .
 									"catid = " . $catid . ", " .
-									"marca = " . $brandid . ", " .
+									"brand = " . $brandid . ", " .
 									"sincronitzat = 1, " .  
 									"name = " . $db->quote($item->name) . ", " .
-									"price1 = " . $db->quote($item->price1) . ", " .
-									"price2 = " . $db->quote($item->price2) . ", " .
+									"price = " . $db->quote($jsonprice) . ", " .
 									"description = " . $db->quote($item->description) . ", " .
 									"image1 = " . $db->quote($item->image1) .  
 								" WHERE LOWER(language) = " . $db->quote(strtolower($item->language)) . " AND factusol_codart = " . $db->quote($item->ref) . " AND @factusol_codart:=LENGTH(factusol_codart)";
 							$insert_query =
-								"INSERT #__laundry_items(catid,marca,name,image1,price1,price2,published,ref,factusol_codart,language,sincronitzat) " .
+								"INSERT #__botiga_items(catid,brand,name,image1,price,published,ref,factusol_codart,language,sincronitzat) " .
 								"VALUES (" .
 									$catid . ", " .
 									$brandid . ", " .
 									$db->quote($item->name) . ", " .
 									$db->quote($item->image1) . ", " .
-									$item->price1 . ", " .
-									$item->price2 . ", " .
+									$db->quote($jsonprice) . ", " .
 									"1, " .
 									$db->quote($item->ref) . ", " .
 									$db->quote($item->ref) . ", " .
@@ -447,6 +474,7 @@ class botigaController extends JControllerLegacy
 							fputs( $log, $update_query . "\n" ); 
 							$db->setQuery( $update_query );
 							if($db->query()) { 
+								fputs( $log, "DEBUG: update article ok\n" );
 								$db->setQuery('select @factusol_codart'); 
 								$factusol_codart_updated = $db->loadResult(); 
 								if ($factusol_codart_updated==0) {
@@ -464,6 +492,7 @@ class botigaController extends JControllerLegacy
 									fputs( $log, $update_query . "\n");
 								}
 							} else { 
+								fputs( $log, "DEBUG: update article caput\n" );
 								$errors_items++;
 								fputs( $log, $update_query . "\n");
 								$errors_items_detalls[] = $item->ref;
@@ -471,20 +500,20 @@ class botigaController extends JControllerLegacy
 						} else {
 							// l'article pertany a una marca inexistent
 							$errors_items++;
-							fputs( $log, "L'article " . $item->ref . " correspon a una categoria inexistent (" . $item->factusol_codfam . ". És possible que en el Factusol falti activar-la a Internet?\n");
+							fputs( $log, "L'article " . $item->ref . " correspon a una marca inexistent (" . $item->factusol_codfte . ". És possible que en el Factusol falti activar-la a Internet (apartat Proveedores)?\n");
 							$errors_items_detalls[] = $item->ref;
 						}
 					} else {
 						// l'article pertany a una categoria inexistent
 						$errors_items++;
-						fputs( $log, "L'article " . $item->ref . " correspon a una marca inexistent (" . $item->factusol_codfte . ". És possible que en el Factusol falti activar-la a Internet (apartat Fabricantes)?\n");
+						fputs( $log, "L'article " . $item->ref . " correspon a una categoria inexistent (" . $item->factusol_codfam . ". És possible que en el Factusol falti activar-la a Internet?\n");
 						$errors_items_detalls[] = $item->ref;						
 					}
 				}
 
 				//esborrar items...
-				fputs( $log, "DELETE FROM #__laundry_items WHERE sincronitzat=0\n" );
-				$db->setQuery( "DELETE FROM #__laundry_items WHERE sincronitzat=0" );
+				fputs( $log, "DELETE FROM #__botiga_items WHERE sincronitzat=0\n" );
+				$db->setQuery( "DELETE FROM #__botiga_items WHERE sincronitzat=0" );
 				$db->query();	
 				$deletes_items = $db->getAffectedRows();
 				fprintf( $log, 
@@ -497,6 +526,7 @@ class botigaController extends JControllerLegacy
 				fputs( $log, "Error al marcar 'sincronitzar=0'. La sincronització dels articles no s'ha pogut dur a terme.\n\n" ); 
 			}
 			
+			/*
 			//comencem amb preus...
 			$xmlfile = JURI::base().'sincro/prices.xml';
 			$nodes = simplexml_load_file($xmlfile, 'SimpleXMLElement');  
@@ -506,20 +536,20 @@ class botigaController extends JControllerLegacy
 			$deletes_prices=0;
 			$errors_prices=0;
 			$errors_prices_detalls = array(); 
-			$db->setQuery( "UPDATE #__laundry_items_userprices SET sincronitzat=0" );
+			$db->setQuery( "UPDATE #__botiga_items_userprices SET sincronitzat=0" );
 			if ($db->query()) {
 				foreach($nodes as $price) {
 					$db->setQuery('select id from #__users where username = '.$db->quote($price['username']));
 					$userid = $db->loadResult();
 					$update_query = 
-						"UPDATE #__laundry_items_userprices " .
+						"UPDATE #__botiga_items_userprices " .
 						"SET price = " . $price->price . ", " .
 							" sincronitzat = 1 " .
 						"WHERE factusol_codart = " . $db->quote($price->ref) . " AND userid = " . $userid . " AND @factusol_codart:=LENGTH(factusol_codart)";
 					$insert_query = 
-						"INSERT INTO #__laundry_items_userprices( itemid, userid, price, factusol_codart, sincronitzat ) " .
+						"INSERT INTO #__botiga_items_userprices( itemid, userid, price, factusol_codart, sincronitzat ) " .
 						"SELECT id, " . $userid . ", " . $price->price . ", " . $db->quote($price->ref) . ", 1 " .
-						"FROM #__laundry_items " .
+						"FROM #__botiga_items " .
 						"WHERE factusol_codart = " . $db->quote($price->ref);
 					$db->setQuery('SET @factusol_codart := 0;');
 					$db->query();
@@ -547,8 +577,8 @@ class botigaController extends JControllerLegacy
 					}
 				}
 				//esborrar preus...
-				fputs( $log, "DELETE FROM #__laundry_items_userprices WHERE sincronitzat=0\n" );
-				$db->setQuery("DELETE FROM #__laundry_items_userprices WHERE sincronitzat=0");
+				fputs( $log, "DELETE FROM #__botiga_items_userprices WHERE sincronitzat=0\n" );
+				$db->setQuery("DELETE FROM #__botiga_items_userprices WHERE sincronitzat=0");
 				$db->query();
 				$deletes_prices = $db->getAffectedRows();
 				fprintf( $log, 
@@ -559,8 +589,10 @@ class botigaController extends JControllerLegacy
 					$errors_prices );
 			} else {
 				fputs( $log, "Error al marcar 'sincronitzar=0'. La sincronització dels preus especials no s'ha pogut dur a terme.\n\n" ); 
-			}
+			}*/
 		}
+		
+		
 		fprintf( $log, "FINAL PROCÉS: %s\n\n", date("d-m-Y H:i:s") );
 	
 		$fail = $errors_brands + $errors_categories + $errors_items + $errors_prices;
@@ -575,6 +607,23 @@ class botigaController extends JControllerLegacy
 
 	}
 
+	function getCatIdFromFactusol($codfam, $idioma, $log) {
+		$db = JFactory::getDbo();
+		if (!$codfam) {
+			return 0;
+		} else {
+			$select_query = 
+				"SELECT catid " .
+				"FROM #__categories " .
+				"INNER JOIN #__botiga_categories ON #__categories.id = #__botiga_categories.catid " .
+				"WHERE #__categories.extension='com_botiga' AND LOWER(#__categories.language) = " . $db->quote(strtolower($idioma)) .
+					" AND #__botiga_categories.factusol_codfam = " . $db->quote($codfam);
+			fputs( $log, 'DEBUG: ' . $select_query . "\n" );
+			$db->setQuery($select_query);
+			return $db->loadResult();
+		}
+	}
+						
 	function sendEmail($subject,$body,$attachment)
 	{
 		$email    = array( 'carles@aficat.com', 'parts@acjsystems.com' );
@@ -606,13 +655,13 @@ class botigaController extends JControllerLegacy
 	}
 
 	/**
-	* 07/01/2017: Utilitat per passar  a minúscules totes les imatges de la carpeta images/laundry_items
+	* 07/01/2017: Utilitat per passar  a minúscules totes les imatges de la carpeta images/botiga_items
 	*/
 	function lcasefiles() {
-		$files = scandir('/var/www/vhosts/acjsystems.com/httpdocs/images/laundry_items');
+		$files = scandir('/var/www/vhosts/acjsystems.com/httpdocs/images/botiga_items');
 		foreach ($files as $file) {
 			if ($file!=strtolower($file)) {
-				//rename('/var/www/vhosts/acjsystems.com/httpdocs/images/laundry_items/' . $file,'/var/www/vhosts/acjsystems.com/httpdocs/images/laundry_items/' . strtolower($file));
+				//rename('/var/www/vhosts/acjsystems.com/httpdocs/images/botiga_items/' . $file,'/var/www/vhosts/acjsystems.com/httpdocs/images/botiga_items/' . strtolower($file));
 				echo $file . '<br/>';
 			}
 		}
@@ -663,6 +712,125 @@ class botigaController extends JControllerLegacy
 		}
 			
 		$this->setRedirect($link, $msg, $type);
+	}
+	
+	public function genPdf()
+	{
+		jimport('fpdf.fpdf');
+		jimport('fpdfi.fpdi');
+		
+		$jinput = JFactory::getApplication()->input;
+		$id     = $jinput->get('id');
+
+		$pdf 	= new FPDI();
+		
+		$pdf->AddPage();
+		
+		$pdf->setSourceFile(JPATH_COMPONENT.DS.'assets'.DS.'pdf'.DS.'invoice.pdf');
+		
+		$tplIdx = $pdf->importPage(1);
+		$pdf->useTemplate($tplIdx, 0, 0, 0, 0, true);
+
+		define('EURO', chr(128));
+
+		$db = JFactory::getDbo();
+		$db->setQuery('SELECT c.*, u.mail_empresa as email, u.cif, u.telefon, u.metodo_pago FROM #__botiga_comandes c INNER JOIN #__botiga_users u ON u.userid = c.userid WHERE c.id = '.$id);
+		$com = $db->loadObject();
+
+		$db->setQuery('SELECT cd.*, i.name, i.ref as referencia, i.image1 as image FROM #__botiga_comandesDetall cd INNER JOIN #__botiga_items i ON cd.iditem = i.id WHERE cd.idComanda = '.$id);
+		$db->query();
+		$num_rows = $db->getNumRows();
+		$detalls  = $db->loadObjectList();
+		
+		$height = 45;
+		
+		$pdf->SetFont('Arial', '', '10');
+		
+		if($num_rows >= 12) { $pag = 2; } else { $pag = 1; }
+		
+		//user
+		$pdf->SetXY(170, $height); 
+		$pdf->Cell(15, 5, $com->telefon, 0, 0, 'R');
+		$height += 4;
+		$pdf->SetXY(121, $height); 
+		$pdf->Cell(16, 5, $com->cif, 0, 0, 'R');
+		$pdf->SetXY(170, $height); 
+		$pdf->Cell(15, 5, $com->email, 0, 0, 'R');
+		
+		//metadata
+		$height = 71;
+		$pdf->SetXY(20, $height); 
+		$pdf->Cell(15, 5, 'WEB00'.$id, 0, 0, 'R');
+		$pdf->SetXY(40, $height);
+		$pdf->Cell(15, 5, 'Pag. 1/'.$pag, 0, 0, 'R');
+		$pdf->SetXY(80, $height);
+		$pdf->Cell(15, 5, date('d-m-Y', strtotime($com->data)), 0, 0, 'R');
+		
+		//detall
+		$total   = 0;		
+		$height  = 85;
+		$counter = 0;
+		
+		foreach($detalls as $detall) {
+		
+			if($counter == 12) {
+				$pdf->AddPage();
+				$pdf->setSourceFile(JPATH_COMPONENT.DS.'assets'.DS.'pdf'.DS.'albaran.pdf');
+				$tplIdx2 = $pdf->importPage(1);
+				$pdf->useTemplate($tplIdx2, 0, 0, 0, 0, true);
+				$height = 71;		
+				$pdf->SetFont('Arial', '', '10');
+				$pdf->SetXY(20, $height); 
+				$pdf->Cell(15, 5, 'WEB00'.$id, 0, 0, 'R');
+				$pdf->SetXY(40, $height);
+				$pdf->Cell(15, 5, 'Pag. 2/2', 0, 0, 'R');
+				$pdf->SetXY(80, $height);
+				$pdf->Cell(15, 5, date('d-m-Y', strtotime($com->data)), 0, 0, 'R');
+				$height  = 85;
+			}
+	
+			$pdf->SetXY(20, $height);  
+			$pdf->Cell(30, 5, $detall->referencia, 0, 0, '');
+			$pdf->SetXY(60, $height);  
+			$pdf->Cell(90, 5, utf8_decode($detall->name), 0, 0, '');
+			$pdf->SetXY(110, $height); 
+			$pdf->Cell(20, 5, $detall->qty, 0, 0, 'R');	
+			$pdf->SetXY(145, $height);
+			$pdf->Cell(20, 5, number_format($detall->price, 2, ',', '.').EURO, 0, 0, '');
+			$pdf->SetXY(150, $height); 
+			$pdf->Cell(20, 5, 0, 0, 0, 'R');
+			$pdf->SetXY(172, $height); 
+			$pdf->Cell(15, 5, number_format(($detall->price * $detall->qty), 2, ',', '.').EURO, 0, 0, '');
+			
+			$height += 6;
+			$counter++;
+		}
+		
+		$height = 243;
+		$pdf->SetFont('Arial', 'B', '10');
+		$pdf->SetXY(55, $height);  
+		$pdf->Cell(30, 5, number_format($com->subtotal, 2, ',', '.').EURO, 0, 0, 'R');
+		$pdf->SetXY(75, $height); 
+		$pdf->Cell(30, 5, $com->iva_percent.'%', 0, 0, 'R');
+		$pdf->SetXY(95, $height);
+		$pdf->Cell(30, 5, number_format($com->iva_total, 2, ',', '.').EURO, 0, 0, 'R');
+
+		$pdf->SetXY(163, $height); 
+		$pdf->Cell(30, 5, number_format(($com->total), 2, ',', '.').EURO, 0, 0, 'R');
+		
+		$height += 10;
+		
+		$pdf->SetXY(35, $height); 
+		$com->metodo_pago == '' ? $metodo_pago = 'Pago habitual' : $metodo_pago = $com->metodo_pago;
+		$pdf->Cell(30, 5, utf8_decode($metodo_pago), 0, 0, 'R');
+		
+		$height += 12;
+		
+		$pdf->SetXY(125, $height); 
+		$pdf->Cell(30, 5, utf8_decode($com->observa), 0, 0, 'R');
+
+		$pdf->Output('presupuesto_'.$id.'.pdf', 'D');
+		die();
 	}
 }
 ?>
