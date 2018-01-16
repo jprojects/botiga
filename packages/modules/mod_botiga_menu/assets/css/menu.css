@@ -22,11 +22,7 @@
 	border: none;
 	color: #000;
 }
-.sidebar li a.active {
-	color: #000 !important;
+.sidebar li ul li a.active, .sidebar li.active a {
+	color: #000  !important;
 	font-weight: bold;
-}
-
-.products-title, .brands-title {
-	font-size: 15px;
 }
