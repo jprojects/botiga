@@ -23,7 +23,7 @@ $login_prices = botigaHelper::getParameter('login_prices', 0);
 <div class="row relateditems <?= $moduleclass_sfx; ?>">
 	<?php foreach ($items as $item) :	?>
 	<?php $precio 	= botigaHelper::getUserPrice($item->id); $precio < 1 ? $price = JText::_('COM_BOTIGA_A_CONSULTAR') : $price = $precio; ?>
-	<?php $item->image1 != '' ? $image = $item->image1 : $image = 'images/noimage.png'; ?>
+	<?php $item->image1 != '' ? $image = $item->image1 : $image = 'components/com_botiga/assets/images/noimage.jpg'; ?>
 	<div class="col-xs-12 col-md-3 item">
 		<div class="thumbnail">
 		<a href="<?= JRoute::_('index.php?option=com_botiga&view=item&id='.$item->id.'&Itemid=135'); ?>">
