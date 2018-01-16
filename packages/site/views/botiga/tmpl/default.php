@@ -96,7 +96,7 @@ $showprices = botigaHelper::getParameter('show_prices', 1);
 	if(count($this->items)) :
 	$i = 0;
 	foreach($this->items as $item) : ?>
-		<?php $item->image1 != '' ? $image = $item->image1 : $image = 'images/noimage.png'; ?>
+		<?php $item->image1 != '' ? $image = $item->image1 : $image = 'components/com_botiga/assets/images/noimage.jpg'; ?>
 
 		<?php 
 		$precio = botigaHelper::getUserPrice($item->id);

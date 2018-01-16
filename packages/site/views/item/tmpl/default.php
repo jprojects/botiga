@@ -12,7 +12,7 @@
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
-$this->item->image1 != '' ? $image = $this->item->image1 : $image = 'components/com_botiga/assets/images/noimage128.jpg';
+$this->item->image1 != '' ? $image = $this->item->image1 : $image = 'components/com_botiga/assets/images/noimage.jpg';
 $model 		= $this->getModel('item');
 $user  		= JFactory::getUser();
 $doc   		= JFactory::getDocument();
