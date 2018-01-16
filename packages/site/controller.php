@@ -280,37 +280,40 @@ class botigaController extends JControllerLegacy
 			$errors_brands_detalls = array();
 			foreach($nodes as $brand) {
 				$marca[] = $brand->factusol_codfte;
-				$update_query = 
-					"UPDATE #__botiga_brands " .
-					"SET name = " . $db->quote($brand->name) .
-					" WHERE factusol_codfte = " . $brand->factusol_codfte . " AND @factusol_codfte:=factusol_codfte";
-				$insert_query =
-					"INSERT #__botiga_brands(name,published,language,factusol_codfte) " .
-					"VALUES (" . $db->quote($brand->name) . ", 1, 'es-ES', " . $brand->factusol_codfte . ")";
-				$db->setQuery('SET @factusol_codfte := 0;');
-				$db->query();
-				$db->setQuery( $update_query );
-				if($db->query()) { 
-					$db->setQuery('select @factusol_codfte'); 
-					$factusol_codfte_updated = $db->loadResult(); 
-					if ($factusol_codfte_updated == 0) {
-						$db->setQuery( $insert_query );
-						if ($db->query()) {
-							$inserts_brands++;
+				if($brand->name != '') {
+					$update_query = 
+						"UPDATE #__botiga_brands " .
+						"SET name = " . $db->quote($brand->name) .
+						" WHERE factusol_codfte = " . $brand->factusol_codfte . " AND @factusol_codfte:=factusol_codfte";
+					$insert_query =
+						"INSERT #__botiga_brands(name,published,language,factusol_codfte) " .
+						"VALUES (" . $db->quote($brand->name) . ", 1, 'es-ES', " . $brand->factusol_codfte . ")";
+					$db->setQuery('SET @factusol_codfte := 0;');
+					$db->query();
+					$db->setQuery( $update_query );
+					
+					if($db->query()) { 
+						$db->setQuery('select @factusol_codfte'); 
+						$factusol_codfte_updated = $db->loadResult(); 
+						if ($factusol_codfte_updated == 0) {
+							$db->setQuery( $insert_query );
+							if ($db->query()) {
+								$inserts_brands++;
+							} else {
+								$errors_brands++;
+								$errors_brands_detalls[] = $brand->name;
+							}
+							fputs( $log, $insert_query . "\n");
 						} else {
-							$errors_brands++;
-							$errors_brands_detalls[] = $brand->name;
+							$updates_brands++;
+							fputs( $log, $update_query . "\n");
 						}
-						fputs( $log, $insert_query . "\n");
-					} else {
-						$updates_brands++;
+					} else { 
+						$errors_brands++;
 						fputs( $log, $update_query . "\n");
-					}
-				} else { 
-					$errors_brands++;
-					fputs( $log, $update_query . "\n");
-					$errors_brands_detalls[] = $brand->name;
-				}		
+						$errors_brands_detalls[] = $brand->name;
+					}	
+				}	
 			}
 
 			//esborrar marques...
@@ -349,6 +352,7 @@ class botigaController extends JControllerLegacy
 				// comprovem si la categoria existeix
 				$catid = $this->getCatIdFromFactusol($cat->factusol_codfam, $cat->language, $log);
 				if ($catid) { // la categoria existeix. fem un update
+					if($parent == 0) { $parent = 1; }
 					$update_query = 
 						"UPDATE #__categories " .
 						"SET title = " . $db->quote($cat->title) .
