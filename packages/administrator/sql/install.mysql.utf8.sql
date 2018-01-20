@@ -144,7 +144,6 @@ CREATE TABLE IF NOT EXISTS `#__botiga_shipments` (
   `min` varchar(50) NOT NULL DEFAULT '',
   `max` varchar(50) NOT NULL DEFAULT '',
   `total` int(5) NOT NULL DEFAULT '0',
-  `country` int(5) NOT NULL DEFAULT '0',
   `ordering` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
