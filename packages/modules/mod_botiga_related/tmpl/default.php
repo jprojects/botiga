@@ -35,7 +35,7 @@ $login_prices = botigaHelper::getParameter('login_prices', 0);
 		<div class="text-left"><?= $item->ref; ?></div>
 		<div class="text-left"><strong><?= $price; ?> &euro;</strong></div>
 		<?php if($show_prices == 1) : ?>
-		<a <?php if(!$user->guest) : ?>href="index.php?option=combotiga&task=laundry.setItem&id=<?= $item->id; ?>&return=<?= $uri; ?>"<?php else: ?>disabled="true"<?php endif; ?> class="btn btn-primary btn-block btn-black"><?= JText::_('COM_BOTIGA_BUY'); ?> <i class="fa fa-shopping-cart"></i></a>
+		<a <?php if(!$user->guest) : ?>href="index.php?option=com_botiga&task=botiga.setItem&id=<?= $item->id; ?>&return=<?= $uri; ?>"<?php else: ?>disabled="true"<?php endif; ?> class="btn btn-primary btn-block btn-black"><?= JText::_('COM_BOTIGA_BUY'); ?> <i class="fa fa-shopping-cart"></i></a>
 		<?php endif; ?>
 	</div>
 	<?php endforeach; ?>
