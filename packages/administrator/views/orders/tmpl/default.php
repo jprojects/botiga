@@ -113,7 +113,19 @@ if (!empty($this->extra_sidebar)) {
 					</th>		
 					<th>
 						<?php echo JHtml::_('grid.sort',  'Data', 'a.data', $listDirn, $listOrder); ?>
-					</th>        
+					</th>   
+					<th>
+						<?php echo JHtml::_('grid.sort',  'Subtotal', 'a.subtotal', $listDirn, $listOrder); ?>
+					</th>  
+					<th>
+						<?php echo JHtml::_('grid.sort',  'Ports', 'a.shipment', $listDirn, $listOrder); ?>
+					</th> 
+					<th>
+						<?php echo JHtml::_('grid.sort',  'IVA', 'a.iva_total', $listDirn, $listOrder); ?>
+					</th> 
+					<th>
+						<?php echo JHtml::_('grid.sort',  'Total', 'a.total', $listDirn, $listOrder); ?>
+					</th>     
 					<th>
 						<?php echo JHtml::_('grid.sort',  'Estat', 'a.status', $listDirn, $listOrder); ?>
 					</th>  
@@ -180,6 +192,18 @@ if (!empty($this->extra_sidebar)) {
 					</td>
 					<td>
 						<?php echo $item->data; ?>
+					</td>
+					<td>
+						<?php echo $item->subtotal; ?>
+					</td>
+					<td>
+						<?php echo $item->shipment; ?>
+					</td>
+					<td>
+						<?php echo $item->iva_total; ?>
+					</td>
+					<td>
+						<?php echo $item->total; ?>
 					</td>
 					<td class="center hidden-phone">
 						<?php echo (int) $item->status; ?>
