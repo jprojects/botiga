@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS `#__botiga_brands` (
   `published` tinyint(1) NOT NULL DEFAULT '0',
   `language` char(7) NOT NULL DEFAULT '0',
   `image` varchar(150) NOT NULL,
+  `header` varchar(150) NOT NULL,
   `factusol_codfte` int(11) DEFAULT '0',
   `ordering` int(11) NOT NULL,
   PRIMARY KEY (`id`)
