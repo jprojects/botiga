@@ -5,6 +5,7 @@
         <options var="view">
             <option value="botiga" name="Items" msg="Esta es la vista principal del componente, genera el buscador de productos." />
 	    	<option value="register" name="Registro" msg="Esta es la vista de registro de usuarios." />
+	    	<option value="categories" name="Categorias" msg="Esta es la vista del componente que genera la vista de categorias." />
             <option value="checkout" name="Carro de la compra" msg="Esta es la vista del componente que genera el formulario de compra." />
 	    	<option value="search" name="Búsqueda" msg="Esta es la vista del componente que genera el listado de resultados de búsqueda." />
 	    	<option value="item" name="Item" msg="Esta es la vista del componente que genera el detalle del producto." />
