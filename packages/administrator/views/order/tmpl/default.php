@@ -23,6 +23,7 @@ $listOrder	= $this->state->get('list.ordering');
 $listDirn	= $this->state->get('list.direction');
 $canOrder	= $user->authorise('core.edit.state', 'com_botiga');
 $saveOrder	= $listOrder == 'a.id';
+$id 		= JFactory::getApplication()->input->get('id');
 if ($saveOrder)
 {
 	$saveOrderingUrl = 'index.php?option=com_botiga&task=order.saveOrderAjax&tmpl=component';
@@ -51,7 +52,7 @@ if (!empty($this->extra_sidebar)) {
 }
 ?>
 
-<form action="<?php echo JRoute::_('index.php?option=com_botiga&view=order'); ?>" method="post" name="adminForm" id="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_botiga&view=order&id='.$id); ?>" method="post" name="adminForm" id="adminForm">
 <?php if(!empty($this->sidebar)): ?>
 	<div id="j-sidebar-container" class="span2">
 		<?php echo $this->sidebar; ?>

@@ -26,10 +26,10 @@ class botigaModelOrders extends JModelList
 	{
                 if (empty($config['filter_fields'])) {
 				$config['filter_fields'] = array(
-				'id', 'id',
-				'userid', 'userid',
-				'data', 'data',
-				'status', 'status',
+				'id', 'a.id',
+				'userid', 'a.userid',
+				'data', 'a.data',
+				'status', 'a.status',
 			);
 		}
 		parent::__construct($config);

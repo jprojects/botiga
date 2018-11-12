@@ -21,7 +21,7 @@ $user		= JFactory::getUser();
 $userId		= $user->get('id');
 $listOrder	= $this->state->get('list.ordering');
 $listDirn	= $this->state->get('list.direction');
-$canOrder	= $user->authorise('core.edit.state', 'com_laundry');
+$canOrder	= $user->authorise('core.edit.state', 'com_botiga');
 $saveOrder	= $listOrder == 'a.ordering';
 if ($saveOrder)
 {

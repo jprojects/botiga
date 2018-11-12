@@ -26,12 +26,12 @@ class botigaModelOrder extends JModelList
 	{
                 if (empty($config['filter_fields'])) {
 				$config['filter_fields'] = array(
-				'id', 'id',
-				'idComanda', 'idComanda',
-				'qty', 'qty',
-				'price', 'price',
-				'name', 'name',
-				'ref', 'ref',
+				'id', 'a.id',
+				'idComanda', 'a.idComanda',
+				'qty', 'a.qty',
+				'price', 'a.price',
+				'name', 'i.name',
+				'ref', 'i.ref',
 			);
 		}
 		parent::__construct($config);
