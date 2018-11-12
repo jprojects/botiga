@@ -299,8 +299,10 @@ class botigaControllerBotiga extends botigaController {
      	
      	$idComanda  = $session->get('idComanda');
      	
+     	$now        = date('Y-m-d H:i:s');
+     	
      	//actualitza comanda
-     	$db->setQuery('update #__botiga_comandes set status = 2 where id = '.$idComanda);
+     	$db->setQuery('UPDATE #__botiga_comandes SET status = 2, data = '.$db->quote($now).' WHERE id = '.$idComanda);
      	$result = $db->query();
      	
      	if($result) {
