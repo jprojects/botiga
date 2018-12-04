@@ -7,11 +7,16 @@
 	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
 	<authorEmail>kim@aficat.com</authorEmail>
 	<authorUrl>www.afi.cat</authorUrl>
-	<version>3.0</version>
+	<version>2.0.0</version>
 	<description>Transferencia procesor for botiga component</description>
 	<files>
 		<filename plugin="transferencia">transferencia.php</filename>
 	</files>
+	
+	<updateservers>
+    	<server type="extension" priority="2" name="Botiga Redsys Plugin">http://www.aficat.com/updates/botiga/plg_botiga_transferencia.xml</server>
+  	</updateservers>
+  	
 	<config>
 		<fields name="params">
 			<fieldset name="basic">
