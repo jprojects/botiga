@@ -124,7 +124,13 @@ jQuery(document).ready(function() {
 	
 		<li class="parent <?php if($marca == $brand->id) : ?>active<?php endif; ?>">
 			<a href="index.php?option=com_botiga&view=botiga&catid=<?= $catid; ?><?php if($marca != $brand->id) : ?>&marca=<?= $brand->id; ?><?php endif; ?>&Itemid=<?= $itemid; ?>">
-				<?= $brand->image == '' ? $brand->name : '<img src="'.$brand->image.'" alt="'.$brand->name.'" class="img-responsive">'; ?>
+				<?php
+				if($logos == 0) {
+					echo $brand->image == '' ? $brand->name : '<img src="'.$brand->image.'" alt="'.$brand->name.'" class="img-responsive">';
+				} else {
+					echo $brand->name;
+				}
+				?>
 			</a>
 		</li>			
 

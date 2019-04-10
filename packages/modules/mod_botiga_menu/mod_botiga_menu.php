@@ -14,6 +14,9 @@ require_once (dirname(__FILE__).DS.'helper.php');
 
 JHtml::stylesheet('modules/mod_botiga_menu/assets/css/menu.css');
 
+$logos = $params->get('logos', 1);
+$class_sfx = $params->get('moduleclass_sfx', '');
+
 require( JModuleHelper::getLayoutPath( 'mod_botiga_menu', 'default') );
 
 ?>
