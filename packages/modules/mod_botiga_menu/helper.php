@@ -16,7 +16,7 @@ class modBotigaMenuHelper
 				
 		$db   = JFactory::getDbo();
 
-		$db->setQuery('select id, name from #__botiga_brands where published = 1 order by ordering asc');
+		$db->setQuery('select id, name, image from #__botiga_brands where published = 1 order by ordering asc');
 		return $db->loadObjectList();
 	}
 	
