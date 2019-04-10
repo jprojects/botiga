@@ -13,6 +13,7 @@
 	    	<option value="coupons" name="Coupons" msg="Esta es la vista del componente que genera el listado de documentos." />
 	    	<option value="favorites" name="Favorites" msg="Esta es la vista del componente que genera el listado de favoritos." />
 	    	<option value="Profile" name="Profile" msg="Esta es la vista del componente que genera el formulario de edicón de datos del usuario." />
+	    	<option value="ofertes" name="Ofertes" msg="Aquesta es la vista del component que genera el llistat d'ofertes." />
         </options>
         </options>
     </menu>
