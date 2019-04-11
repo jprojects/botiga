@@ -113,7 +113,7 @@ $login_prices = botigaHelper::getParameter('login_prices', 0);
 		?>
 		<tr>
 			<!--<td width="15%"><img src="<?= $image; ?>" class="img-responsive" alt="<?= $item->name; ?>" /></td>-->
-			<td><a href="<?= JRoute::_('index.php?option=com_botiga&view=item&id='.$item->id); ?>&Itemid=133"><strong><?= $item->name; ?></strong></a></td>
+			<td><a href="<?= JRoute::_('index.php?option=com_botiga&view=item&id='.$item->id.'&Itemid=133'); ?>"><strong><?= $item->name; ?></strong></a></td>
 			<td><?php if($showprices == 1) : ?><?= $price; ?>&euro;<?php endif; ?></td>
 			<td><?= $item->ref; ?></td>
 			<td><?= $item->brandname; ?></td>

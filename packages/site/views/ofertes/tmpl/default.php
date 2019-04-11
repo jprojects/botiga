@@ -111,7 +111,7 @@ $login_prices = botigaHelper::getParameter('login_prices', 0);
 		<div class="wrapper">
 			<div class="item-wrap">
 				<div class="botiga-img">
-					<a href="<?= JRoute::_('index.php?option=com_botiga&view=item&id='.$item->id); ?>&Itemid=133">
+					<a href="<?= JRoute::_('index.php?option=com_botiga&view=item&id='.$item->id.'&Itemid=133'); ?>">
 						<?php if($item->pvp > 0 && $showprices == 1) : ?>
 						<div class="pvp-badge"><span><?= botigaHelper::getPercentDiff($item->pvp, $price); ?> %</span></div>
 						<?php endif; ?>
