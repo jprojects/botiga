@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <metadata>
-	<layout title="Items Layout">
+	<layout title="Categories Layout">
 		<message>
-			<![CDATA[Items Layout]]>
+			<![CDATA[Categories Layout]]>
 		</message>
 	</layout>
         <fields name="request">
 		<fieldset name="request" addfieldpath="/administrator/components/com_botiga/models/fields">
-			<field name="catid" type="category"
+			<field 
+				name="catid" 
+				type="category"
 				label="Categories"
 				extension="com_botiga"
 				description="This item create a complete list of published items from one category."

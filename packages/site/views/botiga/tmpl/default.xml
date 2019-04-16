@@ -7,10 +7,12 @@
 	</layout>
         <fields name="request">
 		<fieldset name="request" addfieldpath="/administrator/components/com_botiga/models/fields">
-			<field name="catid" type="category"
+			<field 
+				name="catid" 
+				type="category"
 				label="Categories"
 				extension="com_botiga"
-				description="This item create a complete list of published items from one category."
+				description="This item create a complete list of published items from one category. Empty for all items."
 				default=""
 			>
 			<option value="">Selecciona una categoria</option>
