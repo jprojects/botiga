@@ -55,8 +55,9 @@ $doc->addStylesheet('components/com_botiga/assets/css/jquery.fancybox.css');
 	<div class="col-xs-12 col-md-4">
 	
 		<div id="page-header">
-			<h2><?= $this->item->name; ?></h2>
-			<span><?= $this->item->s_description; ?></span>
+		<?php /* <h1><?= JText::_('COM_BOTIGA_ITEM_TITLE'); ?></h1> */ ?>
+		<h1><?= $this->item->name; ?></h1>
+		<span><?= $this->item->s_description; ?></span>
 		</div>
 		
 		<div class="botiga-img">
