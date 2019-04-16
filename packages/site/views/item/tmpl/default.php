@@ -107,7 +107,7 @@ $doc->addStylesheet('components/com_botiga/assets/css/jquery.fancybox.css');
 		<div class="col-xs-12 col-md-4 text-left nopadding">
 			<?php if($show_prices == 1) : ?>
 			<div class="text-left bold price"><?= $price; ?> &euro;</div>
-			<?php if(!$user->guest) : ?>
+			<?php if(!$user->guest && $this->item->pvp > 0) : ?>
 			<div class="text-left faded pvp">PVP <strike><?= $this->item->pvp; ?> &euro;</strike></div>
 			<?php endif; ?>
 			<?php endif; ?>		
@@ -150,27 +150,12 @@ $doc->addStylesheet('components/com_botiga/assets/css/jquery.fancybox.css');
 		<div class="product-extra"><span class="caret"></span> <strong>Garantía</strong></div>
 		<?= JText::_($this->item->garantia); ?>
 		<div class="product-extra"><span class="caret"></span> <strong>Envío</strong></div>
-		<?= JText::_($this->item->envio); ?>
-		
-		<?php if(botigaHelper::getDibujoTecnico($this->item->ref) != false || botigaHelper::getFichaTecnica($this->item->ref) != false) : ?>
-		<div class="product-extra"><span class="caret"></span> <strong>Documentación extra</strong></div>		
-			<?php if(botigaHelper::getFichaTecnica($this->item->ref) != false) : ?>
-				<a href="images/pdf/<?= botigaHelper::getFichaTecnica($this->item->ref); ?>" target="_blank">Ficha técnica</a><br>
-			<?php endif; ?>
-			<?php if(botigaHelper::getDibujoTecnico($this->item->ref) != false) : ?>
-				<a href="images/products/<?= botigaHelper::getDibujoTecnico($this->item->ref); ?>" target="_blank">Dibujo técnico</a>
-			<?php endif; ?>
-		<?php endif; ?>
+		<?= JText::_($this->item->envio); ?>				
 		
 		<?php if($show_ask == 1) : ?>
 		<a data-toggle="modal" data-name="<?= $this->item->name; ?>" data-target="#budget" class="btn btn-primary btn-block"><?= JText::_('COM_BOTIGA_MORE_INFO'); ?></a>
 		<?php endif; ?>
 		<!--<a href="<?= JRoute::_('index.php?option=com_botiga&view=botiga&catid=20&Itemid=128'); ?>" class="btn btn-primary btn-block btn-black"><?= JText::_('COM_BOTIGA_CONTINUE_SHOPPING'); ?></a>-->
-	</div>
-	
-	<div class="col-md-3 hidden-xs">
-		<!-- Modulo presupuesto -->
-		<a href="mailto:info@dicohotel.com"><img src="images/banner.jpg" alt="info" /></a>
 	</div>
 	
 	<div class="clearfix"></div>

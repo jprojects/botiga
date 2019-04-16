@@ -49,12 +49,7 @@ if($lang == 'en-GB') { $itemid = 130; }
 <div>
 
 	<div id="page-header">
-		<h1>
-			<?php 
-				// echo JText::_('COM_BOTIGA_FAVORITES_TITLE'); 
-				echo botigaHelper::getCategoryName();
-			?>
-		</h1>
+		<h1><?= botigaHelper::getCatData('title', $app->input->get('catid', 0)); ?></h1>
 	</div>
 	
 	<div class="clearfix"></div>

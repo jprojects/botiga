@@ -62,6 +62,20 @@ class botigaHelper {
 		$db->setQuery("select $field from #__botiga_users where userid = ".$userid);
 		return $db->loadResult();
 	}
+
+    /**
+	 * method to get user data
+	 * @params string $field database field request
+	 * @return mixed
+	*/
+    public static function getCatData($field, $catid)
+	{
+		if($catid == 0) { return JText::_('COM_BOTIGA_ITEMS_TITLE'); }
+		
+		$db = JFactory::getDbo();
+		$db->setQuery("select $field from #__categories where id = ".$catid);
+		return $db->loadResult();
+	}
 	
 	/**
 	 * method to get comanda data
@@ -84,10 +98,14 @@ class botigaHelper {
 		$db = JFactory::getDbo();
 		$app = JFactory::getApplication();
 		
-		$catid = $app->input->get('catid');
+		$catid = $app->input->get('catid', 0);
 		
-		$db->setQuery("select title from #__categories where id = ".$catid);
-		return $db->loadResult();
+		if($catid == 0) {
+			$db->setQuery("select title from #__categories where id = ".$catid);
+			return $db->loadResult();
+		} else {
+			return JText::_('COM_BOTIGA_FAVORITES_TITLE');
+		}
 	}
 	
 	/**

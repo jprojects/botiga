@@ -56,7 +56,7 @@ $showprices = botigaHelper::getParameter('show_prices', 1);
 <div>
 
 	<div id="page-header">
-		<h1><?= JText::_('COM_BOTIGA_ITEMS_TITLE'); ?></h1>
+		<h1><?= botigaHelper::getCatData('title', $app->input->get('catid', 0)); ?></h1>
 	</div>
 	
 	<div class="clearfix"></div>
