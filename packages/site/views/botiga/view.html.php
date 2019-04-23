@@ -5,8 +5,8 @@
  * @copyright   Copyright © 2010 - All rights reserved.
  * @license		GNU/GPL
  * @author		kim
- * @author mail administracion@joomlanetprojects.com
- * @website		http://www.joomlanetprojects.com
+ * @author mail kim@aficat.com
+ * @website		http://www.aficat.com
  *
 */
 
@@ -41,7 +41,7 @@ class botigaViewBotiga extends JViewLegacy
 		$pathway = $app->getPathway();
 		$menu    = $menus->getActive();
 		
-		$pathway->setPathway($array);
+		$pathway->setPathway($array=array());
 		$pathway->addItem(botigaHelper::getCategoryName(),'');
 		
 		$title = $this->params->get('page_title', '');

@@ -5,8 +5,8 @@
  * @copyright   Copyright © 2010 - All rights reserved.
  * @license		GNU/GPL
  * @author		kim
- * @author mail administracion@joomlanetprojects.com
- * @website		http://www.joomlanetprojects.com
+ * @author mail kim@aficat.com
+ * @website		http://www.aficat.com
  *
 */
   
@@ -56,13 +56,13 @@ $showprices = botigaHelper::getParameter('show_prices', 1);
 <div>
 
 	<div id="page-header">
-		<h1><?= botigaHelper::getCatData('title', $app->input->get('catid', 0)); ?></h1>
+		<h1><?= JText::_('COM_BOTIGA_ITEMS_TITLE'); ?></h1>
 	</div>
 	
 	<div class="clearfix"></div>
 	
 	<?php if($showprices == 1 && $user->guest) : ?>
-	<a href="index.php?option=com_botiga&view=register&Itemid=113">
+	<a href="index.php?option=com_botiga&view=register">
 	<div class="alert alert-danger"><?= JText::_('COM_BOTIGA_PRICES_NOTICE'); ?></div>
 	</a>
 	<?php endif; ?>
@@ -95,10 +95,10 @@ $showprices = botigaHelper::getParameter('show_prices', 1);
 	<?php 
 	if(count($this->items)) :
 	$i = 0;
-	foreach($this->items as $item) : ?>
-		<?php $item->image1 != '' ? $image = $item->image1 : $image = 'components/com_botiga/assets/images/noimage.jpg'; ?>
+	foreach($this->items as $item) :
+		
+		$item->image1 != '' ? $image = $item->image1 : $image = 'components/com_botiga/assets/images/noimage.jpg';
 
-		<?php 
 		$precio = botigaHelper::getUserPrice($item->id);
 		$precio < 1 ? $price = '' : $price = $precio; 
 		if($i == 4) { echo '<div class="clearfix"></div>'; $i = 0; }
@@ -107,7 +107,7 @@ $showprices = botigaHelper::getParameter('show_prices', 1);
 		<div class="wrapper">
 			<div class="item-wrap">
 				<div class="botiga-img">
-					<a href="<?= JRoute::_('index.php?option=com_botiga&view=item&id='.$item->id.'&Itemid=133'); ?>">
+					<a href="<?= JRoute::_('index.php?option=com_botiga&view=item&id='.$item->id.'&catid='.$catid); ?>&Itemid=115">
 						<?php if(!$user->guest && $item->pvp > 0 && $showprices == 1) : ?>
 						<div class="pvp-badge"><span><?= botigaHelper::getPercentDiff($item->pvp, $price); ?> %</span></div>
 						<?php endif; ?>
@@ -130,7 +130,7 @@ $showprices = botigaHelper::getParameter('show_prices', 1);
 			<div class="botiga-btns" style="display:none;">
 			
 				<div class="btn-group btn-group-justified" role="group">
-				  <a href="<?= JRoute::_('index.php?option=com_botiga&view=item&id='.$item->id.'&catid='.$catid.'&Itemid=133'); ?>" class="btn btn-primary"><i class="fa fa-eye"></i><br><?= JText::_('Ver'); ?></a>
+				  <a href="<?= JRoute::_('index.php?option=com_botiga&view=item&id='.$item->id.'&catid='.$catid.'&Itemid=115'); ?>" class="btn btn-primary"><i class="fa fa-eye"></i><br><?= JText::_('Ver'); ?></a>
 				 <a href="#" <?php if($user->guest) : ?>disabled="true"<?php endif; ?> data-id="<?= $item->id; ?>" class="btn btn-primary <?php if(!$user->guest) : ?>setItem<?php endif; ?>"><i class="fa fa-shopping-cart"></i><br><?= JText::_('Comprar'); ?></a>
 				  	<?php if(!botigaHelper::isFavorite($item->id)) : ?>
 						<a href="#" data-id="<?= $item->id; ?>" <?php if($user->guest) : ?>disabled="true"<?php endif; ?> class="btn btn-group btn-primary <?php if(!$user->guest) : ?>setFavorite<?php endif; ?> item<?= $item->id; ?>"><span class="heart glyphicon glyphicon-heart"></span><br>Favorito</a>
@@ -156,7 +156,7 @@ $showprices = botigaHelper::getParameter('show_prices', 1);
 	<div class="clearfix"></div>
 	
 	<div class="paginacion">
-		<?php echo $this->pagination->getPagesLinks(); ?>
+		<?= $this->pagination->getPagesLinks(); ?>
 	</div>
 	
 	<?php if(botigaHelper::getParameter('show_ask', 1) == 1) : ?>

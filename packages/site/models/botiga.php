@@ -10,30 +10,15 @@
  *
 */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
+
+use Joomla\Registry\Registry;
+use Joomla\Utilities\ArrayHelper;
+
+JTable::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
 
 class botigaModelBotiga extends JModelList
 { 
-	/**
-	 * Constructor.
-	 *
-	 * @param	array	An optional associative array of configuration settings.
-	 * @see		JController
-	 * @since	1.6
-	*/
-	public function __construct($config = array())
-	{
-		if (empty($config['filter_fields'])) {
-			$config['filter_fields'] = array(
-				'id', 'id',
-                'name', 'name'
-			);
-		}
-
-		parent::__construct($config);
-	}
-
 	/**
 	 * Method to auto-populate the model state.
 	 *
@@ -55,6 +40,12 @@ class botigaModelBotiga extends JModelList
 		//$value = $app->getUserStateFromRequest($this->context.'.limitstart', 'limitstart', 0);
 		$value = $app->input->getInt('limitstart', 0);
 		$this->setState('list.start', $value);
+		
+		$catid = $app->input->getInt('catid', 0);
+		$this->setState('list.catid', $catid);
+		
+		$orderby = $app->input->getInt('orderby', 'ref');
+		$this->setState('list.orderby', $orderby);
 
 		// Load the parameters.
 		$params = JComponentHelper::getParams('com_botiga');
@@ -77,7 +68,7 @@ class botigaModelBotiga extends JModelList
 	 * @since	1.6
 	*/
 	protected function getStoreId($id = '')
-	{
+	{		
 		return parent::getStoreId($id);
 	}
 
@@ -87,29 +78,27 @@ class botigaModelBotiga extends JModelList
 	 * @return	array	An array of banner objects.
 	 * @since	1.6
 	*/
-	function getListQuery()
+	protected function getListQuery()
 	{
     	$user = JFactory::getUser();
     	$app  = JFactory::getApplication();
-    	$lang = JFactory::getLanguage(); 
-		$def  = $lang->getTag();
         
-		$db   = $this->getDbo();
-
-		$query = $db->getQuery(true);
+		$db         = $this->getDbo();
 		
-		$query->select('i.*, .b.name as brandname');
+		$query      = $db->getQuery(true);
 		
-		$query->from('#__botiga_items as i');
+		$query->select('i.*, b.name AS brandname');
 		
-		$query->join('inner', '#__botiga_brands as b ON b.id = i.brand');
+		$query->from($db->quoteName('#__botiga_items').' AS i');
+		
+		$query->join('LEFT', $db->quoteName('#__botiga_brands').' AS b ON b.id = i.brand');
 
         // Filters
-       	$catid   = $app->input->getInt('catid', 0);
-		$marca   = $app->input->getInt('marca', 0);
-		$coll    = $app->input->getString('collection', '');
-		$ref     = $app->input->get('ref', '');
-		$orderby = $app->input->get('orderby', 'ref');
+       	$catid   	= $app->input->getInt('catid', 0);
+		$marca   	= $app->input->getInt('marca', 0);
+		$collection = $app->input->getString('collection', '');
+		$ref     	= $app->input->get('ref', '');
+		$orderby 	= $app->input->get('orderby', 'ref');
 		
 		//order by pice
 		if($orderby == 'pvp') {
@@ -121,10 +110,7 @@ class botigaModelBotiga extends JModelList
 			}
 		} else {
 			$orderby = 'i.'.$orderby;
-		}
-		
-		$limit = $app->input->getInt('limit', 24);
-		$this->setState('list.limit', $limit);
+		}		
 
 		if($catid != 0) {
 			$query->where('(FIND_IN_SET ('.$catid.', i.catid))');
@@ -135,7 +121,7 @@ class botigaModelBotiga extends JModelList
 		}
 		
 		if($collection != '') {
-			$query->where('(i.collection = '.$db->quote($coll).')');
+			$query->where('(i.collection = '.$db->quote($collection).')');
 		}
 		
 		if($ref != '') {
@@ -143,9 +129,8 @@ class botigaModelBotiga extends JModelList
 		}
 
 		$query->where('i.published = 1');
-		$query->where('i.language = '.$db->quote($def).' ORDER BY '.$orderby.' ASC');
+		$query->where('i.language = '.$db->quote(JFactory::getLanguage()->getTag()).' ORDER BY '.$orderby.' ASC');
 
-        $params = JComponentHelper::getParams( 'com_botiga' );
 		//echo $query;
 		return $query;
 	}
