@@ -50,6 +50,17 @@
         	label="COM_BOTIGA_SETTINGS_IVA_LBL" 
         	description="COM_BOTIGA_SETTINGS_IVA_DSC" 
         />
+        <field 
+        	type="radio" 
+        	name="show_header" 
+        	default="1" 
+        	class="btn-group"
+        	label="COM_BOTIGA_SETTINGS_HEADER_LBL" 
+        	description="COM_BOTIGA_SETTINGS_HEADER_DSC"
+		>
+		<option value="0">JNO</option>
+		<option value="1">JYES</option> 
+        </field>
 		<field 
         	type="radio" 
         	name="show_prices" 
