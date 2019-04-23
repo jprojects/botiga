@@ -26,17 +26,9 @@ $lang 		= JFactory::getLanguage()->getTag();
 $showprices = botigaHelper::getParameter('show_prices', 1);
 ?>
 
-<style>
-.item {
-	margin-bottom: 50px;
-	padding-left: 0 !important;
-	padding-right: 0 !important;
-}
-.item-wrap {
-	padding-left: 10px;
-	padding-right: 10px;
-}
-</style>
+<header>
+
+</header>
 
 <!-- start Modal success -->
 <div class="modal fade" id="success" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">

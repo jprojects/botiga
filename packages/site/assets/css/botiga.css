@@ -62,6 +62,16 @@
     font-size: 18px;
 }
 
+.item {
+	margin-bottom: 50px;
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+}
+.item-wrap {
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
 .thumbnail > img, .thumbnail > a > img { height: 250px; } 
 .additional-img a { display: inline-block; }
 .additional-img img {
