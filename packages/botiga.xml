@@ -19,6 +19,17 @@
 		<folder>controllers/</folder>
 		<folder>assets/</folder>  
 	</files>
+	<media destination="com_botiga" folder="media">
+		<filename>icons/carrito.png</filename>
+		<filename>icons/iniciar-sesion.png</filename>
+		<filename>icons/lista-active.png</filename>
+		<filename>icons/lista.png</filename>
+		<filename>icons/mosaico.png</filename>
+		<filename>icons/mosaico-active.png</filename>
+        <folder>icons/</folder>
+        <folder>css/</folder>
+        <folder>js/</folder>
+    </media>
 	<!-- Language frontend -->
 	<languages folder="site/languages/en-GB">
 		<language tag="en-GB">en-GB.com_botiga.ini</language>
