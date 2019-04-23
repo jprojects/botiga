@@ -102,17 +102,6 @@
 			required="true"
 			multiple="true"
 		/>
-        <field 
-        	type="radio" 
-        	name="show_ask" 
-        	default="1" 
-        	class="btn-group"
-        	label="COM_BOTIGA_SETTINGS_ASK_LBL" 
-        	description="COM_BOTIGA_SETTINGS_ASK_DSC"
-		>
-		<option value="0">JNO</option>
-		<option value="1">JYES</option> 
-        </field>
   </fieldset>
   <fieldset
 		name="permissions"
