@@ -103,6 +103,41 @@
 			multiple="true"
 		/>
   </fieldset>
+  <fieldset name="items" label="COM_BOTIGA_ITEM_SETTINGS" description="COM_BOTIGA_ITEM_SETTINGS_DESC">
+  		<field 
+        	type="radio" 
+        	name="show_ref" 
+        	default="1" 
+        	class="btn-group"
+        	label="COM_BOTIGA_SETTINGS_SHOW_REF_LBL" 
+        	description="COM_BOTIGA_SETTINGS_SHOW_REF_DSC"
+		>
+		<option value="0">JNO</option>
+		<option value="1">JYES</option> 
+        </field>
+        <field 
+        	type="radio" 
+        	name="show_desc" 
+        	default="1" 
+        	class="btn-group"
+        	label="COM_BOTIGA_SETTINGS_SHOW_SDESC_LBL" 
+        	description="COM_BOTIGA_SETTINGS_SHOW_SDESC_DSC"
+		>
+		<option value="0">JNO</option>
+		<option value="1">JYES</option> 
+        </field>
+        <field 
+        	type="radio" 
+        	name="show_brand" 
+        	default="1" 
+        	class="btn-group"
+        	label="COM_BOTIGA_SETTINGS_SHOW_BRAND_LBL" 
+        	description="COM_BOTIGA_SETTINGS_SHOW_BRAND_DSC"
+		>
+		<option value="0">JNO</option>
+		<option value="1">JYES</option> 
+        </field>
+  </fieldset>
   <fieldset
 		name="permissions"
 		label="JCONFIG_PERMISSIONS_LABEL"
