@@ -23,6 +23,13 @@
         	description="COM_BOTIGA_SETTINGS_CIF_DSC" 
         />
         <field 
+        	type="media" 
+        	name="botiga_logo" 
+        	default="" 
+        	label="COM_BOTIGA_SETTINGS_LOGO_LBL" 
+        	description="COM_BOTIGA_SETTINGS_LOGO_DSC" 
+        />
+        <field 
         	type="text" 
         	name="total_shipment" 
         	default="0" 
@@ -67,8 +74,8 @@
         </field>
         <field name="catid_prices"
 			type="category"
-			label="COM_BOTIGA_ITEM_CATID_PRICES_LABEL"
-			description="COM_BOTIGA_ITEM_CATID_PRICES_DESC"
+			label="COM_BOTIGA_ITEM_CATID_PRICES_LBL"
+			description="COM_BOTIGA_ITEM_CATID_PRICES_DSC"
 			extension="com_botiga"
 			required="true"
 			multiple="true"
