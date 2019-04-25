@@ -189,10 +189,10 @@ class botigaHelper {
 		
 		$groups = JAccess::getGroupsByUser($user->id, false);
 		
-		$db->setQuery('SELECT price, catid FROM #__botiga_items WHERE id = '.$itemid);
-		$row = $db->loadObject();
+		$db->setQuery('SELECT price FROM #__botiga_items WHERE id = '.$itemid);
+		$price = $db->loadResult();
 		
-		$prices = json_decode($row->price, true);
+		$prices = json_decode($price, true);
 		
 		foreach ($prices as $sub) 
       	{
@@ -204,7 +204,7 @@ class botigaHelper {
       	
       	foreach ($result as $index => $value) 
 		{ 
-			if($user->guest) { $groups = array(2); }  
+			//if($user->guest) { $groups = array(2); }  
     		if(in_array($value[0], $groups)) { $resultado = $value[1]; }
 		}
 		
