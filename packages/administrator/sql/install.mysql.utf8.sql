@@ -123,7 +123,8 @@ CREATE TABLE IF NOT EXISTS `#__botiga_items` (
   `envio` varchar(150) NOT NULL DEFAULT '',
   `published` tinyint(1) NOT NULL DEFAULT '0',
   `language` char(7) NOT NULL DEFAULT '0',
-  `ref` varchar(15) DEFAULT NULL,
+  `ref` text NOT NULL,
+  `extres` varchar(15) DEFAULT NULL,
   `factusol_codart` varchar(13) DEFAULT NULL,
   `sincronitzat` int(11) DEFAULT '0',
   PRIMARY KEY (`id`)

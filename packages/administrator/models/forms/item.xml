@@ -3,16 +3,37 @@
         addrulepath="/administrator/components/com_botiga/models/rules"
 >
 	<fieldset name="details" addfieldpath="/administrator/components/com_botiga/models/fields">
-		<field name="id"  type="text" class="readonly" label="JGLOBAL_FIELD_ID_LABEL"
-			description ="JGLOBAL_FIELD_ID_DESC" size="10" default="0" readonly="true"  
+		<field 
+			name="id"  
+			type="text" 
+			class="readonly" 
+			label="JGLOBAL_FIELD_ID_LABEL"
+			description ="JGLOBAL_FIELD_ID_DESC" 
+			size="10" 
+			default="0" 
+			readonly="true"  
         />
-        <field name="published" type="list" label="JSTATUS"
-			description="JFIELD_PUBLISHED_DESC" class="inputbox"
-			filter="intval" size="1" default="1"
+        <field 
+        	name="published" 
+        	type="list" 
+        	label="JSTATUS"
+			description="JFIELD_PUBLISHED_DESC" 
+			class="inputbox"
+			filter="intval" 
+			size="1" 
+			default="1"
 		>
 			<option value="1">JPUBLISHED</option>
 			<option value="0">JUNPUBLISHED</option>
 		</field>
+		<field 
+			name="language" 
+			type="language" 
+			client="site" 
+			default="en-GB" 
+			label="COM_BOTIGA_ITEM_LANGUAGE_LABEL" 
+			description="COM_BOTIGA_ITEM_LANGUAGE_DESC" 
+		/>
         <field name="catid"
 			type="category"
 			label="COM_BOTIGA_ITEM_CATID_LABEL"
@@ -159,6 +180,33 @@
 			<option value="COM_BOTIGA_3_WEEK">3 semanas</option>
 			<option value="COM_BOTIGA_4_WEEK">4 semanas</option>
 		</field>
+		<field 
+			name="extres"
+			type="repeatable"
+			icon="list"
+			description="COM_BOTIGA_ITEM_EXTRES_DESC"
+			label="COM_BOTIGA_ITEM_EXTRES_LABEL"
+			default='{"title":[""],
+			"content":[""]}'
+			>
+			<fieldset hidden="true" name="extres_modal" repeat="true">
+				<field 
+					name="title"
+					type="text"
+					label="COM_BOTIGA_ITEM_EXTRA_TITLE_LBL"
+					description="COM_BOTIGA_ITEM_EXTRA_TITLE_DSC"
+					default=""
+					size="30"					 
+				/>
+				<field 
+					name="content"
+					type="textarea"
+					label="COM_BOTIGA_ITEM_EXTRA_CONTENT_LBL"
+					description="COM_BOTIGA_ITEM_EXTRA_CONTENT_DSC"
+					filter="raw"
+				/>
+			</fieldset>
+		</field>
 		<field name="pdf"
 			type="filelist"
 			directory="images/pdf"
@@ -166,6 +214,13 @@
 			label="COM_BOTIGA_ITEM_PDF_LABEL"
 			description="COM_BOTIGA_ITEM_PDF_DESC"
 		/> 
+		<field
+			name="s_description"
+			type="textarea"
+			label="COM_BOTIGA_ITEM_SDESCRIPTION_LABEL"
+			description="COM_BOTIGA_ITEM_SDESCRIPTION_DESC"
+			filter="raw"
+		/>
         <field
 			name="description"
 			type="editor"
@@ -173,23 +228,7 @@
 			description="COM_BOTIGA_ITEM_DESCRIPTION_DESC"
 			filter="safehtml"
 			buttons="false"
-		/>
-		<field
-			name="s_description"
-			type="editor"
-			label="COM_BOTIGA_ITEM_SDESCRIPTION_LABEL"
-			description="COM_BOTIGA_ITEM_SDESCRIPTION_DESC"
-			filter="safehtml"
-			buttons="false"
-		/>
-		<field 
-			name="language" 
-			type="language" 
-			client="site" 
-			default="en-GB" 
-			label="COM_BOTIGA_ITEM_LANGUAGE_LABEL" 
-			description="COM_BOTIGA_ITEM_LANGUAGE_DESC" 
-		/>		
+		/>						
 	</fieldset>
         <fields name="params">
 		<fieldset
