@@ -6,7 +6,8 @@
  * @copyright   Copyright (C) 2015. Todos los derechos reservados.
  * @license     Licencia Pública General GNU versión 2 o posterior. Consulte LICENSE.txt
  * @author      aficat <kim@aficat.com> - http://www.afi.cat
- */
+*/
+
 // No direct access
 defined('_JEXEC') or die;
 
@@ -68,6 +69,18 @@ class botigaHelper {
 	 * @params string $field database field request
 	 * @return mixed
 	*/
+    public static function getItemData($field, $id)
+	{
+		$db = JFactory::getDbo();
+		$db->setQuery("select $field from #__botiga_items where id = ".$id);
+		return $db->loadResult();
+	}
+	
+	/**
+	 * method to get comanda data
+	 * @params string $field database field request
+	 * @return mixed
+	*/
     public static function getComandaData($field, $idComanda)
 	{
 		$db = JFactory::getDbo();
@@ -76,15 +89,26 @@ class botigaHelper {
 	}
 	
 	/**
+	 * method to get all categories
+	 * @return mixed
+	*/
+	public static function getCategories() 
+	{
+		$db = JFactory::getDbo();
+		$db->setQuery('SELECT id, title FROM #__categories WHERE extension = '.$db->quote('com_botiga').'ORDER BY id ASC');
+		return $db->loadObjectList();
+	}
+	
+	/**
 	 * method to get category name
 	 * @return mixed
 	*/
-    public static function getCategoryName()
+    public static function getCategoryName($catid=0)
 	{
 		$db = JFactory::getDbo();
 		$app = JFactory::getApplication();
 		
-		$catid = $app->input->get('catid', 0);
+		$catid = $app->input->get('catid', $catid);
 		
 		if($catid > 0) {
 			$db->setQuery("select title from #__categories where id = ".$catid);
@@ -126,35 +150,49 @@ class botigaHelper {
 	}
 	
 	/**
+	 * method to know the number of items in cart
+	 * @return int
+	*/
+	public static function getCarritoCount() 
+    {
+   		$db 	 = JFactory::getDbo();
+   		$session = JFactory::getSession();
+   		$user 	 = JFactory::getUser();
+		
+		$idComanda = $session->get('idComanda', '');
+		
+		if($idComanda != '') {
+   			$db->setQuery('select sum(qty) from #__botiga_comandesDetall where idComanda = '.$idComanda);
+   			return $db->loadResult();
+   		} else {
+   			return 0;
+   		}
+    }
+	
+	/**
 	 * method to get user the price
+	 * @params int $itemid database id requested
 	 * @return float
 	*/
 	public static function getUserPrice($itemid)
 	{
 		jimport( 'joomla.access.access' );
-		$user   = JFactory::getUser();
-		$db		= JFactory::getDbo();
 		
-		$login_prices = botigaHelper::getParameter('login_prices');
+		$user      = JFactory::getUser();
+		$db		   = JFactory::getDbo();
+		$resultado = '0.00';
+		
+		$login_prices = botigaHelper::getParameter('login_prices', 0);
 		
 		//if user is guest hide price
 		if($login_prices == 1 && $user->guest) { return '0.00'; }
 		
 		$groups = JAccess::getGroupsByUser($user->id, false);
 		
-		$db->setQuery('select price, catid from #__botiga_items where id = '.$itemid);
+		$db->setQuery('SELECT price, catid FROM #__botiga_items WHERE id = '.$itemid);
 		$row = $db->loadObject();
 		
-		//check category marked as hidden for guests...
-		if($user->guest) {
-			$catid_prices = botigaHelper::getParameter('catid_prices');
-			$cats = explode(',', $row->catid);
-			foreach($cats as $cat) {
-				if(in_array($cat, $catid_prices)) { return '0.00'; }
-			}
-		}
-		
-		$prices = json_decode($row->price);
+		$prices = json_decode($row->price, true);
 		
 		foreach ($prices as $sub) 
       	{
@@ -164,13 +202,35 @@ class botigaHelper {
 		    }
       	}
       	
-      	foreach ($result as $index=>$value) 
+      	foreach ($result as $index => $value) 
 		{ 
 			if($user->guest) { $groups = array(2); }  
-    		if(in_array($value[0], $groups)) { $result = $value[1]; }
+    		if(in_array($value[0], $groups)) { $resultado = $value[1]; }
 		}
 		
-		return number_format($result, 2);
+		return number_format($resultado, 2);
+		
+	}
+	
+	/**
+	 * method to get the extra content in the item view
+	 * @params int $itemid database id requested
+	 * @return mixed
+	*/
+	public static function getExtras($itemid)
+	{
+		$result = array();		
+		$extras = json_decode(botigaHelper::getItemData('extres', $itemid), true);
+		
+		foreach ($extras as $extra) 
+      	{
+			foreach ($extra as $k => $v) 
+		    {
+		        $result[$k][] = $v;
+		    }
+      	}
+		
+		return $result;
 		
 	}
 }
