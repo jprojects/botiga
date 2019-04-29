@@ -115,7 +115,7 @@ $showpvp 	= botigaHelper::getParameter('show_pvp', 1);
 				</form>
 			</div>
 			
-			<div class="col-10 mx-auto items">
+			<div class="col-8 mx-auto items">
 				<div class="row">
 				
 				<?php 
@@ -134,7 +134,7 @@ $showpvp 	= botigaHelper::getParameter('show_pvp', 1);
 								<?php if(!$user->guest && $item->pvp > 0 && $showprices == 1) : ?>
 								<div class="pvp-badge"><span><?= botigaHelper::getPercentDiff($item->pvp, $precio); ?> %</span></div>
 								<?php endif; ?>
-								<img src="<?= $image; ?>" class="img-responsive" alt="<?= $item->name; ?>" />
+								<img src="<?= $image; ?>" class="img-fluid" alt="<?= $item->name; ?>" />
 							</a>						
 						</div>
 						
@@ -198,22 +198,23 @@ $showpvp 	= botigaHelper::getParameter('show_pvp', 1);
 	    	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 	  	</div>
 	  	<div class="modal-body">
-		<h2><?= JText::_('COM_BOTIGA_PROCESS_CART'); ?></h2>
-		<div class="row">
-			<div class="col-xs-12 col-md-6">
-			<?php 
-			$img = botigaHelper::getItemData('image1', $modal);
-			$img != '' ? $image = $img : $image = 'components/com_botiga/assets/images/noimage.jpg';
-			?>
-			<img src="<?= $image; ?>" alt="" class="img-fluid">
+			<h2><?= JText::_('COM_BOTIGA_PROCESS_CART'); ?></h2>
+			<div class="row">
+				<div class="col-xs-12 col-md-6">
+					<?php 
+					$img = botigaHelper::getItemData('image1', $modal);
+					$img != '' ? $image = $img : $image = 'components/com_botiga/assets/images/noimage.jpg';
+					?>
+					<img src="<?= $image; ?>" alt="" class="img-fluid" width="50">
+				</div>
+				<div class="col-xs-12 col-md-6 text-left py-3">
+					<b><?= botigaHelper::getItemData('name', $modal); ?></b>
+					<?= botigaHelper::getItemData('s_description', $modal); ?>
+					<b><?= botigaHelper::getUserPrice($modal); ?>&euro;</b>
+				</div>
 			</div>
-			<div class="col-xs-12 col-md-6 text-left py-3">
-			<b><?= botigaHelper::getItemData('name', $modal); ?></b>
-			<?= botigaHelper::getItemData('s_description', $modal); ?>
-			</div>
-		</div>
-		<a href="index.php?option=com_botiga&view=checkout" class="btn btn-primary btn-block mt-2"><?= JText::_('COM_BOTIGA_GOTO_CHECKOUT'); ?></a>
-		<a href="#" class="btn btn-primary btn-block" data-dismiss="modal"><?= JText::_('COM_BOTIGA_CONTINUE_SHOPPING'); ?></a>
+			<a href="index.php?option=com_botiga&view=checkout" class="btn btn-primary btn-block mt-3"><?= JText::_('COM_BOTIGA_GOTO_CHECKOUT'); ?></a>
+			<a href="#" class="btn btn-primary btn-block mt-3" data-dismiss="modal"><?= JText::_('COM_BOTIGA_CONTINUE_SHOPPING'); ?></a>
 	  </div>
 	</div>
   </div>

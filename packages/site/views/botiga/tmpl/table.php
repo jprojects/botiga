@@ -128,7 +128,7 @@ $showpvp 	= botigaHelper::getParameter('show_pvp', 1);
 					<tr>
 						<td width="15%">
 							<a href="<?= JRoute::_('index.php?option=com_botiga&view=item&id='.$item->id); ?>">
-								<img src="<?= $image; ?>" class="img-fluid" alt="<?= $item->name; ?>" width="100">
+								<img src="<?= $image; ?>" class="img-fluid" alt="<?= $item->name; ?>" width="50">
 							</a>
 						</td>
 						<?php if($showprices == 1 || ($loginprices == 1 && !$user->guest)) : ?>
@@ -221,7 +221,7 @@ $showpvp 	= botigaHelper::getParameter('show_pvp', 1);
 			$img = botigaHelper::getItemData('image1', $modal);
 			$img != '' ? $image = $img : $image = 'components/com_botiga/assets/images/noimage.jpg';
 			?>
-			<img src="<?= $image; ?>" alt="" class="img-fluid">
+			<img src="<?= $image; ?>" alt="" class="img-fluid" width="50">
 			</div>
 			<div class="col-xs-12 col-md-6 text-left py-3">
 			<b><?= botigaHelper::getItemData('name', $modal); ?></b>

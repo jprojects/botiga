@@ -44,7 +44,7 @@ class botigaModelBotiga extends JModelList
 		$catid = $app->input->getInt('catid', 0);
 		$this->setState('list.catid', $catid);
 		
-		$orderby = $app->input->getInt('orderby', 'ref');
+		$orderby = $app->input->getInt('orderby', 'id');
 		$this->setState('list.orderby', $orderby);
 
 		// Load the parameters.
@@ -98,7 +98,7 @@ class botigaModelBotiga extends JModelList
 		$marca   	= $app->input->getInt('marca', 0);
 		$collection = $app->input->getString('collection', '');
 		$ref     	= $app->input->get('ref', '');
-		$orderby 	= $app->input->get('orderby', 'ref');
+		$orderby 	= $app->input->get('orderby', 'id');
 		
 		//order by pice
 		if($orderby == 'pvp') {

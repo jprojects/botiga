@@ -16,46 +16,60 @@ defined('_JEXEC') or die('Restricted access');
 JHtml::_('behavior.keepalive');
 JHtml::_('behavior.formvalidator');
 $link = '';
+$f  = array();
+$f[1] = botigaHelper::getParameter('show_field_empresa', 1);
+$f[2] = botigaHelper::getParameter('show_field_cif', 1);
+$f[3] = botigaHelper::getParameter('show_field_nom', 1);
+$f[4] = botigaHelper::getParameter('show_field_cargo', 1);
+$f[5] = botigaHelper::getParameter('show_field_phone', 1);
+$f[6] = botigaHelper::getParameter('show_field_address', 1);
+$f[7] = botigaHelper::getParameter('show_field_cp', 1);
+$f[8] = botigaHelper::getParameter('show_field_state', 1);
+$f[9] = botigaHelper::getParameter('show_field_pais', 1);
 ?>
 
-<style>#page-header { border: none; }</style>
+<div class="col-md-4 mx-auto  mt-5 mb-5"> 
 
-<div> 
-
-	<div class="page-header">
-		<h3><?= JText::_('COM_BOTIGA_REGISTER_TITLE'); ?></h3>
-		<hr>
-		<p><?= JText::_('COM_BOTIGA_REGISTER_SUBTITLE'); ?></p>
+	<div class="text-center">
+		<h1 class="text-dark estil09"><?= JText::_('COM_BOTIGA_REGISTER_TITLE'); ?></h1>
 	</div>
 
-	<div class="col-md-12">
+	<div>
 
 		<form name="register" id="register" action="<?= JRoute::_('index.php?option=com_botiga&task=register'); ?>" method="post" class="form-horizontal form-validate">
 		
-				<?php foreach($this->form->getFieldset('register') as $field): ?>
+				<?php 
+				$i = 1;
+				foreach($this->form->getFieldset('register') as $field): ?>
+				<?php if($f[$i] == 1): ?> 
 				<div class="control-group">
 				<div class="form-group">
-						<label class="col-sm-2 control-label"><?php echo $field->label; ?></label>
-						<div class="col-sm-10"><?php echo $field->input ?></div>
+						<label class="control-label estil03"><?php echo $field->label; ?></label>
+						<div class="estil02"><?php echo $field->input ?></div>
 				</div>
 				</div>
-				<?php endforeach; ?>
+				<?php endif; ?>
+				<?php 
+				$i++;
+				endforeach; ?>
 				
-				<div class="checkbox text-right">
+				<div class="checkbox estil01">
 				  <label>
 					<input type="checkbox" value="" class="tos">
-					<?= JText::_('COM_BOTIGA_REGISTER_LOPD'); ?>
+					<?= JText::sprintf('COM_BOTIGA_REGISTER_LOPD', ''); ?>
 				  </label>
 				</div>
 				
 				<div id="form-login-submit" class="control-group">
-					<div class="controls text-right">
-						<button disabled="disabled" type="submit" class="btn btn-primary validate submit"><?= JText::_('COM_BOTIGA_REGISTER'); ?></button>
+					<div class="controls">
+						<button disabled="disabled" type="submit" class="btn btn-primary btn-block validate submit estil03"><?= JText::_('COM_BOTIGA_REGISTER'); ?></button>
 					</div>
 				</div>
 				<input type="hidden" name="option" value="com_botiga" />
 				<input type="hidden" name="task" value="register" />
 				<?php echo JHtml::_('form.token');?>
+				
+				<div class="estil01 mt-3"><?= JText::_('COM_BOTIGA_REGISTER_SUBTITLE'); ?></div>
 				
 		</form>
 	</div>

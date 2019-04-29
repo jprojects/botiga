@@ -14,10 +14,9 @@
 defined('_JEXEC') or die('Restricted access');
 
 class botigaModelItem extends JModelItem
-{ 
-	
+{ 	
 	/**
-	 * Get a list of items.
+	 * Get selected item.
 	 *
 	 * @return	array
 	 * @since	1.6
@@ -29,7 +28,8 @@ class botigaModelItem extends JModelItem
         
         $id  = $app->input->get('id');
         
-        $db->setQuery('select i.*, b.image as bimage, b.name as bname from #__botiga_items as i inner join #__botiga_brands as b on b.id = i.brand where i.id = '.$id);
+        $db->setQuery('SELECT i.*, b.name AS bname FROM #__botiga_items AS i inner join #__botiga_brands AS b ON b.id = i.brand WHERE i.id = '.$id);
+        
         return $db->loadObject();
 	}
 }

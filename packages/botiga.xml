@@ -27,6 +27,8 @@
 		<filename>icons/mosaico.png</filename>
 		<filename>icons/mosaico-active.png</filename>
 		<filename>icons/addtocart.png</filename>
+		<filename>icons/papelera.png</filename>
+		<filename>icons/salir.png</filename>
         <folder>icons/</folder>
         <folder>css/</folder>
         <folder>js/</folder>

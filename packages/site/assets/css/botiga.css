@@ -2,6 +2,15 @@
 
 .empty { color: #514B4B; }
 .nopadding { padding: 0 !important; }
+.bg-qty {
+	background-color: #683b2b !important;
+	color: #ffcd00 !important;
+}
+
+a { 
+	outline: 0;
+	cursor pointer;
+}
 
 .items { margin-top: 40px; }
 .item {
@@ -9,25 +18,6 @@
 }
 
 .red { color: #bd0000; }
-
-.zoom {
-  	display: inline-block;
-  	background-color: #fff;
-  	-webkit-transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
-  	transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
-}
-
-.zoom:hover {
-  	border: 1px solid #f2f2f2;
-  	box-shadow: 0 0.5em 1em #f2f2f2;
-}
-
-.zoom:hover > .wrapper {
-  	border: 1px solid #f2f2f2;
-  	box-shadow: 0 0.5em 1em #f2f2f2;
-}
-
-.botiga-btns { background-color: #000; height: 54px; }
 
 .botiga-img { position: relative; }
 .item .botiga-img { position: relative; height: 300px; }
@@ -62,16 +52,6 @@
     font-size: 18px;
 }
 
-.item {
-	margin-bottom: 50px;
-	padding-left: 0 !important;
-	padding-right: 0 !important;
-}
-.item-wrap {
-	padding-left: 10px;
-	padding-right: 10px;
-}
-
 .thumbnail > img, .thumbnail > a > img { height: 250px; } 
 .additional-img a { display: inline-block; }
 .additional-img img {
@@ -100,6 +80,15 @@ span.rollover:hover {
 	-webkit-transition: -webkit-transform 1s;
 }
 
+.head_botiga {
+	height: 150px;
+	border-bottom: 1px solid #683b2b;
+}
+
+.item {
+	margin-bottom: 50px;
+}
+
 .btn-link, .btn-link:hover { border: 1px solid #1d1d1d; color: #1d1d1d; text-decoration:none; }
 .item .btn-black { margin-top:10px; }
 .price { font-size: 20px; }
@@ -107,12 +96,18 @@ span.rollover:hover {
 .item-divider { height: 10px; }
 .item-title-item { height: 30px; }
 .item-title-ref { margin-top: 20px; }
-#budget input, #budget textarea { color: #fff; }
 
 .brand { margin-top: 50px; }
 .brand img { height: 40px; }
 
 .addtocart-block { margin: 20px 0; }
+
+.carrito { position: relative; }
+.carrito .badge {
+	position: absolute;
+	top: -5px;
+	left: 10px;
+}
 
 .product-extra {
 	margin-top:20px;

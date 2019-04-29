@@ -1,11 +1,14 @@
 <?php
 /**
- * @version    CVS: 1.0.0
- * @package    Com_Formularios
- * @author     aficat <kim@aficat.com>
- * @copyright  2018 aficat
- * @license    Licencia Pública General GNU versión 2 o posterior. Consulte LICENSE.txt
- */
+ * @version		1.0.0 botiga $
+ * @package		botiga
+ * @copyright   Copyright © 2010 - All rights reserved.
+ * @license		GNU/GPL
+ * @author		kim
+ * @author mail kim@aficat.com
+ * @website		http://www.aficat.com
+ *
+*/
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
@@ -17,7 +20,7 @@ class botigaViewItem extends JViewLegacy
 
     /**
      * Display the view
-     */
+    */
     public function display($tpl = null) {
 
         $app = JFactory::getApplication();
@@ -34,7 +37,6 @@ class botigaViewItem extends JViewLegacy
 		
 		$active  = $app->getMenu()->getActive();
 		$menus   = $app->getMenu();
-		$pathway = $app->getPathway();
 		$menu    = $menus->getActive();
 		
 		$title = $this->params->get('page_title', '');
@@ -53,41 +55,7 @@ class botigaViewItem extends JViewLegacy
             $this->document->setMetadata('robots', $this->params->get('robots'));
         }       
 
-        $this->_prepareDocument();
-
         parent::display($tpl);
     }
-        
-    /**
-	 * Method to set up the document properties
-	 *
-	 * @return void
-	*/
-	protected function _prepareDocument()
-	{
-		$app        = JFactory::getApplication();		
-        $document   = JFactory::getDocument();
-		$menus      = $app->getMenu();
-		$title      = null;
-		
-		$catid      = $app->input->get('catid', '');
-		
-		$pathway = $app->getPathway();
-		$pathway->setPathway($array);
-		$pathway->addItem(botigaHelper::getCategoryName(), 'index.php?option=com_botiga&view=botiga&catid='.$catid.'&Itemid=112');
-		$pathway->addItem(botigaHelper::getItemName(), '');
-
-		// Because the application sets a default page title,
-		// we need to get it from the menu item itself
-		$menu = $menus->getActive();
-		if($menu)
-		{
-			$title = $menu->title;
-		} else {
-			$title = JText::_('COM_BOTIGA_DEFAULT_PAGE_TITLE');
-		}
-
-		$this->document->setTitle($title);
-	}
 }
 ?>

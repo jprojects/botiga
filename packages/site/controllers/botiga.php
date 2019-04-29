@@ -25,7 +25,7 @@ class botigaControllerBotiga extends botigaController {
 	 * @return object	The model
 	 *
 	 * @since	1.6
-	 */
+	*/
 	public function &getModel($name = 'Botiga', $prefix = 'botigaModel', $config = array())
 	{
 		$model = parent::getModel($name, $prefix, array('ignore_request' => true));
@@ -35,15 +35,13 @@ class botigaControllerBotiga extends botigaController {
 	
 	public function setItem() {
 		
-		$db = JFactory::getDbo();
-		$session = JFactory::getSession();
-
-		$jinput = JFactory::getApplication()->input;
-		$itemid = $jinput->get('id');
-		$price  = botigaHelper::getUserPrice($itemid);
-		$return = base64_decode($jinput->getString('return', 'index.php'));
-		
-		$qty    = $jinput->getInt('qty', 1);
+		$db 		= JFactory::getDbo();
+		$session 	= JFactory::getSession();
+		$jinput 	= JFactory::getApplication()->input;
+		$itemid 	= $jinput->get('id');
+		$price  	= botigaHelper::getUserPrice($itemid);
+		$return 	= base64_decode($jinput->getString('return', 'index.php'));		
+		$qty    	= $jinput->getInt('qty', 1);
 		
 		//si no hi ha comanda creem una de nova...
 		$idComanda = $session->get('idComanda', '');
@@ -56,6 +54,7 @@ class botigaControllerBotiga extends botigaController {
 		
 		if(count($row) && $row->qty > 0) {
 			$detall->id 		= $row->id;
+			$detall->price 		= $price;
 			$detall->qty 		= $row->qty + $qty;
 			$db->updateObject('#__botiga_comandesDetall', $detall, 'id');
 		} else {
@@ -66,53 +65,43 @@ class botigaControllerBotiga extends botigaController {
 			$db->insertObject('#__botiga_comandesDetall', $detall);
 		}
 		
-		$this->setRedirect($return);
-	}
+		//depen de la url per afegir un paràmetre necessitem ? o &
+		$pos = strrpos($return, "?");
+		$pos === false ? $link = $return.'?m='.$itemid : $link = $return.'&m='.$itemid;
+		
+		$this->setRedirect($link);
+	}		
 	
-	public function setItemAjax() {
-		
-		$db = JFactory::getDbo();
-		$session = JFactory::getSession();
-
-		$jinput = JFactory::getApplication()->input;
-		$itemid = $jinput->get('id');
-		$price  = botigaHelper::getUserPrice($itemid);
-		
-		$qty    = $jinput->getInt('qty', 1);
-		
-		//si no hi ha comanda creem una de nova...
-		$idComanda = $session->get('idComanda', '');
-		if($idComanda == '') { $idComanda = $this->setComanda(); }
+	public function setComanda() {
 	
-		$db->setQuery('select cd.* from #__botiga_comandesDetall cd where cd.idItem = '.$itemid.' and cd.idComanda = '.$idComanda);
-		$row = $db->loadObject();
+		$db 		= JFactory::getDbo();
+		$session 	= JFactory::getSession();
+		$user 		= JFactory::getUser();
 		
-		$detall = new stdClass();
+		$sessid 	= $session->getId();
 		
-		if(count($row) && $row->qty > 0) {
-			$detall->id 		= $row->id;
-			$detall->qty 		= $row->qty + $qty;
-			$db->updateObject('#__botiga_comandesDetall', $detall, 'id');
-		} else {
-			$detall->idComanda 	= $idComanda;
-			$detall->idItem 	= $itemid;
-			$detall->price 		= $price;
-			$detall->qty 		= $qty;
-			$db->insertObject('#__botiga_comandesDetall', $detall);
+		$db->setQuery('SELECT id FROM #__botiga_comandes WHERE sessid = '.$db->quote($sessid).' AND status < 3');
+		if($idComanda = $db->loadResult()) {
+			
+			$session->set('idComanda', $idComanda); //recuperem la sessió 
+			
+		} else {		
+		
+			$comanda = new stdClass();
+			$comanda->uniqid = md5(substr(uniqid('', true), -8));
+			if(!$user->guest) { $comanda->userid = $user->id; }
+			if($user->guest) { $comanda->sessid = $sessid; }
+			$comanda->data = date('Y-m-d H:i:s');
+			$comanda->status = 1;
+			
+			$db->insertObject('#__botiga_comandes', $comanda);
+			
+			$idComanda = $db->insertid();
+			
+			$session->set('idComanda', $idComanda);
 		}
 		
-		$db->setQuery('select name, image1 from #__botiga_items where id = '.$itemid);
-		$item = $db->loadObject();
-		
-		$result 			= array();
-		$result['id'] 		= $detall->id;
-		$result['qty'] 		= $detall->qty;
-		$result['idItem']   = $itemid;
-		$result['nombre']   = $item->name;
-		$result['imagen'] 	= $item->image1;
-		$result['price'] 	= $price;
-		
-		echo json_encode($result);
+		return $idComanda;
 	}
 	
 	public function removeItem() {
@@ -126,31 +115,10 @@ class botigaControllerBotiga extends botigaController {
 		$result = $db->query();
 		
 		if($result) {	
-			$this->setRedirect('index.php?option=com_botiga&view=checkout&Itemid=134', JText::_('COM_BOTIGA_ITEM_REMOVED_SUCCESS'), 'success');
+			$this->setRedirect('index.php?option=com_botiga&view=checkout', JText::_('COM_BOTIGA_ITEM_REMOVED_SUCCESS'), 'success');
 		} else {
-			$this->setRedirect('index.php?option=com_botiga&view=checkout&Itemid=134', JText::_('COM_BOTIGA_ITEMT_REMOVED_ERROR'), 'error');
+			$this->setRedirect('index.php?option=com_botiga&view=checkout', JText::_('COM_BOTIGA_ITEMT_REMOVED_ERROR'), 'error');
 		}
-	}
-	
-	public function setComanda() {
-	
-		$db 		= JFactory::getDbo();
-		$session 	= JFactory::getSession();
-		$user 		= JFactory::getUser();
-		
-		$comanda = new stdClass();
-		$comanda->uniqid = substr(uniqid('', true), -5);
-		$comanda->userid = $user->id;
-		$comanda->data = date('Y-m-d H:i:s');
-		$comanda->status = 1;
-		
-		$db->insertObject('#__botiga_comandes', $comanda);
-		
-		$idComanda = $db->insertid();
-		
-		$session->set('idComanda', $idComanda);
-		
-		return $idComanda;
 	}
 	
 	public function removeCart() {
@@ -170,7 +138,7 @@ class botigaControllerBotiga extends botigaController {
 			$session->set('idComanda', null);		
 			$this->setRedirect('index.php', JText::_('COM_BOTIGA_CART_REMOVED_SUCCESS'), '');
 		} else {
-			$this->setRedirect('index.php?option=com_botiga&view=checkout&Itemid=134', JText::_('COM_BOTIGA_CART_REMOVED_ERROR'), 'error');
+			$this->setRedirect('index.php?option=com_botiga&view=checkout', JText::_('COM_BOTIGA_CART_REMOVED_ERROR'), 'error');
 		}
 	}
 	
@@ -285,7 +253,7 @@ class botigaControllerBotiga extends botigaController {
      	$this->processPayment();
      	
      	//redirect to payment
-     	$this->setRedirect('index.php?option=com_botiga&view=checkout&layout=payment&Itemid=134&processor='.$processor); 
+     	$this->setRedirect('index.php?option=com_botiga&view=checkout&layout=payment&processor='.$processor); 
      }
      
      public function processPayment()
@@ -493,17 +461,17 @@ class botigaControllerBotiga extends botigaController {
      	$row = $db->loadObject();
      	
      	if($type == 'minus') {
-     		if($row->qty > 0) {
-     			$db->setQuery('update #__botiga_comandesDetall set qty = qty-1 where id = '.$id);
-     			$db->query();
+     		if($row->qty > 1) {
+     			$db->setQuery('UPDATE #__botiga_comandesDetall SET qty = qty-1 WHERE id = '.$id);
+     			$result = $db->query();
+     		} else {
+     			$db->setQuery('DELETE FROM #__botiga_comandesDetall WHERE id = '.$id);
+     			$result = $db->query();
      		}
      	} else {
-     		$db->setQuery('update #__botiga_comandesDetall set qty = qty+1 where id = '.$id);
-     		$db->query();
+     		$db->setQuery('UPDATE #__botiga_comandesDetall SET qty = qty+1 WHERE id = '.$id);
+     			$result = $db->query();
      	}
-     	
-     	$db->setQuery('select * from #__botiga_comandesDetall where id = '.$id);
-     	$result = $db->loadObject();
      	
      	if($result) {
      		$msg = JText::_('COM_BOTIGA_QTY_UPDATED_SUCCESS');
@@ -513,7 +481,7 @@ class botigaControllerBotiga extends botigaController {
      		$type = 'error';
      	}
      	
-     	$this->setRedirect('index.php?option=com_botiga&view=checkout&Itemid=134', $msg, $type);     	     	
+     	$this->setRedirect('index.php?option=com_botiga&view=checkout', $msg, $type);     	     	
      }
      
     public function enviar($subject, $body, $email, $attach='') 

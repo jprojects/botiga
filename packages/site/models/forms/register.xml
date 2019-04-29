@@ -7,7 +7,7 @@
 			label="COM_BOTIGA_REGISTER_NOMBRE_EMPRESA_LBL"
 			description="COM_BOTIGA_REGISTER_NOMBRE_EMPRESA_DSC" 
 			default="" 
-			class="form-control" 
+			class="form-control" 			
 			required="true"
         />
 		<field 

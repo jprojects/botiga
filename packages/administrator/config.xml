@@ -253,6 +253,107 @@
 		<option value="1">JYES</option> 
         </field>
   </fieldset>
+  <fieldset name="register" label="COM_BOTIGA_REGISTER_SETTINGS" description="COM_BOTIGA_REGISTER_SETTINGS_DESC">
+  		<field 
+        	type="radio" 
+        	name="show_field_empresa" 
+        	default="1" 
+        	class="btn-group"
+        	label="COM_BOTIGA_SETTINGS_SHOW_EMPRESA_LBL" 
+        	description="COM_BOTIGA_SETTINGS_SHOW_EMPRESA_DSC"
+		>
+		<option value="0">JNO</option>
+		<option value="1">JYES</option> 
+        </field>
+        <field 
+        	type="radio" 
+        	name="show_field_cif" 
+        	default="1" 
+        	class="btn-group"
+        	label="COM_BOTIGA_SETTINGS_SHOW_CIF_LBL" 
+        	description="COM_BOTIGA_SETTINGS_SHOW_CIF_DSC"
+		>
+		<option value="0">JNO</option>
+		<option value="1">JYES</option> 
+        </field>
+        <field 
+        	type="radio" 
+        	name="show_field_nom" 
+        	default="1" 
+        	class="btn-group"
+        	label="COM_BOTIGA_SETTINGS_SHOW_NOM_LBL" 
+        	description="COM_BOTIGA_SETTINGS_SHOW_NOM_DSC"
+		>
+		<option value="0">JNO</option>
+		<option value="1">JYES</option> 
+        </field>
+        <field 
+        	type="radio" 
+        	name="show_field_cargo" 
+        	default="1" 
+        	class="btn-group"
+        	label="COM_BOTIGA_SETTINGS_SHOW_CARGO_LBL" 
+        	description="COM_BOTIGA_SETTINGS_SHOW_CARGO_DSC"
+		>
+		<option value="0">JNO</option>
+		<option value="1">JYES</option> 
+        </field>
+        <field 
+        	type="radio" 
+        	name="show_field_phone" 
+        	default="1" 
+        	class="btn-group"
+        	label="COM_BOTIGA_SETTINGS_SHOW_PHONE_LBL" 
+        	description="COM_BOTIGA_SETTINGS_SHOW_PHONE_DSC"
+		>
+		<option value="0">JNO</option>
+		<option value="1">JYES</option> 
+        </field>
+        <field 
+        	type="radio" 
+        	name="show_field_address" 
+        	default="1" 
+        	class="btn-group"
+        	label="COM_BOTIGA_SETTINGS_SHOW_ADDRESS_LBL" 
+        	description="COM_BOTIGA_SETTINGS_SHOW_ADDRESS_DSC"
+		>
+		<option value="0">JNO</option>
+		<option value="1">JYES</option> 
+        </field>
+        <field 
+        	type="radio" 
+        	name="show_field_cp" 
+        	default="1" 
+        	class="btn-group"
+        	label="COM_BOTIGA_SETTINGS_SHOW_CP_LBL" 
+        	description="COM_BOTIGA_SETTINGS_SHOW_CP_DSC"
+		>
+		<option value="0">JNO</option>
+		<option value="1">JYES</option> 
+        </field>
+        <field 
+        	type="radio" 
+        	name="show_field_state" 
+        	default="1" 
+        	class="btn-group"
+        	label="COM_BOTIGA_SETTINGS_SHOW_STATE_LBL" 
+        	description="COM_BOTIGA_SETTINGS_SHOW_STATE_DSC"
+		>
+		<option value="0">JNO</option>
+		<option value="1">JYES</option> 
+        </field>
+        <field 
+        	type="radio" 
+        	name="show_field_pais" 
+        	default="1" 
+        	class="btn-group"
+        	label="COM_BOTIGA_SETTINGS_SHOW_PAIS_LBL" 
+        	description="COM_BOTIGA_SETTINGS_SHOW_PAIS_DSC"
+		>
+		<option value="0">JNO</option>
+		<option value="1">JYES</option> 
+        </field>
+  </fieldset>
   <fieldset
 		name="permissions"
 		label="JCONFIG_PERMISSIONS_LABEL"

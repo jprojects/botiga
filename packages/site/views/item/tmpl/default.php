@@ -94,7 +94,7 @@ $doc->addStylesheet('components/com_botiga/assets/css/jquery.fancybox.css');
 </header>
 <?php endif; ?>	
 
-<div class="col-md-8 mx-auto">
+<div class="col-md-8 mx-auto pb-5">
 
 	<div class="row">
 	
@@ -172,7 +172,7 @@ $doc->addStylesheet('components/com_botiga/assets/css/jquery.fancybox.css');
 			<div class="row">
 				<div class="col-12 col-md-4">
 					<div class="addtocart">
-						<form name="addtocart" action="index.php?option=com_botiga&task=botiga.setItem" method="get" class="form-inline">
+						<form name="addtocart" id="addtocart" action="index.php?option=com_botiga&task=botiga.setItem" method="get" class="form-inline">
 							<input type="hidden" name="option" value="com_botiga" />
 							<input type="hidden" name="task" value="botiga.setItem" />
 							<input type="hidden" name="id" value="<?= $this->item->id; ?>" />
@@ -180,13 +180,13 @@ $doc->addStylesheet('components/com_botiga/assets/css/jquery.fancybox.css');
 							<div>
 								<div class="input-group">
 				                    <span class="input-group-btn">
-				                        <button type="button" class="quantity-left-minus btn btn-primary btn-number" data-id="<?= $item->id; ?>">
+				                        <button type="button" class="quantity-left-minus btn btn-primary btn-number" data-id="<?= $this->item->id; ?>">
 				                          <span class="fa fa-minus"></span>
 				                        </button>
 				                    </span>
-				                    <input type="text" id="quantity_<?= $item->id; ?>" name="qty" class="form-control bg-qty input-number text-center" value="1" min="1" max="100">
+				                    <input type="text" id="quantity_<?= $this->item->id; ?>" name="qty" class="form-control bg-qty input-number text-center" value="1" min="1" max="100">
 				                    <span class="input-group-btn">
-				                        <button type="button" class="quantity-right-plus btn btn-primary btn-number" data-id="<?= $item->id; ?>">
+				                        <button type="button" class="quantity-right-plus btn btn-primary btn-number" data-id="<?= $this->item->id; ?>">
 				                            <span class="fa fa-plus"></span>
 				                        </button>
 				                    </span>
@@ -196,9 +196,9 @@ $doc->addStylesheet('components/com_botiga/assets/css/jquery.fancybox.css');
 					</div>
 				</div>
 				<div class="col-xs-12 col-md-8">
-					<a href="index.php?view=botiga&task=botiga.setItem&id=<?= $item->id; ?>&return=<?= $uri; ?>" class="btn btn-primary btn-block estil03">
+					<button onclick="addtocart.submit();" class="btn btn-primary btn-block estil03">
 						<?= JText::_('COM_BOTIGA_BTN_BUY'); ?>
-					</a>
+					</button>
 				</div>
 		    </div>
 		    
@@ -214,12 +214,7 @@ $doc->addStylesheet('components/com_botiga/assets/css/jquery.fancybox.css');
 		    
 		    <?php if($showref == 1) : ?>
 		    <div class="text-left item-title-ref"><?= $this->item->ref; ?></div>
-		    <?php endif; ?>		    			
-			
-			<?php if($showdesc == 1) : ?>		
-			<div class="product-extra">Descripción</div>
-			<?= $this->item->description; ?>
-			<?php endif; ?>	
+		    <?php endif; ?>		    									
 			
 			<?php if($showgar == 1) : ?>
 			<div class="product-extra">Garantía</div>
@@ -234,11 +229,23 @@ $doc->addStylesheet('components/com_botiga/assets/css/jquery.fancybox.css');
 			<?php 
 			$i = 0;
 			foreach(botigaHelper::getExtras($this->item->id) as $k => $v) : ?>
-			<div class="estil07 text-primary <?php if($i == 0): ?>mt-5<?php else: ?>mt-4<?php endif; ?>" data-toggle="collapse" href="#collapse<?= $i; ?>"><?= strtoupper($v[0]); ?>&nbsp;<i class="fa fa-plus fa-2x text-yellow"></i></div>
+			<div class="estil07 text-primary <?php if($i == 0): ?>mt-5<?php else: ?>mt-4<?php endif; ?>" data-toggle="collapse" href="#collapse<?= $i; ?>"><?= strtoupper($v[0]); ?>&nbsp;<i class="fa fa-plus fa-2x text-yellow pl-2"></i></div>
 			<div class="collapse <?php if($i == 0): ?>show<?php endif; ?> estil03 text-primary mt-2" id="collapse<?= $i; ?>"><?= $v[1]; ?></div>
 			<?php 
 			$i++;
 			endforeach; ?>
+			
+			<?php if($showdesc == 1) : ?>		
+			<div class="mt-5"><?= $this->item->description; ?></div>
+			<?php endif; ?>	
+			
+			<div class="estil02 pt-4 text-primary"><i>¡Compartelo!</i></div>
+			<div class="mt-4">
+				<a href="" target="_blank"><img class="pr-3" title="Linkedin" src="images/sampledata/linkedin.png" alt="Linkedin" /></a>
+				<a href="" target="_blank"><img class="pr-3" title="Instagram" src="images/sampledata/instagram.png" alt="Instagram" /></a> 
+				<a href="" target="_blank"><img class="pr-3" title="Facebook" src="images/sampledata/facebook.png" alt="Facebook" /></a> 
+				<a href="" target="_blank"><img title="Twitter" src="images/sampledata/twiter.png" alt="Twitter" /></a>
+			</p>
 		
         </div>                
 	
@@ -274,7 +281,7 @@ $doc->addStylesheet('components/com_botiga/assets/css/jquery.fancybox.css');
 			$img = botigaHelper::getItemData('image1', $modal);
 			$img != '' ? $image = $img : $image = 'components/com_botiga/assets/images/noimage.jpg';
 			?>
-			<img src="<?= $image; ?>" alt="" class="img-fluid">
+			<img src="<?= $image; ?>" alt="" class="img-fluid" width="50">
 			</div>
 			<div class="col-xs-12 col-md-6 text-left py-3">
 			<b><?= botigaHelper::getItemData('name', $modal); ?></b>

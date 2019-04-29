@@ -48,6 +48,7 @@ CREATE TABLE IF NOT EXISTS `#__botiga_comandes` (
   `uniqid` varchar(50) NOT NULL DEFAULT '',
   `data` datetime NOT NULL,
   `userid` int(11) NOT NULL,
+  `sessid` varchar(150) NOT NULL,
   `status` smallint(1) NOT NULL DEFAULT '0' COMMENT '1-Pending;2-Pending payment;3-Completed',
   `subtotal` float(10,2) NOT NULL DEFAULT '0.00',
   `shipment` float(10,2) NOT NULL DEFAULT '0.00',
@@ -71,8 +72,6 @@ CREATE TABLE IF NOT EXISTS `#__botiga_comandesDetall` (
   `idItem` int(11) NOT NULL,
   `price` float(10,2) NOT NULL DEFAULT '0.00',
   `qty` int(5) NOT NULL DEFAULT '0',
-  `published` tinyint(1) NOT NULL DEFAULT '0',
-  `language` char(7) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
