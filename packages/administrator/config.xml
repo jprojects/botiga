@@ -354,6 +354,52 @@
 		<option value="1">JYES</option> 
         </field>
   </fieldset>
+  <fieldset name="checkout" label="COM_BOTIGA_CHECKOUT_SETTINGS" description="COM_BOTIGA_REGISTER_CHECKOUT_DESC">
+  		<field 
+        	type="radio" 
+        	name="show_coupon" 
+        	default="1" 
+        	class="btn-group"
+        	label="COM_BOTIGA_SETTINGS_SHOW_COUPON_LBL" 
+        	description="COM_BOTIGA_SETTINGS_SHOW_COUPON_DSC"
+		>
+		<option value="0">JNO</option>
+		<option value="1">JYES</option> 
+        </field>
+        <field 
+        	type="radio" 
+        	name="show_observa" 
+        	default="1" 
+        	class="btn-group"
+        	label="COM_BOTIGA_SETTINGS_SHOW_OBSERVA_LBL" 
+        	description="COM_BOTIGA_SETTINGS_SHOW_OBSERVA_DSC"
+		>
+		<option value="0">JNO</option>
+		<option value="1">JYES</option> 
+        </field>
+        <field 
+        	type="radio" 
+        	name="show_btn_delete" 
+        	default="1" 
+        	class="btn-group"
+        	label="COM_BOTIGA_SETTINGS_SHOW_BTN_DELETE_LBL" 
+        	description="COM_BOTIGA_SETTINGS_SHOW_BTN_DELETE_DSC"
+		>
+		<option value="0">JNO</option>
+		<option value="1">JYES</option> 
+        </field>
+        <field 
+        	type="radio" 
+        	name="show_btn_save" 
+        	default="1" 
+        	class="btn-group"
+        	label="COM_BOTIGA_SETTINGS_SHOW_BTN_SAVE_LBL" 
+        	description="COM_BOTIGA_SETTINGS_SHOW_BTN_SAVE_DSC"
+		>
+		<option value="0">JNO</option>
+		<option value="1">JYES</option> 
+        </field>
+  </fieldset>
   <fieldset
 		name="permissions"
 		label="JCONFIG_PERMISSIONS_LABEL"
