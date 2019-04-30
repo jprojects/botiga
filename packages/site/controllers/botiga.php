@@ -246,8 +246,8 @@ class botigaControllerBotiga extends botigaController {
      	$processor  = $data['processor'];
      	$observa    = $data['observa'];
      	
-     	//actualitza comanda
-     	$db->setQuery('update #__botiga_comandes set subtotal = '.$db->quote($subtotal).', shipment = '.$db->quote($shipment).', iva_percent = '.$db->quote($iva_percent).', iva_total = '.$db->quote($iva_total).', total = '.$db->quote($total).', observa = '.$db->quote($observa).' where id = '.$idComanda);
+     	//actualitza comanda     	
+     	$db->setQuery('UPDATE #__botiga_comandes SET subtotal = '.$db->quote($subtotal).', shipment = '.$db->quote($shipment).', iva_percent = '.$db->quote($iva_percent).', iva_total = '.$db->quote($iva_total).', total = '.$db->quote($total).', processor = '.$db->quote($processor).', observa = '.$db->quote($observa).' WHERE id = '.$idComanda);
      	$db->query();
      	
      	$this->processPayment();
@@ -263,39 +263,42 @@ class botigaControllerBotiga extends botigaController {
      	$user 		= JFactory::getUser();
      	$app        = JFactory::getApplication();
      	
+     	$botiga_name = botigaHelper::getParameter('botiga_name', '');
+     	$botiga_mail = botigaHelper::getParameter('botiga_mail', '');
+     	$logo		 = botigaHelper::getParameter('botiga_logo', '');
+     	
      	$data 	    = $app->input->getArray($_POST);
      	
      	$idComanda  = $session->get('idComanda');
      	
-     	$now        = date('Y-m-d H:i:s');
-     	
      	//actualitza comanda
-     	$db->setQuery('UPDATE #__botiga_comandes SET status = 2, data = '.$db->quote($now).' WHERE id = '.$idComanda);
+     	$db->setQuery('UPDATE #__botiga_comandes SET status = 2, data = '.$db->quote(date('Y-m-d H:i:s')).' WHERE id = '.$idComanda);
      	$result = $db->query();
      	
      	if($result) {
+     	
+     		$uniqid = botigaHelper::getComandaData('uniqid', $idComanda);
+     		   	
+     		$subject   = "Nuevo pedido, pedido nº ".$uniqid;
      		
-     		//ToDo:: add subject and text to component config   	
-     		$subject   = "Nuevo pedido, pedido nº ".botigaHelper::getComandaData('uniqid', $idComanda);
-			$body      = "<div style='font-family:Arial;font-size:7px;'>Vuestro pedido está en gestión, nos pondremos en contacto para confirmar stock y plazo de entrega.<br>";
-			$body     .= "Adjuntamos factura proforma."; 
-			$body     .= "<p>*Portes pendientes de valoración para envíos fuera de España a excepción de las Islas Canarias.</p>"; 
-			$body     .= "Gracias por confiar en DICOHOTEL<p></p>";   
-			$body     .= "<span style='font-family:Arial;font-size:7px;'><strong>ESTEL NOGUER</strong></span><br>"; 
-			$body     .= "<span style='font-family:Arial;font-size:7px;'><strong>MARKETING & COMUNICATION</strong></span>"; 
-			$body     .= "<p><img src='http://www.dicohotel.com/images/Firma_Dicohotel.jpg' alt='' /></p></div>";
+			$body      = "<div>Vuestro pedido está en gestión, nos pondremos en contacto para confirmar stock y plazo de entrega.<br>";
+			$body     .= "Adjuntamos factura."; 
+			$body     .= "<p>&nbsp;</p>"; 
+			$body     .= "Gracias por confiar en ".$botiga_name."<p></p>";   
+			$body     .= "<p>&nbsp;</p>"; 
+			$body     .= "<p><img src='".JURI::root().$logo."' alt='".$botiga_name."' width='200' /></p></div>";
 			
-			$body2     = "<div style='font-family:Arial;font-size:7px;'>Ha llegado un nuevo pedido desde la web de Dicohotel.<br>";
-			$body2    .= "Adjuntamos factura proforma.</div>"; 
+			$body2     = "<div>Ha llegado un nuevo pedido desde la web de ".$botiga_name.".<br>";
+			$body2    .= "Adjuntamos factura.</div>"; 
 			
 			$this->genPdf('F', $idComanda); 			
 		
 			//mail para el user
-			$this->enviar($subject, $body, $user->email, $idComanda);
+			$this->enviar($subject, $body, $user->email, JPATH_ROOT.'/order_'.$uniqid.'.pdf');
 			//mail para el admin
-			$this->enviar($subject, $body2, botigaHelper::getParameter('botiga_mail'), $idComanda);
+			$this->enviar($subject, $body2, $botiga_mail, JPATH_ROOT.'/order_'.$uniqid.'.pdf');
 			
-			unlink(JPATH_ROOT.'/proforma_'.$idComanda.'.pdf');
+			unlink(JPATH_ROOT.'/order_'.$uniqid.'.pdf');
      	}    	
      }
      
@@ -311,7 +314,7 @@ class botigaControllerBotiga extends botigaController {
 		
 		$pdf->AddPage();
 		
-		$pdf->setSourceFile(JPATH_COMPONENT.DS.'assets'.DS.'pdf'.DS.'invoice.pdf');
+		$pdf->setSourceFile(JPATH_COMPONENT.'/assets/pdf/invoice.pdf');
 		
 		$tplIdx = $pdf->importPage(1);
 		$pdf->useTemplate($tplIdx, 0, 0, 0, 0, true);
@@ -319,11 +322,11 @@ class botigaControllerBotiga extends botigaController {
 		define('EURO', chr(128));
 
 		$db = JFactory::getDbo();
-		$db->setQuery('SELECT c.*, u.mail_empresa as email, u.nom_empresa, u.cif, u.telefon, u.adreca, u.cp, u.poblacio, u.metodo_pago FROM #__botiga_comandes c INNER JOIN #__botiga_users u ON u.userid = c.userid WHERE c.id = '.$id);
+		
+		$db->setQuery('SELECT c.*, u.mail_empresa as email, u.nom_empresa, u.cif, u.telefon, u.adreca, u.cp, u.poblacio FROM #__botiga_comandes c INNER JOIN #__botiga_users u ON u.userid = c.userid WHERE c.id = '.$id);
 		$com = $db->loadObject();
 
 		$db->setQuery('SELECT cd.*, i.name, i.ref as referencia, i.image1 as image, i.description FROM #__botiga_comandesDetall cd INNER JOIN #__botiga_items i ON cd.iditem = i.id WHERE cd.idComanda = '.$id);
-		$db->query();
 		$num_rows = $db->getNumRows();
 		$detalls  = $db->loadObjectList();
 		
@@ -333,7 +336,7 @@ class botigaControllerBotiga extends botigaController {
 		
 		$pdf->SetFont('Arial', '', '10');
 		
-		if($num_rows >= 12) { $pag = 2; } else { $pag = 1; }
+		$pag = 1;
 		
 		$pdf->SetXY(175, $height); 
 		$pdf->Cell(25, 5, '1/'.$pag, 0, 0, 'R');
@@ -378,8 +381,10 @@ class botigaControllerBotiga extends botigaController {
 		foreach($detalls as $detall) {
 		
 			if($counter == 5) {
+			
 				$pdf->AddPage();
-				$pdf->setSourceFile(JPATH_COMPONENT.DS.'assets'.DS.'pdf'.DS.'albaran.pdf');
+				$pag++;
+				$pdf->setSourceFile(JPATH_COMPONENT.'/assets/pdf/invoice.pdf');
 				$tplIdx2 = $pdf->importPage(1);
 				$pdf->useTemplate($tplIdx2, 0, 0, 0, 0, true);
 				$pdf->SetFont('Arial', '', '10');
@@ -393,13 +398,11 @@ class botigaControllerBotiga extends botigaController {
 				$pdf->SetXY(35, $height);
 				$pdf->Cell(15, 5, $com->observa, 0, 0, 'R');
 				$pdf->SetXY(50, $height);
-				$pdf->Cell(15, 5, $uniqid, 0, 0, 'R');
+				$pdf->Cell(15, 5, $com->uniqid, 0, 0, 'R');
 				$pdf->SetXY(80, $height);
 				$pdf->Cell(15, 5, date('d-m-Y', strtotime($com->data)), 0, 0, 'R');
 				$height  = 85;
-			}
-			
-			
+			}						
 	
 			$pdf->SetXY(20, $height);  
 			$pdf->Cell(30, 5, $detall->referencia, 0, 0, '');
@@ -437,16 +440,50 @@ class botigaControllerBotiga extends botigaController {
 		$height += 10;
 		
 		$pdf->SetXY(35, $height); 
-		$com->metodo_pago == '' ? $metodo_pago = 'Pago habitual' : $metodo_pago = $com->metodo_pago;
-		$pdf->Cell(30, 5, utf8_decode($metodo_pago), 0, 0, 'R');
+		$pdf->Cell(30, 5, utf8_decode($com->processor), 0, 0, 'R');
 		
 		$height += 12;
 		
 		$pdf->SetXY(125, $height); 
 		$pdf->Cell(30, 5, utf8_decode($com->observa), 0, 0, 'R');
 
-		$pdf->Output('proforma_'.$id.'.pdf', $mode);
+		$pdf->Output('order_'.$uniqid.'.pdf', $mode);
 		if($uid == '') { die(); }
+		return $uniqid;
+	 }
+	 
+	 public function validateCoupon() 
+	 {
+ 		$db  = JFactory::getDbo();
+ 		$app = JFactory::getApplication();
+ 		$session = JFactory::getSession();
+     	
+     	$data = $app->input->getArray($_POST);
+     	
+     	$idComanda  = $session->get('idComanda');
+ 		
+ 		$db->setQuery('select * from #__botiga_coupons where coupon = '.$db->quote($data['coupon']).' AND published = 1');
+ 		$row = $db->loadObject();
+ 		
+ 		if(count($row)) { 		
+ 		
+ 			$comanda = new stdClass();
+ 			$comanda->id = $idComanda;
+ 			$comanda->idCoupon = $row->id; 			
+ 			
+ 			$db->updateObject('#__botiga_comandes', $comanda, 'id');
+ 			
+ 			$msg = JText::_('COM_BOTIGA_COUPON_VALIDATE_SUCCESS');
+ 			$type = 'success';
+ 			
+ 		} else {
+ 		
+ 			$msg = JText::_('COM_BOTIGA_COUPON_VALIDATE_ERROR');
+ 			$type = 'error';
+ 			
+ 		}
+ 		
+ 		$this->setRedirect('index.php?option=com_botiga&view=checkout', $msg, $type); 
 	 }
      
      public function updateQty()
@@ -482,7 +519,7 @@ class botigaControllerBotiga extends botigaController {
      	}
      	
      	$this->setRedirect('index.php?option=com_botiga&view=checkout', $msg, $type);     	     	
-     }
+    }
      
     public function enviar($subject, $body, $email, $attach='') 
 	{
@@ -503,7 +540,7 @@ class botigaControllerBotiga extends botigaController {
         $mailer->setBody( $body );   
         
         if(attach != '') {
-        	$mailer->addAttachment(JPATH_ROOT.'/proforma_'.$attach.'.pdf');     
+        	$mailer->addAttachment(JPATH_ROOT.'/order_'.$attach.'.pdf');     
         }
         
 		return $mailer->Send();			

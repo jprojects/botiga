@@ -5,15 +5,15 @@
  * @copyright   Copyright © 2010 - All rights reserved.
  * @license		GNU/GPL
  * @author		kim
- * @author mail administracion@joomlanetprojects.com
- * @website		http://www.joomlanetprojects.com
+ * @author mail kim@aficat.com
+ * @website		http://www.aficat.com
  *
- */
+*/
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
-class botigaViewDoc extends JViewLegacy
+class botigaViewCoupon extends JViewLegacy
 {    
 	protected $form = null;
  
@@ -54,44 +54,44 @@ class botigaViewDoc extends JViewLegacy
 		$userId = $user->id;
 		$isNew = $this->item->id == 0;
 		$canDo = botigaHelper::getActions($this->item->id);
-		JToolBarHelper::title($isNew ? JText::_('Nuevo documento') : JText::_('Editar documento'), 'joomla');
+		JToolBarHelper::title($isNew ? JText::_('Nuevo cupón') : JText::_('Editar cupón'), 'joomla');
 		// Built the actions for new and existing records.
 		if ($isNew) 
 		{
 			// For new records, check the create permission.
 			if ($canDo->get('core.create')) 
 			{
-				JToolBarHelper::apply('doc.apply', 'JTOOLBAR_APPLY');
+				JToolBarHelper::apply('coupon.apply', 'JTOOLBAR_APPLY');
                 JToolBarHelper::divider();
-				JToolBarHelper::save('doc.save', 'JTOOLBAR_SAVE');
+				JToolBarHelper::save('coupon.save', 'JTOOLBAR_SAVE');
                 JToolBarHelper::divider();
-				JToolBarHelper::custom('doc.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
+				JToolBarHelper::custom('coupon.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
 			}
-			JToolBarHelper::cancel('doc.cancel', 'JTOOLBAR_CANCEL');
+			JToolBarHelper::cancel('coupon.cancel', 'JTOOLBAR_CANCEL');
 		}
 		else
 		{
 			if ($canDo->get('core.edit'))
 			{
 				// We can save the new record
-				JToolBarHelper::apply('doc.apply', 'JTOOLBAR_APPLY');
+				JToolBarHelper::apply('coupon.apply', 'JTOOLBAR_APPLY');
                 JToolBarHelper::divider();
-				JToolBarHelper::save('doc.save', 'JTOOLBAR_SAVE');
+				JToolBarHelper::save('coupon.save', 'JTOOLBAR_SAVE');
  
 				// We can save this record, but check the create permission to see if we can return to make a new one.
 				if ($canDo->get('core.create')) 
 				{
                     JToolBarHelper::divider();
-					JToolBarHelper::custom('doc.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
+					JToolBarHelper::custom('coupon.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
 				}
 			}
 			if ($canDo->get('core.create')) 
 			{
                 JToolBarHelper::divider();
-				JToolBarHelper::custom('doc.save2copy', 'save-copy.png', 'save-copy_f2.png', 'JTOOLBAR_SAVE_AS_COPY', false);
+				JToolBarHelper::custom('coupon.save2copy', 'save-copy.png', 'save-copy_f2.png', 'JTOOLBAR_SAVE_AS_COPY', false);
 			}
             JToolBarHelper::divider();
-			JToolBarHelper::cancel('doc.cancel', 'JTOOLBAR_CLOSE');
+			JToolBarHelper::cancel('coupon.cancel', 'JTOOLBAR_CLOSE');
 		}
 	}
 

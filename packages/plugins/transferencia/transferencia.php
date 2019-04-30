@@ -57,9 +57,9 @@ class plgBotigaTransferencia extends JPlugin
 		$account = $this->params->get('account','');
 		$benef   = $this->params->get('beneficiari','');
 		
-		$html  = "<div class='alert alert-danger'>Pedido en gestión.<br>Nos pondremos en contacto para confirmar el pedido.</div>";
+		$html  = "<div class='alert alert-success'>Pedido en gestión.<br>Nos pondremos en contacto para confirmar el pedido.</div>";
 		
-		$html .= "<div id='page-header'><h1>Ha escogido pago por transferencia</h1></div>";
+		$html .= "<div><h1>Ha escogido pago por transferencia</h1></div>";
 		$html .= "<table class='table'>";
 		$html .= "<tr><td><strong>Importe a ingressar</strong></td><td>{AMOUNT}€</td></tr>";
 		$html .= "<tr><td><strong>Indicar el concepto</strong></td><td> la id de la comanda (WEB".$idComanda.")</td></tr>";

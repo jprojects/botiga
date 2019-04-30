@@ -7,16 +7,11 @@
 	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
 	<authorEmail>kim@aficat.com</authorEmail>
 	<authorUrl>www.afi.cat</authorUrl>
-	<version>2.0.0</version>
+	<version>3.0</version>
 	<description>Botiga método de pago habitual</description>
 	<files>
 		<filename plugin="habitual">habitual.php</filename>
 	</files>
-	
-	<updateservers>
-    	<server type="extension" priority="2" name="Botiga Habitual Plugin">http://www.aficat.com/updates/botiga/plg_botiga_habitual.xml</server>
-  	</updateservers>
-  	
 	<config>
 		<fields name="params">
 			<fieldset name="basic">

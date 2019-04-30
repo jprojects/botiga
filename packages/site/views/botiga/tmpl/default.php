@@ -23,6 +23,7 @@ $itemid     = $jinput->get('Itemid', '');
 $orderby    = $jinput->get('orderby', 'ref');
 $limit      = $jinput->get('limit', 24);
 $lang 		= JFactory::getLanguage()->getTag();
+$logo		= botigaHelper::getParameter('botiga_logo', '');
 $showprices = botigaHelper::getParameter('show_prices', 1);
 $loginprices = botigaHelper::getParameter('login_prices', 0);
 $shownotice = botigaHelper::getParameter('show_notice', 1);
@@ -31,6 +32,7 @@ $showdesc 	= botigaHelper::getParameter('show_desc', 1);
 $showbrand 	= botigaHelper::getParameter('show_brand', 1);
 $showfav 	= botigaHelper::getParameter('show_fav', 1);
 $showpvp 	= botigaHelper::getParameter('show_pvp', 1);
+$userToken  = JSession::getFormToken();
 ?>
 
 <?php if(botigaHelper::getParameter('show_header', 0) == 1) : ?>
@@ -40,32 +42,39 @@ $showpvp 	= botigaHelper::getParameter('show_pvp', 1);
 
 		<div class="row">
 
-		<?php if(botigaHelper::getParameter('botiga_logo', '') != '') : ?>
+		<?php if($logo != '') : ?>
 		<div class="col-12 text-right">
-			<img src="<?= botigaHelper::getParameter('botiga_logo', ''); ?>" alt="<?= botigaHelper::getParameter('botiga_name', ''); ?>" class="img-fluid">
+			<img src="<?= $logo; ?>" alt="<?= botigaHelper::getParameter('botiga_name', ''); ?>" class="img-fluid">
 		</div>
 		<?php endif; ?>	
 		
 		<div class="col-12 mt-3">
 			<div class="row">
-				<div class="col-xs-12 col-md-6 text-left">			
+				<div class="col-9 text-left">			
 					<a href="index.php?option=com_botiga&view=botiga&layout=table" class="pr-1">
 						<img src="media/com_botiga/icons/mosaico<?php if($jinput->getCmd('layout', '') == 'table') : ?>-active<?php endif; ?>.png">
 					</a>
 					<a href="index.php?option=com_botiga&view=botiga">
 						<img src="media/com_botiga/icons/lista<?php if($jinput->getCmd('layout', '') == '') : ?>-active<?php endif; ?>.png">
 					</a>
+					<span class="pl-3 phone-hide"><?= JText::_('COM_BOTIGA_FREE_SHIPPING_MSG'); ?>&nbsp;<img src="media/com_botiga/icons/envio_gratis.png"></span>
 				</div>
-				<div class="col-xs-12 col-md-6 text-right">
+				<div class="col-3 text-right">
 					<a href="index.php?option=com_botiga&view=checkout" class="pr-1 carrito">
 						<?php if(botigaHelper::getCarritoCount() > 0) : ?>
 						<span class="badge badge-warning"><?= botigaHelper::getCarritoCount(); ?></span>
 						<?php endif; ?>
 						<img src="media/com_botiga/icons/carrito.png">
 					</a>
-					<a href="index.php?option=com_users&view=login">
+					<?php if($user->guest) : ?>
+					<a href="index.php?option=com_users&view=login" title="Login" class="hasTip">
 						<img src="media/com_botiga/icons/iniciar-sesion.png">
 					</a>
+					<?php else: ?>
+					<a href="index.php?option=com_users&task=user.logout&<?= $userToken; ?>=1" title="Logout" class="hasTip">
+						<img src="media/com_botiga/icons/salir.png">
+					</a>
+					<?php endif; ?>
 				</div>
 			</div>
 		</div>
@@ -75,7 +84,7 @@ $showpvp 	= botigaHelper::getParameter('show_pvp', 1);
 	</div>
 	
 </header>
-<?php endif; ?>	
+<?php endif; ?>
 
 <div class="col-md-11 mx-auto">
 
@@ -97,19 +106,23 @@ $showpvp 	= botigaHelper::getParameter('show_pvp', 1);
 					<input type="hidden" name="Itemid" value="<?= $itemid; ?>" />
 					
 					<div class="form-group col-xs-12 col-md-5 mx-auto">
-						<select name="catid" id="catid" class="form-control estil03 text-primary" style="width:100%;">
-							<option value=""><?= JText::_('COM_BOTIGA_SELECT_AN_OPTION'); ?></div>
-							<?php foreach(botigaHelper::getCategories() as $cat) : ?>
-							<option value="<?= $cat->id; ?>" <?php if($catid == $cat->id) : ?>selected<?php endif; ?>><?= $cat->title; ?></option>
-							<?php endforeach; ?>
-						</select>
+						<div class="styled-select">
+							<select name="catid" id="catid" class="form-control estil03 text-primary" style="width:100%;">
+								<option value=""><?= JText::_('COM_BOTIGA_SELECT_AN_OPTION'); ?></div>
+								<?php foreach(botigaHelper::getCategories() as $cat) : ?>
+								<option value="<?= $cat->id; ?>" <?php if($catid == $cat->id) : ?>selected<?php endif; ?>><?= $cat->title; ?></option>
+								<?php endforeach; ?>
+							</select>
+						</div>
 					</div>
 					<div class="form-group col-xs-12 col-md-5 mx-auto">
-						<select name="orderby" id="orderby" class="form-control estil03 text-primary" style="width:100%;">
-							<option value="id"><?= JText::_('COM_BOTIGA_ORDERBY'); ?></div>
-							<option value="ref" <?php if($orderby == 'ref') : ?>selected<?php endif; ?>>Código</option>
-							<option value="pvp" <?php if($orderby == 'pvp') : ?>selected<?php endif; ?>>Precio</option>
-						</select>
+						<div class="styled-select">
+							<select name="orderby" id="orderby" class="form-control estil03 text-primary" style="width:100%;">
+								<option value="id"><?= JText::_('COM_BOTIGA_ORDERBY'); ?></div>
+								<option value="ref" <?php if($orderby == 'ref') : ?>selected<?php endif; ?>>Código</option>
+								<option value="pvp" <?php if($orderby == 'pvp') : ?>selected<?php endif; ?>>Precio</option>
+							</select>
+						</div>
 					</div>					
 
 				</form>

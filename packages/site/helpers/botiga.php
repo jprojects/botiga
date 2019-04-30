@@ -168,6 +168,27 @@ class botigaHelper {
    			return 0;
    		}
     }
+    
+    /**
+	 * method to know if coupon is in use and its values
+	 * @return int
+	*/
+	public static function getCouponDiscount($idCoupon, $total) 
+    {
+   		$db = JFactory::getDbo();
+		
+   		$db->setQuery('select * from #__botiga_coupons where id = '.$idCoupon);
+   		$row = $db->loadObject();
+   		
+   		//0 - percentatge 1- resta
+   		if($row->tipus == 0) {
+   			$value = ($total * $row->valor) / 100;   
+   		} else {
+   			$value = $total - $row->valor;   
+   		}
+   		
+   		return number_format($value, 2, '.', '') * -1;
+    }
 	
 	/**
 	 * method to get user the price

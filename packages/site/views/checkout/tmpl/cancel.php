@@ -15,16 +15,6 @@ defined('_JEXEC') or die('Restricted access');
 
 ?>
 
-<style>
-.block-msg {
-	width: 100%;
-	padding: 50px 20px;
-	background-color: #BD0000;
-	color: #fff;
-	margin-top: 100px;
-}
-</style>
-
 <div>
 
 	<div class="block-msg">

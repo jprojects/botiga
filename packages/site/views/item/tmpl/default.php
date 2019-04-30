@@ -20,6 +20,7 @@ $jinput		= JFactory::getApplication()->input;
 $precio 	= botigaHelper::getUserPrice($this->item->id);
 $uri 		= base64_encode(JFactory::getURI()->toString());
 $modal 		= $jinput->get('m', 0);
+$logo		= botigaHelper::getParameter('botiga_logo', '');
 $showprices = botigaHelper::getParameter('show_prices', 1);
 $loginprices = botigaHelper::getParameter('login_prices', 0);
 $shownotice = botigaHelper::getParameter('show_notice', 1);
@@ -32,6 +33,7 @@ $showbrand 	= botigaHelper::getParameter('show_brand_item', 1);
 $showfav 	= botigaHelper::getParameter('show_fav_item', 1);
 $showpvp 	= botigaHelper::getParameter('show_pvp_item', 1);
 $showrel 	= botigaHelper::getParameter('show_related_item', 1);
+$userToken  = JSession::getFormToken();
 
 $js = '{
   "@context": "http://schema.org/",
@@ -48,7 +50,7 @@ $js = '{
     "priceCurrency": "EUR",
     "seller": {
       "@type": "Organization",
-      "name": "Dicohotel S.L."
+      "name": "'.botigaHelper::getParameter('botiga_name', '').'"
     }
   }
 }';
@@ -64,25 +66,39 @@ $doc->addStylesheet('components/com_botiga/assets/css/jquery.fancybox.css');
 
 		<div class="row">
 
-		<?php if(botigaHelper::getParameter('botiga_logo', '') != '') : ?>
+		<?php if($logo != '') : ?>
 		<div class="col-12 text-right">
-			<img src="<?= botigaHelper::getParameter('botiga_logo', ''); ?>" alt="<?= botigaHelper::getParameter('botiga_name', ''); ?>" class="img-fluid">
+			<img src="<?= $logo; ?>" alt="<?= botigaHelper::getParameter('botiga_name', ''); ?>" class="img-fluid">
 		</div>
 		<?php endif; ?>	
 		
 		<div class="col-12 mt-3">
 			<div class="row">
-				<div class="col-xs-12 col-md-6 text-left">&nbsp;</div>
-				<div class="col-xs-12 col-md-6 text-right">
+				<div class="col-9 text-left">			
+					<a href="index.php?option=com_botiga&view=botiga&layout=table" class="pr-1">
+						<img src="media/com_botiga/icons/mosaico<?php if($jinput->getCmd('layout', '') == 'table') : ?>-active<?php endif; ?>.png">
+					</a>
+					<a href="index.php?option=com_botiga&view=botiga">
+						<img src="media/com_botiga/icons/lista<?php if($jinput->getCmd('layout', '') == '') : ?>-active<?php endif; ?>.png">
+					</a>
+					<span class="pl-3 phone-hide"><?= JText::_('COM_BOTIGA_FREE_SHIPPING_MSG'); ?>&nbsp;<img src="media/com_botiga/icons/envio_gratis.png"></span>
+				</div>
+				<div class="col-3 text-right">
 					<a href="index.php?option=com_botiga&view=checkout" class="pr-1 carrito">
 						<?php if(botigaHelper::getCarritoCount() > 0) : ?>
 						<span class="badge badge-warning"><?= botigaHelper::getCarritoCount(); ?></span>
 						<?php endif; ?>
 						<img src="media/com_botiga/icons/carrito.png">
 					</a>
-					<a href="index.php?option=com_users&view=login">
+					<?php if($user->guest) : ?>
+					<a href="index.php?option=com_users&view=login" title="Login" class="hasTip">
 						<img src="media/com_botiga/icons/iniciar-sesion.png">
 					</a>
+					<?php else: ?>
+					<a href="index.php?option=com_users&task=user.logout&<?= $userToken; ?>=1" title="Logout" class="hasTip">
+						<img src="media/com_botiga/icons/salir.png">
+					</a>
+					<?php endif; ?>
 				</div>
 			</div>
 		</div>
@@ -92,7 +108,7 @@ $doc->addStylesheet('components/com_botiga/assets/css/jquery.fancybox.css');
 	</div>
 	
 </header>
-<?php endif; ?>	
+<?php endif; ?>
 
 <div class="col-md-8 mx-auto pb-5">
 

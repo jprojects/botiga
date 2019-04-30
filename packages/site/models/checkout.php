@@ -100,14 +100,14 @@ class botigaModelCheckout extends JModelList
     	
     	$idComanda = $session->get('idComanda', '');
         
-		$db   = $this->getDbo();
+		$db = $this->getDbo();
 
 		$query = $db->getQuery(true);
 		
 		$query->select('cd.*, i.name, i.ref, i.image1, i.brand, i.catid');
 		
 		$query->from('#__botiga_comandesDetall as cd');
-		$query->join('inner', '#__botiga_items as i on i.id = cd.idItem');
+		$query->join('inner', '#__botiga_items as i on i.id = cd.idItem');		
 		$query->where('cd.idComanda = '.$idComanda);
 		
         $params = JComponentHelper::getParams( 'com_botiga' );
@@ -125,6 +125,18 @@ class botigaModelCheckout extends JModelList
 	{
         $items	= parent::getItems();
 		return $items;
+	}
+	
+	public function getComandaCoupon()
+	{
+    	$session 	= JFactory::getSession();
+    	$db 		= JFactory::getDbo();
+    	
+    	$idComanda = $session->get('idComanda', '');
+    	
+    	$db->setQuery('SELECT idCoupon FROM #__botiga_comandes WHERE id = '.$idComanda);
+    	
+    	return $db->loadResult();   	    	
 	}
 	
 	/**

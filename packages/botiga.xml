@@ -20,13 +20,15 @@
 		<folder>assets/</folder>  
 	</files>
 	<media destination="com_botiga" folder="media">
-		<filename>icons/carrito.png</filename>
-		<filename>icons/iniciar-sesion.png</filename>
-		<filename>icons/lista-active.png</filename>
-		<filename>icons/lista.png</filename>
-		<filename>icons/mosaico.png</filename>
-		<filename>icons/mosaico-active.png</filename>
 		<filename>icons/addtocart.png</filename>
+		<filename>icons/arrow.png</filename>
+		<filename>icons/carrito.png</filename>
+		<filename>icons/envio_gratis.png</filename>
+		<filename>icons/iniciar-sesion.png</filename>
+		<filename>icons/lista_active.png</filename>
+		<filename>icons/lista.png</filename>
+		<filename>icons/mosaico-active.png</filename>
+		<filename>icons/mosaico.png</filename>
 		<filename>icons/papelera.png</filename>
 		<filename>icons/salir.png</filename>
         <folder>icons/</folder>

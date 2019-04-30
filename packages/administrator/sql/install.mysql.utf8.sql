@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS `#__botiga_brands` (
   `language` char(7) NOT NULL DEFAULT '0',
   `image` varchar(150) NOT NULL,
   `header` varchar(150) NOT NULL,
-  `factusol_codfte` int(11) DEFAULT '0',
+  `factusol_codfte` int(11) DEFAULT '0'  COMMENT 'Codi fabricant de Factusol',
   `ordering` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `#__botiga_brands` (
 CREATE TABLE IF NOT EXISTS `#__botiga_categories` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `catid` int(11) NOT NULL,
-  `factusol_codfam` varchar(10) NOT NULL,
+  `factusol_codfam` varchar(10) NOT NULL COMMENT 'Codi familia Factusol',
    PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -55,6 +55,8 @@ CREATE TABLE IF NOT EXISTS `#__botiga_comandes` (
   `iva_percent` int(5) NOT NULL DEFAULT '0',
   `iva_total` float(10,2) NOT NULL DEFAULT '0.00',
   `total` float(10,2) NOT NULL DEFAULT '0.00',
+  `processor` varchar(50) NOT NULL DEFAULT '',
+  `observa` varchar(250) NOT NULL DEFAULT '' COMMENT 'Observacions del client',
   `published` tinyint(1) NOT NULL DEFAULT '0',
   `ordering` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
@@ -96,6 +98,8 @@ CREATE TABLE IF NOT EXISTS `#__botiga_rebuts` (
   `titular` varchar(100) NOT NULL DEFAULT '',
   `iban` varchar(50) NOT NULL DEFAULT '',
   `paypal` varchar(50) NOT NULL DEFAULT '',
+  `published` tinyint(1) NOT NULL DEFAULT '0',
+  `ordering` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -121,6 +125,7 @@ CREATE TABLE IF NOT EXISTS `#__botiga_items` (
   `garantia` varchar(150) NOT NULL DEFAULT '',
   `envio` varchar(150) NOT NULL DEFAULT '',
   `published` tinyint(1) NOT NULL DEFAULT '0',
+  `ordering` int(11) NOT NULL DEFAULT '0',
   `language` char(7) NOT NULL DEFAULT '0',
   `ref` text NOT NULL,
   `extres` varchar(15) DEFAULT NULL,
@@ -139,13 +144,13 @@ CREATE TABLE IF NOT EXISTS `#__botiga_shipments` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` varchar(150) NOT NULL DEFAULT '',
   `usergroup` int(11) DEFAULT NULL,
-  `published` tinyint(1) NOT NULL DEFAULT '0',
   `type` tinyint(1) NOT NULL DEFAULT '0',
   `country` int(11) NOT NULL DEFAULT '0',
   `min` varchar(50) NOT NULL DEFAULT '',
   `max` varchar(50) NOT NULL DEFAULT '',
   `total` int(5) NOT NULL DEFAULT '0',
-  `ordering` int(11) NOT NULL,
+  `published` tinyint(1) NOT NULL DEFAULT '0',
+  `ordering` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -161,6 +166,7 @@ CREATE TABLE `#__botiga_countries` (
   `country_code` char(3) DEFAULT NULL,
   `ordering` int(2) NOT NULL DEFAULT '0',
   `published` tinyint(1) NOT NULL DEFAULT '1',
+  `ordering` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`country_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -174,7 +180,7 @@ CREATE TABLE `#__botiga_favorites` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `itemid` char(64) DEFAULT NULL,
   `userid` char(3) DEFAULT NULL,
-  `ordering` int(2) NOT NULL DEFAULT '0',
+  `ordering` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -186,8 +192,11 @@ CREATE TABLE `#__botiga_favorites` (
 
 CREATE TABLE `#__botiga_coupons` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `title` varchar(50) NOT NULL,
+  `tipus` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0- Percent; 1 - Resta',
   `coupon` varchar(50) NOT NULL,
+  `valor` float(10,2) NOT NULL,
+  `published` tinyint(1) NOT NULL DEFAULT '0',
+  `ordering` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -211,6 +220,7 @@ CREATE TABLE `#__botiga_users` (
   `pais` varchar(50) DEFAULT NULL,
   `telefon` varchar(50) DEFAULT NULL,
   `published` tinyint(1) NOT NULL DEFAULT '0',
+  `ordering` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
