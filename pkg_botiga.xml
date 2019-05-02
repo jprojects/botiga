@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
- <extension type="package" version="1.6" method="upgrade">
+ <extension type="package" version="3.5" method="upgrade">
  <name>Botiga</name>
  <author>Afi informàtica</author>
  <creationDate>May 2017</creationDate>
- <packagename>botiga</packagename>
+ <packagename>Botiga</packagename>
  <version>1.0.0</version>
  <url>http://www.aficat.com/</url>
- <packager>Afi Team</packager>
+ <packager>Afi Informàtica</packager>
  <packagerurl>http://www.aficat.com/</packagerurl>
  <description>Joomla e-commerce sollution</description>
  <files folder="packages">
@@ -16,10 +16,11 @@
    <file type="module" id="mod_botiga_related" client="site">mod_botiga_related.zip</file>
    <file type="module" id="mod_botiga_megamenu" client="site">mod_botiga_megamenu.zip</file>
    <file type="module" id="mod_botiga_search" client="site">mod_botiga_search.zip</file>
-   <file type="library" id="lib_fpdf">lib_fpdf.zip</file>
-   <file type="library" id="lib_fpdfi">lib_fpdfi.zip</file>
+   <file type="library" id="fpdf">fpdf.zip</file>
+   <file type="library" id="fpdfi">fpdfi.zip</file>
    <file type="plugin" id="plg_paypal" group="botiga">plg_paypal.zip</file>
    <file type="plugin" id="plg_redsys" group="botiga">plg_redsys.zip</file>
    <file type="plugin" id="plg_transferencia" group="botiga">plg_transferencia.zip</file>
+   <file type="plugin" id="plg_botiga_users" group="users">plg_botiga_users.zip</file>
  </files>
  </extension>
