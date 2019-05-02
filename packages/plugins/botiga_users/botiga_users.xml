@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="3.5" type="plugin" group="user" method="upgrade">
+	<name>plg_botiga_users</name>
+	<author>Afi</author>
+	<creationDate>May 2019</creationDate>
+	<copyright>(C) 20019 Afi Informàtica. All rights reserved.</copyright>
+	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+	<authorEmail>kim@aficat.com</authorEmail>
+	<authorUrl>www.afi.cat</authorUrl>
+	<version>3.0</version>
+	<description>PLG_USER_JOOMLA_XML_DESCRIPTION</description>
+	<files>
+		<filename plugin="botiga_users">botiga_users.php</filename>
+	</files>
+	<config>
+		<fields name="params">
+
+		</fields>
+	</config>
+</extension>
