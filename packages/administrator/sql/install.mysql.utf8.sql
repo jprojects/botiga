@@ -224,8 +224,25 @@ CREATE TABLE `#__botiga_users` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+-- --------------------------------------------------------
+
 --
--- Volcado de datos para la tabla `afi_virtuemart_countries`
+-- Estructura de tabla para la tabla `#__botiga_users`
+--
+
+CREATE TABLE `#__botiga_savedCarts` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `idComanda` int(11) DEFAULT NULL,
+  `data` datetime NOT NULL,
+  `userid` int(11) DEFAULT '0',
+  `userid` int(11) DEFAULT '0',
+  `cart` text NOT NULL DEFAULT '',
+  `ordering` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `afi_botiga_countries`
 --
 
 INSERT INTO `afi_botiga_countries` (`country_id`, `country_name`, `country_code`, `ordering`, `published`) VALUES
