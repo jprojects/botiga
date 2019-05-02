@@ -235,7 +235,6 @@ CREATE TABLE `#__botiga_savedCarts` (
   `idComanda` int(11) DEFAULT NULL,
   `data` datetime NOT NULL,
   `userid` int(11) DEFAULT '0',
-  `userid` int(11) DEFAULT '0',
   `cart` text NOT NULL DEFAULT '',
   `ordering` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
