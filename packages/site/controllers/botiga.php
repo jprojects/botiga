@@ -468,20 +468,23 @@ class botigaControllerBotiga extends botigaController {
  		
  		if(count($row)) {
  		
- 			if($row->finishdate > date('Y-m-d')) { //Ja no es vàlid així que despubliquem
+ 			if(strtotime($row->finishDate) < strtotime(date('Y-m-d'))) { //Ja no es vàlid així que despubliquem
    				$db->setQuery('UPDATE #__botiga_coupons SET published = 0 WHERE id = '.$row->id);
    				$db->query();
-   				return;	
-   			} 		
+   				$msg = JText::_('COM_BOTIGA_COUPON_VALIDATE_ERROR_DATE');
+ 				$type = 'error';
+ 				
+   			} else {		
  		
- 			$comanda = new stdClass();
- 			$comanda->id = $idComanda;
- 			$comanda->idCoupon = $row->id; 			
- 			
- 			$db->updateObject('#__botiga_comandes', $comanda, 'id');
- 			
- 			$msg = JText::_('COM_BOTIGA_COUPON_VALIDATE_SUCCESS');
- 			$type = 'success';
+	 			$comanda = new stdClass();
+	 			$comanda->id = $idComanda;
+	 			$comanda->idCoupon = $row->id; 			
+	 			
+	 			$db->updateObject('#__botiga_comandes', $comanda, 'id');
+	 			
+	 			$msg = JText::_('COM_BOTIGA_COUPON_VALIDATE_SUCCESS');
+	 			$type = 'success';
+ 			}
  			
  		} else {
  		
