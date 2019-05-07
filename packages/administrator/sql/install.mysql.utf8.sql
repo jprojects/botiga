@@ -129,6 +129,9 @@ CREATE TABLE IF NOT EXISTS `#__botiga_items` (
   `language` char(7) NOT NULL DEFAULT '0',
   `ref` text NOT NULL,
   `extres` varchar(15) DEFAULT NULL,
+  `variacions` text NOT NULL,
+  `pes` varchar(50) NOT NULL DEFAULT '',
+  `mida` varchar(50) NOT NULL DEFAULT '',
   `factusol_codart` varchar(13) DEFAULT NULL,
   `sincronitzat` int(11) DEFAULT '0',
   PRIMARY KEY (`id`)
@@ -212,6 +215,7 @@ CREATE TABLE `#__botiga_users` (
   `nom_empresa` varchar(255) DEFAULT NULL,
   `mail_empresa` varchar(255) DEFAULT NULL,
   `cif` varchar(50) DEFAULT NULL,
+  `type` tinyint(1) NOT NULL DEFAULT '0',
   `userid` int(11) DEFAULT '0',
   `adreca` varchar(100) DEFAULT NULL,
   `cp` varchar(10) DEFAULT NULL,
@@ -219,6 +223,7 @@ CREATE TABLE `#__botiga_users` (
   `provincia` varchar(50) DEFAULT NULL,
   `pais` varchar(50) DEFAULT NULL,
   `telefon` varchar(50) DEFAULT NULL,
+  `state` tinyint(1) NOT NULL DEFAULT '0',
   `published` tinyint(1) NOT NULL DEFAULT '0',
   `ordering` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
