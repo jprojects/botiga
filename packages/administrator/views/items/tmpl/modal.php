@@ -1,5 +1,14 @@
 <?php
-
+/**
+ * @version		1.0.0 com_botiga $
+ * @package		botiga
+ * @copyright   Copyright © 2011 - All rights reserved.
+ * @license		GNU/GPL
+ * @author		kim
+ * @author mail kim@aficat.com
+ * @website		http://www.aficat.com
+ *
+*/
 
 // no direct access
 defined('_JEXEC') or die;
@@ -31,7 +40,7 @@ $function	= JRequest::getCmd('function', 'jSelectProduct');
                         <?php echo JHtml::_('grid.sort',  'COM_BOTIGA_ITEMS_HEADING_ID', 'id', $listDirn, $listOrder); ?>
                     </th>			
                     <th>
-                        <?php echo JHtml::_('grid.sort',  'COM_BOTIGA_ITEMS_HEADING_BRAND', 'name', $listDirn, $listOrder); ?>
+                        <?php echo JHtml::_('grid.sort',  'COM_BOTIGA_ITEMS_HEADING_NAME', 'name', $listDirn, $listOrder); ?>
                     </th>
                 </tr>		
                 <tbody>
@@ -48,7 +57,7 @@ $function	= JRequest::getCmd('function', 'jSelectProduct');
 			</tr>
 			<?php endforeach; ?>
                         <tr>
-                            <td colspan="4"><?php echo $this->pagination->getListFooter(); ?></td>
+                            <td colspan="4"><?= $this->pagination->getListFooter(); ?></td>
                         </tr>
 		</tbody>
 	</table>

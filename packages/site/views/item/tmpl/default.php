@@ -68,7 +68,9 @@ $doc->addStylesheet('components/com_botiga/assets/css/jquery.fancybox.css');
 
 		<?php if($logo != '') : ?>
 		<div class="col-12 text-right">
-			<img src="<?= $logo; ?>" alt="<?= botigaHelper::getParameter('botiga_name', ''); ?>" class="img-fluid">
+			<a href="index.php">
+				<img src="<?= $logo; ?>" alt="<?= botigaHelper::getParameter('botiga_name', ''); ?>" class="img-fluid botiga-logo">
+			</a>
 		</div>
 		<?php endif; ?>	
 		
@@ -97,6 +99,9 @@ $doc->addStylesheet('components/com_botiga/assets/css/jquery.fancybox.css');
 					<?php else: ?>
 					<a href="index.php?option=com_users&task=user.logout&<?= $userToken; ?>=1" title="Logout" class="hasTip">
 						<img src="media/com_botiga/icons/salir.png">
+					</a>
+					<a href="index.php?option=com_botiga&view=history" title="History" class="hasTip">
+						<img src="media/com_botiga/icons/sesion-iniciada.png">
 					</a>
 					<?php endif; ?>
 				</div>
@@ -171,7 +176,7 @@ $doc->addStylesheet('components/com_botiga/assets/css/jquery.fancybox.css');
 			<?php endif; ?>			
 			
 			<div class="row no-gutters mb-2">
-			<div class="col-12 col-md-6 text-left estil07 text-primary"><b><?= strtoupper($this->item->name); ?></b></div>
+			<div class="col-12 col-md-6 text-left estil07 text-primary"><b class="titol"><?= strtoupper($this->item->name); ?></b></div>
 			<div class="col-12 col-md-6 text-right estil08 text-primary">
 				<?php if($showprices == 1 || ($loginprices == 1 && !$user->guest)) : ?>
 				<b><?= $precio; ?> &euro;</b>
@@ -181,9 +186,31 @@ $doc->addStylesheet('components/com_botiga/assets/css/jquery.fancybox.css');
 			
 			<?php if($showpvp == 1) : ?>
 			<div class="col-12 col-md-12">			
-			<div class="text-left faded pvp">PVP <strike><?= $this->item->pvp; ?> &euro;</strike></div>			
+				<div class="text-left faded pvp">PVP <strike><?= $this->item->pvp; ?> &euro;</strike></div>			
 			</div>
 			<?php endif; ?>
+			
+			<?php if(count(botigaHelper::getChilds($this->item->id))) : ?>
+			<div class="row no-gutters mb-2">
+				<div class="col-12 col-md-12">	
+					<div class="form-group">
+						<div class="styled-select">		
+							<select name="variacions" id="variacions" class="form-control">
+								<option value=""><?= JText::_('COM_BOTIGA_SELECT_AN_OPTION'); ?></option>
+								<?php 
+								$i = 0;
+								foreach(botigaHelper::getChilds($this->item->id) as $child) : ?>
+								<option value="<?= $child->id; ?>"><?= $child->name; ?></option>
+								<?php
+								$i++;
+								endforeach; ?>
+							</select>	
+						</div>
+					</div>	
+				</div>
+			</div>
+			<?php endif; ?>
+			
 			
 			<div class="row">
 				<div class="col-12 col-md-4">
@@ -245,7 +272,7 @@ $doc->addStylesheet('components/com_botiga/assets/css/jquery.fancybox.css');
 			<?php 
 			$i = 0;
 			foreach(botigaHelper::getExtras($this->item->id) as $k => $v) : ?>
-			<div class="estil07 text-primary <?php if($i == 0): ?>mt-5<?php else: ?>mt-4<?php endif; ?>" data-toggle="collapse" href="#collapse<?= $i; ?>"><?= strtoupper($v[0]); ?>&nbsp;<i class="fa fa-plus fa-2x text-yellow pl-2"></i></div>
+			<div class="estil07 text-primary <?php if($i == 0): ?>mt-5<?php else: ?>mt-4<?php endif; ?>" data-toggle="collapse" href="#collapse<?= $i; ?>"><?= strtoupper($v[0]); ?>&nbsp;<i class="fa fa-plus text-yellow pl-2"></i></div>
 			<div class="collapse <?php if($i == 0): ?>show<?php endif; ?> estil03 text-primary mt-2" id="collapse<?= $i; ?>"><?= $v[1]; ?></div>
 			<?php 
 			$i++;
@@ -300,8 +327,9 @@ $doc->addStylesheet('components/com_botiga/assets/css/jquery.fancybox.css');
 			<img src="<?= $image; ?>" alt="" class="img-fluid" width="50">
 			</div>
 			<div class="col-xs-12 col-md-6 text-left py-3">
-			<b><?= botigaHelper::getItemData('name', $modal); ?></b>
-			<?= botigaHelper::getItemData('s_description', $modal); ?>
+				<b><?= botigaHelper::getItemData('name', $modal); ?></b>
+				<?= botigaHelper::getItemData('s_description', $modal); ?><br>
+				<b><?= botigaHelper::getUserPrice($modal); ?>&euro;</b>
 			</div>
 		</div>
 		<a href="index.php?option=com_botiga&view=checkout" class="btn btn-primary btn-block mt-2"><?= JText::_('COM_BOTIGA_GOTO_CHECKOUT'); ?></a>

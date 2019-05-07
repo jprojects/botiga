@@ -10,6 +10,14 @@ jQuery(document).ready(function() {
 		} 
 	});
 	
+	jQuery('#variacions').change(function() {
+		
+		var id 	= jQuery(this).val();
+		
+		document.location.href = 'index.php?option=com_botiga&view=item&id='+id;
+		
+	});
+	
    jQuery('.quantity-right-plus').click(function(e) {
         
         var id = jQuery(this).attr('data-id');

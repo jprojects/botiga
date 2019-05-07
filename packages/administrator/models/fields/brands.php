@@ -79,7 +79,7 @@ class JFormFieldBrands extends JFormField
 		// The current user display field.
 		$html[] = '<div class="input-append">';
 		$html[] = '  <input type="text" id="'.$this->id.'_name" value="'.$title.'" disabled="disabled" size="35" />';
-		$html[] = '	<a class="btn btn-primary button-select modal" title="'.JText::_('COM_LAUNDRY_SELECT_BRAND').'"  href="'.$link.'" rel="{handler: \'iframe\', size: {x: 800, y: 450}}">'.JText::_('COM_BOTIGA_SELECT_BRAND').'</a>';
+		$html[] = '	<a class="btn btn-primary button-select modal" title="'.JText::_('COM_BOTIGA_SELECT_BRAND').'"  href="'.$link.'" rel="{handler: \'iframe\', size: {x: 800, y: 450}}">'.JText::_('COM_BOTIGA_SELECT_BRAND').'</a>';
 		$html[] = '</div>';
 
 		// The active article id field.

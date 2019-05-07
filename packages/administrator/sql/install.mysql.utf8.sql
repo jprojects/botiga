@@ -129,7 +129,7 @@ CREATE TABLE IF NOT EXISTS `#__botiga_items` (
   `language` char(7) NOT NULL DEFAULT '0',
   `ref` text NOT NULL,
   `extres` varchar(15) DEFAULT NULL,
-  `variacions` text NOT NULL,
+  `child` text NOT NULL,
   `pes` varchar(50) NOT NULL DEFAULT '',
   `mida` varchar(50) NOT NULL DEFAULT '',
   `factusol_codart` varchar(13) DEFAULT NULL,

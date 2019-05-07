@@ -53,6 +53,17 @@ class botigaHelper {
     }
     
     /**
+	 * method to get all countries
+	 * @return mixed
+	*/
+	public static function getCountries() 
+	{
+		$db = JFactory::getDbo();
+		$db->setQuery('SELECT country_id, country_name FROM #__botiga_countries WHERE published = 1 ORDER BY country_name');
+		return $db->loadObjectList();
+	}
+    
+    /**
 	 * method to get user data
 	 * @params string $field database field request
 	 * @return mixed
@@ -177,7 +188,7 @@ class botigaHelper {
     {
    		$db = JFactory::getDbo();
 		
-   		$db->setQuery('select * from #__botiga_coupons where id = '.$idCoupon);
+   		$db->setQuery('SELECT * from #__botiga_coupons WHERE id = '.$idCoupon);
    		$row = $db->loadObject();
    		
    		//0 - percentatge 1- resta
@@ -252,6 +263,19 @@ class botigaHelper {
       	}
 		
 		return $result;
+		
+	}
+	
+	/**
+	 * method to get the child content in the item view
+	 * @params int $itemid database id requested
+	 * @return mixed
+	*/
+	public static function getChilds($itemid)
+	{
+		$db = JFactory::getDbo();
+		$db->setQuery('SELECT id, name FROM #__botiga_items WHERE child = '.$itemid.' AND published = 1');
+		return $db->loadObjectList();
 		
 	}
 }
