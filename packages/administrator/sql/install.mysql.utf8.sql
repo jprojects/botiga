@@ -198,6 +198,7 @@ CREATE TABLE `#__botiga_coupons` (
   `tipus` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0- Percent; 1 - Resta',
   `coupon` varchar(50) NOT NULL,
   `valor` float(10,2) NOT NULL,
+  `finishDate` date NOT NULL,
   `published` tinyint(1) NOT NULL DEFAULT '0',
   `ordering` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)

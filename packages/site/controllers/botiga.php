@@ -88,7 +88,7 @@ class botigaControllerBotiga extends botigaController {
 		} else {		
 		
 			$comanda = new stdClass();
-			$comanda->uniqid = md5(substr(uniqid('', true), -8));
+			$comanda->uniqid = md5(substr(uniqid('', true), -5));
 			if(!$user->guest) { $comanda->userid = $user->id; }
 			if($user->guest) { $comanda->sessid = $sessid; }
 			$comanda->data = date('Y-m-d H:i:s');
@@ -291,7 +291,7 @@ class botigaControllerBotiga extends botigaController {
 			$body2     = "<div>Ha llegado un nuevo pedido desde la web de ".$botiga_name.".<br>";
 			$body2    .= "Adjuntamos factura.</div>"; 
 			
-			$this->genPdf('F', $idComanda); 			
+			$this->genPdf('F', $idComanda, $uniqid); 			
 		
 			//mail para el user
 			$this->enviar($subject, $body, $user->email, JPATH_ROOT.'/order_'.$uniqid.'.pdf');
@@ -302,9 +302,10 @@ class botigaControllerBotiga extends botigaController {
      	}    	
      }
      
-     public function genPdf($mode = 'D', $uid = '')
+     public function genPdf($mode = 'D', $uid = '', $uniqid = '')
 	 {
 		jimport('fpdf.fpdf');
+		jimport('fpdf.html2pdf.php');
 		jimport('fpdfi.fpdi');
 		
 		$jinput = JFactory::getApplication()->input;
@@ -325,12 +326,12 @@ class botigaControllerBotiga extends botigaController {
 		
 		$db->setQuery('SELECT c.*, u.mail_empresa as email, u.nom_empresa, u.cif, u.telefon, u.adreca, u.cp, u.poblacio FROM #__botiga_comandes c INNER JOIN #__botiga_users u ON u.userid = c.userid WHERE c.id = '.$id);
 		$com = $db->loadObject();
+		
+		if($uniqid == '') $uniqid = $com->uniqid;
 
 		$db->setQuery('SELECT cd.*, i.name, i.ref as referencia, i.image1 as image, i.description FROM #__botiga_comandesDetall cd INNER JOIN #__botiga_items i ON cd.iditem = i.id WHERE cd.idComanda = '.$id);
 		$num_rows = $db->getNumRows();
 		$detalls  = $db->loadObjectList();
-		
-		$uniqid = $com->uniqid;
 		
 		$height = 38;
 		
@@ -398,7 +399,7 @@ class botigaControllerBotiga extends botigaController {
 				$pdf->SetXY(35, $height);
 				$pdf->Cell(15, 5, $com->observa, 0, 0, 'R');
 				$pdf->SetXY(50, $height);
-				$pdf->Cell(15, 5, $com->uniqid, 0, 0, 'R');
+				$pdf->Cell(15, 5, $uniqid, 0, 0, 'R');
 				$pdf->SetXY(80, $height);
 				$pdf->Cell(15, 5, date('d-m-Y', strtotime($com->data)), 0, 0, 'R');
 				$height  = 85;
@@ -408,7 +409,7 @@ class botigaControllerBotiga extends botigaController {
 			$pdf->Cell(30, 5, $detall->referencia, 0, 0, '');
 			$new_height = $height+4;
 			$pdf->SetXY(20, $new_height);  
-			$pdf->Cell(30, 5, $pdf->WriteHTML('<img src="'.$detall->image.'" alt="" width="50" height="50" />'), 0, 0, '');
+			//$pdf->Cell(30, 5, $pdf->WriteHTML('<img src="'.$detall->image.'" alt="" width="50" height="50" />'), 0, 0, '');
 			
 			$pdf->SetXY(60, $height);  
 			$pdf->Cell(90, 5, utf8_decode($detall->name), 0, 0, '');
@@ -465,7 +466,13 @@ class botigaControllerBotiga extends botigaController {
  		$db->setQuery('select * from #__botiga_coupons where coupon = '.$db->quote($data['coupon']).' AND published = 1');
  		$row = $db->loadObject();
  		
- 		if(count($row)) { 		
+ 		if(count($row)) {
+ 		
+ 			if($row->finishdate > date('Y-m-d')) { //Ja no es vàlid així que despubliquem
+   				$db->setQuery('UPDATE #__botiga_coupons SET published = 0 WHERE id = '.$row->id);
+   				$db->query();
+   				return;	
+   			} 		
  		
  			$comanda = new stdClass();
  			$comanda->id = $idComanda;
@@ -540,7 +547,7 @@ class botigaControllerBotiga extends botigaController {
         $mailer->setBody( $body );   
         
         if(attach != '') {
-        	$mailer->addAttachment(JPATH_ROOT.'/order_'.$attach.'.pdf');     
+        	$mailer->addAttachment($attach);     
         }
         
 		return $mailer->Send();			
