@@ -169,7 +169,6 @@ CREATE TABLE `#__botiga_countries` (
   `country_code` char(3) DEFAULT NULL,
   `ordering` int(2) NOT NULL DEFAULT '0',
   `published` tinyint(1) NOT NULL DEFAULT '1',
-  `ordering` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`country_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
