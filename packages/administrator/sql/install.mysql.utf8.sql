@@ -249,7 +249,7 @@ CREATE TABLE `#__botiga_savedCarts` (
 -- Volcado de datos para la tabla `afi_botiga_countries`
 --
 
-INSERT INTO `afi_botiga_countries` (`country_id`, `country_name`, `country_code`, `ordering`, `published`) VALUES
+INSERT INTO `#__botiga_countries` (`country_id`, `country_name`, `country_code`, `ordering`, `published`) VALUES
 (1, 'Afghanistan', 'AFG', 0, 1),
 (2, 'Albania', 'ALB', 0, 1),
 (3, 'Algeria', 'DZA', 0, 1),
