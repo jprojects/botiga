@@ -24,10 +24,29 @@ class com_botigaInstallerScript
      * @return void
     */
 	public function install () {
+	
+		$db = JFactory::getDbo();
 		
 		//create pdf directory
 		mkdir(JPATH_ROOT.'/images/sampledata/products');
 		mkdir(JPATH_ROOT.'/images/sampledata/brands');
+		
+		//create groups
+		$group = new stdClass();
+		
+		$group->parent_id = 2;
+		$group->lft = 17;
+		$group->rgt = 18;
+		$group->title = 'Empresas';
+		
+		$db->insertObject('#__usergroups', $group);
+		
+		$group->parent_id = 2;
+		$group->lft = 15;
+		$group->rgt = 16;
+		$group->title = 'Clientes';
+		
+		$db->insertObject('#__usergroups', $group);				
 		
 		$parent->getParent()->setRedirectURL('index.php?option=com_botiga');
 	}
