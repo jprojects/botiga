@@ -163,7 +163,7 @@ CREATE TABLE IF NOT EXISTS `#__botiga_shipments` (
 -- Estructura de tabla para la tabla `#__botiga_countries`
 --
 
-CREATE TABLE `#__botiga_countries` (
+CREATE TABLE IF NOT EXISTS `#__botiga_countries` (
   `country_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `country_name` char(64) DEFAULT NULL,
   `country_code` char(3) DEFAULT NULL,
@@ -178,7 +178,7 @@ CREATE TABLE `#__botiga_countries` (
 -- Estructura de tabla para la tabla `#__botiga_favorites`
 --
 
-CREATE TABLE `#__botiga_favorites` (
+CREATE TABLE IF NOT EXISTS `#__botiga_favorites` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `itemid` char(64) DEFAULT NULL,
   `userid` char(3) DEFAULT NULL,
@@ -192,7 +192,7 @@ CREATE TABLE `#__botiga_favorites` (
 -- Estructura de tabla para la tabla `#__botiga_coupons`
 --
 
-CREATE TABLE `#__botiga_coupons` (
+CREATE TABLE IF NOT EXISTS `#__botiga_coupons` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `tipus` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0- Percent; 1 - Resta',
   `coupon` varchar(50) NOT NULL,
@@ -209,7 +209,7 @@ CREATE TABLE `#__botiga_coupons` (
 -- Estructura de tabla para la tabla `#__botiga_users`
 --
 
-CREATE TABLE `#__botiga_users` (
+CREATE TABLE IF NOT EXISTS `#__botiga_users` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `usergroup` int(11) DEFAULT NULL,
   `nom_empresa` varchar(255) DEFAULT NULL,
@@ -235,7 +235,7 @@ CREATE TABLE `#__botiga_users` (
 -- Estructura de tabla para la tabla `#__botiga_users`
 --
 
-CREATE TABLE `#__botiga_savedCarts` (
+CREATE TABLE IF NOT EXISTS `#__botiga_savedCarts` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `idComanda` int(11) DEFAULT NULL,
   `data` datetime NOT NULL,
