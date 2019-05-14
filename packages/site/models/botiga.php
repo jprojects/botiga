@@ -129,6 +129,7 @@ class botigaModelBotiga extends JModelList
 		}
 
 		$query->where('i.published = 1');
+		$query->where('i.child = ""');
 		$query->where('i.language = '.$db->quote(JFactory::getLanguage()->getTag()).' ORDER BY '.$orderby.' ASC');
 
 		//echo $query;

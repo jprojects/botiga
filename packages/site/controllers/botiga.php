@@ -83,14 +83,14 @@ class botigaControllerBotiga extends botigaController {
 		$db->setQuery('SELECT id FROM #__botiga_comandes WHERE sessid = '.$db->quote($sessid).' AND status < 3');
 		if($idComanda = $db->loadResult()) {
 			
-			$session->set('idComanda', $idComanda); //recuperem la sessió 
+			$session->set('idComanda', $idComanda); //recuperem la sessió 						
 			
 		} else {		
-		
+			
 			$comanda = new stdClass();
 			$comanda->uniqid = md5(substr(uniqid('', true), -5));
 			if(!$user->guest) { $comanda->userid = $user->id; }
-			if($user->guest) { $comanda->sessid = $sessid; }
+			$comanda->sessid = $sessid;
 			$comanda->data = date('Y-m-d H:i:s');
 			$comanda->status = 1;
 			
@@ -305,7 +305,6 @@ class botigaControllerBotiga extends botigaController {
      public function genPdf($mode = 'D', $uid = '', $uniqid = '')
 	 {
 		jimport('fpdf.fpdf');
-		jimport('fpdf.html2pdf.php');
 		jimport('fpdfi.fpdi');
 		
 		$jinput = JFactory::getApplication()->input;
@@ -333,84 +332,79 @@ class botigaControllerBotiga extends botigaController {
 		$num_rows = $db->getNumRows();
 		$detalls  = $db->loadObjectList();
 		
-		$height = 38;
+		$height = 10;
 		
 		$pdf->SetFont('Arial', '', '10');
 		
 		$pag = 1;
 		
-		$pdf->SetXY(175, $height); 
-		$pdf->Cell(25, 5, '1/'.$pag, 0, 0, 'R');
+		//$pdf->SetXY(175, $height); 
+		//$pdf->Cell(25, 5, '1/'.$pag, 0, 0, 'R');
 		
-		$height = 45;
-		
-		//user
-		$pdf->SetXY(170, $height); 
-		$pdf->Cell(15, 5, $com->telefon, 0, 0, 'R');
-		$height += 4;
-		$pdf->SetXY(121, $height); 
-		$pdf->Cell(16, 5, $com->cif, 0, 0, 'R');
-		$pdf->SetXY(170, $height); 
-		$pdf->Cell(15, 5, $com->email, 0, 0, 'R');
-		
-		$height = 60;
-		
-		//adreça
-		$pdf->SetXY(107, $height); 
-		$pdf->Cell(15, 5, $com->nom_empresa, 0, 0);
-		$height += 4;
-		$pdf->SetXY(107, $height); 
-		$pdf->Cell(15, 5, $com->adreca, 0, 0);
-		$height += 4;
-		$pdf->SetXY(107, $height); 
-		$pdf->Cell(15, 5, $com->cp.' '.$com->poblacio, 0, 0);
+		$pdf->SetFont('Arial', 'B', '10');
 		
 		//metadata
-		$height = 71;
-		$pdf->SetXY(35, $height);
-		$pdf->Cell(15, 5, $com->observa, 0, 0, 'R');
-		$pdf->SetXY(50, $height);
-		$pdf->Cell(15, 5, $uniqid, 0, 0, 'R');
-		$pdf->SetXY(80, $height);
-		$pdf->Cell(15, 5, date('d/m/Y', strtotime($com->data)), 0, 0, 'R');
+		$pdf->SetXY(130, $height); 
+		$pdf->Cell(15, 5, utf8_decode('Factura nº '), 0, 0, 'R');
+		$pdf->SetXY(170, $height);
+		$pdf->Cell(15, 5, utf8_decode('Data : '), 0, 0, 'R');
+		
+		$pdf->SetFont('Arial', '', '10');
+		
+		$pdf->SetXY(140, $height); 
+		$pdf->Cell(15, 5, $id, 0, 0, 'R');
+		$pdf->SetXY(190, $height);
+		$pdf->Cell(15, 5, date('d-m-Y', strtotime($com->data)), 0, 0, 'R');
+		
+		$height += 10;
+		
+		//user
+		$pdf->SetXY(130, $height); 
+		$pdf->Cell(15, 5, $com->nombre, 0, 0, 'R');
+		$height += 5;
+		$pdf->SetXY(130, $height); 
+		$pdf->Cell(16, 5, $com->adreca, 0, 0, 'R');
+		$height += 5;
+		$pdf->SetXY(130, $height); 
+		$pdf->Cell(15, 5, $com->email, 0, 0, 'R');
+		$height += 5;
+		$pdf->SetXY(130, $height); 
+		$pdf->Cell(15, 5, $com->cp.' - '.$com->poblacio, 0, 0, 'R');
+		
+		$height += 20;
+		$pdf->SetFont('Arial', 'B', '10');
+		
+		$pdf->SetXY(20, $height);  
+		$pdf->Cell(30, 5, JText::_('COM_BOTIGA_INVOICE_REF'), 0, 0, '');
+		$pdf->SetXY(60, $height);  
+		$pdf->Cell(90, 5, JText::_('COM_BOTIGA_INVOICE_DESC'), 0, 0, '');
+		$pdf->SetXY(110, $height); 
+		$pdf->Cell(20, 5, JText::_('COM_BOTIGA_INVOICE_QTY'), 0, 0, 'R');	
+		$pdf->SetXY(145, $height);
+		$pdf->Cell(20, 5, JText::_('COM_BOTIGA_INVOICE_UNIT_PRICE'), 0, 0, '');
+		$pdf->SetXY(180, $height); 
+		$pdf->Cell(15, 5, JText::_('COM_BOTIGA_INVOICE_AMOUNT'), 0, 0, '');
 		
 		//detall
 		$total   = 0;		
-		$height  = 85;
+		$height  += 10;
 		$counter = 0;
 		
 		foreach($detalls as $detall) {
 		
-			if($counter == 5) {
+			if($counter == 10) {
 			
 				$pdf->AddPage();
 				$pag++;
 				$pdf->setSourceFile(JPATH_COMPONENT.'/assets/pdf/invoice.pdf');
 				$tplIdx2 = $pdf->importPage(1);
 				$pdf->useTemplate($tplIdx2, 0, 0, 0, 0, true);
-				$pdf->SetFont('Arial', '', '10');
-				
-				$height = 38;
-				$pdf->SetXY(175, $height); 
-				$pdf->Cell(25, 5, '2/'.$pag, 0, 0, 'R');
-				
-				$height = 71;		
-				
-				$pdf->SetXY(35, $height);
-				$pdf->Cell(15, 5, $com->observa, 0, 0, 'R');
-				$pdf->SetXY(50, $height);
-				$pdf->Cell(15, 5, $uniqid, 0, 0, 'R');
-				$pdf->SetXY(80, $height);
-				$pdf->Cell(15, 5, date('d-m-Y', strtotime($com->data)), 0, 0, 'R');
-				$height  = 85;
-			}						
+			}
+			
+			$pdf->SetFont('Arial', '', '10');						
 	
 			$pdf->SetXY(20, $height);  
-			$pdf->Cell(30, 5, $detall->referencia, 0, 0, '');
-			$new_height = $height+4;
-			$pdf->SetXY(20, $new_height);  
-			//$pdf->Cell(30, 5, $pdf->WriteHTML('<img src="'.$detall->image.'" alt="" width="50" height="50" />'), 0, 0, '');
-			
+			$pdf->Cell(30, 5, $detall->referencia, 0, 0, '');			
 			$pdf->SetXY(60, $height);  
 			$pdf->Cell(90, 5, utf8_decode($detall->name), 0, 0, '');
 			$pdf->SetXY(110, $height); 
@@ -419,7 +413,7 @@ class botigaControllerBotiga extends botigaController {
 			$pdf->Cell(20, 5, number_format($detall->price, 2, ',', '.'), 0, 0, '');
 			$pdf->SetXY(150, $height); 
 			$pdf->Cell(20, 5, '', 0, 0, 'R');
-			$pdf->SetXY(172, $height); 
+			$pdf->SetXY(180, $height); 
 			$pdf->Cell(15, 5, number_format(($detall->price * $detall->qty), 2, ',', '.').EURO, 0, 0, '');
 			
 			$height += 20;
@@ -428,25 +422,39 @@ class botigaControllerBotiga extends botigaController {
 		
 		$height = 244;
 		$pdf->SetFont('Arial', 'B', '10');
-		$pdf->SetXY(55, $height);  
-		$pdf->Cell(30, 5, number_format($com->subtotal, 2, ',', '.').EURO, 0, 0, 'R');
-		$pdf->SetXY(75, $height); 
-		$pdf->Cell(30, 5, $com->iva_percent, 0, 0, 'R');
-		$pdf->SetXY(95, $height);
-		$pdf->Cell(30, 5, number_format($com->iva_total, 2, ',', '.').EURO, 0, 0, 'R');
-
-		$pdf->SetXY(163, $height); 
-		$pdf->Cell(30, 5, number_format(($com->total), 2, ',', '.').EURO, 0, 0, 'R');
+		
+		$pdf->SetXY(20, $height);  
+		$pdf->Cell(30, 5, JText::_('COM_BOTIGA_INVOICE_BASE'), 0, 0, '');
+		$pdf->SetXY(50, $height);  
+		$pdf->Cell(30, 5, JText::_('COM_BOTIGA_INVOICE_BASE'), 0, 0, '');
+		$pdf->SetXY(80, $height); 
+		$pdf->Cell(20, 5, JText::_('COM_BOTIGA_INVOICE_IVA'), 0, 0, 'R');	
+		$pdf->SetXY(100, $height);
+		$pdf->Cell(20, 5, JText::_('COM_BOTIGA_INVOICE_IMPORT_IVA'), 0, 0, '');
+		$pdf->SetXY(125, $height); 
+		$pdf->Cell(15, 5, JText::_('COM_BOTIGA_INVOICE_RE'), 0, 0, '');
+		$pdf->SetXY(155, $height); 
+		$pdf->Cell(15, 5, JText::_('COM_BOTIGA_INVOICE_IMPORT_RE'), 0, 0, '');
+		$pdf->SetXY(180, $height); 
+		$pdf->Cell(15, 5, JText::_('COM_BOTIGA_INVOICE_TOTAL'), 0, 0, '');
 		
 		$height += 10;
+		$pdf->SetFont('Arial', '', '10');
 		
-		$pdf->SetXY(35, $height); 
-		$pdf->Cell(30, 5, utf8_decode($com->processor), 0, 0, 'R');
-		
-		$height += 12;
-		
+		$pdf->SetXY(20, $height);  
+		$pdf->Cell(30, 5, number_format($com->subtotal, 2, ',', '.').EURO, 0, 0, '');
+		$pdf->SetXY(50, $height);  
+		$pdf->Cell(30, 5, JText::_('COM_BOTIGA_INVOICE_BASE'), 0, 0, '');
+		$pdf->SetXY(80, $height); 
+		$pdf->Cell(20, 5, $com->iva_percent, 0, 0, 'R');	
+		$pdf->SetXY(100, $height);
+		$pdf->Cell(20, 5, number_format($com->iva_total, 2, ',', '.').EURO, 0, 0, '');
 		$pdf->SetXY(125, $height); 
-		$pdf->Cell(30, 5, utf8_decode($com->observa), 0, 0, 'R');
+		$pdf->Cell(15, 5, JText::_('COM_BOTIGA_INVOICE_RE'), 0, 0, '');
+		$pdf->SetXY(155, $height); 
+		$pdf->Cell(15, 5, JText::_('COM_BOTIGA_INVOICE_IMPORT_RE'), 0, 0, '');
+		$pdf->SetXY(180, $height); 
+		$pdf->Cell(15, 5, number_format(($com->total), 2, ',', '.').EURO, 0, 0, '');
 
 		$pdf->Output('order_'.$uniqid.'.pdf', $mode);
 		if($uid == '') { die(); }

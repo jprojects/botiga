@@ -35,6 +35,12 @@ $showpvp 	= botigaHelper::getParameter('show_pvp_item', 1);
 $showrel 	= botigaHelper::getParameter('show_related_item', 1);
 $userToken  = JSession::getFormToken();
 
+$spain 		= botigaHelper::getParameter('total_shipment_spain', 25);
+$islands 	= botigaHelper::getParameter('total_shipment_islands', 50);
+$world 		= botigaHelper::getParameter('total_shipment_world', 60);
+
+$count 	    = botigaHelper::getCarritoCount();
+
 $js = '{
   "@context": "http://schema.org/",
   "@type": "Product",
@@ -67,7 +73,7 @@ $doc->addStylesheet('components/com_botiga/assets/css/jquery.fancybox.css');
 		<div class="row">
 
 		<?php if($logo != '') : ?>
-		<div class="col-12 text-right">
+		<div class="col-12 text-right d-none d-sm-block">
 			<a href="index.php">
 				<img src="<?= $logo; ?>" alt="<?= botigaHelper::getParameter('botiga_name', ''); ?>" class="img-fluid botiga-logo">
 			</a>
@@ -77,18 +83,18 @@ $doc->addStylesheet('components/com_botiga/assets/css/jquery.fancybox.css');
 		<div class="col-12 mt-3">
 			<div class="row">
 				<div class="col-9 text-left">			
-					<a href="index.php?option=com_botiga&view=botiga&layout=table" class="pr-1">
-						<img src="media/com_botiga/icons/mosaico<?php if($jinput->getCmd('layout', '') == 'table') : ?>-active<?php endif; ?>.png">
+					<a href="index.php?option=com_botiga&view=botiga" class="pr-1">
+						<img src="media/com_botiga/icons/mosaico<?php if($jinput->getCmd('layout', '') == '') : ?>-active<?php endif; ?>.png">
 					</a>
-					<a href="index.php?option=com_botiga&view=botiga">
-						<img src="media/com_botiga/icons/lista<?php if($jinput->getCmd('layout', '') == '') : ?>-active<?php endif; ?>.png">
+					<a href="index.php?option=com_botiga&view=botiga&layout=table">
+						<img src="media/com_botiga/icons/lista<?php if($jinput->getCmd('layout', '') == 'table') : ?>-active<?php endif; ?>.png">
 					</a>
-					<span class="pl-3 phone-hide"><?= JText::_('COM_BOTIGA_FREE_SHIPPING_MSG'); ?>&nbsp;<img src="media/com_botiga/icons/envio_gratis.png"></span>
+					<span class="pl-3 phone-hide"><?= JText::sprintf('COM_BOTIGA_FREE_SHIPPING_MSG', $spain, $islands, $world); ?>&nbsp;<img src="media/com_botiga/icons/envio_gratis.png"></span>
 				</div>
 				<div class="col-3 text-right">
-					<a href="index.php?option=com_botiga&view=checkout" class="pr-1 carrito">
-						<?php if(botigaHelper::getCarritoCount() > 0) : ?>
-						<span class="badge badge-warning"><?= botigaHelper::getCarritoCount(); ?></span>
+					<a href="<?php if($count > 0) : ?>index.php?option=com_botiga&view=checkout<?php else: ?>#<?php endif; ?>" class="pr-1 carrito">
+						<?php if($count > 0) : ?>
+						<span class="badge badge-warning"><?= $count; ?></span>
 						<?php endif; ?>
 						<img src="media/com_botiga/icons/carrito.png">
 					</a>
@@ -227,7 +233,7 @@ $doc->addStylesheet('components/com_botiga/assets/css/jquery.fancybox.css');
 				                          <span class="fa fa-minus"></span>
 				                        </button>
 				                    </span>
-				                    <input type="text" id="quantity_<?= $this->item->id; ?>" name="qty" class="form-control bg-qty input-number text-center" value="1" min="1" max="100">
+				                    <input type="text" id="quantity_<?= $this->item->id; ?>" name="qty" class="form-control bg-qty input-number text-center" value="1" min="1" max="100" autofocus>
 				                    <span class="input-group-btn">
 				                        <button type="button" class="quantity-right-plus btn btn-primary btn-number" data-id="<?= $this->item->id; ?>">
 				                            <span class="fa fa-plus"></span>
@@ -239,9 +245,13 @@ $doc->addStylesheet('components/com_botiga/assets/css/jquery.fancybox.css');
 					</div>
 				</div>
 				<div class="col-xs-12 col-md-8">
+					<?php if(botigaHelper::isValidated()) : ?>
 					<button onclick="addtocart.submit();" class="btn btn-primary btn-block estil03">
 						<?= JText::_('COM_BOTIGA_BTN_BUY'); ?>
 					</button>
+					<?php else: ?>
+					<img src="media/com_botiga/icons/carrito_desactivado.png" alt="<?= JText::_('COM_BOTIGA_BTN_BUY'); ?>">
+					<?php endif; ?>
 				</div>
 		    </div>
 		    
@@ -282,12 +292,17 @@ $doc->addStylesheet('components/com_botiga/assets/css/jquery.fancybox.css');
 			<div class="mt-5"><?= $this->item->description; ?></div>
 			<?php endif; ?>	
 			
-			<div class="estil02 pt-4 text-primary"><i>¡Compartelo!</i></div>
+			<div class="estil02 pt-4 text-primary"><i><?= JText::_('COM_BOTIGA_SHARE'); ?></i></div>
 			<div class="mt-4">
-				<a href="" target="_blank"><img class="pr-3" title="Linkedin" src="images/sampledata/linkedin.png" alt="Linkedin" /></a>
-				<a href="" target="_blank"><img class="pr-3" title="Instagram" src="images/sampledata/instagram.png" alt="Instagram" /></a> 
-				<a href="" target="_blank"><img class="pr-3" title="Facebook" src="images/sampledata/facebook.png" alt="Facebook" /></a> 
-				<a href="" target="_blank"><img title="Twitter" src="images/sampledata/twiter.png" alt="Twitter" /></a>
+				<?php if(botigaHelper::getParameter('show_pinterest', 1) == 1) : ?>
+				<a href="https://pinterest.com/pin/create/button/?url=<?= urlencode(JFactory::getURI()->toString()); ?>&media=<?= urlencode(JURI::root().$image); ?>&description=<?= urlencode($this->item->name); ?>" target="_blank"><img class="pr-3" title="Instagram" src="media/com_botiga/icons/pinterest.png" alt="Pinterest" /></a> 
+				<?php endif; ?>
+				<?php if(botigaHelper::getParameter('show_facebook', 1) == 1) : ?>
+				<a href="https://www.facebook.com/sharer/sharer.php?u=<?= urlencode($this->item->name).'%0A'.urlencode(JFactory::getURI()->toString()); ?>" target="_blank"><img class="pr-3" title="Facebook" src="media/com_botiga/icons/facebook.png" alt="Facebook" /></a> 
+				<?php endif; ?>
+				<?php if(botigaHelper::getParameter('show_twitter', 1) == 1) : ?>
+				<a href="https://twitter.com/home?status=<?= urlencode($this->item->name).'%0A'.urlencode(JFactory::getURI()->toString()); ?>" target="_blank"><img title="Twitter" src="media/com_botiga/icons/twiter.png" alt="Twitter" /></a>
+				<?php endif; ?>
 			</p>
 		
         </div>                

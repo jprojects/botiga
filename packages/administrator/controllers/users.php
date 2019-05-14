@@ -29,6 +29,23 @@ class botigaControllerUsers extends JControllerAdmin
 	{
 		$model = parent::getModel($name, $prefix, array('ignore_request' => true));
 		return $model;
-	}  
+	} 
+	
+	public function validate()
+	{
+		$db = JFactory::getDbo();
+		$userid = JFactory::getApplication()->input->get('userid');
+		
+		$db->setQuery('UPDATE #__botiga_users SET validate = 1 WHERE userid = '.$userid);
+		if($db->query()) {
+			$msg = JText::_('COM_BOTIGA_USERS_VALIDATE_SUCCESS');
+			$type = 'success';
+		} else {
+			$msg = JText::_('COM_BOTIGA_USERS_VALIDATE_ERROR');
+			$type = 'error';
+		}
+		
+		$this->setRedirect('index.php?option=com_botiga&view=users', $msg, $type);
+	} 
 	
 }

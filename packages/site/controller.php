@@ -5,8 +5,8 @@
  * @copyright   Copyright © 2010 - All rights reserved.
  * @license		GNU/GPL
  * @author		kim
- * @author mail administracion@joomlanetprojects.com
- * @website		http://www.joomlanetprojects.com
+ * @author mail kim@aficat.com
+ * @website		http://www.aficat.com
  *
  */
 
@@ -22,119 +22,11 @@ class botigaController extends JControllerLegacy
 		parent::__construct();
     }
     
-    public function register() {
-	
-		// Check for request forgeries.
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
-		
-		$db 		= JFactory::getDbo();
-		$config 	= JFactory::getConfig();
-		$app   	   	= JFactory::getApplication();
-		$data 	   	= $app->input->post->get('jform', array(), 'array');
-		$valid      = true;
-		
-		$uparams = JComponentHelper::getParams( 'com_users' );
-		$new_user_type = $uparams->get('new_usertype', 2);
-		
-		if($data['password1'] !== $data['password2']) {
-			$msg  = JText::_('COM_BOTIGA_REGISTER_PASSWORD_NOT_MATCH');
-			$type = 'danger';
-			$valid = false;
-		}
-		if($data['email1'] !== $data['email2']) {
-			$msg  = JText::_('COM_BOTIGA_REGISTER_EMAIL_NOT_MATCH');
-			$type = 'danger';
-			$valid = false;
-		}
-
-		if($valid) {
-			//we need the encrypted password
-			jimport('joomla.user.helper');
-			$password = JUserHelper::hashPassword($data['password1']);
-		
-			//create joomla user
-			$user                   = new stdClass();
-			$user->name             = $data['nombre'];
-			$user->username         = $data['email1'];
-			$user->password         = $password;
-			$user->email            = $data['email1'];
-			$user->registerDate     = date('Y-m-d H:i:s');
-			//si esta configurat per activar desde administració (7) bloquejar user si no res
-			$user->block 			= $new_user_type == 7 ? 1 : 0;
-			
-			$valid = $db->insertObject('#__users', $user);
-			
-			$userid  = $db->insertid();
-			
-			if($valid) {
-			
-				//create acj user
-				$acjuser            	= new stdClass();
-				$acjuser->userid    	= $userid;
-			    $acjuser->usergroup 	= 2;
-			    $acjuser->nom_empresa	= $data['empresa'];
-			    $acjuser->mail_empresa	= $data['email1'];
-			    $acjuser->telefon		= $data['phone'];
-			    $acjuser->adreca		= $data['address'];
-			    $acjuser->cp			= $data['zip'];
-			    $acjuser->poblacio		= $data['city'];
-			    $acjuser->pais   		= $data['pais'];	
-			    $acjuser->cif   		= $data['cif'];
-			    $acjuser->telefon   	= $data['telefon'];	
-			    $acjuser->published	    = 1;
-			    
-			    $db->insertObject('#__botiga_users', $acjuser);    	        	
-			    
-				//create usergroups
-				$group              = new stdClass();
-				$group->user_id     = $userid;
-				$group->group_id    = 2; //group registered
-				$db->insertObject('#__user_usergroup_map', $group);
-				
-				//send email to the user with his credentials...
-				$mail = JFactory::getMailer();
-				$sender[]  	= $config->get('fromname');
-				$sender[]	= $config->get('mailfrom');
-				
-				$botiga_name = botigaHelper::getParameter('botiga_name');
-				
-				$mail->setSender( $sender );
-				
-				if($new_user_type == 2) {		
-				
-					$mail->addRecipient( $data['email1'] );
-					$mail->setSubject( JText::sprintf('COM_BOTIGA_REGISTER_SUBJECT', $botiga_name) );
-					$mail->setBody( JText::sprintf('COM_BOTIGA_REGISTER_BODY', $data['email1'], $data['password1']) );
-					
-				} else {
-
-					$mail->addRecipient( $data['email1'] );
-					$mail->setSubject( JText::sprintf('COM_BOTIGA_REGISTER_ADMIN_SUBJECT', $botiga_name) );
-					$mail->setBody( JText::_('COM_BOTIGA_REGISTER_ADMIN_BODY') );
-				}
-				
-				//ToDo::send email to admin needed??
-				
-				$mail->IsHTML(true);
-				$mail->Send();
-				
-				$msg  = JText::_('COM_BOTIGA_REGISTER_SUCCESS');
-				$type = '';
-			
-			} else {
-				$msg  = JText::_('COM_BOTIGA_REGISTER_ERROR');
-				$type = 'error';
-			}
-		}
-		
-		$this->setRedirect('index.php?option=com_botiga&view=register&Itemid=116', $msg, $type);
-	}
-    
-	/**
+	 /**
 	 * method to set item to favorites
 	 * @return bool 
 	 */
-     function setFavorite()
+     public function setFavorite()
      {
      	$db   = JFactory::getDbo();
      	$user = JFactory::getUser();
@@ -160,7 +52,7 @@ class botigaController extends JControllerLegacy
 	 * method to unset item from favorites
 	 * @return bool 
 	 */
-     function unsetFavorite()
+     public function unsetFavorite()
      {
      	$db   = JFactory::getDbo();
      	$user = JFactory::getUser();
@@ -178,6 +70,7 @@ class botigaController extends JControllerLegacy
      	$this->setRedirect($url, JText::_('COM_BOTIGA_UNSET_FAVORITE_SUCCESS'), 'info');
      }
      
+     //ToDo:: esta función viene con el sistema de documentos de la tienda, valorar si borrar o mejorar
      function sendPdf()
      {
      	$user   = JFactory::getUser();
@@ -601,9 +494,9 @@ class botigaController extends JControllerLegacy
 	
 		$fail = $errors_brands + $errors_categories + $errors_items + $errors_prices;
 		if($integritat==true && $fail == 0) { 
-		 	$this->sendEmail( JText::_('COM_BOTIGA_CRON_SUBJECT_OK'), JText::_('COM_BOTIGA_CRON_BODY_OK'), $_SERVER['DOCUMENT_ROOT'].'/sincro/log.txt' );
+		 	$this->sendEmail('carles@afi.cat', JText::_('COM_BOTIGA_CRON_SUBJECT_OK'), JText::_('COM_BOTIGA_CRON_BODY_OK'), $_SERVER['DOCUMENT_ROOT'].'/sincro/log.txt' );
 		} else {
-		 	$this->sendEmail( JText::_('COM_BOTIGA_CRON_SUBJECT_ERR'), JText::_('COM_BOTIGA_CRON_BODY_ERR'),$_SERVER['DOCUMENT_ROOT'].'/sincro/log.txt'  );
+		 	$this->sendEmail('carles@afi.cat', JText::_('COM_BOTIGA_CRON_SUBJECT_ERR'), JText::_('COM_BOTIGA_CRON_BODY_ERR'),$_SERVER['DOCUMENT_ROOT'].'/sincro/log.txt'  );
 		}
 		
 		fclose( $log );
@@ -628,18 +521,23 @@ class botigaController extends JControllerLegacy
 		}
 	}
 						
-	function sendEmail($subject,$body,$attachment)
+	public function sendEmail($email, $subject, $body, $attachment='')
 	{
-		$email    = array( 'carles@aficat.com', 'parts@acjsystems.com' );
 		$config   = JFactory::getConfig();
 		$mail 	  = JFactory::getMailer();
+		
 		$sender[] = $config->get('fromname');
-		$sender[] = $config->get('mailfrom');    	   
+		$sender[] = $config->get('mailfrom');
+		
+		$botiga_name = botigaHelper::getParameter('botiga_name');
+		$botiga_logo = botigaHelper::getParameter('botiga_logo');
+		
+		$htmlbody = '<div style="width:100%!important;height:100%;background-color:#683b2b;"><table style="width:50%;padding:20px;margin: 0 auto;"><tr><td></td><td style="text-align:center;background-color:#ffcd00;display:block!important;max-width:600px!important;margin:0"><img src="'.JURI::root().$botiga_logo.'" alt="'.$botiga_name.'" style="margin-top:10px;" /><div style="padding:30px;max-width:600px;margin:0"><table width="100%"><tr><td><p style="color:#683b2b;">'.$body.'</p><p></p><a style="color:#683b2b;" href="'.JURI::root().'">'.$botiga_name.'</a></td></tr></table></div></td><td></td></tr></table></div>';    	   
 	     	
 		$mail->setSender( $sender );
 		$mail->addRecipient( $email );
 		$mail->setSubject( $subject );
-		$mail->setBody( $body );
+		$mail->setBody( $htmlbody );
 		$mail->addAttachment( $attachment );
 		$mail->IsHTML(true);
 		$mail->Send();
@@ -669,172 +567,6 @@ class botigaController extends JControllerLegacy
 				echo $file . '<br/>';
 			}
 		}
-	}
-	
-	public function enviar($subject, $body, $email) 
-	{
-		$mail 		= JFactory::getMailer();
-		$config 	= JFactory::getConfig();
-
-		$fromname  	= $config->get('fromname');
-		$mailfrom	= $config->get('mailfrom');	
-	
-		$sender[]  	= $fromname;
-		$sender[]	= $mailfrom;	
-		
-        $mail->setSender( $sender );
-        $mail->addRecipient( $email );
-        $mail->setSubject( $subject );
-        $mail->setBody( $body );
-        $mail->IsHTML(true);
-        
-		return $mail->Send();			
-	}
-	
-	public function sendModalEmail()
-	{
-		$app   	   = JFactory::getApplication();
-		$data 	   = $app->input->getArray($_POST);
-
-		$subject   = "Nova solicitut d'informació desde el web";
-		$body      = "Hem rebut una nova solicitut del producte ".$data['maquina']." desde el web, aquestes son les dades del formulari:<br>";
-		$body     .= "Nom i cognoms: ".$data['nombre']."<br>";
-		$body     .= "Email: ".$data['email']."<br>";
-		$body     .= "Telèfon: ".$data['phone']."<br>";
-		$body     .= "Missatge:<br>".$data['mensaje']."<br>";
-
-		$send = $this->enviar($subject, $body, 'info@acjsystems.com');
-
-		if($send) {
-			$link = $data['url'];
-			$msg  = 'La solicitud ha sido enviada correctamente, en breve nos pondremos en contacto contigo.';
-			$type = 'info';
-		} else {
-			$link = $data['url'];
-			$msg  = 'Hubo un fallo al tratar de enviar la solicitud, vuelve a intentarlo por favor.';
-			$type = 'error';
-		}
-			
-		$this->setRedirect($link, $msg, $type);
-	}
-	
-	public function genPdf()
-	{
-		jimport('fpdf.fpdf');
-		jimport('fpdfi.fpdi');
-		
-		$jinput = JFactory::getApplication()->input;
-		$id     = $jinput->get('id');
-
-		$pdf 	= new FPDI();
-		
-		$pdf->AddPage();
-		
-		$pdf->setSourceFile(JPATH_COMPONENT.DS.'assets'.DS.'pdf'.DS.'invoice.pdf');
-		
-		$tplIdx = $pdf->importPage(1);
-		$pdf->useTemplate($tplIdx, 0, 0, 0, 0, true);
-
-		define('EURO', chr(128));
-
-		$db = JFactory::getDbo();
-		$db->setQuery('SELECT c.*, u.mail_empresa as email, u.cif, u.telefon, u.metodo_pago FROM #__botiga_comandes c INNER JOIN #__botiga_users u ON u.userid = c.userid WHERE c.id = '.$id);
-		$com = $db->loadObject();
-
-		$db->setQuery('SELECT cd.*, i.name, i.ref as referencia, i.image1 as image FROM #__botiga_comandesDetall cd INNER JOIN #__botiga_items i ON cd.iditem = i.id WHERE cd.idComanda = '.$id);
-		$db->query();
-		$num_rows = $db->getNumRows();
-		$detalls  = $db->loadObjectList();
-		
-		$height = 45;
-		
-		$pdf->SetFont('Arial', '', '10');
-		
-		if($num_rows >= 12) { $pag = 2; } else { $pag = 1; }
-		
-		//user
-		$pdf->SetXY(170, $height); 
-		$pdf->Cell(15, 5, $com->telefon, 0, 0, 'R');
-		$height += 4;
-		$pdf->SetXY(121, $height); 
-		$pdf->Cell(16, 5, $com->cif, 0, 0, 'R');
-		$pdf->SetXY(170, $height); 
-		$pdf->Cell(15, 5, $com->email, 0, 0, 'R');
-		
-		//metadata
-		$height = 71;
-		$pdf->SetXY(20, $height); 
-		$pdf->Cell(15, 5, 'WEB00'.$id, 0, 0, 'R');
-		$pdf->SetXY(40, $height);
-		$pdf->Cell(15, 5, 'Pag. 1/'.$pag, 0, 0, 'R');
-		$pdf->SetXY(80, $height);
-		$pdf->Cell(15, 5, date('d-m-Y', strtotime($com->data)), 0, 0, 'R');
-		
-		//detall
-		$total   = 0;		
-		$height  = 85;
-		$counter = 0;
-		
-		foreach($detalls as $detall) {
-		
-			if($counter == 12) {
-				$pdf->AddPage();
-				$pdf->setSourceFile(JPATH_COMPONENT.DS.'assets'.DS.'pdf'.DS.'albaran.pdf');
-				$tplIdx2 = $pdf->importPage(1);
-				$pdf->useTemplate($tplIdx2, 0, 0, 0, 0, true);
-				$height = 71;		
-				$pdf->SetFont('Arial', '', '10');
-				$pdf->SetXY(20, $height); 
-				$pdf->Cell(15, 5, 'WEB00'.$id, 0, 0, 'R');
-				$pdf->SetXY(40, $height);
-				$pdf->Cell(15, 5, 'Pag. 2/2', 0, 0, 'R');
-				$pdf->SetXY(80, $height);
-				$pdf->Cell(15, 5, date('d-m-Y', strtotime($com->data)), 0, 0, 'R');
-				$height  = 85;
-			}
-	
-			$pdf->SetXY(20, $height);  
-			$pdf->Cell(30, 5, $detall->referencia, 0, 0, '');
-			$pdf->SetXY(60, $height);  
-			$pdf->Cell(90, 5, utf8_decode($detall->name), 0, 0, '');
-			$pdf->SetXY(110, $height); 
-			$pdf->Cell(20, 5, $detall->qty, 0, 0, 'R');	
-			$pdf->SetXY(145, $height);
-			$pdf->Cell(20, 5, number_format($detall->price, 2, ',', '.').EURO, 0, 0, '');
-			$pdf->SetXY(150, $height); 
-			$pdf->Cell(20, 5, 0, 0, 0, 'R');
-			$pdf->SetXY(172, $height); 
-			$pdf->Cell(15, 5, number_format(($detall->price * $detall->qty), 2, ',', '.').EURO, 0, 0, '');
-			
-			$height += 6;
-			$counter++;
-		}
-		
-		$height = 243;
-		$pdf->SetFont('Arial', 'B', '10');
-		$pdf->SetXY(55, $height);  
-		$pdf->Cell(30, 5, number_format($com->subtotal, 2, ',', '.').EURO, 0, 0, 'R');
-		$pdf->SetXY(75, $height); 
-		$pdf->Cell(30, 5, $com->iva_percent.'%', 0, 0, 'R');
-		$pdf->SetXY(95, $height);
-		$pdf->Cell(30, 5, number_format($com->iva_total, 2, ',', '.').EURO, 0, 0, 'R');
-
-		$pdf->SetXY(163, $height); 
-		$pdf->Cell(30, 5, number_format(($com->total), 2, ',', '.').EURO, 0, 0, 'R');
-		
-		$height += 10;
-		
-		$pdf->SetXY(35, $height); 
-		$com->metodo_pago == '' ? $metodo_pago = 'Pago habitual' : $metodo_pago = $com->metodo_pago;
-		$pdf->Cell(30, 5, utf8_decode($metodo_pago), 0, 0, 'R');
-		
-		$height += 12;
-		
-		$pdf->SetXY(125, $height); 
-		$pdf->Cell(30, 5, utf8_decode($com->observa), 0, 0, 'R');
-
-		$pdf->Output('presupuesto_'.$id.'.pdf', 'D');
-		die();
 	}
 }
 ?>

@@ -57,34 +57,7 @@ class botigaViewHistory extends JViewLegacy
             $this->document->setMetadata('robots', $this->params->get('robots'));
         }
 
-		$this->_prepareDocument();
-
 		parent::display($tpl);
-	}
-        
-    /**
-	 * Method to set up the document properties
-	 *
-	 * @return void
-	*/
-	protected function _prepareDocument()
-	{
-		$app        = JFactory::getApplication();		
-        $document   = JFactory::getDocument();
-		$menus      = $app->getMenu();
-		$title      = null;
-
-		// Because the application sets a default page title,
-		// we need to get it from the menu item itself
-		$menu = $menus->getActive();
-		if($menu)
-		{
-			$title = $menu->title;
-		} else {
-			$title = JText::_('COM_BOTIGA_HISTORY_TITLE');
-		}
-
-		$this->document->setTitle($title);
 	}
 }
 ?>

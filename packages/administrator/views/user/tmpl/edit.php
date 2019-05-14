@@ -52,10 +52,7 @@ else{
 			<legend><?php echo JText::_( 'COM_LAUNDRY_USER_DETAILS' ); ?></legend>
 			
 				<?php foreach($this->form->getFieldset('details') as $field): ?>
-						<div class="control-group">
-						<div class="control-label"><?php echo $field->label; ?></div>
-						<div class="controls"><?php echo $field->input ?></div>
-						</div>
+						<?php echo $field->renderField() ?>
 	    		<?php endforeach; ?>
 
 		</fieldset>

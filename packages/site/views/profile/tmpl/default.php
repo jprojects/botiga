@@ -15,7 +15,28 @@ defined('_JEXEC') or die('Restricted access');
 
 JHtml::_('behavior.keepalive');
 JHtml::_('behavior.formvalidator');
-$user = JFactory::getUser();
+$user  = JFactory::getUser();
+$app   = JFactory::getApplication();
+
+if($user->guest) {
+	$returnurl = JRoute::_('index.php?option=com_users&view=login&return='.base64_encode(JUri::current()), false);
+    $app->redirect($returnurl, JText::_('COM_BOTIGA_REDIRECT_GUESTS'), 'warning');
+}
+
+$f  = array();
+$f[1] = botigaHelper::getParameter('show_field_tipus', 1);
+$f[2] = botigaHelper::getParameter('show_field_empresa', 1);
+$f[3] = botigaHelper::getParameter('show_field_cif', 1);
+$f[4] = botigaHelper::getParameter('show_field_nom', 1);
+$f[5] = botigaHelper::getParameter('show_field_phone', 1);
+$f[6] = 1;
+$f[7] = 1;
+$f[8] = 1;
+$f[9] = 1;
+$f[10] = botigaHelper::getParameter('show_field_address', 1);
+$f[11] = botigaHelper::getParameter('show_field_cp', 1);
+$f[12] = botigaHelper::getParameter('show_field_state', 1);
+$f[13] = botigaHelper::getParameter('show_field_pais', 1);
 ?>
 
 <style>#page-header { border: none; }</style>
@@ -32,14 +53,15 @@ $user = JFactory::getUser();
 
 		<form name="register" id="register" action="<?= JRoute::_('index.php?option=com_botiga&view=profile&task=profile.profile'); ?>" method="post" class="form-horizontal form-validate">
 				<input type="hidden" name="jform[id]" value="<?= $user->id; ?>" />
-				<?php foreach($this->form->getFieldset('profile') as $field): ?>
-				<div class="control-group">
-					<div class="form-group">
-							<label class="col-sm-2 control-label"><?php echo $field->label; ?></label>
-							<div class="col-sm-10"><?php echo $field->input ?></div>
-					</div>
-				</div>
-				<?php endforeach; ?>
+				<?php 
+				$i = 1;
+				foreach($this->form->getFieldset('profile') as $field): ?>
+				<?php if($f[$i] == 1): ?> 
+				<?= $field->renderField(); ?>
+				<?php endif; ?>
+				<?php 
+				$i++;
+				endforeach; ?>
 				
 				<div class="checkbox text-right">
 				  <label>

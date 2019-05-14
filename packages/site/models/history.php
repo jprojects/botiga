@@ -5,8 +5,8 @@
  * @copyright   Copyright © 2010 - All rights reserved.
  * @license		GNU/GPL
  * @author		kim
- * @author mail administracion@joomlanetprojects.com
- * @website		http://www.joomlanetprojects.com
+ * @author mail kim@aficat.com
+ * @website		http://www.aficat.com
  *
 */
 
@@ -91,7 +91,6 @@ class botigaModelHistory extends JModelList
 	function getListQuery()
 	{
     	$user = JFactory::getUser();
-    	$session = JFactory::getSession();
         
 		$db   = $this->getDbo();
 

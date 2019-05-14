@@ -82,6 +82,38 @@ class plgUserBotiga_users extends JPlugin
 			return;
 		}
 	}
+	
+	/**
+	 * This method should handle any login logic and report back to the subject
+	 *
+	 * @param   array  $user     Holds the user data
+	 * @param   array  $options  Array holding options (remember, autoregister, group)
+	 *
+	 * @return  boolean  True on success
+	 *
+	 * @since   1.5
+	 */
+	public function onUserLogin($user, $options = array())
+	{
+		$instance = $this->_getUser($user, $options);
+
+		// If _getUser returned an error, then pass it back.
+		if ($instance instanceof Exception)
+		{
+			return false;
+		}
+
+		$session = JFactory::getSession();
+		$db 	 = JFactory::getDbo();
+
+		// Grab the current session ID
+		$oldSessionId = $session->getId();
+			
+		$db->setQuery('UPDATE #__botiga_comandes SET userid = '.$instance->id.' WHERE sessid = '.$db->quote($oldSessionId));
+		$db->Query();								
+
+		return true;
+	}
 
 	/**
 	 * This method will return a user object

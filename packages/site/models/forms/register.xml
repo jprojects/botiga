@@ -2,13 +2,28 @@
 <form>
 	<fieldset name="register">		
 		<field 
+			name="type"  
+			type="list" 
+			label="COM_BOTIGA_REGISTER_TYPE_LBL"
+			description="COM_BOTIGA_REGISTER_TYPE_DSC" 
+			default="" 
+			class="form-control estil02" 
+			labelclass="control-label estil03 pt-4"
+			required="true"
+        >	
+        <option value="">COM_BOTIGA_SELECT_AN_OPTION</option>
+		<option value="0">COM_BOTIGA_REGISTER_TYPE_CLIENT</option>
+		<option value="1">COM_BOTIGA_REGISTER_TYPE_EMPRESA</option>
+        </field>
+		<field 
 			name="empresa"  
 			type="text" 
 			label="COM_BOTIGA_REGISTER_NOMBRE_EMPRESA_LBL"
 			description="COM_BOTIGA_REGISTER_NOMBRE_EMPRESA_DSC" 
 			default="" 
-			class="form-control" 			
-			required="true"
+			showon="type:1"
+			class="form-control estil02" 
+			labelclass="control-label estil03 pt-4"			
         />
 		<field 
 			name="cif"  
@@ -16,8 +31,9 @@
 			label="COM_BOTIGA_REGISTER_CIF_LBL"
 			description="COM_BOTIGA_REGISTER_CIF_DSC" 
 			default="" 
-			class="form-control" 
-			required="true"
+			showon="type:1"
+			class="form-control estil02" 
+			labelclass="control-label estil03 pt-4" 
         />        
 		<field 
 			name="nombre"  
@@ -25,73 +41,18 @@
 			label="COM_BOTIGA_REGISTER_NOMBRE_LBL"
 			description="COM_BOTIGA_REGISTER_NOMBRE_DSC" 
 			default="" 
-			class="form-control" 
+			class="form-control estil02" 
+			labelclass="control-label estil03 pt-4"
 			required="true"
         />
-        <field 
-			name="cargo"  
-			type="text" 
-			label="COM_BOTIGA_REGISTER_CARGO_LBL"
-			description="COM_BOTIGA_REGISTER_CARGO_DSC" 
-			default="" 
-			class="form-control" 
-			required="true"
-        />
-        <field 
-			name="phone"  
-			type="text" 
-			label="COM_BOTIGA_REGISTER_PHONE_LBL"
-			description="COM_BOTIGA_REGISTER_PHONE_DSC" 
-			default="" 
-			class="form-control" 
-			required="true"
-        /> 
-        <field 
-			name="address"  
-			type="text" 
-			label="COM_BOTIGA_REGISTER_ADDRESS_LBL"
-			description="COM_BOTIGA_REGISTER_ADDRESS_DSC" 
-			default="" 
-			class="form-control" 
-			required="true"
-        />
-        <field 
-			name="cp"  
-			type="text" 
-			label="COM_BOTIGA_REGISTER_CP_LBL"
-			description="COM_BOTIGA_REGISTER_CP_DSC" 
-			default="" 
-			class="form-control" 
-			required="true"
-        />
-        <field 
-			name="city"  
-			type="text" 
-			label="COM_BOTIGA_REGISTER_CITY_LBL"
-			description="COM_BOTIGA_REGISTER_CITY_DSC" 
-			default="" 
-			class="form-control" 
-			required="true"
-        /> 
-        <field 
-			name="pais" 
-			type="sql" 
-			label="COM_BOTIGA_REGISTER_PAIS_LABEL" 
-			description="COM_BOTIGA_REGISTER_PAIS_DESC" 
-			default="195"
-			query="SELECT country_id, country_name FROM #__botiga_countries"
-    		key_field="country_id"
-    		value_field="country_name"
-    		class="form-control" 
-			required="true"
-		/>       
         <field 
 			name="email1"  
 			type="text" 
 			label="COM_BOTIGA_REGISTER_EMAIL_LBL"
 			description="COM_BOTIGA_REGISTER_EMAIL_DSC" 
 			default="" 
-			class="form-control validate-email" 
+			class="form-control estil02 validate-email" 
+			labelclass="control-label estil03 pt-4"
 			field="id"
 			required="true"
 			unique="true"
@@ -104,10 +65,11 @@
 			label="COM_BOTIGA_REGISTER_EMAIL2_LBL"
 			description="COM_BOTIGA_REGISTER_EMAIL2_DSC" 
 			default="" 
-			class="form-control validate-email" 
+			class="form-control estil02 validate-email" 
+			labelclass="control-label estil03 pt-4"
 			field="email1"
-			required="true"
 			validate="equals"
+			required="true"
         />
         <field 
 			name="password1"  
@@ -115,11 +77,13 @@
 			label="COM_BOTIGA_REGISTER_PWD_LBL"
 			description="COM_BOTIGA_REGISTER_PWD_DSC" 
 			default="" 
-			class="form-control validate-password" 
+			class="form-control estil02 validate-password"
+			labelclass="control-label estil03 pt-4" 
 			autocomplete="off"
-			required="true"
 			validate="password"
 			field="password1"
+			required="true"
+			hint="COM_BOTIGA_REGISTER_PWD_HINT"
         />
         <field 
 			name="password2"  
@@ -127,11 +91,66 @@
 			label="COM_BOTIGA_REGISTER_PWD2_LBL"
 			description="COM_BOTIGA_REGISTER_PWD2_DSC" 
 			default="" 
-			class="form-control validate-password" 
+			class="form-control estil02 validate-password" 
+			labelclass="control-label estil03 pt-4"
 			autocomplete="off"
 			field="password1"
 			validate="equals"
 			required="true"
         />
+        <field 
+			name="phone"  
+			type="text" 
+			label="COM_BOTIGA_REGISTER_PHONE_LBL"
+			description="COM_BOTIGA_REGISTER_PHONE_DSC" 
+			default="" 
+			class="form-control estil02" 
+			labelclass="control-label estil03 pt-4"
+        /> 
+        <field 
+			name="address"  
+			type="text" 
+			label="COM_BOTIGA_REGISTER_ADDRESS_LBL"
+			description="COM_BOTIGA_REGISTER_ADDRESS_DSC" 
+			default="" 
+			class="form-control estil02" 
+			labelclass="control-label estil03 pt-4"
+			required="true"
+        />
+        <field 
+			name="cp"  
+			type="text" 
+			label="COM_BOTIGA_REGISTER_CP_LBL"
+			description="COM_BOTIGA_REGISTER_CP_DSC" 
+			default="" 
+			class="form-control estil02 validate-numeric" 
+			labelclass="control-label estil03 pt-4"
+			required="true"
+        />
+        <field 
+			name="city"  
+			type="text" 
+			label="COM_BOTIGA_REGISTER_CITY_LBL"
+			description="COM_BOTIGA_REGISTER_CITY_DSC" 
+			default="" 
+			class="form-control estil02" 
+			labelclass="control-label estil03 pt-4" 
+			required="true"
+        /> 
+        <field 
+			name="pais" 
+			type="sql" 
+			label="COM_BOTIGA_REGISTER_PAIS_LABEL" 
+			description="COM_BOTIGA_REGISTER_PAIS_DESC" 
+			default=""
+			query="SELECT country_id, country_name FROM #__botiga_countries"
+    		key_field="country_id"
+    		value_field="country_name"
+    		class="form-control estil02" 
+			labelclass="control-label estil03 pt-4"
+			required="true"
+		>
+    		<option value="">COM_BOTIGA_SELECT_AN_OPTION</option>
+		</field>      
 	</fieldset>
 </form>

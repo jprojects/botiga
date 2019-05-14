@@ -148,69 +148,92 @@ class botigaModelCheckout extends JModelList
 	{
 		jimport( 'joomla.access.access' );
 		
-		$db 	= JFactory::getDbo();
-		$user 	= JFactory::getUser();
-		$groups = JAccess::getGroupsByUser($user->id, false);
+		$db 	 = JFactory::getDbo();
+		$user 	 = JFactory::getUser();
+		$session = JFactory::getSession();
+		$groups  = JAccess::getGroupsByUser($user->id, false);
 		
-		//if amount > config free shipment return 0
-		$free     = botigaHelper::getParameter('total_shipment', 250);
-		if($amount > $free) { return 0; }
+		$idComanda = $session->get('idComanda', '');					
 		
-		$operator = '%';
+		$shipment_discount = 0;
 		
-		$db->setQuery('select * from #__botiga_shipments where published = 1 and usergroup in ('.implode(',', $groups).')');
-		$rows = $db->loadObjectList();
+		$db->setQuery('SELECT pais, cp FROM #__botiga_users WHERE userid = '.$user->id);
+		$usr = $db->loadObject();
+		
+		$db->setQuery('SELECT * FROM #__botiga_shipments WHERE published = 1 AND usergroup IN ('.implode(',', $groups).')');
+		$rows = $db->loadObjectList();				
 		
 		foreach($rows as $row) {
-		
-			if($row->type == 1) {
+
+			if($amount > $row->free) { return 0; } //el pedido supera el porte mínimo, salimos retornando 0
 			
-				$db->setQuery('select pais, cp from #__botiga_users where userid = '.$user->id);
-				$usr = $db->loadObject();
-		
-				//type 1 is zip code method
-				$db->setQuery('select total, min, max, operator from #__botiga_shipments where country = '.$usr->pais.' and type = 1 and published = 1');
-				foreach($db->loadObjectList() as $ship)
-				{
-					//9999 throw a message...
-					if($ship->total == 9999) { return 9999; }
+			$countries = explode(';', $row->country);
+				
+			if($row->conditional == 0) { 
+				if (!in_array($usr->pais, $countries)) {
+					botigaHelper::customLog($row->id.' same countries fail');
+					continue; //same countries fail end iteration					
+				}
+			} else {
+				if (in_array($usr->pais, $countries)) {
+					botigaHelper::customLog($row->id.' distinct countries fail');
+					continue; //distinct countries fail end iteration
+				}
+			}
+			
+			$total 		= $row->total;
+			$operator 	= $row->operator;
+			
+			//type 1 shippment by zip code method
+			if($row->type == 1) {									
+				
+				if($usr->cp >= $row->min && $usr->cp <= $row->max) {												
 					
-					if($usr->cp >= $ship->min && $usr->cp <= $ship->max) {
-						$total = $ship->total;
-						$operator = $ship->operator;						
-						break;
+					//make operations
+					if($operator == '%') {
+						$shipment_discount += ($total / 100) * $amount;
+					}
+					if($operator == '+') {
+						$shipment_discount += $total;
 					}
 				}
 			}
 			
+			//type 2 shippment by weight method
+			if($row->type == 2) {
 			
-			if($row->type == 3) {
+			botigaHelper::customLog($row->id.' inside type 2');
+				
+				$db->setQuery('SELECT SUM(i.pes) FROM #__botiga_items AS i INNER JOIN #__botiga_comandesDetall AS cd ON cd.idItem = i.id  where cd.idComanda = '.$idComanda);
+				$weight   = $db->loadResult() / 10;
+				
+				//make operations
+				if($operator == '%') {
+					$shipment_discount += ($total / 100) * $amount;
+				}
+				if($operator == '+') {
+					$shipment_discount += $total;
+				}
+				
+				$shipment_discount * $weight; //multiplicamos la cantidad a sumar al carro por las veces que se repite el peso
 			
-				$db->setQuery('select pais from #__botiga_users where userid = '.$user->id);
-				$pais = $db->loadResult();
-			/*
-				//type 3 is country
-				$db->setQuery('select total, operator from #__botiga_shipments where country = '.$pais.' and type = 3 and published = 1');
-				$result   = $db->loadObject();
-				$operator = $result->operator;
-				$total    = $result->total;	
-			*/
-				//195 not spain -> 9999 throw a message...
-				if($pais != 195) { return 9999; }			
 			}
 			
-		
-			//ToDo::new methods by total amount, by weight...
+			//type 3 shippment by country method
+			if($row->type == 3) {								
+				
+				//make operations
+				if($operator == '%') {
+					$shipment_discount += ($total / 100) * $amount;
+				}
+				if($operator == '+') {
+					$shipment_discount += $total;
+				}
+			
+			}
 		}		
-
-		//check operator
-		if($operator == '%') {
-			$shipment = ($total / 100) * $amount;
-		}
-		if($operator == '+') {
-			$shipment = $total;
-		}
-		return number_format($shipment, 2, '.', '');
+		
+		return number_format($shipment_discount, 2, '.', '');
 		
 	}
 }

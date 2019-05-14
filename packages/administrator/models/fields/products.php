@@ -21,7 +21,7 @@ jimport('joomla.form.formfield');
  * @subpackage	com_laundry
  * @since	1.6
  */
-class JFormFieldBrands extends JFormField
+class JFormFieldProducts extends JFormField
 {
 	/**
 	 * The form field type.
@@ -29,7 +29,7 @@ class JFormFieldBrands extends JFormField
 	 * @var		string
 	 * @since	1.6
 	 */
-	protected $type = 'Brands';
+	protected $type = 'Products';
 
 	/**
 	 * Method to get the field input markup.
@@ -44,7 +44,7 @@ class JFormFieldBrands extends JFormField
 
 		// Build the script.
 		$script = array();
-		$script[] = '	function jSelectBrand_'.$this->id.'(id, name, object) {';
+		$script[] = '	function jSelectProduct_'.$this->id.'(id, name, object) {';
 		$script[] = '		document.id("'.$this->id.'_id").value = id;';
 		$script[] = '		document.id("'.$this->id.'_name").value = name;';
 		$script[] = '		SqueezeBox.close();';
@@ -56,13 +56,13 @@ class JFormFieldBrands extends JFormField
 
 		// Setup variables for display.
 		$html	= array();
-		$link	= 'index.php?option=com_botiga&amp;view=brands&amp;task=element&amp;layout=modal&amp;tmpl=component&amp;function=jSelectBrand_'.$this->id;
+		$link	= 'index.php?option=com_botiga&amp;view=items&amp;task=element&amp;layout=modal&amp;tmpl=component&amp;function=jSelectProduct_'.$this->id;
 
 		$db	= JFactory::getDBO(); 
                 
 		$db->setQuery(
 			'SELECT name' .
-			' FROM #__botiga_brands' .
+			' FROM #__botiga_items' .
 			' WHERE id = '.(int) $this->value
 		);
 		$title = $db->loadResult();
@@ -72,14 +72,14 @@ class JFormFieldBrands extends JFormField
 		}
 
 		if (empty($title)) {
-			$title = JText::_('COM_BOTIGA_SELECT_BRAND');
+			$title = JText::_('COM_BOTIGA_SELECT_ITEM');
 		}
 		$title = htmlspecialchars($title, ENT_QUOTES, 'UTF-8');
 
 		// The current user display field.
 		$html[] = '<div class="input-append">';
 		$html[] = '  <input type="text" id="'.$this->id.'_name" value="'.$title.'" disabled="disabled" size="35" />';
-		$html[] = '	<a class="btn btn-primary button-select modal" title="'.JText::_('COM_BOTIGA_SELECT_BRAND').'"  href="'.$link.'" rel="{handler: \'iframe\', size: {x: 800, y: 450}}">'.JText::_('COM_BOTIGA_SELECT_BRAND').'</a>';
+		$html[] = '	<a class="btn btn-primary button-select modal" title="'.JText::_('COM_BOTIGA_SELECT_ITEM').'"  href="'.$link.'" rel="{handler: \'iframe\', size: {x: 800, y: 450}}">'.JText::_('COM_BOTIGA_SELECT_ITEM').'</a>';
 		$html[] = '</div>';
 
 		// The active article id field.

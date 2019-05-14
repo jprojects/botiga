@@ -5,8 +5,8 @@
  * @copyright   Copyright © 2010 - All rights reserved.
  * @license		GNU/GPL
  * @author		kim
- * @author mail administracion@joomlanetprojects.com
- * @website		http://www.joomlanetprojects.com
+ * @author mail kim@aficat.com
+ * @website		http://www.aficat.com
  *
 */
 
@@ -53,6 +53,11 @@ class botigaControllerProfile extends botigaController {
 			$type = 'danger';
 			$valid = false;
 		}
+		if($data['address'] == '' || $data['cp'] == '' || $data['city'] == '' || $data['pais'] == '') {
+			$msg  = JText::_('COM_BOTIGA_REGISTER_SHIPMENT_MANDATORY');
+			$type = 'danger';
+			$valid = false;
+		}
 
 		if($valid) {	
 		
@@ -62,9 +67,9 @@ class botigaControllerProfile extends botigaController {
 			//create joomla user
 			$user                   = new stdClass();
 			$user->id               = $data['id'];
+			$user->username         = $data['nombre'];
 			
-			if($data['email2'] != '' && ($data['email1'] == $data['email2'])) {
-				$user->username         = $data['email1'];
+			if($data['email2'] != '' && ($data['email1'] == $data['email2'])) {				
 				$user->email            = $data['email1'];
 				$mail = true;
 			}
@@ -80,10 +85,12 @@ class botigaControllerProfile extends botigaController {
 			
 			if($valid) {
 			
-				//create botiga user
+				//edit botiga user
 				$acjuser            	= new stdClass();
 				$acjuser->userid    	= $data['id'];
+				$acjuser->type			= $data['type'];
 			    $acjuser->nom_empresa	= $data['empresa'];
+			    $acjuser->nombre		= $data['nombre'];
 			    $acjuser->mail_empresa	= $data['email1'];
 			    $acjuser->telefon		= $data['phone'];
 			    $acjuser->cargo			= $data['cargo'];
@@ -92,19 +99,18 @@ class botigaControllerProfile extends botigaController {
 			    $acjuser->poblacio		= $data['city'];
 			    $acjuser->pais   		= $data['pais'];	
 			    $acjuser->cif   		= $data['cif'];	
-			     $acjuser->cp   		= $data['cp'];
 			    
 			    $db->updateObject('#__botiga_users', $acjuser, 'userid');    	        	
 			
-				$msg  = JText::_('El perfil se ha guardado correctamente.');
-				$type = '';
+				$msg  = JText::_('COM_BOTIGA_PROFILE_SUCCESS');
+				$type = 'success';
 			
 			} else {
-				$msg  = JText::_('Hubo un error al guardar el perfil, intentelo de nuevo.');
+				$msg  = JText::_('COM_BOTIGA_PROFILE_ERROR');
 				$type = 'error';
 			}
 		}
 		
-		$this->setRedirect('index.php?option=com_botiga&view=profile&Itemid=121', $msg, $type);
+		$this->setRedirect('index.php?option=com_botiga&view=history', $msg, $type);
 	}
 }

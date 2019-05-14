@@ -33,6 +33,12 @@ $showbrand 	= botigaHelper::getParameter('show_brand', 1);
 $showfav 	= botigaHelper::getParameter('show_fav', 1);
 $showpvp 	= botigaHelper::getParameter('show_pvp', 1);
 $userToken  = JSession::getFormToken();
+
+$spain 		= botigaHelper::getParameter('total_shipment_spain', 25);
+$islands 	= botigaHelper::getParameter('total_shipment_islands', 50);
+$world 		= botigaHelper::getParameter('total_shipment_world', 60);
+
+$count 	    = botigaHelper::getCarritoCount();
 ?>
 
 <?php if(botigaHelper::getParameter('show_header', 0) == 1) : ?>
@@ -43,26 +49,26 @@ $userToken  = JSession::getFormToken();
 		<div class="row">
 
 		<?php if($logo != '') : ?>
-		<div class="col-12 text-right">
-			<img src="<?= $logo; ?>" alt="<?= botigaHelper::getParameter('botiga_name', ''); ?>" class="img-fluid">
+		<div class="col-12 text-right d-none d-sm-block">
+			<a href="index.php"><img src="<?= $logo; ?>" alt="<?= botigaHelper::getParameter('botiga_name', ''); ?>" class="img-fluid"></a>
 		</div>
 		<?php endif; ?>	
 		
 		<div class="col-12 mt-3">
 			<div class="row">
 				<div class="col-9 text-left">			
-					<a href="index.php?option=com_botiga&view=botiga&layout=table" class="pr-1">
-						<img src="media/com_botiga/icons/mosaico<?php if($jinput->getCmd('layout', '') == 'table') : ?>-active<?php endif; ?>.png">
+					<a href="index.php?option=com_botiga&view=botiga" class="pr-1">
+						<img src="media/com_botiga/icons/mosaico<?php if($jinput->getCmd('layout', '') == '') : ?>-active<?php endif; ?>.png">
 					</a>
-					<a href="index.php?option=com_botiga&view=botiga">
-						<img src="media/com_botiga/icons/lista<?php if($jinput->getCmd('layout', '') == '') : ?>-active<?php endif; ?>.png">
+					<a href="index.php?option=com_botiga&view=botiga&layout=table">
+						<img src="media/com_botiga/icons/lista<?php if($jinput->getCmd('layout', '') == 'table') : ?>-active<?php endif; ?>.png">
 					</a>
-					<span class="pl-3 phone-hide"><?= JText::_('COM_BOTIGA_FREE_SHIPPING_MSG'); ?>&nbsp;<img src="media/com_botiga/icons/envio_gratis.png"></span>
+					<span class="pl-3 phone-hide"><?= JText::sprintf('COM_BOTIGA_FREE_SHIPPING_MSG', $spain, $islands, $world); ?>&nbsp;<img src="media/com_botiga/icons/envio_gratis.png"></span>
 				</div>
 				<div class="col-3 text-right">
-					<a href="index.php?option=com_botiga&view=checkout" class="pr-1 carrito">
-						<?php if(botigaHelper::getCarritoCount() > 0) : ?>
-						<span class="badge badge-warning"><?= botigaHelper::getCarritoCount(); ?></span>
+					<a href="<?php if($count > 0) : ?>index.php?option=com_botiga&view=checkout<?php else: ?>#<?php endif; ?>" class="pr-1 carrito">
+						<?php if($count > 0) : ?>
+						<span class="badge badge-warning"><?= $count; ?></span>
 						<?php endif; ?>
 						<img src="media/com_botiga/icons/carrito.png">
 					</a>
@@ -73,6 +79,9 @@ $userToken  = JSession::getFormToken();
 					<?php else: ?>
 					<a href="index.php?option=com_users&task=user.logout&<?= $userToken; ?>=1" title="Logout" class="hasTip">
 						<img src="media/com_botiga/icons/salir.png">
+					</a>
+					<a href="index.php?option=com_botiga&view=history" title="History" class="hasTip">
+						<img src="media/com_botiga/icons/sesion-iniciada.png">
 					</a>
 					<?php endif; ?>
 				</div>
@@ -130,7 +139,7 @@ $userToken  = JSession::getFormToken();
 			
 			<div class="table-responsive items">
 			
-				<table class="table table-hover">
+				<table class="table">
 				<?php 
 				if(count($this->items)) :
 				$i = 0;
@@ -171,7 +180,7 @@ $userToken  = JSession::getFormToken();
 			                                  <span class="fa fa-minus"></span>
 			                                </button>
 			                            </span>
-			                            <input type="text" id="quantity_<?= $item->id; ?>" name="qty" class="form-control bg-qty input-number text-center estil06" value="1" min="1" max="100">
+			                            <input type="text" id="quantity_<?= $item->id; ?>" name="qty" class="form-control bg-qty input-number text-center estil06" value="1" min="1" max="100" <?php if($i == 0) : ?>autofocus<?php endif; ?>>
 			                            <span class="input-group-btn">
 			                                <button type="button" class="quantity-right-plus btn btn-primary btn-number" data-id="<?= $item->id; ?>">
 			                                    <span class="fa fa-plus"></span>
@@ -180,7 +189,11 @@ $userToken  = JSession::getFormToken();
 			                        </div>
 				                </div>
 				                <div class="col-xs-1 col-md-1">
+				                <?php if(botigaHelper::isValidated()) : ?>
 								<input type="image" src="media/com_botiga/icons/addtocart.png" alt="<?= JText::_('COM_BOTIGA_BTN_BUY'); ?>">
+								<?php else: ?>
+								<img src="media/com_botiga/icons/carrito_desactivado.png" alt="<?= JText::_('COM_BOTIGA_BTN_BUY'); ?>">
+								<?php endif; ?>
 								</div>
 							</div>
 							</form>
@@ -238,8 +251,9 @@ $userToken  = JSession::getFormToken();
 			<img src="<?= $image; ?>" alt="" class="img-fluid" width="50">
 			</div>
 			<div class="col-xs-12 col-md-6 text-left py-3">
-			<b><?= botigaHelper::getItemData('name', $modal); ?></b>
-			<?= botigaHelper::getItemData('s_description', $modal); ?>
+				<b><?= botigaHelper::getItemData('name', $modal); ?></b>
+				<?= botigaHelper::getItemData('s_description', $modal); ?><br>
+				<b><?= botigaHelper::getUserPrice($modal); ?>&euro;</b>
 			</div>
 		</div>
 		<a href="index.php?option=com_botiga&view=checkout" class="btn btn-primary btn-block mt-2"><?= JText::_('COM_BOTIGA_GOTO_CHECKOUT'); ?></a>

@@ -32,6 +32,12 @@ $showobserva 	= botigaHelper::getParameter('show_observa', 0);
 $show_btn_delete = botigaHelper::getParameter('show_btn_delete', 0);
 $show_btn_save 	= botigaHelper::getParameter('show_btn_save', 0);
 $coupon     	= $model->getComandaCoupon();
+
+$spain 		= botigaHelper::getParameter('total_shipment_spain', 25);
+$islands 	= botigaHelper::getParameter('total_shipment_islands', 50);
+$world 		= botigaHelper::getParameter('total_shipment_world', 60);
+
+$count 	    = botigaHelper::getCarritoCount();
 ?>
 
 <?php if(botigaHelper::getParameter('show_header', 0) == 1) : ?>
@@ -42,26 +48,26 @@ $coupon     	= $model->getComandaCoupon();
 		<div class="row">
 
 		<?php if($logo != '') : ?>
-		<div class="col-12 text-right">
-			<img src="<?= $logo; ?>" alt="<?= botigaHelper::getParameter('botiga_name', ''); ?>" class="img-fluid">
+		<div class="col-12 text-right d-none d-sm-block">
+			<a href="index.php"><img src="<?= $logo; ?>" alt="<?= botigaHelper::getParameter('botiga_name', ''); ?>" class="img-fluid"></a>
 		</div>
 		<?php endif; ?>	
 		
 		<div class="col-12 mt-3">
 			<div class="row">
 				<div class="col-9 text-left">			
-					<a href="index.php?option=com_botiga&view=botiga&layout=table" class="pr-1">
-						<img src="media/com_botiga/icons/mosaico<?php if($jinput->getCmd('layout', '') == 'table') : ?>-active<?php endif; ?>.png">
+					<a href="index.php?option=com_botiga&view=botiga" class="pr-1">
+						<img src="media/com_botiga/icons/mosaico<?php if($jinput->getCmd('layout', '') == '') : ?>-active<?php endif; ?>.png">
 					</a>
-					<a href="index.php?option=com_botiga&view=botiga">
-						<img src="media/com_botiga/icons/lista<?php if($jinput->getCmd('layout', '') == '') : ?>-active<?php endif; ?>.png">
+					<a href="index.php?option=com_botiga&view=botiga&layout=table">
+						<img src="media/com_botiga/icons/lista<?php if($jinput->getCmd('layout', '') == 'table') : ?>-active<?php endif; ?>.png">
 					</a>
-					<span class="pl-3 phone-hide"><?= JText::_('COM_BOTIGA_FREE_SHIPPING_MSG'); ?>&nbsp;<img src="media/com_botiga/icons/envio_gratis.png"></span>
+					<span class="pl-3 phone-hide"><?= JText::sprintf('COM_BOTIGA_FREE_SHIPPING_MSG', $spain, $islands, $world); ?>&nbsp;<img src="media/com_botiga/icons/envio_gratis.png"></span>
 				</div>
 				<div class="col-3 text-right">
-					<a href="index.php?option=com_botiga&view=checkout" class="pr-1 carrito">
-						<?php if(botigaHelper::getCarritoCount() > 0) : ?>
-						<span class="badge badge-warning"><?= botigaHelper::getCarritoCount(); ?></span>
+					<a href="<?php if($count > 0) : ?>index.php?option=com_botiga&view=checkout<?php else: ?>#<?php endif; ?>" class="pr-1 carrito">
+						<?php if($count > 0) : ?>
+						<span class="badge badge-warning"><?= $count; ?></span>
 						<?php endif; ?>
 						<img src="media/com_botiga/icons/carrito.png">
 					</a>
@@ -72,6 +78,9 @@ $coupon     	= $model->getComandaCoupon();
 					<?php else: ?>
 					<a href="index.php?option=com_users&task=user.logout&<?= $userToken; ?>=1" title="Logout" class="hasTip">
 						<img src="media/com_botiga/icons/salir.png">
+					</a>
+					<a href="index.php?option=com_botiga&view=history" title="History" class="hasTip">
+						<img src="media/com_botiga/icons/sesion-iniciada.png">
 					</a>
 					<?php endif; ?>
 				</div>
@@ -96,7 +105,9 @@ $coupon     	= $model->getComandaCoupon();
 		<?php if(count($this->items)) : ?>
 		<div class="table-responsive">
 			<table class="table table-hover">
-				<?php foreach($this->items as $item) : ?>
+				<?php 
+				$i = 0;
+				foreach($this->items as $item) : ?>
 				<?php $item->image1 != '' ? $image = $item->image1 : $image = 'images/noimage.png'; ?>
 				<?php $total_row = $item->price * $item->qty; ?>
 				<tr>
@@ -111,7 +122,7 @@ $coupon     	= $model->getComandaCoupon();
 								 	<span class="fa fa-minus"></span>
 								</a>
 							</span>
-							<input type="text" id="quantity_<?= $item->id; ?>" name="qty" class="form-control bg-qty input-number text-center estil06" value="<?= $item->qty; ?>" min="1" max="100">
+							<input type="text" id="quantity_<?= $item->id; ?>" name="qty" class="form-control bg-qty input-number text-center estil06" value="<?= $item->qty; ?>" min="1" max="100" <?php if($i == 0) : ?>autofocus<?php endif; ?>>
 							<span class="input-group-btn">
 								<a href="index.php?option=com_botiga&task=botiga.updateQty&id=<?= $item->id; ?>&type=plus" class="quantity-right-plus btn btn-primary btn-number" data-id="<?= $item->id; ?>">
 									<span class="fa fa-plus"></span>
@@ -124,7 +135,9 @@ $coupon     	= $model->getComandaCoupon();
 					<td width="15%" align="right" class="align-middle estil05 text-primary"><b><?= number_format($total_row, 2) . ' &euro;'; ?></b></td>				
 				</tr>										
 				<?php $subtotal += $total_row; ?>
-				<?php endforeach; ?>
+				<?php 
+				$i++;
+				endforeach; ?>
 				<tr>
 					<td colspan="3"></div>
 					<td colspan="3" class="align-middle" align="right">
@@ -207,17 +220,19 @@ $coupon     	= $model->getComandaCoupon();
 				<?php
 				$plugins = botigaHelper::getPaymentPlugins();
 				if(count($plugins) > 1) : ?>
-				<p><?= JText::_('COM_BOTIGA_FINISH_ADD_DATA'); ?></p>
+				<p class="estil03"><?= JText::_('COM_BOTIGA_FINISH_ADD_DATA'); ?></p>
 				<div class="form-group">
-					<select name="processor" id="processor" class="form-control">
-					<option value=""><?= JText::_('COM_BOTIGA_SELECT_PAYMENT_METHOD'); ?></option>
-					<?php 
-					foreach($plugins as $plugin) : 
-					$params = json_decode($plugin->params);				
-					?>
-					<option value="<?= $params->alies; ?>"><?= $params->title; ?></option>
-					<?php endforeach; ?>
-					</select>
+					<div class="styled-select">
+						<select name="processor" id="processor" class="form-control">
+						<option value=""><?= JText::_('COM_BOTIGA_SELECT_PAYMENT_METHOD'); ?></option>
+						<?php 
+						foreach($plugins as $plugin) : 
+						$params = json_decode($plugin->params);				
+						?>
+						<option value="<?= $params->alies; ?>"><?= $params->title; ?></option>
+						<?php endforeach; ?>
+						</select>
+					</div>
 				</div>
 				<?php else : 
 				foreach($plugins as $plugin) : 

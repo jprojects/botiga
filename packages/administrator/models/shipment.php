@@ -76,11 +76,44 @@ class botigaModelShipment extends JModelAdmin
 	{
 		// Check the session for previously entered form data.
 		$data = JFactory::getApplication()->getUserState('com_botiga.edit.shipment.data', array());
-		if (empty($data)) 
-		{
+		if (empty($data)) {
 			$data = $this->getItem();
+			$data->country = explode(';', $data->country);
 		}
 		return $data;
+	}
+	
+	/**
+	 * method to store data into the database
+	 * @param boolean
+	*/
+    function store()
+	{		
+		$row =& $this->getTable();
+		
+		$post_data  = JRequest::get( 'post' );
+   		$data       = $post_data["jform"];
+		$data['id'] = JRequest::getInt('id', 0, 'get');
+
+		if($data['id'] != 0) {
+	    	
+	    	$paises = array();
+	    	foreach($data['country'] as $k) {
+	    		$paises[] = $k;
+	    	}
+			
+	    	$data['country'] = implode(';', $paises);
+		
+			if (!$row->bind( $data )) {
+				return JError::raiseWarning( 500, $row->getError() );
+			}
+
+			if (!$row->store()) {
+				return JError::raiseError(500, $row->getError() );
+			}
+		}
+		return true;
+
 	}
     
 }

@@ -7,7 +7,7 @@
 	<authorUrl>http://www.afi.cat</authorUrl>
 	<copyright>Copyright © 2017 - All rights reserved.</copyright>
 	<license>GNU/GPL</license>
-	<version>2.0.0</version>
+	<version>1.0.0</version>
 	<description><![CDATA[COM_BOTIGA_DESCRIPTION]]></description>
     <files folder="site">
 		<filename>botiga.php</filename>
@@ -15,6 +15,7 @@
         <filename>metadata.xml</filename>
 		<folder>views/</folder>
 		<folder>models/</folder>
+		<folder>helpers/</folder>
 		<folder>controllers/</folder>
 		<folder>assets/</folder>  
 	</files>
@@ -37,9 +38,6 @@
 			<schemapath type="mysql">sql/updates/mysql</schemapath>
 		</schemas>
 	</update>
-	<updateservers>
-    	<server type="extension" priority="2" name="Botiga Component">http://www.aficat.com/updates/botiga/com_botiga.xml</server>
-    </updateservers>
 	<administration>
 		<menu link="option=com_botiga&amp;view=items">Botiga</menu>
 		<files folder="administrator">

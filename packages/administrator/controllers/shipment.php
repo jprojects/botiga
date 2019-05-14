@@ -28,4 +28,19 @@ class botigaControllerShipment extends JControllerForm
 		$model = parent::getModel($name, $prefix, array('ignore_request' => true));
 		return $model;
 	}
+	
+	/**
+	* Method to override the save method
+	 *
+	 * @return	void
+	*/
+    function save()
+	{		
+		$model  = $this->getModel();
+    
+    	if($model->store()) {
+
+			parent::save();
+		}
+	}
 }

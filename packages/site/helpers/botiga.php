@@ -200,6 +200,44 @@ class botigaHelper {
    		
    		return number_format($value, 2, '.', '') * -1;
     }
+    
+    /**
+	 * method to know if user is validated
+	 * @return int
+	*/
+	public static function isValidated() 
+    {
+   		$db = JFactory::getDbo();
+   		$user = JFactory::getUser();
+   		
+   		if($user->guest) { return true; }
+		
+   		$db->setQuery('SELECT validate from #__botiga_users WHERE userid = '.$user->id);
+   		if($db->loadResult() == 1) { 
+   			return true; 
+   		} else {
+   			return  false;
+   		}
+   		
+    }
+    
+    /**
+	 * method to get user the active Itemid
+	 * @return int
+	*/
+    public static function getItemid()
+    {
+		$menu = JFactory::getApplication()->getMenu();
+		$active = $menu->getActive();
+		return $active->id;
+    }
+    
+    public static function customLog($text) {
+
+		$handle = fopen(JPATH_COMPONENT.'/logs/botiga.log', 'a');
+		fwrite($handle, date('d-M-Y H:i:s') . ': ' . $text . "\n");
+		fclose($handle);
+	}
 	
 	/**
 	 * method to get user the price
@@ -212,7 +250,8 @@ class botigaHelper {
 		
 		$user      = JFactory::getUser();
 		$db		   = JFactory::getDbo();
-		$resultado = '0.00';
+		$resultado = '0.00';				
+		
 		
 		$login_prices = botigaHelper::getParameter('login_prices', 0);
 		
@@ -236,7 +275,8 @@ class botigaHelper {
       	
       	foreach ($result as $index => $value) 
 		{ 
-			//if($user->guest) { $groups = array(2); }  
+			//check if user is no validated
+			if(!botigaHelper::isValidated() || $user->guest) { $groups = array(2, 11); }  
     		if(in_array($value[0], $groups)) { $resultado = $value[1]; }
 		}
 		
