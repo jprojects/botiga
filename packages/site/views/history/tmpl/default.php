@@ -40,6 +40,7 @@ $islands 	= botigaHelper::getParameter('total_shipment_islands', 50);
 $world 		= botigaHelper::getParameter('total_shipment_world', 60);
 
 $count 	    = botigaHelper::getCarritoCount();
+$user_params = json_decode(botigaHelper::getUserData('params', $user->id), true);
 ?>
 
 <?php if(botigaHelper::getParameter('show_header', 0) == 1) : ?>
@@ -213,6 +214,34 @@ $count 	    = botigaHelper::getCarritoCount();
 								<?php endforeach; ?>
 							</select>
 						</div>
+						
+						<legend><?= JText::_('COM_BOTIGA_USER_SETTINGS'); ?></legend>
+						
+						<div class="form-group">
+							<label for="jform_pais estil03"><?= JText::_('COM_BOTIGA_REGISTER_METODO_PAGO_LABEL'); ?> *</label>
+							<select name="jform[metodo_pago]" id="jform_metodo_pago" class="form-control">
+								<option value=""><?= JText::_('COM_BOTIGA_SELECT_AN_OPTION'); ?></option>
+								<?php 								
+								foreach(botigaHelper::getPaymentPlugins() as $plugin) : 
+								$params = json_decode($plugin->params);
+								?>
+								<option value="<?= strtolower($params->alies); ?>" <?php if(strtolower($params->alies) == $user_params['metodo_pago']) : ?>selected<?php endif; ?>><?= $params->title; ?></option>
+								<?php endforeach; ?>
+							</select>
+						</div>
+						
+						<div class="form-group">
+							<label for="jform_pais estil03"><?= JText::_('COM_BOTIGA_REGISTER_RE_EQUIV_LABEL'); ?></label>
+							<div class="form-check form-check-inline">
+							  	<input class="form-check-input" type="radio" name="jform[re_equiv]" id="jform_re_equiv0" value="0" <?php if($user_params['re_equiv'] == 0) : ?>checked<?php endif; ?>>
+							  	<label class="form-check-label" for="jform_re_equiv0"><?= JText::_('JNO'); ?></label>
+							</div>
+							<div class="form-check form-check-inline">
+							  	<input class="form-check-input" type="radio" name="jform[re_equiv]" id="jform_re_equiv1" value="1" <?php if($user_params['re_equiv'] == 1) : ?>checked<?php endif; ?>>
+							  	<label class="form-check-label" for="jform_re_equiv1"><?= JText::_('JYES'); ?></label>
+							</div>
+						</div>
+						
 						<div id="form-login-submit" class="control-group">
 							<div class="controls">
 								<button type="submit" class="btn btn-primary btn-block validate submit estil03"><?= JText::_('COM_BOTIGA_REGISTER'); ?></button>

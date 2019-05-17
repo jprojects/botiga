@@ -45,19 +45,31 @@ else{
 </script>
 
 <form action="<?php echo JRoute::_('index.php?option=com_botiga&view=user&layout=edit&id='.(int) $this->item->id); ?>" method="post" name="adminForm" id="item-form" class="form-validate">
- 
-	<div class="row-fluid">
-        <div class="span6 form-horizontal">
-            <fieldset class="adminform">
-			<legend><?php echo JText::_( 'COM_LAUNDRY_USER_DETAILS' ); ?></legend>
-			
-				<?php foreach($this->form->getFieldset('details') as $field): ?>
-						<?php echo $field->renderField() ?>
-	    		<?php endforeach; ?>
 
-		</fieldset>
-	</div>
+		<div class="row-fluid">
+		    <div class="span6 form-horizontal">
+		        <fieldset class="adminform">
+				<legend><?php echo JText::_( 'COM_BOTIGA_USER_DETAILS' ); ?></legend>
+				
+					<?php foreach($this->form->getFieldset('details') as $field): ?>
+							<?php echo $field->renderField() ?>
+					<?php endforeach; ?>
+
+			</fieldset>
+			</div>
+		    <div class="span6 form-horizontal">
+		        <fieldset class="adminform">
+				<legend><?php echo JText::_( 'COM_BOTIGA_USER_SETTINGS' ); ?></legend>
+				
+					<?php foreach($this->form->getFieldset('settings') as $field): ?>
+							<?php echo $field->renderField() ?>
+					<?php endforeach; ?>
+
+				</fieldset>
+			</div>
+	
 		<input type="hidden" name="task" value="user.edit" />
 		<?php echo JHtml::_('form.token'); ?>
 	</div>
+	
 </form>

@@ -49,11 +49,14 @@ CREATE TABLE IF NOT EXISTS `#__botiga_comandes` (
   `data` datetime NOT NULL,
   `userid` int(11) NOT NULL,
   `sessid` varchar(150) NOT NULL,
-  `status` smallint(1) NOT NULL DEFAULT '0' COMMENT '1-Pending;2-Pending payment;3-Completed',
+  `status` smallint(1) NOT NULL DEFAULT '0' COMMENT '1-Pendent;2-Pendent pagar;3-Pagada',
   `subtotal` float(10,2) NOT NULL DEFAULT '0.00',
   `shipment` float(10,2) NOT NULL DEFAULT '0.00',
+  `discount` float(10,2) NOT NULL DEFAULT '0.00' COMMENT 'total descomptes',
   `iva_percent` int(5) NOT NULL DEFAULT '0',
   `iva_total` float(10,2) NOT NULL DEFAULT '0.00',
+  `re_percent` float(10,2) NOT NULL DEFAULT '0.00',
+  `re_total` float(10,2) NOT NULL DEFAULT '0.00' COMMENT 'recarrec equivalencia',
   `total` float(10,2) NOT NULL DEFAULT '0.00',
   `processor` varchar(50) NOT NULL DEFAULT '',
   `observa` varchar(250) NOT NULL DEFAULT '' COMMENT 'Observacions del client',
@@ -126,7 +129,7 @@ CREATE TABLE IF NOT EXISTS `#__botiga_items` (
   `envio` varchar(150) NOT NULL DEFAULT '',
   `published` tinyint(1) NOT NULL DEFAULT '0',
   `ordering` int(11) NOT NULL DEFAULT '0',
-  `language` char(7) NOT NULL DEFAULT '0',
+  `language` char(7) NOT NULL DEFAULT '',
   `ref` text NOT NULL,
   `extres` varchar(15) DEFAULT NULL,
   `child` text NOT NULL,
@@ -230,6 +233,7 @@ CREATE TABLE IF NOT EXISTS `#__botiga_users` (
   `published` tinyint(1) NOT NULL DEFAULT '0',
   `ordering` int(11) NOT NULL DEFAULT '0',
   `validate` tinyint(1) NOT NULL DEFAULT '0',
+  `params` text NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 

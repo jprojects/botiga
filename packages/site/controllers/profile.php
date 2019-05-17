@@ -53,7 +53,7 @@ class botigaControllerProfile extends botigaController {
 			$type = 'danger';
 			$valid = false;
 		}
-		if($data['address'] == '' || $data['cp'] == '' || $data['city'] == '' || $data['pais'] == '') {
+		if($data['address'] == '' || $data['zip'] == '' || $data['city'] == '' || $data['pais'] == '') {
 			$msg  = JText::_('COM_BOTIGA_REGISTER_SHIPMENT_MANDATORY');
 			$type = 'danger';
 			$valid = false;
@@ -66,7 +66,7 @@ class botigaControllerProfile extends botigaController {
 		
 			//create joomla user
 			$user                   = new stdClass();
-			$user->id               = $data['id'];
+			$user->id               = $data['userid'];
 			$user->username         = $data['nombre'];
 			
 			if($data['email2'] != '' && ($data['email1'] == $data['email2'])) {				
@@ -83,32 +83,34 @@ class botigaControllerProfile extends botigaController {
 			
 			if($mail || $pass) { $valid = $db->updateObject('#__users', $user, 'id'); }
 			
-			if($valid) {
+			$params['metodo_pago'] = $data['metodo_pago'];
+			$params['re_equiv']    = $data['re_equiv'];
 			
-				//edit botiga user
-				$acjuser            	= new stdClass();
-				$acjuser->userid    	= $data['id'];
-				$acjuser->type			= $data['type'];
-			    $acjuser->nom_empresa	= $data['empresa'];
-			    $acjuser->nombre		= $data['nombre'];
-			    $acjuser->mail_empresa	= $data['email1'];
-			    $acjuser->telefon		= $data['phone'];
-			    $acjuser->cargo			= $data['cargo'];
-			    $acjuser->adreca		= $data['address'];
-			    $acjuser->cp			= $data['zip'];
-			    $acjuser->poblacio		= $data['city'];
-			    $acjuser->pais   		= $data['pais'];	
-			    $acjuser->cif   		= $data['cif'];	
-			    
-			    $db->updateObject('#__botiga_users', $acjuser, 'userid');    	        	
-			
-				$msg  = JText::_('COM_BOTIGA_PROFILE_SUCCESS');
-				$type = 'success';
-			
-			} else {
-				$msg  = JText::_('COM_BOTIGA_PROFILE_ERROR');
-				$type = 'error';
-			}
+			unset($data['metodo_pago'], $data['re_equiv']);
+		
+			//edit botiga user
+			$acjuser            	= new stdClass();
+			$acjuser->userid    	= $data['userid'];
+			$acjuser->type			= $data['type'];
+		    $acjuser->nom_empresa	= $data['empresa'];
+		    $acjuser->nombre		= $data['nombre'];
+		    $acjuser->mail_empresa	= $data['email1'];
+		    $acjuser->telefon		= $data['phone'];
+		    $acjuser->adreca		= $data['address'];
+		    $acjuser->cp			= $data['zip'];
+		    $acjuser->poblacio		= $data['city'];
+		    $acjuser->pais   		= $data['pais'];	
+		    $acjuser->cif   		= $data['cif'];	
+		    $acjuser->params 		= json_encode($params);
+		    
+		    $db->updateObject('#__botiga_users', $acjuser, 'userid');    	        	
+		
+			$msg  = JText::_('COM_BOTIGA_PROFILE_SUCCESS');
+			$type = 'success';
+		
+		} else {
+			$msg  = JText::_('COM_BOTIGA_PROFILE_ERROR');
+			$type = 'error';
 		}
 		
 		$this->setRedirect('index.php?option=com_botiga&view=history', $msg, $type);

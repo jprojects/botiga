@@ -5,8 +5,8 @@
  * @copyright   Copyright © 2010 - All rights reserved.
  * @license		GNU/GPL
  * @author		kim
- * @author mail administracion@joomlanetprojects.com
- * @website		http://www.joomlanetprojects.com
+ * @author mail kim@aficat.com
+ * @website		http://www.aficat.com
  *
  */
 
@@ -27,5 +27,20 @@ class botigaControllerUser extends JControllerForm
 	{
 		$model = parent::getModel($name, $prefix, array('ignore_request' => true));
 		return $model;
+	}
+	
+	/**
+	* Method to override the save method
+	 *
+	 * @return	void
+	*/
+    function save()
+	{		
+		$model  = $this->getModel();
+    
+    	if($model->store()) {
+
+			parent::save();
+		}
 	}
 }

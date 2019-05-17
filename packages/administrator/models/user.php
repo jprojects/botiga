@@ -79,8 +79,41 @@ class botigaModelUser extends JModelAdmin
 		if (empty($data)) 
 		{
 			$data = $this->getItem();
+			$params = json_decode($data->params); 
+			$data->metodo_pago = $data->params['metodo_pago'];
+			$data->re_equiv = $data->params['re_equiv'];
 		}
 		return $data;
+	}
+	
+	/**
+	 * method to store data into the database
+	 * @param boolean
+	*/
+    function store()
+	{		
+		$row =& $this->getTable();
+		
+		$post_data  = JRequest::get( 'post' );
+   		$data       = $post_data["jform"];
+	    	
+    	$params['metodo_pago'] = $data['metodo_pago'];
+    	$params['re_equiv']    = $data['re_equiv'];
+    	
+    	unset($data['metodo_pago'], $data['re_equiv']);
+    	
+    	$data['params'] = json_encode($params);
+	
+		if (!$row->bind( $data )) {
+			return JError::raiseWarning( 500, $row->getError() );
+		}
+
+		if (!$row->store()) {
+			return JError::raiseError(500, $row->getError() );
+		}
+
+		return true;
+
 	}
     
 }
