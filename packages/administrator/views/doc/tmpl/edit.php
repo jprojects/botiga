@@ -5,8 +5,8 @@
  * @copyright   Copyright © 2010 - All rights reserved.
  * @license		GNU/GPL
  * @author		kim
- * @author mail administracion@joomlanetprojects.com
- * @website		http://www.joomlanetprojects.com
+ * @author mail kim@aficat.com
+ * @website		http://www.aficat.com
  *
  */
 
@@ -44,23 +44,38 @@ else{
 }
 </script>
 
-<form action="<?php echo JRoute::_('index.php?option=com_botiga&view=doc&layout=edit&id='.(int) $this->item->id); ?>" method="post" name="adminForm" id="item-form" class="form-validate">
- 
-	<div class="row-fluid">
-        <div class="span6 form-horizontal">
-            <fieldset class="adminform">
-			<legend><?php echo JText::_( 'COM_BOTIGA_DOC_DETAILS' ); ?></legend>
-			
-				<?php foreach($this->form->getFieldset('details') as $field): ?>
-						<div class="control-group">
-						<div class="control-label"><?php echo $field->label; ?></div>
-						<div class="controls"><?php echo $field->input ?></div>
-						</div>
-	    		<?php endforeach; ?>
+<div class="form-horizontal">
 
-		</fieldset>
-	</div>
-		<input type="hidden" name="task" value="doc.edit" />
+	<div class="row-fluid">
+		<form
+		action="<?php echo JRoute::_('index.php?option=com_botiga&view=doc&layout=edit&id='.(int) $this->item->id); ?>"
+		method="post" enctype="multipart/form-data" name="adminForm" id="adminForm" class="form-validate">
+		<div class="span8 form-horizontal">
+			<fieldset class="adminform">
+
+				<?php foreach($this->form->getFieldset('details') as $field): ?>
+				<?php echo $field->renderField() ?>
+	    		<?php endforeach; ?>		
+
+			</fieldset>
+		</div>
+		<input type="hidden" name="task" value=""/>
 		<?php echo JHtml::_('form.token'); ?>
-	</div>
-</form>
+		</form>
+		
+		<form
+		action="<?php echo JRoute::_('index.php?option=com_botiga&task=doc.upload&id=' . (int) $this->item->id); ?>"
+		method="post" enctype="multipart/form-data" name="adminForm" id="documento-form" class="form-validate">
+		<div class="span4 form-horizontal">
+		<label><?= JText::_('COM_BOTIGA_UPLOAD_LBL'); ?></label>
+		<input type="hidden" name="jform[id]" value="<?= $this->item->id; ?>" />
+		<?php echo $this->form->renderField('subida'); ?>
+		<button type="submit" class="btn btn-primary btn-block"><?= JText::_('JSUBMIT'); ?></button>
+		</div>
+		<input type="hidden" name="task" value="doc.upload"/>
+		<?php echo JHtml::_('form.token'); ?>
+		</form>
+		
+	</div>	
+
+</div>

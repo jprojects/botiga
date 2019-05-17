@@ -93,9 +93,12 @@ class botigaModelCheckout extends JModelList
     	$session = JFactory::getSession();
     	$db = JFactory::getDbo();
     	
+    	$sessid = $session->getId();
+    	
     	//check if a comanda exist
-		$db->setQuery('select id from #__botiga_comandes where userid = '.$user->id.' and status = 1');
+		$db->setQuery('select MAX(id) from #__botiga_comandes where (userid = '.$user->id.' OR sessid = '.$db->quote($sessid).') and status = 1');
 		$id = $db->loadResult();
+		
 		if($id > 0) { $session->set('idComanda', $id); }
     	
     	$idComanda = $session->get('idComanda', '');
@@ -163,23 +166,23 @@ class botigaModelCheckout extends JModelList
 		$db->setQuery('SELECT * FROM #__botiga_shipments WHERE published = 1 AND usergroup IN ('.implode(',', $groups).')');
 		$rows = $db->loadObjectList();				
 		
-		foreach($rows as $row) {
-
-			if($amount > $row->free) { return 0; } //el pedido supera el porte mínimo, salimos retornando 0
+		foreach($rows as $row) {			
 			
 			$countries = explode(';', $row->country);
 				
 			if($row->conditional == 0) { 
 				if (!in_array($usr->pais, $countries)) {
-					botigaHelper::customLog($row->id.' same countries fail');
+					//botigaHelper::customLog($row->id.' same countries fail');
 					continue; //same countries fail end iteration					
 				}
 			} else {
 				if (in_array($usr->pais, $countries)) {
-					botigaHelper::customLog($row->id.' distinct countries fail');
+					//botigaHelper::customLog($row->id.' distinct countries fail');
 					continue; //distinct countries fail end iteration
 				}
 			}
+			
+			if($amount > $row->free) { return 0; } //el pedido supera el porte mínimo, salimos retornando 0
 			
 			$total 		= $row->total;
 			$operator 	= $row->operator;
@@ -202,7 +205,7 @@ class botigaModelCheckout extends JModelList
 			//type 2 shippment by weight method
 			if($row->type == 2) {
 			
-			botigaHelper::customLog($row->id.' inside type 2');
+				//botigaHelper::customLog($row->id.' inside type 2');
 				
 				$db->setQuery('SELECT SUM(i.pes) FROM #__botiga_items AS i INNER JOIN #__botiga_comandesDetall AS cd ON cd.idItem = i.id  where cd.idComanda = '.$idComanda);
 				$weight   = $db->loadResult() / 10;

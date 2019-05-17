@@ -126,6 +126,17 @@
 		<option value="0">JNO</option>
 		<option value="1">JYES</option> 
         </field>
+        <field 
+        	type="radio" 
+        	name="control_stock" 
+        	default="0" 
+        	class="btn-group"
+        	label="COM_BOTIGA_SETTINGS_CONTROL_STOCK_LBL" 
+        	description="COM_BOTIGA_SETTINGS_CONTROL_STOCK_DSC"
+		>
+		<option value="0">JNO</option>
+		<option value="1">JYES</option> 
+        </field>
   </fieldset>
   <fieldset name="items" label="COM_BOTIGA_ITEMS_SETTINGS" description="COM_BOTIGA_ITEMS_SETTINGS_DESC">
   		<field 

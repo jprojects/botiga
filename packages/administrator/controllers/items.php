@@ -42,6 +42,17 @@ class botigaControllerItems extends JControllerAdmin
 	}
 	
 	/**
+	 * Method to export a csv from list
+	*/
+	function excel()
+	{		
+        $model = $this->getModel('Items');
+        $model->getXls();
+		jexit();
+
+	}
+	
+	/**
 	 * Method to clone an existing block.
 	 *
 	 * @return  void

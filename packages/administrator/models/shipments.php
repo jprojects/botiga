@@ -5,8 +5,8 @@
  * @copyright   Copyright © 2010 - All rights reserved.
  * @license		GNU/GPL
  * @author		kim
- * @author mail administracion@joomlanetprojects.com
- * @website		http://www.joomlanetprojects.com
+ * @author mail kim@aficat.com
+ * @website		http://www.aficat.com
  *
  */
 
@@ -26,9 +26,9 @@ class botigaModelShipments extends JModelList
 	{
                 if (empty($config['filter_fields'])) {
 				$config['filter_fields'] = array(
-				'id', 'id',
-				'name', 'name',
-				'published', 'published',
+				'id', 'a.id',
+				'name', 'a.name',
+				'published', 'a.published',
 			);
 		}
 		parent::__construct($config);
@@ -55,7 +55,7 @@ class botigaModelShipments extends JModelList
 	 *
 	 * @since	1.6
 	*/
-	protected function populateState($ordering = null, $direction = null)
+	protected function populateState($ordering = 'a.ordering', $direction = 'asc')
 	{
 		// Initialise variables.
 		$app = JFactory::getApplication('administrator');
@@ -66,9 +66,12 @@ class botigaModelShipments extends JModelList
                 
         $search = $this->getUserStateFromRequest($this->context.'.filter.search', 'filter_search');
 		$this->setState('filter.search', $search);
+		
+		$published = $this->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '');
+		$this->setState('filter.published', $published);
 
 		// List state information.
-		parent::populateState('a.ordering', 'asc');
+		parent::populateState($ordering, $direction);
 	}
         
     /**
@@ -112,6 +115,11 @@ class botigaModelShipments extends JModelList
 		if (!empty($search)) {
 			$search = $db->Quote('%'.$db->escape($search, true).'%');
 			$query->where('(a.name LIKE '.$search.')');
+		}
+		
+		// Filter on the published.
+		if ($published = $this->getState('filter.published')) {
+			$query->where('a.published = ' . $published);
 		}
                 
         // Add the list ordering clause.

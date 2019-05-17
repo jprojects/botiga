@@ -26,12 +26,11 @@ class botigaModelCoupons extends JModelList
 	{
                 if (empty($config['filter_fields'])) {
 				$config['filter_fields'] = array(
-				'id', 'id',
-				'pdf', 'pdf',
-				'category', 'category',
-				'title', 'title',
-				'published', 'published',
-				'language', 'language',
+				'id', 'a.id',
+				'coupon', 'a.coupon',
+				'finishDate', 'a.finishDate',
+				'tipus', 'a.tipus',
+				'valor', 'a.valor',
 			);
 		}
 		parent::__construct($config);
@@ -58,7 +57,7 @@ class botigaModelCoupons extends JModelList
 	 *
 	 * @since	1.6
 	*/
-	protected function populateState($ordering = null, $direction = null)
+	protected function populateState($ordering = 'a.id', $direction = 'asc')
 	{
 		// Initialise variables.
 		$app = JFactory::getApplication('administrator');
@@ -70,11 +69,11 @@ class botigaModelCoupons extends JModelList
         $search = $this->getUserStateFromRequest($this->context.'.filter.search', 'filter_search');
 		$this->setState('filter.search', $search);
 		
-		$language = $this->getUserStateFromRequest($this->context.'.filter.language', 'filter_language', '');
-		$this->setState('filter.language', $language);
+		$published = $this->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '');
+		$this->setState('filter.published', $published);
 
 		// List state information.
-		parent::populateState('a.id', 'asc');
+		parent::populateState($ordering, $direction);
 	}
         
     /**
@@ -120,9 +119,9 @@ class botigaModelCoupons extends JModelList
 			$query->where('(a.title LIKE '.$search.')');
 		}
 		
-		// Filter on the language.
-		if ($language = $this->getState('filter.language')) {
-			$query->where('a.language = ' . $db->quote($language));
+		// Filter on the published.
+		if ($published = $this->getState('filter.published')) {
+			$query->where('a.published = ' . $published);
 		}
                 
         // Add the list ordering clause.

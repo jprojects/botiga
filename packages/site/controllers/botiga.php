@@ -33,6 +33,9 @@ class botigaControllerBotiga extends botigaController {
 		return $model;
 	}
 	
+	/**
+	 * Method to save a item purchased in a database.
+	*/
 	public function setItem() {
 		
 		$db 		= JFactory::getDbo();
@@ -80,7 +83,11 @@ class botigaControllerBotiga extends botigaController {
 		
 		$sessid 	= $session->getId();
 		
-		$db->setQuery('SELECT id FROM #__botiga_comandes WHERE sessid = '.$db->quote($sessid).' AND status < 3');
+		//netejem comandes anteriors a 24 hores sense confirmar
+		$db->setQuery('DELETE FROM #__botiga_comandes WHERE data < (NOW() - INTERVAL 24 HOUR) AND status < 3');
+		$db->query();
+		
+		$db->setQuery('SELECT MAX(id) FROM #__botiga_comandes WHERE (userid = '.$user->id.' OR sessid = '.$db->quote($sessid).') AND status < 3');
 		if($idComanda = $db->loadResult()) {
 			
 			$session->set('idComanda', $idComanda); //recuperem la sessió 						
@@ -238,16 +245,29 @@ class botigaControllerBotiga extends botigaController {
      	
      	$idComanda  = $session->get('idComanda');
      	
+     	$control_stock = botigaHelper::getParameter('control_stock', 0);
+		if($control_stock == 1) { //el control d'estoc es activat restem les unitats
+			$db->setQuery('SELECT idItem, qty FROM #__botiga_comandesDetall WHERE idComanda = '.$idComanda);
+			$rows = $db->loadObjectList();
+			foreach($rows as $row) {
+				$db->setQuery('UPDATE #__botiga_items SET stock = stock - '.$row->qty.' WHERE id = '.$row->idItem);
+				$db->query();
+			}
+		}
+     	
      	$subtotal 	= $data['subtotal'];
      	$shipment 	= $data['shipment'];
-     	$iva_percent = botigaHelper::getParameter('iva', '21');
-     	$iva_total  = ($iva_percent / 100) * ($subtotal + $shipment);
+     	$iva_percent = $data['iva_percent'];
+     	$iva_total  = $data['iva_total'];     	
+     	$re_percent = $data['re_percent'];
+     	$re_total   = $data['re_total']; 
+     	$discount 	= $data['discount'];    	
      	$total 		= $data['total'];
      	$processor  = $data['processor'];
      	$observa    = $data['observa'];
      	
      	//actualitza comanda     	
-     	$db->setQuery('UPDATE #__botiga_comandes SET subtotal = '.$db->quote($subtotal).', shipment = '.$db->quote($shipment).', iva_percent = '.$db->quote($iva_percent).', iva_total = '.$db->quote($iva_total).', total = '.$db->quote($total).', processor = '.$db->quote($processor).', observa = '.$db->quote($observa).' WHERE id = '.$idComanda);
+     	$db->setQuery('UPDATE #__botiga_comandes SET subtotal = '.$db->quote($subtotal).', shipment = '.$db->quote($shipment).', discount = '.$db->quote($discount).', iva_percent = '.$db->quote($iva_percent).', iva_total = '.$db->quote($iva_total).', re_percent = '.$db->quote($re_percent).', re_total = '.$db->quote($re_total).', total = '.$db->quote($total).', processor = '.$db->quote($processor).', observa = '.$db->quote($observa).' WHERE id = '.$idComanda);
      	$db->query();
      	
      	$this->processPayment();
@@ -444,15 +464,15 @@ class botigaControllerBotiga extends botigaController {
 		$pdf->SetXY(20, $height);  
 		$pdf->Cell(30, 5, number_format($com->subtotal, 2, ',', '.').EURO, 0, 0, '');
 		$pdf->SetXY(50, $height);  
-		$pdf->Cell(30, 5, JText::_('COM_BOTIGA_INVOICE_BASE'), 0, 0, '');
+		$pdf->Cell(30, 5, number_format(($com->total/1.21), 2, ',', '.').EURO, 0, 0, '');
 		$pdf->SetXY(80, $height); 
 		$pdf->Cell(20, 5, $com->iva_percent, 0, 0, 'R');	
 		$pdf->SetXY(100, $height);
 		$pdf->Cell(20, 5, number_format($com->iva_total, 2, ',', '.').EURO, 0, 0, '');
 		$pdf->SetXY(125, $height); 
-		$pdf->Cell(15, 5, JText::_('COM_BOTIGA_INVOICE_RE'), 0, 0, '');
+		$pdf->Cell(15, 5, $com->re_percent, 0, 0, '');
 		$pdf->SetXY(155, $height); 
-		$pdf->Cell(15, 5, JText::_('COM_BOTIGA_INVOICE_IMPORT_RE'), 0, 0, '');
+		$pdf->Cell(15, 5, number_format($com->re_total, 2, ',', '.').EURO, 0, 0, '');
 		$pdf->SetXY(180, $height); 
 		$pdf->Cell(15, 5, number_format(($com->total), 2, ',', '.').EURO, 0, 0, '');
 

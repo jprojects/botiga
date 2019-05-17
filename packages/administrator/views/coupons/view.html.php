@@ -24,6 +24,8 @@ class botigaViewCoupons extends JViewLegacy
 		$this->state		= $this->get('State');
 		$this->items		= $this->get('Items');
 		$this->pagination	= $this->get('Pagination');
+		$this->filterForm   = $this->get('FilterForm');
+		$this->activeFilters = $this->get('ActiveFilters');
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {
@@ -70,39 +72,6 @@ class botigaViewCoupons extends JViewLegacy
             JToolBarHelper::divider();
 			JToolBarHelper::preferences('com_botiga');
 		}	
-		
-		//Set sidebar action - New in 3.0
-        JHtmlSidebar::setAction('index.php?option=com_botiga&view=coupons');
-
-        $this->extra_sidebar = '';
-        
-		JHtmlSidebar::addFilter(
-
-			JText::_('JOPTION_SELECT_PUBLISHED'),
-
-			'filter_published',
-
-			JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), "value", "text", $this->state->get('filter.state'), true)
-
-		);
-		
-		JHtmlSidebar::addFilter(
-		JText::_('JOPTION_SELECT_LANGUAGE'),
-		'filter_language',
-		JHtml::_('select.options', JHtml::_('contentlanguage.existing', true, true), 'value', 'text', $this->state->get('filter.language'))
-		);	
-	}
-        
-    protected function getSortFields()
-	{
-		return array(
-		'a.id' => JText::_('JGRID_HEADING_ID'),
-		'a.ordering' => JText::_('JGRID_HEADING_ORDERING'),
-		'a.published' => JText::_('JSTATUS'),
-		'a.pdf' => JText::_('Pdf'),
-		'a.category' => JText::_('Categoria'),
-		'a.title' => JText::_('COM_BOTIGA_BRANDS_HEADING_BRAND')
-		);
 	}
 }
 ?>

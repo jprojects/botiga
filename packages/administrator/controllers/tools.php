@@ -18,7 +18,17 @@ jimport('joomla.application.component.controllerform');
  
 
 class botigaControllerTools extends JControllerForm
-{	
+{
+	/**
+	 * cancel task.
+	 * @since	1.6
+	*/
+	public function cancel() 
+	{
+		$link = "index.php?option=com_botiga";
+		$this->setRedirect($link);
+	}
+		
 	public function import()
 	{
 		$post_data  = JRequest::get( 'post' );

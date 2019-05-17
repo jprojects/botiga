@@ -5,8 +5,8 @@
  * @copyright   Copyright © 2010 - All rights reserved.
  * @license		GNU/GPL
  * @author		kim
- * @author mail administracion@joomlanetprojects.com
- * @website		http://www.joomlanetprojects.com
+ * @author mail kim@aficat.com
+ * @website		http://www.aficat.com
  *
  */
 
@@ -56,7 +56,7 @@ class botigaViewUser extends JViewLegacy
 		$userId = $user->id;
 		$isNew = $this->item->id == 0;
 		$canDo = botigaHelper::getActions($this->item->id);
-		JToolBarHelper::title($isNew ? JText::_('COM_BOTIGA_MANAGER_USER_NEW') : JText::_('COM_BOTIGA_MANAGER_USER_EDIT'), 'joomla');
+		JToolBarHelper::title($isNew ? JText::_('COM_BOTIGA_MANAGER_USER_NEW') : JText::_('COM_BOTIGA_MANAGER_USER_EDIT'), 'user');
 		// Built the actions for new and existing records.
 		if ($isNew) 
 		{

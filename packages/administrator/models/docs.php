@@ -29,9 +29,10 @@ class botigaModelDocs extends JModelList
 	{
         if (empty($config['filter_fields'])) {
 			$config['filter_fields'] = array(
-				'id', 'id',
-				'name', 'name',
-				'category', 'category',
+				'id', 'a.id',
+				'name', 'a.name',
+				'idItem', 'a.idItem',
+				'filename', 'a.filename',
 			);
 		}
 		parent::__construct($config);
@@ -58,7 +59,7 @@ class botigaModelDocs extends JModelList
 	 *
 	 * @since	1.6
 	*/
-	protected function populateState($ordering = null, $direction = null)
+	protected function populateState($ordering = 'a.id', $direction = 'asc')
 	{
 		// Initialise variables.
 		$app = JFactory::getApplication('administrator');
@@ -69,9 +70,12 @@ class botigaModelDocs extends JModelList
                 
         $search = $this->getUserStateFromRequest($this->context.'.filter.search', 'filter_search');
 		$this->setState('filter.search', $search);
+		
+		$published = $this->getUserStateFromRequest($this->context.'.filter.published', 'filter_published');
+		$this->setState('filter.published', $published);
 
 		// List state information.
-		parent::populateState('id', 'asc');
+		parent::populateState($ordering, $direction);
 	}
         
     /**
@@ -106,15 +110,17 @@ class botigaModelDocs extends JModelList
 
 		$query = $db->getQuery(true);
 		
-		$query->select('d.*');
+		$query->select('a.*, i.name as item');
 
-		$query->from('#__botiga_docs d');
+		$query->from('#__botiga_documents a');
+		
+		$query->join('inner', '#__botiga_items AS i ON a.idItem = i.id');
                 
         // Filter by search in name.
 		$search = $this->getState('filter.search');
 		if (!empty($search)) {
 			$search = $db->Quote('%'.$db->escape($search, true).'%');
-			$query->where('(d.name LIKE '.$search.')');
+			$query->where('(a.name LIKE '.$search.')');
 		}
 		
         // Add the list ordering clause.

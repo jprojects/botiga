@@ -5,8 +5,8 @@
  * @copyright   Copyright © 2010 - All rights reserved.
  * @license		GNU/GPL
  * @author		kim
- * @author mail administracion@joomlanetprojects.com
- * @website		http://www.joomlanetprojects.com
+ * @author mail kim@aficat.com
+ * @website		http://www.aficat.com
  *
  */
 
@@ -24,6 +24,8 @@ class botigaViewShipments extends JViewLegacy
 		$this->state		= $this->get('State');
 		$this->items		= $this->get('Items');
 		$this->pagination	= $this->get('Pagination');
+		$this->filterForm   = $this->get('FilterForm');
+		$this->activeFilters = $this->get('ActiveFilters');
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {
@@ -46,7 +48,7 @@ class botigaViewShipments extends JViewLegacy
 	protected function addToolBar() 
 	{
 		$canDo = botigaHelper::getActions();
-		JToolBarHelper::title(JText::_('COM_BOTIGA_MANAGER_SHIPMENTS'), 'joomla');
+		JToolBarHelper::title(JText::_('COM_BOTIGA_MANAGER_SHIPMENTS'), 'wand');
 
 		if ($canDo->get('core.create')) 
 		{
@@ -68,32 +70,7 @@ class botigaViewShipments extends JViewLegacy
 		{
             JToolBarHelper::divider();
 			JToolBarHelper::preferences('com_botiga');
-		}
-		
-		//Set sidebar action - New in 3.0
-		JHtmlSidebar::setAction('index.php?option=com_botiga&view=shipments');
-        
-        $this->extra_sidebar = '';
-        
-		JHtmlSidebar::addFilter(
-
-			JText::_('JOPTION_SELECT_PUBLISHED'),
-
-			'filter_published',
-
-			JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), "value", "text", $this->state->get('filter.state'), true)
-
-		);		
-	}
-	
-	protected function getSortFields()
-	{
-		return array(
-		'a.id' => JText::_('JGRID_HEADING_ID'),
-		'a.ordering' => JText::_('JGRID_HEADING_ORDERING'),
-		'a.published' => JText::_('JSTATUS'),
-		'a.name' => JText::_('COM_BOTIGA_SHIPMENT_NAME'),
-		);
+		}	
 	}
 }
 ?>

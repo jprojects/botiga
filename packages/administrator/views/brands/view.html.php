@@ -5,8 +5,8 @@
  * @copyright   Copyright © 2010 - All rights reserved.
  * @license		GNU/GPL
  * @author		kim
- * @author mail administracion@joomlanetprojects.com
- * @website		http://www.joomlanetprojects.com
+ * @author mail kim@aficat.com
+ * @website		http://www.aficat.com
  *
  */
 
@@ -24,6 +24,8 @@ class botigaViewBrands extends JViewLegacy
 		$this->state		= $this->get('State');
 		$this->items		= $this->get('Items');
 		$this->pagination	= $this->get('Pagination');
+		$this->filterForm   = $this->get('FilterForm');
+		$this->activeFilters = $this->get('ActiveFilters');
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {
@@ -58,6 +60,7 @@ class botigaViewBrands extends JViewLegacy
             JToolBarHelper::divider();
             JToolBarHelper::custom('brands.publish', 'publish.png', 'publish_f2.png', 'JTOOLBAR_PUBLISH', true);
             JToolBarHelper::custom('brands.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
+            JToolBarHelper::custom('brands.excel', 'checkin.png', 'checkin_f2.png', 'Excel', false);	
 		}
 		if ($canDo->get('core.delete')) 
 		{   
@@ -73,28 +76,7 @@ class botigaViewBrands extends JViewLegacy
 		//Set sidebar action - New in 3.0
 		JHtmlSidebar::setAction('index.php?option=com_botiga&view=brands');
         
-        $this->extra_sidebar = '';
-        
-		JHtmlSidebar::addFilter(
-
-			JText::_('JOPTION_SELECT_PUBLISHED'),
-
-			'filter_published',
-
-			JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), "value", "text", $this->state->get('filter.state'), true)
-
-		);		
-	}
-	
-	protected function getSortFields()
-	{
-		return array(
-		'a.id' => JText::_('JGRID_HEADING_ID'),
-		'a.ordering' => JText::_('JGRID_HEADING_ORDERING'),
-		'a.published' => JText::_('JSTATUS'),
-		'a.name' => JText::_('COM_BOTIGA_BRANDS_HEADING_BRAND'),
-		'a.language' => JText::_('JGRID_HEADING_LANGUAGE'),
-		);
+        $this->extra_sidebar = '';		
 	}
 }
 ?>

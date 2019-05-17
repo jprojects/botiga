@@ -88,6 +88,18 @@ class botigaHelper {
 	}
 	
 	/**
+	 * method to get all documents associated to a one document
+	 * @params string $id database item id
+	 * @return mixed
+	*/
+    public static function getItemDocuments($id)
+	{
+		$db = JFactory::getDbo();
+		$db->setQuery("select * from #__botiga_documents where idItem = ".$id);
+		return $db->loadObjectList();
+	}
+	
+	/**
 	 * method to get comanda data
 	 * @params string $field database field request
 	 * @return mixed
@@ -217,8 +229,24 @@ class botigaHelper {
    			return true; 
    		} else {
    			return  false;
-   		}
+   		}   		
+    }
+    
+    /**
+	 * method to know if there are stock of a product and validate addtocart button
+	 * @return bool
+	*/
+	public static function validateStock($stock) 
+    {
+   		$control_stock = botigaHelper::getParameter('control_stock', 0);
    		
+   		if($control_stock == 0) { return true; }
+		
+   		if($control_stock == 1 && $stock > 0) { 
+   			return true; 
+   		} else {
+   			return  false;
+   		}   		
     }
     
     /**
@@ -232,6 +260,9 @@ class botigaHelper {
 		return $active->id;
     }
     
+    /**
+	 * method to write in a debug log
+	*/
     public static function customLog($text) {
 
 		$handle = fopen(JPATH_COMPONENT.'/logs/botiga.log', 'a');

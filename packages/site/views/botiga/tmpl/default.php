@@ -38,6 +38,8 @@ $spain 		= botigaHelper::getParameter('total_shipment_spain', 25);
 $islands 	= botigaHelper::getParameter('total_shipment_islands', 50);
 $world 		= botigaHelper::getParameter('total_shipment_world', 60);
 
+$control_stock = botigaHelper::getParameter('control_stock', 0);
+
 $count 	    = botigaHelper::getCarritoCount();
 ?>
 
@@ -160,6 +162,11 @@ $count 	    = botigaHelper::getCarritoCount();
 							</a>						
 						</div>
 						
+						
+						<?php if($control_stock == 1 && $item->stock == 0) : ?>
+						<div class="text-left text-danger"><?= JText::_('COM_BOTIGA_ITEM_WITHOUT_STOCK'); ?></div>
+						<?php endif; ?>
+						
 						<?php if($showref == 1) : ?>
 						<div class="text-left item-ref"><?= $item->ref; ?></div>
 						<?php endif; ?>						
@@ -179,7 +186,7 @@ $count 	    = botigaHelper::getCarritoCount();
 						<div class="col-6 text-left bold estil05 text-dark mt-2"><?= $precio; ?>&euro;</div>
 						<?php endif; ?>
 						<div class="col-6 text-right pr-3">
-							<?php if(botigaHelper::isValidated()) : ?>
+							<?php if(botigaHelper::isValidated() && botigaHelper::validateStock($item->stock)) : ?>
 							<a href="index.php?view=botiga&task=botiga.setItem&id=<?= $item->id; ?>&return=<?= $uri; ?>">
 								<img src="media/com_botiga/icons/addtocart.png" alt="<?= JText::_('COM_BOTIGA_BTN_BUY'); ?>">
 							</a>

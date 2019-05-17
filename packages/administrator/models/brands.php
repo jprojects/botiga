@@ -5,13 +5,18 @@
  * @copyright   Copyright © 2010 - All rights reserved.
  * @license		GNU/GPL
  * @author		kim
- * @author mail administracion@joomlanetprojects.com
- * @website		http://www.joomlanetprojects.com
+ * @author mail kim@aficat.com
+ * @website		http://www.aficat.com
  *
  */
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
+
+require_once JPATH_ROOT.'/libraries/PhpOffice/vendor/autoload.php';
+		
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class botigaModelBrands extends JModelList
 {
@@ -24,12 +29,12 @@ class botigaModelBrands extends JModelList
 	*/
 	public function __construct($config = array())
 	{
-                if (empty($config['filter_fields'])) {
-				$config['filter_fields'] = array(
-				'id', 'id',
-				'name', 'name',
-				'published', 'published',
-				'language', 'language',
+        if (empty($config['filter_fields'])) {
+			$config['filter_fields'] = array(
+			'id', 'a.id',
+			'name', 'a.name',
+			'published', 'a.published',
+			'language', 'a.language',
 			);
 		}
 		parent::__construct($config);
@@ -56,7 +61,7 @@ class botigaModelBrands extends JModelList
 	 *
 	 * @since	1.6
 	*/
-	protected function populateState($ordering = null, $direction = null)
+	protected function populateState($ordering = 'a.ordering', $direction = 'asc')
 	{
 		// Initialise variables.
 		$app = JFactory::getApplication('administrator');
@@ -71,8 +76,11 @@ class botigaModelBrands extends JModelList
 		$language = $this->getUserStateFromRequest($this->context.'.filter.language', 'filter_language', '');
 		$this->setState('filter.language', $language);
 
+		$published = $this->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', 1);
+		$this->setState('filter.published', $published);
+
 		// List state information.
-		parent::populateState('a.ordering', 'asc');
+		parent::populateState($ordering, $direction);
 	}
         
     /**
@@ -122,13 +130,57 @@ class botigaModelBrands extends JModelList
 		if ($language = $this->getState('filter.language')) {
 			$query->where('a.language = ' . $db->quote($language));
 		}
+
+		// Filter on the language.
+		if ($published = $this->getState('filter.published')) {
+			$query->where('a.published = ' . $db->quote($published));
+		}
                 
         // Add the list ordering clause.
 		$orderCol	= $this->state->get('list.ordering', 'a.ordering');
 		$orderDirn	= $this->state->get('list.direction', 'ASC');
 
 		$query->order($db->escape($orderCol.' '.$orderDirn));
-                
+        //echo $query;        
 		return $query;
+	}
+	
+	/**
+	 * Method to export a csv from history
+	 * @return boolean true if success false if not
+	*/
+	public function getXls()
+	{		
+		// Create new PHPExcel object
+		$spreadsheet = new Spreadsheet();
+
+        // Add some data
+		$sheet = $spreadsheet->getActiveSheet();
+		$sheet->setCellValue('A1', JText::_('Id'));
+		$sheet->setCellValue('B1', JText::_('Brand'));
+		$sheet->setCellValue('C1', JText::_('CodFte'));
+		$sheet->setCellValue('D1', JText::_('Language'));
+
+		$this->populateState();
+		$db   = JFactory::getDbo();
+        $rows = $db->setQuery($this->getListQuery())->loadObjectList();
+
+		$i = 2;
+    	foreach($rows as $row) {
+			$sheet->setCellValue('A'.$i, $row->id);
+			$sheet->setCellValue('B'.$i, $row->name);
+			$sheet->setCellValue('C'.$i, $row->factusol_codfte);
+			$sheet->setCellValue('D'.$i, $row->language);
+			$i++;
+    	}
+
+		// Redirect output to a client’s web browser (Excel5)
+		header('Content-Type: application/vnd.ms-excel');
+		header('Content-Disposition: attachment;filename="list.xls"');
+		header('Cache-Control: max-age=0');
+
+		$objWriter = new Xlsx($spreadsheet);
+		$objWriter->save('php://output');
+		exit(0);
 	}
 }

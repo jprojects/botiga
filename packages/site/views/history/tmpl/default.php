@@ -143,7 +143,7 @@ $user_params = json_decode(botigaHelper::getUserData('params', $user->id), true)
 			<div role="tabpanel" class="tab-pane fade" id="tab2">
 				<div class="col-xs-12 col-md-6 mx-auto">
 					<form name="register" id="register" action="index.php?option=com_botiga&task=profile.profile" method="post" class="form-validate">
-						<input type="hidden" name="jform[id]" value="<?= $user->id; ?>" />
+						<input type="hidden" name="jform[userid]" value="<?= $user->id; ?>" />
 						<input type="hidden" name="option" value="com_botiga" />
 						<input type="hidden" name="task" value="profile.profile" />
 						<?php echo JHtml::_('form.token');?>						
@@ -244,7 +244,7 @@ $user_params = json_decode(botigaHelper::getUserData('params', $user->id), true)
 						
 						<div id="form-login-submit" class="control-group">
 							<div class="controls">
-								<button type="submit" class="btn btn-primary btn-block validate submit estil03"><?= JText::_('COM_BOTIGA_REGISTER'); ?></button>
+								<button type="submit" class="btn btn-primary btn-block validate submit estil03"><?= JText::_('JSUBMIT'); ?></button>
 							</div>
 						</div>
 					</form>

@@ -13,19 +13,21 @@
 			default="0" 
 			readonly="true"  
         />
-        <field 
-        	name="published" 
-        	type="list" 
-        	label="JSTATUS"
-			description="JFIELD_PUBLISHED_DESC" 
-			class="inputbox"
-			filter="intval" 
-			size="1" 
+        <field
+			name="published"
+			type="list"
+			label="JSTATUS"
+			description="COM_BANNERS_FIELD_STATE_DESC"
+			class="chzn-color-state"
+			size="1"
 			default="1"
-		>
+            onchange="this.form.submit();"
+			>
 			<option value="1">JPUBLISHED</option>
 			<option value="0">JUNPUBLISHED</option>
-		</field>
+			<option value="2">JARCHIVED</option>
+			<option value="-2">JTRASHED</option>
+		</field> 
 		<field 
 			name="language" 
 			type="language" 

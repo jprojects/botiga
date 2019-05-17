@@ -29,18 +29,19 @@ class botigaModelUsers extends JModelList
 	{
         if (empty($config['filter_fields'])) {
 			$config['filter_fields'] = array(
-				'id', 'id',
-				'nom_empresa', 'nom_empresa',
-				'cargo', 'cargo',
-				'mail_empresa', 'mail_empresa',
-				'telefon', 'telefon', 
-				'poblacio', 'poblacio',
-				'pais', 'pais',
-				'tarifa', 'tarifa', 
-				'published', 'published',
-				'contacto', 'contacto',
-				'cp', 'cp',
-				'cif', 'cif',
+				'id', 'u.id',
+				'nombre', 'u.nombre',
+				'type', 'u.type',
+				'usergroup', 'u.usergroup',
+				'validate', 'u.validate',
+				'nom_empresa', 'u.nom_empresa',
+				'mail_empresa', 'u.mail_empresa',
+				'telefon', 'u.telefon', 
+				'poblacio', 'u.poblacio',
+				'pais', 'u.pais',
+				'published', 'u.published',
+				'cp', 'u.cp',
+				'cif', 'u.cif',
 			);
 		}
 		parent::__construct($config);
@@ -67,7 +68,7 @@ class botigaModelUsers extends JModelList
 	 *
 	 * @since	1.6
 	*/
-	protected function populateState($ordering = null, $direction = null)
+	protected function populateState($ordering = 'u.id', $direction = 'asc')
 	{
 		// Initialise variables.
 		$app = JFactory::getApplication('administrator');
@@ -78,24 +79,18 @@ class botigaModelUsers extends JModelList
                 
         $search = $this->getUserStateFromRequest($this->context.'.filter.search', 'filter_search');
 		$this->setState('filter.search', $search);
-
-		$city = $this->getUserStateFromRequest($this->context.'.filter.city', 'filter_city');
-		$this->setState('filter.city', $city);
-
-		$country = $this->getUserStateFromRequest($this->context.'.filter.country', 'filter_country');
-		$this->setState('filter.country', $country);
 		
-		$rate = $this->getUserStateFromRequest($this->context.'.filter.rate', 'filter_rate');
-		$this->setState('filter.rate', $rate);
-		
-		$group = $this->getUserStateFromRequest($this->context.'.filter.group', 'filter_group');
-		$this->setState('filter.group', $group);
+		$usergroup = $this->getUserStateFromRequest($this->context.'.filter.usergroup', 'filter_usergroup');
+		$this->setState('filter.usergroup', $usergroup);
 		
 		$published = $this->getUserStateFromRequest($this->context.'.filter.published', 'filter_published');
 		$this->setState('filter.published', $published);
 
+		$validate = $this->getUserStateFromRequest($this->context.'.filter.validate', 'filter_validate');
+		$this->setState('filter.validate', $validate);
+
 		// List state information.
-		parent::populateState('id', 'asc');
+		parent::populateState($ordering, $direction);
 	}
         
     /**
@@ -114,10 +109,9 @@ class botigaModelUsers extends JModelList
 	{
 		// Compile the store id.
 		$id	.= ':'.$this->getState('filter.search');
-		$id	.= ':'.$this->getState('filter.city');
-		$id	.= ':'.$this->getState('filter.country');
-		$id	.= ':'.$this->getState('filter.group');
+		$id	.= ':'.$this->getState('filter.usergroup');
 		$id	.= ':'.$this->getState('filter.published');
+		$id	.= ':'.$this->getState('filter.validate');
 
 		return parent::getStoreId($id);
 	}
@@ -134,15 +128,25 @@ class botigaModelUsers extends JModelList
 
 		$query = $db->getQuery(true);
 		
-		$query->select('u.*');
+		$query->select('u.*, ug.title, c.country_name');
 
 		$query->from('#__botiga_users u');
+
+		$query->join('inner', '#__usergroups as ug ON ug.id = u.usergroup');
+		
+		$query->join('inner', '#__botiga_countries c ON c.country_id = u.pais');
                 
         // Filter by search in name.
 		$search = $this->getState('filter.search');
 		if (!empty($search)) {
 			$search = $db->Quote('%'.$db->escape($search, true).'%');
 			$query->where('(u.nom_empresa LIKE '.$search.' OR u.mail_empresa LIKE '.$search.')');
+		}
+
+		// Filter by published.
+    	$usergroup = $this->getState('filter.usergroup');
+		if ($usergroup != '') {
+			$query->where('(u.usergroup = '.$usergroup.')');
 		}
 		
 		// Filter by published.
@@ -151,6 +155,11 @@ class botigaModelUsers extends JModelList
 			$query->where('(u.published = '.$published.')');
 		}
 		
+		$validate = $this->getState('filter.validate');
+		if ($validate != '') {
+			$query->where('(u.validate = '.$validate.')');
+		}
+
         // Add the list ordering clause.
 		$orderCol	= $this->state->get('list.ordering');
 		$orderDirn	= $this->state->get('list.direction');

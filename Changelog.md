@@ -1,4 +1,6 @@
 #version 2.0.0
 
-* Nou sistema de regles per descomptes
-* Nou sistema per asociar documents a un producte
+* Nou sistema per asociar documents infinits a un producte
+* Nou sistema control d'estocs
+* Descarregues de llistats en el backend
+* Multitud de solució a petits errors

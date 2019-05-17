@@ -5,8 +5,8 @@
  * @copyright   Copyright © 2010 - All rights reserved.
  * @license		GNU/GPL
  * @author		kim
- * @author mail administracion@joomlanetprojects.com
- * @website		http://www.joomlanetprojects.com
+ * @author mail kim@aficat.com
+ * @website		http://www.aficat.com
  *
  */
 
@@ -39,6 +39,17 @@ class botigaControllerBrands extends JControllerAdmin
 	{
 		$link = "index.php?option=com_botiga";
 		$this->setRedirect($link);
+	}
+	
+	/**
+	 * Method to export a csv from list
+	*/
+	function excel()
+	{		
+        $model = $this->getModel('Brands');
+        $model->getXls();
+		jexit();
+
 	}
 	
 	/**

@@ -7,7 +7,7 @@
 	<authorUrl>http://www.afi.cat</authorUrl>
 	<copyright>Copyright © 2017 - All rights reserved.</copyright>
 	<license>GNU/GPL</license>
-	<version>1.0.0</version>
+	<version>2.0.0</version>
 	<description><![CDATA[COM_BOTIGA_DESCRIPTION]]></description>
     <files folder="site">
 		<filename>botiga.php</filename>
@@ -19,6 +19,10 @@
 		<folder>controllers/</folder>
 		<folder>assets/</folder>  
 	</files>
+	<media destination="com_botiga" folder="media">
+        <folder>icons/</folder>
+        <folder>docs/</folder>
+    </media>
 	<!-- Language frontend -->
 	<languages folder="site/languages/en-GB">
 		<language tag="en-GB">en-GB.com_botiga.ini</language>
@@ -33,6 +37,7 @@
 			<file driver="mysql" charset="utf8">sql/uninstall.mysql.utf8.sql</file>
 		</sql>
 	</uninstall>
+	<scriptfile>script.php</scriptfile>
     <update>
 		<schemas>
 			<schemapath type="mysql">sql/updates/mysql</schemapath>
@@ -40,6 +45,18 @@
 	</update>
 	<administration>
 		<menu link="option=com_botiga&amp;view=items">Botiga</menu>
+		<submenu>
+			<menu link="option=com_botiga&amp;view=brands">Brands</menu>
+			<menu link="option=com_categories&amp;extension=com_botiga">Categories</menu>
+			<menu link="option=com_botiga&amp;view=items">Products</menu>
+			<menu link="option=com_botiga&amp;view=users">Users</menu>
+			<menu link="option=com_botiga&amp;view=orders">Orders</menu>
+			<menu link="option=com_botiga&amp;view=coupons">Coupons</menu>
+			<menu link="option=com_botiga&amp;view=shipments">Shippments</menu>
+			<menu link="option=com_botiga&amp;view=discounts">Discounts</menu>
+			<menu link="option=com_botiga&amp;view=documents">Documents</menu>
+			<menu link="option=com_botiga&amp;view=tools&amp;view=edit">Tools</menu>
+		</submenu>
 		<files folder="administrator">
 			<filename>index.html</filename>
 			<filename>botiga.php</filename>

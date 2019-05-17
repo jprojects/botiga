@@ -36,6 +36,10 @@ class botigaViewTools extends JViewLegacy
 		// Assign the Data
 		$this->form = $form;
 		$this->item = $item;
+		
+		//create charts with chart.js and jquery https://www.chartjs.org/docs/latest/getting-started/
+		JHtml::_('jquery.framework');
+		JHtml::script('https://cdn.jsdelivr.net/npm/chart.js@2.8.0');
  
 		// Set the toolbar
 		$this->addToolBar();

@@ -5,8 +5,8 @@
  * @copyright   Copyright © 2010 - All rights reserved.
  * @license		GNU/GPL
  * @author		kim
- * @author mail administracion@joomlanetprojects.com
- * @website		http://www.joomlanetprojects.com
+ * @author mail kim@aficat.com
+ * @website		http://www.aficat.com
  *
  */
 
@@ -19,7 +19,7 @@ jimport('joomla.database.table');
 /**
  * Docs Table class
  *
- * @package    com_laundry
+ * @package    com_botiga
  *
  */
 class botigaTableDocs extends JTable
@@ -30,7 +30,7 @@ class botigaTableDocs extends JTable
     * @param object Database connector object
     */
     function __construct( &$db ) {
-    	parent::__construct('#__botiga_docs', 'id', $db);
+    	parent::__construct('#__botiga_documents', 'id', $db);
     }
                
 }

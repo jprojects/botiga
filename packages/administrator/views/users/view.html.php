@@ -24,6 +24,8 @@ class botigaViewUsers extends JViewLegacy
 		$this->state		= $this->get('State');
 		$this->items		= $this->get('Items');
 		$this->pagination	= $this->get('Pagination');
+		$this->filterForm   = $this->get('FilterForm');
+		$this->activeFilters = $this->get('ActiveFilters');
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {
@@ -46,7 +48,7 @@ class botigaViewUsers extends JViewLegacy
 	protected function addToolBar() 
 	{
 		$canDo = botigaHelper::getActions();
-		JToolBarHelper::title(JText::_('COM_BOTIGA_MANAGER_USERS'), 'users48');
+		JToolBarHelper::title(JText::_('COM_BOTIGA_MANAGER_USERS'), 'users');
 
 		if ($canDo->get('core.create')) 
 		{
@@ -56,8 +58,8 @@ class botigaViewUsers extends JViewLegacy
 		{
 			JToolBarHelper::editList('user.edit', 'JTOOLBAR_EDIT');
             JToolBarHelper::divider();
-            JToolBarHelper::custom('users.publish', 'Publicar', 'publish_f2.png','JTOOLBAR_PUBLISH', true);
-            JToolBarHelper::custom('users.unpublish', 'Despublicar', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
+            JToolBarHelper::custom('users.publish', 'publish.png', 'publish_f2.png', 'JTOOLBAR_PUBLISH', true);
+            JToolBarHelper::custom('users.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
 		}
 		if ($canDo->get('core.delete')) 
 		{   
@@ -75,24 +77,6 @@ class botigaViewUsers extends JViewLegacy
         
         $this->extra_sidebar = '';
         
-		JHtmlSidebar::addFilter(
-
-			JText::_('JOPTION_SELECT_PUBLISHED'),
-
-			'filter_published',
-
-			JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), "value", "text", $this->state->get('filter.published'), true)
-
-		);
-	}
-        
-    protected function getSortFields()
-	{
-		return array(
-		'a.id' => JText::_('JGRID_HEADING_ID'),
-		'a.published' => JText::_('JSTATUS'),
-		'a.nom_empresa' => JText::_('COM_BOTIGA_BRANDS_HEADING_BRAND'),
-		);
 	}
 }
 ?>

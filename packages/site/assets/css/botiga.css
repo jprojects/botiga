@@ -115,6 +115,15 @@ span.rollover:hover {
 	margin-bottom: 10px;
 }
 
+legend {
+	border-bottom: 1px solid #683b2b;
+	width: 100%;
+	font-size: 2em;
+	margin: 20px 0;
+	text-transform: uppercase;
+	color: #683b2b;
+}
+
 .styled-select select {
    background: transparent;
    width: 100%;

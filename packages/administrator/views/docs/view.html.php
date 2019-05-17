@@ -5,8 +5,8 @@
  * @copyright   Copyright © 2010 - All rights reserved.
  * @license		GNU/GPL
  * @author		kim
- * @author mail administracion@joomlanetprojects.com
- * @website		http://www.joomlanetprojects.com
+ * @author mail kim@aficat.com
+ * @website		http://www.aficat.com
  *
  */
 
@@ -24,6 +24,8 @@ class botigaViewDocs extends JViewLegacy
 		$this->state		= $this->get('State');
 		$this->items		= $this->get('Items');
 		$this->pagination	= $this->get('Pagination');
+		$this->filterForm   = $this->get('FilterForm');
+		$this->activeFilters = $this->get('ActiveFilters');
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {
@@ -46,7 +48,7 @@ class botigaViewDocs extends JViewLegacy
 	protected function addToolBar() 
 	{
 		$canDo = botigaHelper::getActions();
-		JToolBarHelper::title(JText::_('COM_BOTIGA_MANAGER_DOCS'), 'joomla');
+		JToolBarHelper::title(JText::_('COM_BOTIGA_MANAGER_DOCS'), 'briefcase');
 
 		if ($canDo->get('core.create')) 
 		{
@@ -56,42 +58,21 @@ class botigaViewDocs extends JViewLegacy
 		{
 			JToolBarHelper::editList('doc.edit', 'JTOOLBAR_EDIT');
             JToolBarHelper::divider();
-            JToolBarHelper::custom('docs.publish', 'Publicar', 'publish_f2.png','JTOOLBAR_PUBLISH', true);
-            JToolBarHelper::custom('docs.unpublish', 'Despublicar', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
+            JToolBarHelper::custom('docs.publish', 'publish.png', 'publish_f2.png', 'JTOOLBAR_PUBLISH', true);
+            JToolBarHelper::custom('docs.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
 		}
 		if ($canDo->get('core.delete')) 
 		{   
             JToolBarHelper::divider();
 			JToolBarHelper::deleteList('', 'docs.delete', 'JTOOLBAR_DELETE');
+			JToolBarHelper::divider();
+			JToolBarHelper::custom('docs.deleteFiles', 'unpublish.png', 'unpublish_f2.png', 'COM_BOTIGA_DOCS_DELETE_FILES', true);
 		}
 		if ($canDo->get('core.admin')) 
 		{
             JToolBarHelper::divider();
 			JToolBarHelper::preferences('com_botiga');
 		}		
-		
-		//Set sidebar action - New in 3.0
-		JHtmlSidebar::setAction('index.php?option=com_botiga&view=docs');
-        
-        $this->extra_sidebar = '';
-        
-		JHtmlSidebar::addFilter(
-
-			JText::_('JOPTION_SELECT_PUBLISHED'),
-
-			'filter_published',
-
-			JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), "value", "text", $this->state->get('filter.state'), true)
-
-		);
-	}
-        
-    protected function getSortFields()
-	{
-		return array(
-		'a.id' => JText::_('JGRID_HEADING_ID'),
-		'a.published' => JText::_('JSTATUS')
-		);
 	}
 }
 ?>

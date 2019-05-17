@@ -245,7 +245,7 @@ $doc->addStylesheet('components/com_botiga/assets/css/jquery.fancybox.css');
 					</div>
 				</div>
 				<div class="col-xs-12 col-md-8">
-					<?php if(botigaHelper::isValidated()) : ?>
+					<?php if(botigaHelper::isValidated() && botigaHelper::validateStock($this->item->stock)) : ?>
 					<button onclick="addtocart.submit();" class="btn btn-primary btn-block estil03">
 						<?= JText::_('COM_BOTIGA_BTN_BUY'); ?>
 					</button>
@@ -270,14 +270,21 @@ $doc->addStylesheet('components/com_botiga/assets/css/jquery.fancybox.css');
 		    <?php endif; ?>		    									
 			
 			<?php if($showgar == 1) : ?>
-			<div class="product-extra">Garantía</div>
+			<div class="product-extra"><?= JText::_('COM_BOTIGA_ITEM_SHIPPMENT_WARRANTY'); ?></div>
 			<?= JText::_($this->item->garantia); ?>
 			<?php endif; ?>	
 			
 			<?php if($showenvio == 1) : ?>
-			<div class="product-extra">Envío</div>
+			<div class="product-extra"><?= JText::_('COM_BOTIGA_ITEM_SHIPPMENT_DAYS'); ?></div>
 			<?= JText::_($this->item->envio); ?>
 			<?php endif; ?>	
+			
+			<?php if(count(botigaHelper::getItemDocuments($this->item->id)) > 0) : ?>
+			<div class="product-extra"><?= JText::_('COM_BOTIGA_ITEM_DOCUMENTS'); ?></div>
+			<?php foreach(botigaHelper::getItemDocuments($this->item->id) as $document) : ?>
+			<a href="<?= JURI::root().'media/com_botiga/docs/'.$document->filename; ?>"><i class="fa fa-file" aria-hidden="true"></i>&nbsp;<?= $document->name; ?></a>
+ 			<?php endforeach; ?>
+			<?php endif; ?>
 			
 			<?php 
 			$i = 0;

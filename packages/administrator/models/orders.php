@@ -56,7 +56,7 @@ class botigaModelOrders extends JModelList
 	 *
 	 * @since	1.6
 	*/
-	protected function populateState($ordering = null, $direction = null)
+	protected function populateState($ordering = 'a.id', $direction = 'desc')
 	{
 		// Initialise variables.
 		$app = JFactory::getApplication('administrator');
@@ -69,7 +69,7 @@ class botigaModelOrders extends JModelList
 		$this->setState('filter.search', $search);
 
 		// List state information.
-		parent::populateState('a.id', 'desc');
+		parent::populateState($ordering, $direction);
 	}
         
     /**
@@ -103,7 +103,7 @@ class botigaModelOrders extends JModelList
 		$db = JFactory::getDBO();
 
 		$query = $db->getQuery(true);
-		// Select some fields
+
 		$query->select('a.*, u.nom_empresa, u.id as user_id');
 
 		$query->from('#__botiga_comandes as a');

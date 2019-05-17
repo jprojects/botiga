@@ -5,8 +5,8 @@
  * @copyright   Copyright © 2010 - All rights reserved.
  * @license		GNU/GPL
  * @author		kim
- * @author mail administracion@joomlanetprojects.com
- * @website		http://www.joomlanetprojects.com
+ * @author mail kim@aficat.com
+ * @website		http://www.aficat.com
  *
  */
 
@@ -24,6 +24,8 @@ class botigaViewOrders extends JViewLegacy
 		$this->state		= $this->get('State');
 		$this->items		= $this->get('Items');
 		$this->pagination	= $this->get('Pagination');
+		$this->filterForm   = $this->get('FilterForm');
+		$this->activeFilters = $this->get('ActiveFilters');
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {
@@ -54,25 +56,16 @@ class botigaViewOrders extends JViewLegacy
             JToolBarHelper::divider();
 			JToolBarHelper::deleteList('', 'orders.delete', 'JTOOLBAR_DELETE');
 		}
+		if ($canDo->get('core.edit')) 
+		{
+            JToolBarHelper::custom('orders.excel', 'checkin.png', 'checkin_f2.png', 'Excel', false);
+		}
 		if ($canDo->get('core.admin')) 
 		{
             JToolBarHelper::divider();
 			JToolBarHelper::preferences('com_botiga');
 		}
-		
-		//Set sidebar action - New in 3.0
-		JHtmlSidebar::setAction('index.php?option=com_botiga&view=orders');
-        
-        $this->extra_sidebar = '';
         		
-	}
-	
-	protected function getSortFields()
-	{
-		return array(
-		'a.id' => JText::_('JGRID_HEADING_ID'),
-		'a.status' => JText::_('JSTATUS'),
-		);
 	}
 }
 ?>

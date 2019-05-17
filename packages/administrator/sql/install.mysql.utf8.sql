@@ -135,6 +135,7 @@ CREATE TABLE IF NOT EXISTS `#__botiga_items` (
   `child` text NOT NULL,
   `pes` varchar(50) NOT NULL DEFAULT '',
   `mida` varchar(50) NOT NULL DEFAULT '',
+  `stock` int(11) NOT NULL DEFAULT '0',
   `factusol_codart` varchar(13) DEFAULT NULL,
   `sincronitzat` int(11) DEFAULT '0',
   PRIMARY KEY (`id`)
@@ -158,6 +159,41 @@ CREATE TABLE IF NOT EXISTS `#__botiga_shipments` (
   `operator` char(7) NOT NULL DEFAULT '',
   `total` float(10,2) NOT NULL DEFAULT '0',
   `free` int(5) NOT NULL DEFAULT '0'  COMMENT 'Gratuito a partir de esta cantidad',
+  `published` tinyint(1) NOT NULL DEFAULT '0',
+  `ordering` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `#__botiga_discounts`
+--
+
+CREATE TABLE IF NOT EXISTS `#__botiga_discounts` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(150) NOT NULL DEFAULT '',
+  `usergroup` int(11) DEFAULT NULL,
+  `min` varchar(50) NOT NULL DEFAULT '',
+  `max` varchar(50) NOT NULL DEFAULT '',
+  `operator` char(7) NOT NULL DEFAULT '',
+  `total` float(10,2) NOT NULL DEFAULT '0',
+  `published` tinyint(1) NOT NULL DEFAULT '0',
+  `ordering` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `#__botiga_documents`
+--
+
+CREATE TABLE IF NOT EXISTS `#__botiga_documents` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(150) NOT NULL DEFAULT '',
+  `idItem` int(11) DEFAULT NULL,
+  `filename` varchar(150) NOT NULL DEFAULT '',
   `published` tinyint(1) NOT NULL DEFAULT '0',
   `ordering` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)

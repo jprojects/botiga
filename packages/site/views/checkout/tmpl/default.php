@@ -19,6 +19,11 @@ $model 		= $this->getModel('checkout');
 $app   		= JFactory::getApplication();
 $jinput		= JFactory::getApplication()->input;
 $user  		= JFactory::getUser();
+$cupon      = 0; //valor base del descompte del cupó
+$re_total   = 0; //valor per defecte de re_total si no està activat
+$re_percent = 0; //percent actual del recàrrec d'equivalència
+$iva_percent = 0; //percent d'iva actual
+$iva_total   = 0; //iva total
 
 if($user->guest) {
 	$returnurl = JRoute::_('index.php?option=com_users&view=login&return='.base64_encode(JUri::current()), false);
@@ -38,6 +43,7 @@ $islands 	= botigaHelper::getParameter('total_shipment_islands', 50);
 $world 		= botigaHelper::getParameter('total_shipment_world', 60);
 
 $count 	    = botigaHelper::getCarritoCount();
+$user_params = json_decode(botigaHelper::getUserData('params', $user->id), true);
 ?>
 
 <?php if(botigaHelper::getParameter('show_header', 0) == 1) : ?>
@@ -111,7 +117,11 @@ $count 	    = botigaHelper::getCarritoCount();
 				<?php $item->image1 != '' ? $image = $item->image1 : $image = 'images/noimage.png'; ?>
 				<?php $total_row = $item->price * $item->qty; ?>
 				<tr>
-					<td width="10%"><img src="<?= $image; ?>" class="img-fluid" alt="<?= $item->name; ?>" width="50" /></td>
+					<td width="10%">
+						<a href="<?= JRoute::_('index.php?option=com_botiga&view=item&id='.$item->idItem); ?>">
+							<img src="<?= $image; ?>" class="img-fluid" alt="<?= $item->name; ?>" width="50" />
+						</a>
+					</td>
 					<td width="5%" class="align-middle estil05 text-primary"><b><?= $item->price.'&euro;'; ?></b></td>
 					<td width="40%" class="align-middle estil05"><span class="estil05 text-primary"><?= $item->name; ?></span><br><?= $item->s_description; ?></td>				
 					<td width="20%" class="align-middle">
@@ -172,8 +182,8 @@ $count 	    = botigaHelper::getCarritoCount();
 				</tr>
 				<tr>
 					<?php 
-					$iva_percent = botigaHelper::getParameter('iva', '21');
-				 	$iva_total  = ($iva_percent / 100) * ($subtotal + $shipment); 
+					$iva_percent += botigaHelper::getParameter('iva', '21');
+				 	$iva_total   += ($iva_percent / 100) * ($subtotal + $shipment); 
 				 	?>
 					<td width="20%" class="align-middle estil03"><?= 'IVA '.$iva_percent.'%'; ?></td>
 					<td width="5%"></td>
@@ -182,6 +192,19 @@ $count 	    = botigaHelper::getCarritoCount();
 					<td width="10%"></td>				
 					<td width="20%" class="align-middle estil05"><span><?= number_format($iva_total, 2, '.', ''); ?>&euro;</span></td>
 				</tr>
+				<?php if($user_params['re_equiv'] == 1) :
+				$re_percent  += botigaHelper::getParameter('re_equiv', 5.2);
+				$re_total  += ($re_percent / 100) * ($subtotal + $shipment);
+				?>
+				<tr>
+					<td width="20%" class="align-middle estil03"><?= JText::_('COM_BOTIGA_CHECKOUT_RE_EQUIV'); ?></td>
+					<td width="5%"></td>
+					<td width="40%"></td>
+					<td width="20%"></td>
+					<td width="10%"></td>				
+					<td width="20%" class="align-middle estil05"><span><?= number_format($re_total, 2, '.', ''); ?>&euro;</span></td>
+				</tr>
+				<?php endif; ?>
 				<?php if($coupon != 0) : ?>
 				<?php $cupon = botigaHelper::getCouponDiscount($coupon, $subtotal); ?>
 				<tr>
@@ -194,7 +217,7 @@ $count 	    = botigaHelper::getCarritoCount();
 				</tr>
 				<?php endif; ?>
 				<tr>
-					<?php $total = $subtotal + $shipment + $iva_total + $cupon; ?>
+					<?php $total = $subtotal + $shipment + $iva_total + $re_total - $cupon; ?>
 					<td width="20%" class="align-middle estil03"><?= JText::_('COM_BOTIGA_CHECKOUT_TOTAL'); ?></td>
 					<td width="5%"></td>
 					<td width="40%"></td>
@@ -207,8 +230,14 @@ $count 	    = botigaHelper::getCarritoCount();
 		
 		<div id="userData">		
 			<form name="finishCart" id="finishCart" action="index.php?option=com_botiga&task=botiga.processCart" method="post">
+				<input type="hidden" name="userid" value="<?= $user->id; ?>">
 				<input type="hidden" name="subtotal" value="<?= $subtotal; ?>">
 				<input type="hidden" name="shipment" value="<?= $shipment; ?>">
+				<input type="hidden" name="re_percent" value="<?= $re_percent; ?>">
+				<input type="hidden" name="re_total" value="<?= $re_total; ?>">
+				<input type="hidden" name="iva_percent" value="<?= $iva_percent; ?>">
+				<input type="hidden" name="iva_total" value="<?= $iva_total; ?>">
+				<input type="hidden" name="discount" value="<?= $cupon; ?>">
 				<input type="hidden" name="total" value="<?= $total; ?>">
 				
 				<?php if($showobserva == 1) : ?>
@@ -229,7 +258,7 @@ $count 	    = botigaHelper::getCarritoCount();
 						foreach($plugins as $plugin) : 
 						$params = json_decode($plugin->params);				
 						?>
-						<option value="<?= $params->alies; ?>"><?= $params->title; ?></option>
+						<option value="<?= $params->alies; ?>" <?php if($user_params['metodo_pago'] == strtolower($params->alies)): ?>selected<?php endif; ?> ><?= $params->title; ?></option>
 						<?php endforeach; ?>
 						</select>
 					</div>

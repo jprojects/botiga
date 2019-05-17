@@ -22,34 +22,31 @@
 			label="COM_BOTIGA_DOC_NAME_LABEL"
 			description="COM_BOTIGA_DOC_NAME_DESC"
 			required="true"
-		/>      
+		/> 
 		<field 
-			name="category" 
-			type="list" 
-			label="COM_BOTIGA_DOC_CATEGORY_LABEL" 
-			description="COM_BOTIGA_DOC_CATEGORY_DESC" 
-			default=""
-		>
-			<option value="">COM_BOTIGA_SELECT_AN_OPTION</option>				
-			<option value="Aspiradoras">Aspiradoras</option>
-			<option value="Equipos Humidificación">Equipos Humidificación</option>
-			<option value="Grupos Motor Bomba">Grupos Motor Bomba</option>
-			<option value="Hidrolimpiadoras">Hidrolimpiadoras</option>	
-			<option value="Lavamoquetas">Lavamoquetas</option>
-		</field>
-		<field name="pdf"
+			name="idItem"
+			type="products"
+			label="COM_BOTIGA_DOC_ITEM_LABEL"
+			description="COM_BOTIGA_DOC_ITEM_DESC"
+			required="true"
+		/>     
+		<field 
+			name="filename"
 			type="filelist"
-			directory="images/pdf"
+			directory="media/com_botiga/docs"
 			exclude="\.html$"
 			label="COM_BOTIGA_DOC_PDF_LABEL"
 			description="COM_BOTIGA_DOC_PDF_DESC"
+			hide_default="true"
 		/> 
 	</fieldset>
-        <fields name="params">
-		<fieldset
-			name="params"
-			label="JGLOBAL_FIELDSET_DISPLAY_OPTIONS"
-		>			
-		</fieldset>
-	</fields>
+    <fieldset name="subida">
+    	<field 
+			name="subida" 
+			type="file" 
+			label="COM_BOTIGA_FORM_LBL_DOCUMENT_UPLOAD" 
+			description="COM_BOTIGA_FORM_DESC_DOCUMENT_UPLOAD" 
+			accept="pdf,doc,docx,xls" 	
+		/>
+  </fieldset>
 </form>
