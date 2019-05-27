@@ -75,7 +75,7 @@ if (!empty($this->extra_sidebar)) {
 					<th width="1%" class="hidden-phone">
 						<input type="checkbox" name="checkall-toggle" value="" title="<?= JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)" />
 					</th>
-		        	<?php if (isset($this->items[0]->state)): ?>
+		        	<?php if (isset($this->items[0]->published)): ?>
 					<th width="1%" class="nowrap center">
 						<?= JHtml::_('grid.sort', 'JSTATUS', 'a.published', $listDirn, $listOrder); ?>
 					</th>
@@ -84,7 +84,10 @@ if (!empty($this->extra_sidebar)) {
 						<?= JHtml::_('grid.sort',  'COM_BOTIGA_DISCOUNTS_HEADING_NAME', 'a.name', $listDirn, $listOrder); ?>
 					</th>
 					<th>
-						<?= JHtml::_('grid.sort',  'COM_BOTIGA_DISCOUNTS_HEADING_USERGROUP', 'a.usergroup', $listDirn, $listOrder); ?>
+						<?= JHtml::_('grid.sort',  'COM_BOTIGA_DISCOUNTS_HEADING_TYPE', 'a.type', $listDirn, $listOrder); ?>
+					</th>
+					<th>
+						<?= JHtml::_('grid.sort',  'COM_BOTIGA_DISCOUNTS_HEADING_TOTAL', 'a.total', $listDirn, $listOrder); ?>
 					</th>
 					<th>
 						<?= JHtml::_('grid.sort',  'COM_BOTIGA_DISCOUNTS_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>
@@ -141,14 +144,17 @@ if (!empty($this->extra_sidebar)) {
 					</td>
 		            <?php if (isset($this->items[0]->published)): ?>
 					<td class="center">
-							<?= JHtml::_('jgrid.published', $item->published, $i, 'items.', $canChange, 'cb'); ?>
+							<?= JHtml::_('jgrid.published', $item->published, $i, 'discounts.', $canChange, 'cb'); ?>
 					</td>
 		            <?php endif; ?>
 		            <td>
 						<a href="index.php?option=com_botiga&task=discount.edit&id=<?= $item->id; ?>"><?= $item->name; ?></a>
 					</td> 
 					<td>
-						<?= $item->usergroup; ?>
+						<?= $item->type; ?>
+					</td>
+					<td>
+						<?= $item->total; ?>&euro;
 					</td>	
 					<td>
 						<?= $item->id; ?>

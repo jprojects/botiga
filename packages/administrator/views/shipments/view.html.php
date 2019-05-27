@@ -48,7 +48,7 @@ class botigaViewShipments extends JViewLegacy
 	protected function addToolBar() 
 	{
 		$canDo = botigaHelper::getActions();
-		JToolBarHelper::title(JText::_('COM_BOTIGA_MANAGER_SHIPMENTS'), 'wand');
+		JToolBarHelper::title(JText::_('COM_BOTIGA_MANAGER_SHIPMENTS'), 'puzzle');
 
 		if ($canDo->get('core.create')) 
 		{

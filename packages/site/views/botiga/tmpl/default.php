@@ -85,6 +85,7 @@ $count 	    = botigaHelper::getCarritoCount();
 					<a href="index.php?option=com_botiga&view=history" title="History" class="hasTip">
 						<img src="media/com_botiga/icons/sesion-iniciada.png">
 					</a>
+					<div class="d-none d-sm-block"><small><?= JText::sprintf('COM_BOTIGA_WELCOME', $user->name); ?></small></div>
 					<?php endif; ?>
 				</div>
 			</div>

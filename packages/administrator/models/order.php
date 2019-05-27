@@ -107,11 +107,13 @@ class botigaModelOrder extends JModelList
 		
 		$id = JFactory::getApplication()->input->get('id');
 	
-		$query->select('a.*, i.name, i.ref');
+		$query->select('a.*, i.name, i.ref, c.subtotal, c.shipment, c.discount, c.iva_percent, c.iva_total, c.re_percent, c.re_total, c.total');
 
 		$query->from('#__botiga_comandesDetall as a');
 		
 		$query->join('inner', '#__botiga_items as i on a.idItem = i.id');
+		
+		$query->join('inner', '#__botiga_comandes as c on c.id = a.idComanda');
                 
         // Filter by search in name.
 		$search = $this->getState('filter.search');

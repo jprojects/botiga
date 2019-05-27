@@ -43,6 +43,17 @@ $control_stock = botigaHelper::getParameter('control_stock', 0);
 $count 	    = botigaHelper::getCarritoCount();
 ?>
 
+<script>
+jQuery(document).ready(function() {
+	jQuery('.input-number').keypress(function(event) {
+		if (event.keyCode == 13 || event.which == 13) {
+		    document.forms.addtocart.submit();
+		    event.preventDefault();
+		}
+	});
+});
+</script>
+
 <?php if(botigaHelper::getParameter('show_header', 0) == 1) : ?>
 <header class="head_botiga">
 
@@ -85,6 +96,7 @@ $count 	    = botigaHelper::getCarritoCount();
 					<a href="index.php?option=com_botiga&view=history" title="History" class="hasTip">
 						<img src="media/com_botiga/icons/sesion-iniciada.png">
 					</a>
+					<div class="d-none d-sm-block"><small><?= JText::sprintf('COM_BOTIGA_WELCOME', $user->name); ?></small></div>
 					<?php endif; ?>
 				</div>
 			</div>

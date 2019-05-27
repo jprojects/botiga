@@ -83,11 +83,18 @@ class botigaControllerBotiga extends botigaController {
 		
 		$sessid 	= $session->getId();
 		
-		//netejem comandes anteriors a 24 hores sense confirmar
-		$db->setQuery('DELETE FROM #__botiga_comandes WHERE data < (NOW() - INTERVAL 24 HOUR) AND status < 3');
-		$db->query();
+		$timeout 	= botigaHelper::getParameter('botiga_timeout_orders', 5); //comanda lifetime from config
 		
-		$db->setQuery('SELECT MAX(id) FROM #__botiga_comandes WHERE (userid = '.$user->id.' OR sessid = '.$db->quote($sessid).') AND status < 3');
+		//netejem comandes anteriors a 5 hores sense confirmar
+		$db->setQuery('SELECT id FROM #__botiga_comandes WHERE data < (NOW() - INTERVAL '.$timeout.' HOUR) AND status <= 2');
+		foreach($db->loadObjectList() as $row) {
+			$db->setQuery('DELETE FROM #__botiga_comandes WHERE id = '.$row->id);
+			$db->query();
+			$db->setQuery('DELETE FROM #__botiga_comandesDetall WHERE idComanda = '.$row->id);
+			$db->query();
+		}
+		
+		$db->setQuery('SELECT MAX(id) FROM #__botiga_comandes WHERE (userid = '.$user->id.' OR sessid = '.$db->quote($sessid).') AND status <= 2');
 		if($idComanda = $db->loadResult()) {
 			
 			$session->set('idComanda', $idComanda); //recuperem la sessió 						

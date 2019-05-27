@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS `#__botiga_comandes` (
   `data` datetime NOT NULL,
   `userid` int(11) NOT NULL,
   `sessid` varchar(150) NOT NULL,
-  `status` smallint(1) NOT NULL DEFAULT '0' COMMENT '1-Pendent;2-Pendent pagar;3-Pagada',
+  `status` smallint(1) NOT NULL DEFAULT '0' COMMENT '1-Pendent;2-Pendent pagar;3-Pagada;4-Pagada al 50%',
   `subtotal` float(10,2) NOT NULL DEFAULT '0.00',
   `shipment` float(10,2) NOT NULL DEFAULT '0.00',
   `discount` float(10,2) NOT NULL DEFAULT '0.00' COMMENT 'total descomptes',
@@ -114,6 +114,8 @@ CREATE TABLE IF NOT EXISTS `#__botiga_items` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `catid` varchar(150) NOT NULL DEFAULT '0',
   `name` varchar(150) NOT NULL DEFAULT '',
+  `child` int(11) NOT NULL DEFAULT '0',
+  `usergroup` int(11) NOT NULL DEFAULT '0',
   `brand` int(11) NOT NULL DEFAULT '0',
   `s_description` text NOT NULL,
   `description` text NOT NULL,
@@ -132,7 +134,6 @@ CREATE TABLE IF NOT EXISTS `#__botiga_items` (
   `language` char(7) NOT NULL DEFAULT '',
   `ref` text NOT NULL,
   `extres` varchar(15) DEFAULT NULL,
-  `child` text NOT NULL,
   `pes` varchar(50) NOT NULL DEFAULT '',
   `mida` varchar(50) NOT NULL DEFAULT '',
   `stock` int(11) NOT NULL DEFAULT '0',
@@ -173,11 +174,13 @@ CREATE TABLE IF NOT EXISTS `#__botiga_shipments` (
 CREATE TABLE IF NOT EXISTS `#__botiga_discounts` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` varchar(150) NOT NULL DEFAULT '',
-  `usergroup` int(11) DEFAULT NULL,
-  `min` varchar(50) NOT NULL DEFAULT '',
-  `max` varchar(50) NOT NULL DEFAULT '',
-  `operator` char(7) NOT NULL DEFAULT '',
+  `type` tinyint(1) DEFAULT NULL DEFAULT '0',
+  `idItem` int(11) DEFAULT NULL,
+  `min` int(5) NOT NULL,
+  `max` int(5) NOT NULL,
+  `box_items` int(5) NOT NULL,
   `total` float(10,2) NOT NULL DEFAULT '0',
+  `message` varchar(150) NOT NULL DEFAULT '',
   `published` tinyint(1) NOT NULL DEFAULT '0',
   `ordering` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
@@ -194,6 +197,8 @@ CREATE TABLE IF NOT EXISTS `#__botiga_documents` (
   `name` varchar(150) NOT NULL DEFAULT '',
   `idItem` int(11) DEFAULT NULL,
   `filename` varchar(150) NOT NULL DEFAULT '',
+  `language` char(7) NOT NULL DEFAULT '',
+  `listed` tinyint(1) NOT NULL DEFAULT '0',
   `published` tinyint(1) NOT NULL DEFAULT '0',
   `ordering` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
@@ -224,6 +229,7 @@ CREATE TABLE IF NOT EXISTS `#__botiga_favorites` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `itemid` char(64) DEFAULT NULL,
   `userid` char(3) DEFAULT NULL,
+  `published` tinyint(1) NOT NULL DEFAULT '0',
   `ordering` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -285,6 +291,7 @@ CREATE TABLE IF NOT EXISTS `#__botiga_savedCarts` (
   `data` datetime NOT NULL,
   `userid` int(11) DEFAULT '0',
   `cart` text NOT NULL DEFAULT '',
+  `published` tinyint(1) NOT NULL DEFAULT '0',
   `ordering` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;

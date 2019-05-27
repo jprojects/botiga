@@ -18,9 +18,23 @@
         <field 
         	type="text" 
         	name="botiga_cif" 
-        	default="Botiga" 
+        	default="" 
         	label="COM_BOTIGA_SETTINGS_CIF_LBL" 
         	description="COM_BOTIGA_SETTINGS_CIF_DSC" 
+        />
+        <field 
+        	type="text" 
+        	name="botiga_iban" 
+        	default="" 
+        	label="COM_BOTIGA_SETTINGS_IBAN_LBL" 
+        	description="COM_BOTIGA_SETTINGS_IBAN_DSC" 
+        />
+        <field 
+        	type="text" 
+        	name="botiga_address" 
+        	default="" 
+        	label="COM_BOTIGA_SETTINGS_ADDRESS_LBL" 
+        	description="COM_BOTIGA_SETTINGS_ADDRESS_DSC" 
         />
         <field 
         	type="media" 
@@ -137,6 +151,13 @@
 		<option value="0">JNO</option>
 		<option value="1">JYES</option> 
         </field>
+        <field 
+        	type="text" 
+        	name="botiga_timeout_orders" 
+        	default="5" 
+        	label="COM_BOTIGA_SETTINGS_TIME_REMOVE_ORDERS_LBL" 
+        	description="COM_BOTIGA_SETTINGS_TIME_REMOVE_ORDERS_DSC" 
+        />
   </fieldset>
   <fieldset name="items" label="COM_BOTIGA_ITEMS_SETTINGS" description="COM_BOTIGA_ITEMS_SETTINGS_DESC">
   		<field 

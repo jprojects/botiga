@@ -85,6 +85,7 @@ $user_params = json_decode(botigaHelper::getUserData('params', $user->id), true)
 						<a href="index.php?option=com_botiga&view=history" title="Mis pedidos" class="hasTip">
 							<img src="media/com_botiga/icons/sesion-iniciada.png">
 						</a>
+						<div class="d-none d-sm-block"><small><?= JText::sprintf('COM_BOTIGA_WELCOME', $user->name); ?></small></div>
 						<?php endif; ?>
 					</div>
 				</div>

@@ -93,6 +93,8 @@ class botigaModelUser extends JModelAdmin
     function store()
 	{		
 		$row =& $this->getTable();
+		$db  = JFactory::getDbo();
+		$user = JFactory::getUser();
 		
 		$post_data  = JRequest::get( 'post' );
    		$data       = $post_data["jform"];
@@ -103,6 +105,15 @@ class botigaModelUser extends JModelAdmin
     	unset($data['metodo_pago'], $data['re_equiv']);
     	
     	$data['params'] = json_encode($params);
+    	
+    	//save usergroup 0 customer (11) 1 company (10)
+    	if($data['type'] == 0) {
+    		$db->setQuery('UPDATE #__user_usergroup_map SET group_id = 11 WHERE user_id = '.$user->id.' AND group_id = 10');
+    		$db->query();
+    	} else {
+    		$db->setQuery('UPDATE #__user_usergroup_map SET group_id = 10 WHERE user_id = '.$user->id.' AND group_id = 11');
+    		$db->query();
+    	}
 	
 		if (!$row->bind( $data )) {
 			return JError::raiseWarning( 500, $row->getError() );

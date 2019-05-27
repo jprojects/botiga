@@ -211,12 +211,16 @@ if (!empty($this->extra_sidebar)) {
 						<span class="label label-info"><?= $item->processor; ?></span>
 					</td>
 					<td>
-						<a href="index.php?option=com_botiga&view=coupon&layout=edit&id=<?php $item->idCoupon; ?>"><?= $item->idCoupon; ?></a>
+						<a href="index.php?option=com_botiga&view=coupon&layout=edit&id=<?= $item->idCoupon; ?>"><?= $item->idCoupon; ?></a>
 					</td>					
 					<td class="hidden-phone">
 						<?php if($item->status == 1): ?><span class="label label-danger"><?= JText::_('COM_BOTIGA_STATUS_PENDING'); ?></span><?php endif; ?>
-						<?php if($item->status == 2): ?><span class="label label-warning"><?= JText::_('COM_BOTIGA_STATUS_PENDING_PAYMENT'); ?></span><?php endif; ?>
+						<?php if($item->status == 2 && $item->processor != 'Transferencia'): ?><span class="label label-warning"><?= JText::_('COM_BOTIGA_STATUS_PENDING_PAYMENT'); ?></span><?php endif; ?>
+						<?php if($item->status == 2 && $item->processor == 'Transferencia'): ?>
+						<a href="index.php?option=com_botiga&task=order.changeStatus&id=<?= $item->id; ?>"><span class="label label-important"><?= JText::_('COM_BOTIGA_STATUS_PAY_RECEIVED'); ?></span></a>
+						<?php endif; ?>
 						<?php if($item->status == 3): ?><span class="label label-success"><?= JText::_('COM_BOTIGA_STATUS_COMPLETED'); ?></span><?php endif; ?>
+						<?php if($item->status == 4): ?><span class="label label-important"><?= JText::_('COM_BOTIGA_STATUS_PENDING_50_PERCENT'); ?></span><?php endif; ?>
 					</td>
 				</tr>
 				<?php endforeach; ?>

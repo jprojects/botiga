@@ -2,78 +2,85 @@
 <extension version="3.5" type="plugin" group="botiga" method="upgrade">
 	<name>plg_paypal</name>
 	<author>Afi</author>
-	<creationDate>May 2015</creationDate>
-	<copyright>(C) 2005 - 2009 Open Source Matters. All rights reserved.</copyright>
+	<creationDate>May 2019</creationDate>
+	<copyright>(C) 20019 Afi Informàtica. All rights reserved.</copyright>
 	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
 	<authorEmail>kim@aficat.com</authorEmail>
 	<authorUrl>www.afi.cat</authorUrl>
-	<version>2.0.0</version>
+	<version>3.0</version>
 	<description>Paypal procesor for botiga component</description>
 	<files>
 		<filename plugin="paypal">paypal.php</filename>
 		<folder>paypal</folder>
 	</files>
-	
-	<updateservers>
-    	<server type="extension" priority="2" name="Botiga Paypal Plugin">http://www.aficat.com/updates/botiga/plg_botiga_paypal.xml</server>
-  	</updateservers>
-  	
 	<config>
 		<fields name="params">
 			<fieldset name="basic">
-			<field 
-				name="title"
-				type="text"
-				label="Title"
-				description=""
-				default="Paypal"
-			/>
-			<field 
-				name="alies"
-				type="text"
-				label="Alias"
-				description=""
-				default="Paypal"
-			/>
-			<field 
-				name="description"
-				type="text"
-				label="Description"
-				description=""
-				default=""
-			/>
-			<field 
-				name="sandbox"
-				type="radio"
-				label="Sandbox"
-				description=""
-				default="0"
-				class="btn-group"
-			>
+				<field 
+					name="title"
+					type="text"
+					label="Title"
+					description=""
+					default="Paypal"
+				/>
+				<field 
+					name="alies"
+					type="text"
+					label="Alias"
+					description=""
+					readonly="true"
+					default="Paypal"
+				/>
+				<field 
+					name="description"
+					type="text"
+					label="Description"
+					description=""
+					default=""
+				/>
+				<field 
+					name="sandbox"
+					type="radio"
+					label="Sandbox"
+					description=""
+					default="0"
+					class="btn-group"
+				>
+					<option value="0">JNO</option>
+					<option value="1">JYES</option>
+				</field>
+				<field 
+					name="merchantID"
+					type="email"
+					label="merchantID"
+					description="Your email account in paypal"
+					default=""
+				/>
+				<field 
+					name="successURL"
+					type="text"
+					label="success url"
+					description=""
+					default="index.php?option=com_botiga&amp;view=checkout&amp;layout=success"
+				/>
+				<field 
+					name="cancelURL"
+					type="text"
+					label="cancel url"
+					description=""
+					default="index.php?option=com_botiga&amp;view=checkout&amp;layout=cancel"
+				/>
+				<field 
+					type="radio" 
+					name="company_pay_percent" 
+					default="0" 
+					class="btn-group"
+					label="Companies pay 50%" 
+					description=""
+				>
 				<option value="0">JNO</option>
-				<option value="1">JYES</option>
-			</field>
-			<field 
-				name="merchantID"
-				type="email"
-				label="merchantID"
-				description="Your email account in paypal"
-				default=""
-			/>
-			<field 
-				name="successURL"
-				type="text"
-				label="success url"
-				description=""
-				default=""
-			/>
-			<field 
-				name="cancelURL"
-				type="text"
-				label="cancel url"
-				description=""
-				default=""
-			/>
+				<option value="1">JYES</option> 
+		    	</field>
 			</fieldset>	
 		</fields>
 	</config>

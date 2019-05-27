@@ -42,9 +42,6 @@ class botigaViewShipment extends JViewLegacy
  
 		// Display the template
 		parent::display($tpl);
- 
-		// Set the document
-		$this->setDocument();
 	}
  
 	/**
@@ -57,8 +54,8 @@ class botigaViewShipment extends JViewLegacy
 		$userId = $user->id;
 		$isNew = $this->item->id == 0;
 		$canDo = botigaHelper::getActions($this->item->id);
-		JToolBarHelper::title($isNew ? JText::_('COM_BOTIGA_MANAGER_SHIPMENT_NEW') : JText::_('COM_BOTIGA_MANAGER_SHIPMENT_EDIT'), 'brand48');
-		// Built the actions for new and existing records.
+		JToolBarHelper::title($isNew ? JText::_('COM_BOTIGA_MANAGER_SHIPMENT_NEW') : JText::_('COM_BOTIGA_MANAGER_SHIPMENT_EDIT'), 'puzzle');
+
 		if ($isNew) 
 		{
 			// For new records, check the create permission.
@@ -96,17 +93,6 @@ class botigaViewShipment extends JViewLegacy
             JToolBarHelper::divider();
 			JToolBarHelper::cancel('shipment.cancel', 'JTOOLBAR_CLOSE');
 		}
-	}
-	/**
-	 * Method to set up the document properties
-	 *
-	 * @return void
-	 */
-	protected function setDocument() 
-	{
-		$isNew = ($this->item->id < 1);
-		$document = JFactory::getDocument();
-		$document->setTitle($isNew ? JText::_('COM_BOTIGA_MANAGER_SHIPMENT_NEW') : JText::_('COM_BOTIGA_MANAGER_SHIPMENT_EDIT'));
 	}
 }
 ?>

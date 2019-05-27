@@ -8,7 +8,7 @@
  * @author mail kim@aficat.com
  * @website		http://www.aficat.com
  *
- */
+*/
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
@@ -179,7 +179,7 @@ if (!empty($this->extra_sidebar)) {
 						<?php if ($item->language == '*'):?>
 							<?= JText::alt('JALL', 'language'); ?>
 						<?php else:?>
-							<?= $item->language; ?>
+							<img src="<?= JURI::root(); ?>media/mod_languages/images/<?= str_replace('-', '_', strtolower($item->language)); ?>.gif" alt="<?= $item->language; ?>">
 						<?php endif;?>
 					</td>		
 				</tr>	

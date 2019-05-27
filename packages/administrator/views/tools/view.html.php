@@ -40,6 +40,7 @@ class botigaViewTools extends JViewLegacy
 		//create charts with chart.js and jquery https://www.chartjs.org/docs/latest/getting-started/
 		JHtml::_('jquery.framework');
 		JHtml::script('https://cdn.jsdelivr.net/npm/chart.js@2.8.0');
+		JHtml::script('/administrator/components/com_botiga/assets/js/chart.utils.js');
  
 		// Set the toolbar
 		$this->addToolBar();
@@ -57,8 +58,6 @@ class botigaViewTools extends JViewLegacy
 
 		JToolBarHelper::title(JText::_('COM_BOTIGA_MANAGER_TOOLS'), 'joomla');
 
-		JToolBarHelper::custom('tools.import', 'save-new.png', 'save-new_f2.png', 'COM_BOTIGA_TOOLS_IMPORT', false);
-        JToolBarHelper::divider();
 		JToolBarHelper::cancel('tools.cancel', 'JTOOLBAR_CANCEL');
 	}
 

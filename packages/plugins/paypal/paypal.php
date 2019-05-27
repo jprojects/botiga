@@ -36,12 +36,21 @@ class plgBotigaPaypal extends JPlugin
 	{
 		if($paymentmethod != $this->gateway) return false;
 		
+		jimport( 'joomla.access.access' );
+		
 		$user = JFactory::getUser();
 		$session = JFactory::getSession();
+		
+		$groups = JAccess::getGroupsByUser($user->id, false); // grupos a los que pertenece el usuario
 		
 		$postback = 'index.php?option=com_botiga&view=callback&method=Paypal&userid='.$user->id.'&idComanda='.$idComanda;
 		
 		$this->params->get('sandbox') == 0 ? $url = 'https://www.paypal.com/cgi-bin/webscr' : $url = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
+		
+		$company_pay_percent = $this->params->get('company_pay_percent', 0);
+		if($company_pay_percent == 1 && in_array(10, $groups)) { //10 usergroup empresa
+			$total = number_format(($total / 2), 2, '.', ''); // hacemos el 50% del total
+		}
 
 		$data = (object)array(
 			'url'			=> $url,
@@ -54,7 +63,7 @@ class plgBotigaPaypal extends JPlugin
 			'cmd'			=> '_xclick',
 			'recurring'		=> 0,
 			'idComanda'		=> $idComanda,
-			'amount'		=> $total			
+			'amount'		=> $total 			
 		);
 
 		@ob_start();
@@ -101,7 +110,7 @@ class plgBotigaPaypal extends JPlugin
     	$newStatus == 'C' ? $pagat = 1 : $pagat = 2;
     	$amount = $data['mc_gross'];
 
-    	// Set the payment status to Pending
+    	// Creem el rebut de la transacció
     	$rebut 					= new stdClass();
     	$rebut->data 			= date('Y-m-d');
     	$rebut->userid 			= $userid;
@@ -112,8 +121,9 @@ class plgBotigaPaypal extends JPlugin
     		
     	$db->insertObject('#__botiga_rebuts', $rebut);
     		
-    	//actualitzar estat comanda a pagada (3)
-		$db->setQuery('update #__botiga_comandes set status = 3, data = '.$db->quote(date('Y-m-d H:i:s')).' WHERE id = '.$idComanda);
+    	//actualitzar estat comanda a pagada (3) o (4) si es empresa i tenim activat el pagament al 50%
+    	$company_pay_percent == 1 && in_array(10, $groups) ? $status = 4 : $status = 3;
+		$db->setQuery('update #__botiga_comandes set status = '.$status.', data = '.$db->quote(date('Y-m-d H:i:s')).' WHERE id = '.$idComanda);
 		$db->query();
 		
 		//tanquem comanda

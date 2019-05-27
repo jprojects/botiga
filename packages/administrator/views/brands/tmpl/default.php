@@ -8,7 +8,7 @@
  * @author mail administracion@joomlanetprojects.com
  * @website		http://www.joomlanetprojects.com
  *
- */
+*/
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
@@ -163,7 +163,11 @@ if (!empty($this->extra_sidebar)) {
 						<?php echo $item->factusol_codfte; ?>
 					</td>
 					<td>
-						<?php echo $item->language; ?>
+						<?php if ($item->language == '*'):?>
+							<?= JText::alt('JALL', 'language'); ?>
+						<?php else:?>
+							<img src="<?= JURI::root(); ?>media/mod_languages/images/<?= str_replace('-', '_', strtolower($item->language)); ?>.gif" alt="<?= $item->language; ?>">
+						<?php endif;?>
 					</td>
 					<?php if (isset($this->items[0]->id)): ?>
 					<td class="center hidden-phone">

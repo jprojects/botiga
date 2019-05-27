@@ -44,6 +44,12 @@
 			label="COM_BOTIGA_ITEM_CHILD_LBL" 
 			description="COM_BOTIGA_ITEM_CHILD_DSC" 
 		/>
+		<field 
+			name="usergroup" 
+			type="usergroup"
+			label="COM_BOTIGA_ITEM_USERGROUP_LABEL"
+			description="COM_BOTIGA_ITEM_USERGROUP_DESC" 
+		/>
         <field name="catid"
 			type="category"
 			label="COM_BOTIGA_ITEM_CATID_LABEL"

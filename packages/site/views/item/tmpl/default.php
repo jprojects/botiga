@@ -65,6 +65,17 @@ $doc->addScript('components/com_botiga/assets/js/jquery.fancybox.js');
 $doc->addStylesheet('components/com_botiga/assets/css/jquery.fancybox.css');
 ?>
 
+<script>
+jQuery(document).ready(function() {
+	jQuery('.input-number').keypress(function(event) {
+		if (event.keyCode == 13 || event.which == 13) {
+		    document.forms.addtocart.submit();
+		    event.preventDefault();
+		}
+	});
+});
+</script>
+
 <?php if(botigaHelper::getParameter('show_header', 0) == 1) : ?>
 <header class="head_botiga">
 

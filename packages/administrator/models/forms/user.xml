@@ -26,13 +26,27 @@
 			<option value="1">JPUBLISHED</option>
 			<option value="0">JUNPUBLISHED</option>
 		</field>
-        <field name="usergroup"
+		<field 
+        	name="type" 
+        	type="list" 
+        	label="JSTATUS"
+			description="COM_BOTIGA_USER_TYPE_LABEL" 
+			class="inputbox"
+			filter="intval"  
+			default="0"
+		>
+			<option value="0">COM_BOTIGA_TYPE_CUSTOMER</option>
+			<option value="1">COM_BOTIGA_TYPE_COMPANY</option>
+		</field>
+        <field 
+        	name="usergroup"
 			type="usergroup"
 			label="COM_BOTIGA_USER_USERGROUP_LABEL"
 			description="COM_BOTIGA_USER_USERGROUP_DESC"
-			required="true"
+			default="11"
 		/>
-		<field name="userid"
+		<field 
+			name="userid"
 			type="user"
 			label="COM_BOTIGA_USER_USERID_LABEL"
 			description="COM_BOTIGA_USER_USERID_DESC"

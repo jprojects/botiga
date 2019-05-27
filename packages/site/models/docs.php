@@ -5,8 +5,8 @@
  * @copyright   Copyright © 2010 - All rights reserved.
  * @license		GNU/GPL
  * @author		kim
- * @author mail administracion@joomlanetprojects.com
- * @website		http://www.joomlanetprojects.com
+ * @author mail kim@aficat.com
+ * @website		http://www.aficat.com
  *
 */
 
@@ -114,8 +114,8 @@ class botigaModelDocs extends JModelList
 			$query->where('category = '.$db->quote($category));
 		}
 		
-		$query->where('published = 1');
-		//$query->where("(language = ".$db->quote($lang)." OR language='*')");
+		$query->where('published = 1 AND listed = 1');
+		$query->where("(language = ".$db->quote($lang)." OR language='*')");
 		echo $query;
 		return $query;
 	}

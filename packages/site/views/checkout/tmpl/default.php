@@ -24,6 +24,7 @@ $re_total   = 0; //valor per defecte de re_total si no està activat
 $re_percent = 0; //percent actual del recàrrec d'equivalència
 $iva_percent = 0; //percent d'iva actual
 $iva_total   = 0; //iva total
+$discount_total = 0; //total descomptes
 
 if($user->guest) {
 	$returnurl = JRoute::_('index.php?option=com_users&view=login&return='.base64_encode(JUri::current()), false);
@@ -88,6 +89,7 @@ $user_params = json_decode(botigaHelper::getUserData('params', $user->id), true)
 					<a href="index.php?option=com_botiga&view=history" title="History" class="hasTip">
 						<img src="media/com_botiga/icons/sesion-iniciada.png">
 					</a>
+					<div class="d-none d-sm-block"><small><?= JText::sprintf('COM_BOTIGA_WELCOME', $user->name); ?></small></div>
 					<?php endif; ?>
 				</div>
 			</div>
@@ -180,8 +182,23 @@ $user_params = json_decode(botigaHelper::getUserData('params', $user->id), true)
 					<td width="10%"></td>		
 					<td width="20%" class="align-middle estil05"><span><?= $shipment; ?>&euro;</span></td>
 				</tr>
+				<?php 
+				$discount = json_decode($model->getDiscounts(), true);
+				if($discount['total'] > 0) : 
+				$discount_total += $discount['total'];
+				?>
+				<tr>
+					<td width="20%" class="align-middle estil03"><span><?= $discount['message']; ?></span></td>
+					<td width="5%"></td>
+					<td width="40%"></td>
+					<td width="20%"></td>
+					<td width="10%"></td>		
+					<td width="20%" class="align-middle estil05"><span><?= $discount_total; ?>&euro;</span></td>
+				</tr>
+				<?php endif; ?>
 				<tr>
 					<?php 
+					$subtotal = $subtotal - $discount_total;
 					$iva_percent += botigaHelper::getParameter('iva', '21');
 				 	$iva_total   += ($iva_percent / 100) * ($subtotal + $shipment); 
 				 	?>
@@ -237,7 +254,7 @@ $user_params = json_decode(botigaHelper::getUserData('params', $user->id), true)
 				<input type="hidden" name="re_total" value="<?= $re_total; ?>">
 				<input type="hidden" name="iva_percent" value="<?= $iva_percent; ?>">
 				<input type="hidden" name="iva_total" value="<?= $iva_total; ?>">
-				<input type="hidden" name="discount" value="<?= $cupon; ?>">
+				<input type="hidden" name="discount" value="<?= $cupon+$discount_total; ?>">
 				<input type="hidden" name="total" value="<?= $total; ?>">
 				
 				<?php if($showobserva == 1) : ?>

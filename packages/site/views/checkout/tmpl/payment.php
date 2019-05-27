@@ -21,6 +21,10 @@ $processor = $jinput->get('processor');
 $idComanda = JFactory::getSession()->get('idComanda');
 $total     = botigaHelper::getComandaData('total', $idComanda);
 
+$spain 		= botigaHelper::getParameter('total_shipment_spain', 25);
+$islands 	= botigaHelper::getParameter('total_shipment_islands', 50);
+$world 		= botigaHelper::getParameter('total_shipment_world', 60);
+
 $uri 		= base64_encode(JFactory::getURI()->toString());
 $logo		= botigaHelper::getParameter('botiga_logo', '');
 $userToken  = JSession::getFormToken();
@@ -49,7 +53,7 @@ $userToken  = JSession::getFormToken();
 					<a href="index.php?option=com_botiga&view=botiga&layout=table">
 						<img src="media/com_botiga/icons/lista<?php if($jinput->getCmd('layout', '') == 'table') : ?>-active<?php endif; ?>.png">
 					</a>
-					<span class="pl-3 phone-hide"><?= JText::_('COM_BOTIGA_FREE_SHIPPING_MSG'); ?>&nbsp;<img src="media/com_botiga/icons/envio_gratis.png"></span>
+					<span class="pl-3 phone-hide"><?= JText::sprintf('COM_BOTIGA_FREE_SHIPPING_MSG', $spain, $islands, $world); ?>&nbsp;<img src="media/com_botiga/icons/envio_gratis.png"></span>
 				</div>
 				<div class="col-3 text-right">
 					<?php if($user->guest) : ?>
@@ -63,6 +67,7 @@ $userToken  = JSession::getFormToken();
 					<a href="index.php?option=com_botiga&view=history" title="History" class="hasTip">
 						<img src="media/com_botiga/icons/sesion-iniciada.png">
 					</a>
+					<div class="d-none d-sm-block"><small><?= JText::sprintf('COM_BOTIGA_WELCOME', $user->name); ?></small></div>
 					<?php endif; ?>
 				</div>
 			</div>

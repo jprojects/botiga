@@ -5,8 +5,8 @@
  * @copyright   Copyright © 2010 - All rights reserved.
  * @license		GNU/GPL
  * @author		kim
- * @author mail administracion@joomlanetprojects.com
- * @website		http://www.joomlanetprojects.com
+ * @author mail kim@aficat.com
+ * @website		http://www.aficat.com
  *
  */
 
@@ -27,7 +27,7 @@ class botigaController extends JControllerLegacy
     public function display($cachable = false, $urlparams = false) {
         require_once JPATH_COMPONENT . '/helpers/botiga.php';
 
-        $view = JFactory::getApplication()->input->getCmd('view', 'items');
+        $view = JFactory::getApplication()->input->getCmd('view', 'botiga');
         JFactory::getApplication()->input->set('view', $view);
 
         parent::display($cachable, $urlparams);

@@ -4,25 +4,77 @@
         <field
             name="search"
             type="text"
-            label="COM_BANNERS_BANNERS_FILTER_SEARCH_LABEL"
-            description="COM_BANNERS_BANNERS_FILTER_SEARCH_DESC"
-            hint="JSEARCH_FILTER"
+            label="COM_BOTIGA_ORDERS_SEARCH_LABEL"
+            description="COM_BOTIGA_ORDERS_SEARCH_DESC"
+            hint="COM_BOTIGA_ORDERS_SEARCH_HINT"
         />
-        <field
-			name="published"
+		<field
+			name="processor"
 			type="list"
-			label="JSTATUS"
-			description="COM_BANNERS_FIELD_STATE_DESC"
-			class="chzn-color-state"
+			label="COM_BOTIGA_ORDERS_PROCESSOR_LABEL"
+			description="COM_BOTIGA_ORDERS_PROCESSOR_DESC"
 			size="1"
-			default="1"
+			default=""
             onchange="this.form.submit();"
 			>
-			<option value="1">JPUBLISHED</option>
-			<option value="0">JUNPUBLISHED</option>
-			<option value="2">JARCHIVED</option>
-			<option value="-2">JTRASHED</option>
+			<option value="">COM_BOTIGA_SELECT_A_PROCESSOR</option>
+			<option value="Transferencia">Transferència</option>
+			<option value="Paypal">Paypal</option>
+			<option value="Targeta">Targeta</option>
 		</field>
+		<field
+			name="status"
+			type="list"
+			label="COM_BOTIGA_ORDERS_STATUS_LABEL"
+			description="COM_BOTIGA_ORDERS_STATUS_DESC"
+			size="1"
+			default=""
+            onchange="this.form.submit();"
+			>
+			<option value="">COM_BOTIGA_SELECT_A_STATUS</option>
+			<option value="1">Pendent</option>
+			<option value="2">Pendent de pagament</option>
+			<option value="3">Pagada</option>
+			<option value="4">Pagada al 50%</option>
+		</field>
+		<field 
+			name="date_from" 
+			type="calendar" 
+			default="" 
+			label="COM_BOTIGA_ORDERS_SELECT_DATA_FROM" 
+			description=""
+			class="input-medium" 
+			filter="user_utc" 
+			format="%Y-%m-%d %H:%M:%S"
+			singleheader="true" 
+			showtime="true" 
+			timeformat="12" 
+			todaybutton="true" 
+			weeknumbers="true"
+			filltable="true" 
+			minyear="-3" 
+			maxyear="5"
+			onchange="this.form.submit();" 
+		/>
+		<field 
+			name="date_to" 
+			type="calendar" 
+			default="" 
+			label="COM_BOTIGA_ORDERS_SELECT_DATA_TO" 
+			description=""
+			class="input-medium" 
+			onchange="this.form.submit();" 
+			filter="user_utc" 
+			format="%Y-%m-%d %H:%M:%S"
+			singleheader="true" 
+			showtime="true" 
+			timeformat="12" 
+			todaybutton="true" 
+			weeknumbers="true"
+			filltable="true" 
+			minyear="-3" 
+			maxyear="5" 
+		/>
     </fields>
     <fields name="list">
         <field

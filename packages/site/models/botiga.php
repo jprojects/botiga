@@ -100,11 +100,12 @@ class botigaModelBotiga extends JModelList
 		$ref     	= $app->input->get('ref', '');
 		$orderby 	= $app->input->get('orderby', 'id');
 		
+		$groups  = JAccess::getGroupsByUser($user->id, false);
+		
 		//order by pice
-		if($orderby == 'pvp') {
-			$groups  = JAccess::getGroupsByUser($user->id, false);
+		if($orderby == 'pvp') {			
 			if(in_array(10, $groups)) {
-				$orderby = 'CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(i.price, \'pricing":["\',-1), \'"\', -2), \'"\', 1) AS double(10,2))'; //hotusa
+				$orderby = 'CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(i.price, \'pricing":["\',-1), \'"\', -2), \'"\', 1) AS double(10,2))'; //empresa
 			} else {
 				$orderby = 'CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(i.price, \'pricing":["\',-1), \'","\', 1) AS double(10,2))'; //registered
 			}
@@ -130,6 +131,7 @@ class botigaModelBotiga extends JModelList
 
 		$query->where('i.published = 1');
 		$query->where('i.child = ""');
+		$query->where('(i.usergroup = 0 OR i.usergroup IN('.implode(',', $groups).'))');
 		$query->where('i.language = '.$db->quote(JFactory::getLanguage()->getTag()).' ORDER BY '.$orderby.' ASC');
 
 		//echo $query;

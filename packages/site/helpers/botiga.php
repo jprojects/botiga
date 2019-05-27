@@ -95,7 +95,8 @@ class botigaHelper {
     public static function getItemDocuments($id)
 	{
 		$db = JFactory::getDbo();
-		$db->setQuery("select * from #__botiga_documents where idItem = ".$id);
+		$lang = JFactory::getLanguage()->getTag();
+		$db->setQuery("select * from #__botiga_documents where idItem = ".$id." AND language = ".$db->quote($lang));
 		return $db->loadObjectList();
 	}
 	
@@ -345,7 +346,9 @@ class botigaHelper {
 	public static function getChilds($itemid)
 	{
 		$db = JFactory::getDbo();
-		$db->setQuery('SELECT id, name FROM #__botiga_items WHERE child = '.$itemid.' AND published = 1');
+		$user = JFactory::getUser();
+		$groups  = JAccess::getGroupsByUser($user->id, false);
+		$db->setQuery('SELECT id, name FROM #__botiga_items WHERE child = '.$itemid.' AND published = 1 AND (usergroup = 0 OR usergroup IN('.implode(',', $groups).'))');
 		return $db->loadObjectList();
 		
 	}

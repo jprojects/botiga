@@ -2,8 +2,8 @@
 <extension version="3.5" type="plugin" group="botiga" method="upgrade">
 	<name>Botiga Ttransferencia</name>
 	<author>Afi</author>
-	<creationDate>May 2015</creationDate>
-	<copyright>(C) 2005 - 2009 Open Source Matters. All rights reserved.</copyright>
+	<creationDate>May 2019</creationDate>
+	<copyright>(C) 2019 Afi Informàtica. All rights reserved.</copyright>
 	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
 	<authorEmail>kim@aficat.com</authorEmail>
 	<authorUrl>www.afi.cat</authorUrl>
@@ -15,34 +15,46 @@
 	<config>
 		<fields name="params">
 			<fieldset name="basic">
-			<field 
-				name="title"
-				type="text"
-				label="Title"
-				description=""
-				default="Transferència"
-			/>
-			<field 
-				name="alies"
-				type="text"
-				label="Alias"
-				description=""
-				default="Transferencia"
-			/>
-			<field 
-				name="account"
-				type="text"
-				label="Compte bancari"
-				description="Compte bancari amb IBAN"
-				default=""
-			/>
-			<field 
-				name="beneficiari"
-				type="text"
-				label="Beneficiari"
-				description=""
-				default=""
-			/>
+				<field 
+					name="title"
+					type="text"
+					label="Title"
+					description=""
+					default="Transferència"
+				/>
+				<field 
+					name="alies"
+					type="text"
+					label="Alias"
+					description=""
+					readonly="true"
+					default="Transferencia"
+				/>
+				<field 
+					name="account"
+					type="text"
+					label="Compte bancari"
+					description="Compte bancari amb IBAN"
+					default=""
+				/>
+				<field 
+					name="beneficiari"
+					type="text"
+					label="Beneficiari"
+					description=""
+					default=""
+				/>
+				<field 
+					type="radio" 
+					name="company_pay_percent" 
+					default="0" 
+					class="btn-group"
+					label="Companies pay 50%" 
+					description=""
+				>
+				<option value="0">JNO</option>
+				<option value="1">JYES</option> 
+		    	</field>
 			</fieldset>
 		</fields>
 	</config>

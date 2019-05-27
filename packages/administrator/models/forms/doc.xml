@@ -29,7 +29,15 @@
 			label="COM_BOTIGA_DOC_ITEM_LABEL"
 			description="COM_BOTIGA_DOC_ITEM_DESC"
 			required="true"
-		/>     
+		/>  
+		<field 
+			name="language" 
+			type="language" 
+			client="site" 
+			default="en-GB" 
+			label="COM_BOTIGA_DOC_LANGUAGE_LABEL" 
+			description="COM_BOTIGA_DOC_LANGUAGE_DESC" 
+		/>   
 		<field 
 			name="filename"
 			type="filelist"

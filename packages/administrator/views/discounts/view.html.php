@@ -48,7 +48,7 @@ class botigaViewDiscounts extends JViewLegacy
 	protected function addToolBar() 
 	{
 		$canDo = botigaHelper::getActions();
-		JToolBarHelper::title(JText::_('COM_BOTIGA_MANAGER_DISCOUNTS'), 'joomla');
+		JToolBarHelper::title(JText::_('COM_BOTIGA_MANAGER_DISCOUNTS'), 'puzzle');
 
 		if ($canDo->get('core.create')) 
 		{

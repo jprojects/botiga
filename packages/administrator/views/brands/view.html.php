@@ -71,12 +71,7 @@ class botigaViewBrands extends JViewLegacy
 		{
             JToolBarHelper::divider();
 			JToolBarHelper::preferences('com_botiga');
-		}
-		
-		//Set sidebar action - New in 3.0
-		JHtmlSidebar::setAction('index.php?option=com_botiga&view=brands');
-        
-        $this->extra_sidebar = '';		
+		}	
 	}
 }
 ?>

@@ -23,6 +23,7 @@ abstract class botigaHelper
 	*/
 	public static function addSubmenu($submenu) 
 	{
+		JHtmlSidebar::addEntry(JText::_('COM_BOTIGA_SUBMENU_BOTIGA'), 'index.php?option=com_botiga', $submenu == 'botiga');
         JHtmlSidebar::addEntry(JText::_('COM_BOTIGA_SUBMENU_BRANDS'), 'index.php?option=com_botiga&view=brands', $submenu == 'brands');
         JHtmlSidebar::addEntry(JText::_('COM_BOTIGA_SUBMENU_CATEGORIES'), 'index.php?option=com_categories&view=categories&extension=com_botiga', $submenu == 'categories');
 		JHtmlSidebar::addEntry(JText::_('COM_BOTIGA_SUBMENU_PRODUCTS'), 'index.php?option=com_botiga&view=items', $submenu == 'products');

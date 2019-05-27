@@ -5,60 +5,41 @@
  * @copyright   Copyright © 2010 - All rights reserved.
  * @license		GNU/GPL
  * @author		kim
- * @author mail administracion@joomlanetprojects.com
- * @website		http://www.joomlanetprojects.com
+ * @author mail kim@aficat.com
+ * @website		http://www.aficat.com
  *
- */
+*/
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
-JHtml::_('behavior.tooltip');
-JHtml::_('behavior.formvalidation');
-JHtml::_('formbehavior.chosen', 'select');
 JHtml::_('behavior.keepalive');
 $model = $this->getModel('tools');
 ?>
 
 <script type="text/javascript">
-js = jQuery.noConflict();
-js(document).ready(function(){
-
-});
-
 Joomla.submitbutton = function(task)
 {
-if(task == 'tools.cancel'){
-    Joomla.submitform(task, document.getElementById('item-form'));
-}
-else{
-    
-    if (task != 'brand.cancel' && document.formvalidator.isValid(document.id('item-form'))) {
-        
-        Joomla.submitform(task, document.getElementById('item-form'));
-    }
-    else {
-        alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED')); ?>');
-    }
-}
+	if(task == 'tools.cancel'){
+		document.location.href = 'index.php?option=com_botiga';
+	}
 }
 </script>
 
-<form action="<?php echo JRoute::_('index.php?option=com_botiga&task=tools.import'); ?>" method="post" name="adminForm" id="item-form" class="form-validate">
- 
+
+<form action="<?= JRoute::_('index.php?option=com_botiga'); ?>" method="post" name="adminForm" id="item-form">
+
 	<div class="row-fluid">
-        <div class="span6 form-horizontal">
-            <fieldset class="adminform">
-			<legend><?php echo JText::_( 'COM_BOTIGA_TOOLS_IMPORT_FROM_VM' ); ?></legend>
-			<?php foreach($this->form->getFieldset('details') as $field): ?>
-				<div class="control-group">
-				<div class="control-label"><?php echo $field->label; ?></div>
-				<div class="controls"><?php echo $field->input ?></div>
-				</div>
-	    	<?php endforeach; ?>
-			</fieldset>
+		<div class="span5">
+			<canvas id="canvas1"></canvas>
+			<canvas id="canvas3"></canvas>
 		</div>
-		<input type="hidden" name="task" value="tools.import" />
-		<?php echo JHtml::_('form.token'); ?>
+		<div class="span5">
+			<canvas id="canvas2"></canvas>
+			<canvas id="canvas4"></canvas>
+		</div>
 	</div>
+
+	<input type="hidden" name="task" value="tools.cancel" />
+	<?= JHtml::_('form.token'); ?>
 </form>

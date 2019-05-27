@@ -90,6 +90,9 @@ if (!empty($this->extra_sidebar)) {
 						<?= JHtml::_('grid.sort',  'COM_BOTIGA_DOCS_HEADING_FILENAME', 'a.filename', $listDirn, $listOrder); ?>
 					</th>
 					<th>
+						<?= JHtml::_('grid.sort',  'JGRID_HEADING_LANGUAGE', 'a.language', $listDirn, $listOrder); ?>
+					</th>
+					<th>
 						<?= JHtml::_('grid.sort',  'COM_BOTIGA_DOCS_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>
 					</th>					
 				</tr>
@@ -155,6 +158,13 @@ if (!empty($this->extra_sidebar)) {
 					</td>
 					<td>
 						<a href="<?= JURI::root().'media/com_botiga/docs/'.$item->filename; ?>"><?= $item->filename; ?></a>
+					</td>
+					<td class="center nowrap">
+						<?php if ($item->language == '*'):?>
+							<?= JText::alt('JALL', 'language'); ?>
+						<?php else:?>
+							<img src="<?= JURI::root(); ?>media/mod_languages/images/<?= str_replace('-', '_', strtolower($item->language)); ?>.gif" alt="<?= $item->language; ?>">
+						<?php endif;?>
 					</td>	
 					<td>
 						<?= $item->id; ?>

@@ -28,4 +28,21 @@ class botigaControllerOrder extends JControllerForm
 		$model = parent::getModel($name, $prefix, array('ignore_request' => true));
 		return $model;
 	}
+	
+	public function changeStatus()
+	{
+		$db = JFactory::getDbo();
+		$id = JFactory::getApplication()->input->get('id');
+		
+		$db->setQuery('UPDATE #__botiga_comandes SET status = 3 WHERE id = '.$id);
+		if($db->query()) {
+			$msg = JText::_('COM_BOTIGA_ORDER_CHANGE_STATUS_SUCCESS');
+			$type = 'success';
+		} else {
+			$msg = JText::_('COM_BOTIGA_ORDER_CHANGE_STATUS_ERROR');
+			$type = 'success';
+		}
+		
+		$this->setRedirect('index.php?option=com_botiga&view=orders', $msg, $type);
+	}
 }

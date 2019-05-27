@@ -54,7 +54,7 @@ class plgBotigaHabitual extends JPlugin
 		
 		$total = abs($total);
 		
-		$html  = "<div class='alert alert-success'>Pedido en gestión.<br>Nos pondremos en contacto para confirmar el pedido.</div>";
+		$html  = "";
 		
 		$html .= "<div id='page-header'><h1>>Ha escogido pago por método habitual</h1></div>";
 		$html .= "<table class='table'>";

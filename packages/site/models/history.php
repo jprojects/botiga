@@ -43,7 +43,7 @@ class botigaModelHistory extends JModelList
 	 * @return	void
 	 * @since	1.6
 	*/
-	protected function populateState($ordering = 'ordering', $direction = 'ASC')
+	protected function populateState($ordering = 'c.id', $direction = 'DESC')
 	{
 		// Initialise variables.
 		$app = JFactory::getApplication();
@@ -99,7 +99,7 @@ class botigaModelHistory extends JModelList
 		$query->select('c.*');
 		$query->from('#__botiga_comandes as c');
 		$query->join('inner', '#__botiga_comandesDetall as cd on c.id = cd.idComanda');
-		$query->where('c.userid = '.$user->id.' and c.status = 3 group by c.id, c.data, c.status');
+		$query->where('c.userid = '.$user->id.' and c.status = 3 group by c.id, c.data, c.status ORDER BY c.id DESC');
 		
         $params = JComponentHelper::getParams( 'com_botiga' );
 

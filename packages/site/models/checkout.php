@@ -143,6 +143,68 @@ class botigaModelCheckout extends JModelList
 	}
 	
 	/**
+	 * Get a total discount.
+	 * @return	float
+	*/
+	public function getDiscounts()
+	{
+		jimport( 'joomla.access.access' );
+		
+		$db 	 = JFactory::getDbo();
+		$session = JFactory::getSession();
+		
+		$idComanda = $session->get('idComanda', '');					
+		
+		$discount = array();
+		$discount['total'] = 0;
+		$discount['message'] = '';
+		
+		$db->setQuery('SELECT * FROM #__botiga_comandesDetall WHERE idComanda = '.$idComanda);
+		$rows = $db->loadObjectList();				
+		
+		foreach($rows as $row) {														
+
+			$db->setQuery('SELECT * FROM #__botiga_discounts WHERE idItem = '.$row->idItem.' AND published = 1');
+			$dsc = $db->loadObject();
+			
+			//type 1 discounts by nºitems in a box
+			if($dsc->type == 1) {		
+
+				if($row->qty >= $dsc->box_items) {
+				
+					$num_capces = round($row->qty / $dsc->box_items); //nº de capces
+					$items_sense_capsa = $row->qty - ($num_capces * $dsc->box_items); //items sense capça
+					
+					//botigaHelper::customLog('capces '.$num_capces.' sense capça '.$items_sense_capsa);
+					
+					$new_price = ($num_capces * $dsc->box_items) * $dsc->total;
+					
+					$old_price = ($num_capces * $dsc->box_items) * $row->price;
+					
+					$discount['total'] += number_format(($old_price - $new_price), 2, '.', '');
+					$discount['message'] = JText::sprintf($dsc->message, $num_capces, $dsc->box_items);
+				}		
+			}
+			
+			//type 2 discounts by nºitems
+			if($dsc->type == 2) {		
+
+				if($row->qty >= $dsc->min) {
+					
+					$new_price = $row->qty * $dsc->total;
+					
+					$old_price = $row->qty * $row->price;
+					
+					$discount['total'] += number_format(($old_price - $new_price), 2, '.', '');
+					$discount['message'] = JText::sprintf($dsc->message, $row->qty, $dsc->total);
+				}		
+			}
+		}		
+		
+		return json_encode($discount);		
+	}
+	
+	/**
 	 * Get a shipment amount.
 	 * @params float $amount the total cart amount
 	 * @return	float
@@ -236,7 +298,6 @@ class botigaModelCheckout extends JModelList
 			}
 		}		
 		
-		return number_format($shipment_discount, 2, '.', '');
-		
+		return number_format($shipment_discount, 2, '.', '');		
 	}
 }

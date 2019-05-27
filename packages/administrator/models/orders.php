@@ -5,8 +5,8 @@
  * @copyright   Copyright © 2010 - All rights reserved.
  * @license		GNU/GPL
  * @author		kim
- * @author mail administracion@joomlanetprojects.com
- * @website		http://www.joomlanetprojects.com
+ * @author mail kim@aficat.com
+ * @website		http://www.aficat.com
  *
  */
 
@@ -30,6 +30,15 @@ class botigaModelOrders extends JModelList
 				'userid', 'a.userid',
 				'data', 'a.data',
 				'status', 'a.status',
+				'subtotal', 'a.subtotal',
+				'processor', 'a.processor',
+				'discount', 'a.discount',
+				'shipment', 'a.shipment',
+				'iva_percent', 'a.iva_percent',
+				'iva_total', 'a.iva_total',
+				're_percent', 'a.re_percent',
+				're_total', 'a.re_total',
+				'idCoupon', 'a.idCoupon'
 			);
 		}
 		parent::__construct($config);
@@ -67,6 +76,18 @@ class botigaModelOrders extends JModelList
                 
         $search = $this->getUserStateFromRequest($this->context.'.filter.search', 'filter_search');
 		$this->setState('filter.search', $search);
+		
+		$processor = $this->getUserStateFromRequest($this->context.'.filter.processor', 'filter_processor');
+		$this->setState('filter.processor', $processor);
+		
+		$status = $this->getUserStateFromRequest($this->context.'.filter.status', 'filter_status');
+		$this->setState('filter.status', $status);
+		
+		$from = $this->getUserStateFromRequest($this->context.'.filter.date_from', 'filter_date_from');
+		$this->setState('filter.date_from', $from);
+		
+		$to = $this->getUserStateFromRequest($this->context.'.filter.date_to', 'filter_date_to');
+		$this->setState('filter.date_to', $to);
 
 		// List state information.
 		parent::populateState($ordering, $direction);
@@ -116,13 +137,37 @@ class botigaModelOrders extends JModelList
 			$search = $db->Quote('%'.$db->escape($search, true).'%');
 			$query->where('(u.nom_empresa LIKE '.$search.')');
 		}
+		
+		// Filter by processor.
+		$processor = $this->getState('filter.processor');
+		if (!empty($processor)) {
+			$query->where('(a.processor = '.$db->Quote($processor).')');
+		}
+		
+		// Filter by status.
+		$status = $this->getState('filter.status');
+		if (!empty($status)) {
+			$query->where('(a.status = '.$status.')');
+		}
+		
+		// Filter by date from.
+		$from = $this->getState('filter.date_from');
+		if (!empty($from)) {
+			$query->where('(a.data >= '.$db->Quote($from).')');
+		}
+		
+		// Filter by date to.
+		$to = $this->getState('filter.date_to');
+		if (!empty($to)) {
+			$query->where('(a.data <= '.$db->Quote($to).')');
+		}
                 
         // Add the list ordering clause.
 		$orderCol	= $this->state->get('list.ordering', 'a.id');
 		$orderDirn	= $this->state->get('list.direction', 'DESC');
 
 		$query->order($db->escape($orderCol.' '.$orderDirn));
-                
+        //echo $query;        
 		return $query;
 	}
 }

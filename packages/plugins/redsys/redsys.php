@@ -36,6 +36,16 @@ class plgBotigaRedsys extends JPlugin
 	{
 		if($paymentmethod != $this->gateway) return false;
 		
+		jimport( 'joomla.access.access' );
+		
+		$user   = JFactory::getUser();
+		$groups = JAccess::getGroupsByUser($user->id, false); // grupos a los que pertenece el usuario
+		
+		$company_pay_percent = $this->params->get('company_pay_percent', 0);
+		if($company_pay_percent == 1 && in_array(10, $groups)) { //10 usergroup empresa
+			$total = number_format(($total / 2), 2, '.', ''); // hacemos el 50% del total
+		}
+		
 		$this->params->get('sandbox') == 0 ? $url = 'https://sis.redsys.es/sis/realizarPago' : $url = 'https://sis-t.redsys.es:25443/sis/realizarPago';
 		
 		$success  = JURI::base().$this->params->get('successURL', '');
@@ -126,8 +136,9 @@ class plgBotigaRedsys extends JPlugin
 			    		
 			    	$db->insertObject('#__botiga_rebuts', $rebut);				
 			    		
-			    	//actualitzar estat comanda a pagada (3)
-			    	$db->setQuery('update #__botiga_comandes set status = 3, data = '.$db->quote(date('Y-m-d H:i:s')).' WHERE id = '.$idComanda);
+			    	//actualitzar estat comanda a pagada (3) o (4) si es empresa i tenim activat el pagament al 50%
+    				$company_pay_percent == 1 && in_array(10, $groups) ? $status = 4 : $status = 3;
+			    	$db->setQuery('update #__botiga_comandes set status = '.$status.', data = '.$db->quote(date('Y-m-d H:i:s')).' WHERE id = '.$idComanda);
 			    	$db->query();
 			    	
 			    	//tanquem comanda
