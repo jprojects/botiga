@@ -29,6 +29,8 @@ $uri 		= base64_encode(JFactory::getURI()->toString());
 $logo		= botigaHelper::getParameter('botiga_logo', '');
 $userToken  = JSession::getFormToken();
 
+$user = JFactory::getUser();
+
 ?>
 
 <?php if(botigaHelper::getParameter('show_header', 0) == 1) : ?>
@@ -50,10 +52,12 @@ $userToken  = JSession::getFormToken();
 					<a href="index.php?option=com_botiga&view=botiga" class="pr-1">
 						<img src="media/com_botiga/icons/mosaico<?php if($jinput->getCmd('layout', '') == '') : ?>-active<?php endif; ?>.png">
 					</a>
+					<?php/*
 					<a href="index.php?option=com_botiga&view=botiga&layout=table">
 						<img src="media/com_botiga/icons/lista<?php if($jinput->getCmd('layout', '') == 'table') : ?>-active<?php endif; ?>.png">
-					</a>
-					<span class="pl-3 phone-hide"><?= JText::sprintf('COM_BOTIGA_FREE_SHIPPING_MSG', $spain, $islands, $world); ?>&nbsp;<img src="media/com_botiga/icons/envio_gratis.png"></span>
+					</a>*/
+					?>
+					<span class="pl-3 phone-hide estil02"><?= JText::sprintf('COM_BOTIGA_FREE_SHIPPING_MSG', $spain, $islands, $world); ?>&nbsp;<img src="media/com_botiga/icons/envio_gratis.png"></span>
 				</div>
 				<div class="col-3 text-right">
 					<?php if($user->guest) : ?>
@@ -64,7 +68,7 @@ $userToken  = JSession::getFormToken();
 					<a href="index.php?option=com_users&task=user.logout&<?= $userToken; ?>=1" title="Logout" class="hasTip">
 						<img src="media/com_botiga/icons/salir.png">
 					</a>
-					<a href="index.php?option=com_botiga&view=history" title="History" class="hasTip">
+					<a class="ml-4" href="index.php?option=com_botiga&view=history" title="History" class="hasTip">
 						<img src="media/com_botiga/icons/sesion-iniciada.png">
 					</a>
 					<div class="d-none d-sm-block"><small><?= JText::sprintf('COM_BOTIGA_WELCOME', $user->name); ?></small></div>

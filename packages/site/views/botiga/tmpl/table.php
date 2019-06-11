@@ -69,16 +69,16 @@ jQuery(document).ready(function() {
 		
 		<div class="col-12 mt-3">
 			<div class="row">
-				<div class="col-9 text-left">			
+				<div class="col-8 text-left">			
 					<a href="index.php?option=com_botiga&view=botiga" class="pr-1">
 						<img src="media/com_botiga/icons/mosaico<?php if($jinput->getCmd('layout', '') == '') : ?>-active<?php endif; ?>.png">
 					</a>
 					<a href="index.php?option=com_botiga&view=botiga&layout=table">
 						<img src="media/com_botiga/icons/lista<?php if($jinput->getCmd('layout', '') == 'table') : ?>-active<?php endif; ?>.png">
 					</a>
-					<span class="pl-3 phone-hide"><?= JText::sprintf('COM_BOTIGA_FREE_SHIPPING_MSG', $spain, $islands, $world); ?>&nbsp;<img src="media/com_botiga/icons/envio_gratis.png"></span>
+					<span class="pl-3 phone-hide estil02"><?= JText::sprintf('COM_BOTIGA_FREE_SHIPPING_MSG', $spain, $islands, $world); ?>&nbsp;<img src="media/com_botiga/icons/envio_gratis.png"></span>
 				</div>
-				<div class="col-3 text-right">
+				<div class="col-4 text-right">
 					<a href="<?php if($count > 0) : ?>index.php?option=com_botiga&view=checkout<?php else: ?>#<?php endif; ?>" class="pr-1 carrito">
 						<?php if($count > 0) : ?>
 						<span class="badge badge-warning"><?= $count; ?></span>
@@ -160,36 +160,37 @@ jQuery(document).ready(function() {
 				foreach($this->items as $item) : ?>	
 						
 					<?php $item->image1 != '' ? $image = $item->image1 : $image = 'components/com_botiga/assets/images/noimage.jpg'; ?>
-
+					<?php $price = botigaHelper::getUserPrice($item->id); ?>
 					<tr>
-						<td width="15%">
+						<td width="12%">
 							<a href="<?= JRoute::_('index.php?option=com_botiga&view=item&id='.$item->id); ?>">
 								<img src="<?= $image; ?>" class="img-fluid" alt="<?= $item->name; ?>" width="50">
 							</a>
 						</td>
 						<?php if($showprices == 1 || ($loginprices == 1 && !$user->guest)) : ?>
-						<td class="align-middle phone-hide"><div class="bold estil05 text-dark"><?= botigaHelper::getUserPrice($item->id); ?>&euro;</div></td>
+						<td width="12%" class="align-middle phone-hide"><span class="bold estil05 text-dark"><?= $price; ?>&euro;</span></td>
 						<?php endif; ?>
 						<?php if($showref == 1) : ?>
 						<td class="align-middle"><?= $item->ref; ?></td>
 						<?php endif; ?>						
-						<td width="45%" class="align-middle">
-							<div class="estil05 text-dark"><?= $item->name; ?></div>
+						<td width="18%" class="align-middle phone-hide table-text">
+							<span class="estil05 text-dark"><?= $item->name; ?></span>
 							
 							<?php if($control_stock == 1 && $item->stock == 0) : ?>
-							<div class="estil03 text-danger"><?= JText::_('COM_BOTIGA_ITEM_WITHOUT_STOCK'); ?></div>
+							<span class="estil03 text-danger"><?= JText::_('COM_BOTIGA_ITEM_WITHOUT_STOCK'); ?></span>
 							<?php endif; ?>
 							
-							<div class="estil03 text-dark"><?php if($showdesc == 1) : ?><br><?= $item->s_description; ?><?php endif; ?></div>
-							<div class="estil03 text-dark phone-visible"><?= botigaHelper::getUserPrice($item->id); ?>&euro;</div>
+							<span class="estil03 text-dark"><?php if($showdesc == 1) : ?><br><?= $item->s_description; ?><?php endif; ?></span>
+							<span class="estil03 text-dark d-block d-md-none"><?= $price; ?>&euro;</span>
 						</td>						
 						<?php if($showbrand == 1) : ?>
 						<td class="align-middle"><?= $item->brandname; ?></td>
 						<?php endif; ?>
-						<td class="align-middle text-right">
+						<td class="align-middle">
 							<form name="addtocart" id="addtocart" action="<?= JRoute::_('index.php?option=com_botiga'); ?>" method="get">
-							<div class="row">
-								<div class="col-xs-4 col-md-4">								
+							<div class="estil05 text-left text-dark phone-visible"><?= $item->name; ?>&nbsp;<?= $price; ?>&euro;</div>
+							<div class="row text-right">
+								<div class="col-8">								
 									<input type="hidden" name="id" value="<?= $item->id; ?>">
 									<input type="hidden" name="return" value="<?= $uri; ?>">
 									<input type="hidden" name="task" value="botiga.setItem">
@@ -199,7 +200,7 @@ jQuery(document).ready(function() {
 			                                  <span class="fa fa-minus"></span>
 			                                </button>
 			                            </span>
-			                            <input type="text" id="quantity_<?= $item->id; ?>" name="qty" class="form-control bg-qty input-number text-center estil06" value="1" min="1" max="100" <?php if($i == 0) : ?>autofocus<?php endif; ?>>
+			                            <input type="text" id="quantity_<?= $item->id; ?>" name="qty" class="form-control bg-qty input-number text-center estil05" min="1" max="100" <?php if($i == 0) : ?>autofocus<?php endif; ?> value="<?= $model->getQtyRow($item->id); ?>">
 			                            <span class="input-group-btn">
 			                                <button type="button" class="quantity-right-plus btn btn-primary btn-number" data-id="<?= $item->id; ?>">
 			                                    <span class="fa fa-plus"></span>
@@ -207,7 +208,7 @@ jQuery(document).ready(function() {
 			                            </span>
 			                        </div>
 				                </div>
-				                <div class="col-xs-1 col-md-1">
+				                <div class="col-1">
 				                <?php if(botigaHelper::isValidated() && botigaHelper::validateStock($item->stock)) : ?>
 								<input type="image" src="media/com_botiga/icons/addtocart.png" alt="<?= JText::_('COM_BOTIGA_BTN_BUY'); ?>">
 								<?php else: ?>
@@ -218,7 +219,7 @@ jQuery(document).ready(function() {
 							</form>
 						</td>
 						<?php if($showprices == 1 || ($loginprices == 1 && !$user->guest)) : ?>
-						<td class="align-middle phone-hide"><div class="bold estil05 text-dark"><?= botigaHelper::getUserPrice($item->id); ?>&euro;</div></td>
+						<td class="align-middle phone-hide"><div class="bold estil05 text-dark"><?= $model->getNumItemsRow($item->id, $price); ?>&euro;</div></td>
 						<?php endif; ?>
 						<?php if($showfav == 1) : ?> 
 						<td class="align-middle d-none d-md-block">

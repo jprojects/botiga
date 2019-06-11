@@ -18,6 +18,7 @@ $user  		= JFactory::getUser();
 $doc   		= JFactory::getDocument();
 $jinput		= JFactory::getApplication()->input;
 $precio 	= botigaHelper::getUserPrice($this->item->id);
+$dtos 		= botigaHelper::getUserDiscounts($this->item->id);
 $uri 		= base64_encode(JFactory::getURI()->toString());
 $modal 		= $jinput->get('m', 0);
 $logo		= botigaHelper::getParameter('botiga_logo', '');
@@ -97,10 +98,12 @@ jQuery(document).ready(function() {
 					<a href="index.php?option=com_botiga&view=botiga" class="pr-1">
 						<img src="media/com_botiga/icons/mosaico<?php if($jinput->getCmd('layout', '') == '') : ?>-active<?php endif; ?>.png">
 					</a>
+					<?php/*
 					<a href="index.php?option=com_botiga&view=botiga&layout=table">
 						<img src="media/com_botiga/icons/lista<?php if($jinput->getCmd('layout', '') == 'table') : ?>-active<?php endif; ?>.png">
-					</a>
-					<span class="pl-3 phone-hide"><?= JText::sprintf('COM_BOTIGA_FREE_SHIPPING_MSG', $spain, $islands, $world); ?>&nbsp;<img src="media/com_botiga/icons/envio_gratis.png"></span>
+					</a>*/
+					?>
+					<span class="pl-3 phone-hide estil02"><?= JText::sprintf('COM_BOTIGA_FREE_SHIPPING_MSG', $spain, $islands, $world); ?>&nbsp;<img src="media/com_botiga/icons/envio_gratis.png"></span>
 				</div>
 				<div class="col-3 text-right">
 					<a href="<?php if($count > 0) : ?>index.php?option=com_botiga&view=checkout<?php else: ?>#<?php endif; ?>" class="pr-1 carrito">
@@ -114,10 +117,10 @@ jQuery(document).ready(function() {
 						<img src="media/com_botiga/icons/iniciar-sesion.png">
 					</a>
 					<?php else: ?>
-					<a href="index.php?option=com_users&task=user.logout&<?= $userToken; ?>=1" title="Logout" class="hasTip">
+					<a class="ml-4" href="index.php?option=com_users&task=user.logout&<?= $userToken; ?>=1" title="Logout" class="hasTip">
 						<img src="media/com_botiga/icons/salir.png">
 					</a>
-					<a href="index.php?option=com_botiga&view=history" title="History" class="hasTip">
+					<a class="ml-4" href="index.php?option=com_botiga&view=history" title="History" class="hasTip">
 						<img src="media/com_botiga/icons/sesion-iniciada.png">
 					</a>
 					<?php endif; ?>
@@ -150,38 +153,32 @@ jQuery(document).ready(function() {
 
 		<div class="col-12 col-md-5">			
 	
-			<div class="botiga-img">
+			<div class="botiga-img text-center">
 				<a href="<?= $image; ?>" data-fancybox="gallery">
 				<?php if(!$user->guest && $this->item->pvp > 0 && $show_prices == 1) : ?>
 				<div class="pvp-badge big"><span><?= botigaHelper::getPercentDiff($this->item->pvp, $precio); ?>%</span></div>
 				<?php endif; ?>
-				<span class="rollover"></span>
-					<img src="<?= $image; ?>" class="img-fluid" alt="<?= $this->item->name; ?>" />
+				<span class="rollover"><img src="media/com_botiga/icons/lupa.png"></span>
+					<img src="<?= $image; ?>" class="img-fluid" alt="<?= $this->item->name; ?>" rel="gallery" />
 				</a>
 			</div>
 
+			<?php 
+			$extra_images = botigaHelper::getImages($this->item->id);
+			if(count($extra_images)) : ?>
 			<div class="additional-img">
-				<?php if($this->item->image2 != '') : ?>
-				<a href="<?= $this->item->image2; ?>" data-fancybox="gallery">
-					<img src="<?= $this->item->image2; ?>" class="img-fluid" alt="<?= $this->item->name; ?>" />
-				</a>
-				<?php endif; ?>
-				<?php if($this->item->image3 != '') : ?>
-				<a href="<?= $this->item->image3; ?>" data-fancybox="gallery">
-					<img src="<?= $this->item->image3; ?>" class="img-fluid" alt="<?= $this->item->name; ?>" />
-				</a>
-				<?php endif; ?>
-				<?php if($this->item->image4 != '') : ?>
-				<a href="<?= $this->item->image4; ?>" data-fancybox="gallery">
-					<img src="<?= $this->item->image4; ?>" class="img-fluid" alt="<?= $this->item->name; ?>" />
-				</a>
-				<?php endif; ?>
-				<?php if($this->item->image5 != '') : ?>
-				<a href="<?= $this->item->image5; ?>" data-fancybox="gallery">
-					<img src="<?= $this->item->image5; ?>" class="img-fluid" alt="<?= $this->item->name; ?>" />
-				</a>
-				<?php endif; ?>
+				<ul class="preview-thumbnail nav">
+				<?php foreach($extra_images as $k => $v) : ?>				
+				<li>
+					<a href="<?= $v[0]; ?>" data-fancybox="gallery" class="img-thumbnail">
+						<img src="<?= $v[0]; ?>" class="img-fluid" alt="<?= $this->item->name; ?>" width="100" height="100" />
+					</a>
+				</li>
+				<?php endforeach; ?>	
+				</ul>			
 			</div>
+			<?php endif; ?>
+			
 		</div>
 		
 		<div class="col-12 col-md-7">
@@ -196,7 +193,10 @@ jQuery(document).ready(function() {
 			<div class="col-12 col-md-6 text-left estil07 text-primary"><b class="titol"><?= strtoupper($this->item->name); ?></b></div>
 			<div class="col-12 col-md-6 text-right estil08 text-primary">
 				<?php if($showprices == 1 || ($loginprices == 1 && !$user->guest)) : ?>
-				<b><?= $precio; ?> &euro;</b>
+					<b><?= $precio; ?> &euro;</b>
+					<?php if($dtos!='') : ?>
+						<br/><span class='estil02'><?= $dtos; ?>&euro;</span>
+					<?php endif; ?>						
 				<?php endif; ?>						
 			</div>
 			</div>

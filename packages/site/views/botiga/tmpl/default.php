@@ -62,10 +62,12 @@ $count 	    = botigaHelper::getCarritoCount();
 					<a href="index.php?option=com_botiga&view=botiga" class="pr-1">
 						<img src="media/com_botiga/icons/mosaico<?php if($jinput->getCmd('layout', '') == '') : ?>-active<?php endif; ?>.png">
 					</a>
+					<?php /*
 					<a href="index.php?option=com_botiga&view=botiga&layout=table">
 						<img src="media/com_botiga/icons/lista<?php if($jinput->getCmd('layout', '') == 'table') : ?>-active<?php endif; ?>.png">
-					</a>
-					<span class="pl-3 phone-hide"><?= JText::sprintf('COM_BOTIGA_FREE_SHIPPING_MSG', $spain, $islands, $world); ?>&nbsp;<img src="media/com_botiga/icons/envio_gratis.png"></span>
+					</a> */
+					?>
+					<span class="pl-3 phone-hide estil02"><?= JText::sprintf('COM_BOTIGA_FREE_SHIPPING_MSG', $spain, $islands, $world); ?>&nbsp;<img src="media/com_botiga/icons/envio_gratis.png"></span>
 				</div>
 				<div class="col-3 text-right">
 					<a href="<?php if($count > 0) : ?>index.php?option=com_botiga&view=checkout<?php else: ?>#<?php endif; ?>" class="pr-1 carrito">
@@ -75,14 +77,14 @@ $count 	    = botigaHelper::getCarritoCount();
 						<img src="media/com_botiga/icons/carrito.png">
 					</a>
 					<?php if($user->guest) : ?>
-					<a href="index.php?option=com_users&view=login" title="Login" class="hasTip pr-1">
+					<a class="ml-4" href="index.php?option=com_users&view=login" title="Login" class="hasTip pr-1">
 						<img src="media/com_botiga/icons/iniciar-sesion.png">
 					</a>
 					<?php else: ?>
-					<a href="index.php?option=com_users&task=user.logout&<?= $userToken; ?>=1" title="Logout" class="hasTip pr-1">
+					<a class="ml-4" href="index.php?option=com_users&task=user.logout&<?= $userToken; ?>=1" title="Logout" class="hasTip pr-1">
 						<img src="media/com_botiga/icons/salir.png">
 					</a>
-					<a href="index.php?option=com_botiga&view=history" title="History" class="hasTip">
+					<a class="ml-4" href="index.php?option=com_botiga&view=history" title="History" class="hasTip">
 						<img src="media/com_botiga/icons/sesion-iniciada.png">
 					</a>
 					<div class="d-none d-sm-block"><small><?= JText::sprintf('COM_BOTIGA_WELCOME', $user->name); ?></small></div>
@@ -150,7 +152,10 @@ $count 	    = botigaHelper::getCarritoCount();
 					
 					$item->image1 != '' ? $image = $item->image1 : $image = 'components/com_botiga/assets/images/noimage.jpg';
 					$precio = botigaHelper::getUserPrice($item->id);
-
+					$dtos = botigaHelper::getUserDiscounts($item->id);
+					botigaHelper::customLog("descomptes".$item->id." ".$dtos);
+					
+					if ($precio!=0) :
 					?>
 					<div class="col-xs-12 col-md-3 item px-5">
 						
@@ -183,20 +188,26 @@ $count 	    = botigaHelper::getCarritoCount();
 						<?php endif; ?>
 						
 						<div class="row">
-						<?php if($showprices == 1 || ($loginprices == 1 && !$user->guest)) : ?>
-						<div class="col-6 text-left bold estil05 text-dark mt-2"><?= $precio; ?>&euro;</div>
-						<?php endif; ?>
-						<div class="col-6 text-right pr-3">
-							<?php if(botigaHelper::isValidated() && botigaHelper::validateStock($item->stock)) : ?>
-							<a href="index.php?view=botiga&task=botiga.setItem&id=<?= $item->id; ?>&return=<?= $uri; ?>">
-								<img src="media/com_botiga/icons/addtocart.png" alt="<?= JText::_('COM_BOTIGA_BTN_BUY'); ?>">
-							</a>
-							<?php else: ?>
-							<a href="#">
-								<img src="media/com_botiga/icons/carrito_desactivado.png" alt="<?= JText::_('COM_BOTIGA_BTN_BUY'); ?>">
-							</a>
+							<?php if($showprices == 1 || ($loginprices == 1 && !$user->guest)) : ?>
+								<div class="col-6 text-left bold estil05 text-dark mt-2"><?= $precio; ?>&euro;</div>
 							<?php endif; ?>
+							<div class="col-6 text-right pr-3">
+								<?php if(botigaHelper::isValidated() && botigaHelper::validateStock($item->stock)) : ?>
+								<a href="index.php?view=botiga&task=botiga.setItem&id=<?= $item->id; ?>&return=<?= $uri; ?>">
+									<img src="media/com_botiga/icons/addtocart.png" alt="<?= JText::_('COM_BOTIGA_BTN_BUY'); ?>">
+								</a>
+								<?php else: ?>
+								<a href="#">
+									<img src="media/com_botiga/icons/carrito_desactivado.png" alt="<?= JText::_('COM_BOTIGA_BTN_BUY'); ?>">
+								</a>
+								<?php endif; ?>
+							</div>
 						</div>
+						<?php // Mostrar preus especials ?>
+						<div class="row">
+							<?php if( ($showprices == 1 || ($loginprices == 1 && !$user->guest)) && $dtos!='' ) : ?>
+								<div class="col-12 text-left estil02 mt-2"><?= $dtos; ?>&euro;</div>
+							<?php endif; ?>
 						</div>
 						
 						<?php if($showfav == 1) : ?> 
@@ -209,6 +220,7 @@ $count 	    = botigaHelper::getCarritoCount();
 						
 					</div>
 				<?php
+				endif;
 				$i++;
 				endforeach; 
 				endif;

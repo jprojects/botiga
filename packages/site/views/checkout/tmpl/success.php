@@ -15,7 +15,7 @@ defined('_JEXEC') or die('Restricted access');
 $spain 		= botigaHelper::getParameter('total_shipment_spain', 25);
 $islands 	= botigaHelper::getParameter('total_shipment_islands', 50);
 $world 		= botigaHelper::getParameter('total_shipment_world', 60);
-
+$user = JFactory::getUser();
 ?>
 
 <?php if(botigaHelper::getParameter('show_header', 0) == 1) : ?>
@@ -33,16 +33,16 @@ $world 		= botigaHelper::getParameter('total_shipment_world', 60);
 		
 		<div class="col-12 mt-3">
 			<div class="row">
-				<div class="col-9 text-left">			
+				<div class="col-8 text-left">			
 					<a href="index.php?option=com_botiga&view=botiga" class="pr-1">
 						<img src="media/com_botiga/icons/mosaico<?php if($jinput->getCmd('layout', '') == '') : ?>-active<?php endif; ?>.png">
 					</a>
 					<a href="index.php?option=com_botiga&view=botiga&layout=table">
 						<img src="media/com_botiga/icons/lista<?php if($jinput->getCmd('layout', '') == 'table') : ?>-active<?php endif; ?>.png">
 					</a>
-					<span class="pl-3 phone-hide"><?= JText::sprintf('COM_BOTIGA_FREE_SHIPPING_MSG', $spain, $islands, $world); ?>&nbsp;<img src="media/com_botiga/icons/envio_gratis.png"></span>
+					<span class="pl-3 phone-hide estil02"><?= JText::sprintf('COM_BOTIGA_FREE_SHIPPING_MSG', $spain, $islands, $world); ?>&nbsp;<img src="media/com_botiga/icons/envio_gratis.png"></span>
 				</div>
-				<div class="col-3 text-right">
+				<div class="col-4 text-right">
 					<?php if($user->guest) : ?>
 					<a href="index.php?option=com_users&view=login" title="Login" class="hasTip">
 						<img src="media/com_botiga/icons/iniciar-sesion.png">

@@ -5,8 +5,8 @@
  * @copyright   Copyright © 2010 - All rights reserved.
  * @license		GNU/GPL
  * @author		kim
- * @author mail administracion@joomlanetprojects.com
- * @website		http://www.joomlanetprojects.com
+ * @author mail kim@aficat.com
+ * @website		http://www.aficat.com
  *
  */
 
@@ -93,27 +93,62 @@ class botigaModelItem extends JModelAdmin
 		
 		$post_data  = JRequest::get( 'post' );
    		$data       = $post_data["jform"];
-		$data['id'] = JRequest::getInt('id', 0, 'get');
-
-		if($data['id'] != 0) {
-	    	
-	    	$categories = array();
-	    	foreach($data['catid'] as $k) {
-	    		$categories[] = $k;
-	    	}
-			
-	    	$data['catid'] = implode(',', $categories);
+		$data['id'] = JRequest::getInt('id', 0, 'get');				
+	
+    	$categories = array();
+    	
+    	foreach($data['catid'] as $k) {
+    		$categories[] = $k;
+    	}
 		
-			if (!$row->bind( $data )) {
-				return JError::raiseWarning( 500, $row->getError() );
-			}
-
-			if (!$row->store()) {
-				return JError::raiseError(500, $row->getError() );
-			}
+    	$data['catid'] = implode(',', $categories);
+	
+		if (!$row->bind( $data )) {
+			return JError::raiseWarning( 500, $row->getError() );
 		}
-		return true;
 
+		if (!$row->store()) {					
+	
+			return JError::raiseError(500, $row->getError() );
+		}
+		
+		if($data['id'] == 0) { $itemid = $row->id; } else { $itemid = $data['id']; }
+			
+		//ingresem preus a la taula aux. #__botiga_items_prices
+		if($data['price'] != '') {
+			
+			$db     = JFactory::getDbo();
+			$result = array();		
+			$preus  = json_decode($data['price'], true);
+		
+			foreach ($preus as $preu) 
+		  	{
+				foreach ($preu as $k => $v) 
+				{
+					if($v != '') {
+					
+						$result[$k][] = $v;
+					}
+				}								
+		  	}
+		  	
+		  	foreach($result as $k => $v) {
+			  	$prices = new stdClass();
+				$prices->itemId = $itemid;
+				$prices->usergroup = $v[0];
+				$prices->price = $v[1];
+				
+				$db->setQuery('SELECT id FROM #__botiga_items_prices WHERE itemId = '.$itemid.' AND usergroup = '.$v[0]);
+			  	if($id = $db->loadResult()) {
+			  		$prices->id = $id;
+			  		$db->updateObject('#__botiga_items_prices', $prices, 'id');
+			  	} else {
+			  		$db->insertObject('#__botiga_items_prices', $prices);
+			  	}	
+		  	}	  			  			  	
+		}
+		
+		return true;
 	}
 	
 	/**

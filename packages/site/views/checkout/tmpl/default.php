@@ -18,6 +18,7 @@ $total 		= 0;
 $model 		= $this->getModel('checkout');
 $app   		= JFactory::getApplication();
 $jinput		= JFactory::getApplication()->input;
+$uri 		= base64_encode(JFactory::getURI()->toString());
 $user  		= JFactory::getUser();
 $cupon      = 0; //valor base del descompte del cupó
 $re_total   = 0; //valor per defecte de re_total si no està activat
@@ -47,6 +48,17 @@ $count 	    = botigaHelper::getCarritoCount();
 $user_params = json_decode(botigaHelper::getUserData('params', $user->id), true);
 ?>
 
+<script>
+jQuery(document).ready(function() {
+	jQuery('.input-number').keypress(function(event) {
+		if (event.keyCode == 13 || event.which == 13) {
+		    document.forms.addtocart.submit();
+		    event.preventDefault();
+		}
+	});
+});
+</script>
+
 <?php if(botigaHelper::getParameter('show_header', 0) == 1) : ?>
 <header class="head_botiga">
 
@@ -66,10 +78,12 @@ $user_params = json_decode(botigaHelper::getUserData('params', $user->id), true)
 					<a href="index.php?option=com_botiga&view=botiga" class="pr-1">
 						<img src="media/com_botiga/icons/mosaico<?php if($jinput->getCmd('layout', '') == '') : ?>-active<?php endif; ?>.png">
 					</a>
+					<?php/*
 					<a href="index.php?option=com_botiga&view=botiga&layout=table">
 						<img src="media/com_botiga/icons/lista<?php if($jinput->getCmd('layout', '') == 'table') : ?>-active<?php endif; ?>.png">
-					</a>
-					<span class="pl-3 phone-hide"><?= JText::sprintf('COM_BOTIGA_FREE_SHIPPING_MSG', $spain, $islands, $world); ?>&nbsp;<img src="media/com_botiga/icons/envio_gratis.png"></span>
+					</a>*/
+					?>
+					<span class="pl-3 phone-hide estil02"><?= JText::sprintf('COM_BOTIGA_FREE_SHIPPING_MSG', $spain, $islands, $world); ?>&nbsp;<img src="media/com_botiga/icons/envio_gratis.png"></span>
 				</div>
 				<div class="col-3 text-right">
 					<a href="<?php if($count > 0) : ?>index.php?option=com_botiga&view=checkout<?php else: ?>#<?php endif; ?>" class="pr-1 carrito">
@@ -79,14 +93,14 @@ $user_params = json_decode(botigaHelper::getUserData('params', $user->id), true)
 						<img src="media/com_botiga/icons/carrito.png">
 					</a>
 					<?php if($user->guest) : ?>
-					<a href="index.php?option=com_users&view=login" title="Login" class="hasTip">
+					<a class="ml-4" href="index.php?option=com_users&view=login" title="Login" class="hasTip">
 						<img src="media/com_botiga/icons/iniciar-sesion.png">
 					</a>
 					<?php else: ?>
-					<a href="index.php?option=com_users&task=user.logout&<?= $userToken; ?>=1" title="Logout" class="hasTip">
+					<a class="ml-4" href="index.php?option=com_users&task=user.logout&<?= $userToken; ?>=1" title="Logout" class="hasTip">
 						<img src="media/com_botiga/icons/salir.png">
 					</a>
-					<a href="index.php?option=com_botiga&view=history" title="History" class="hasTip">
+					<a class="ml-4" href="index.php?option=com_botiga&view=history" title="History" class="hasTip">
 						<img src="media/com_botiga/icons/sesion-iniciada.png">
 					</a>
 					<div class="d-none d-sm-block"><small><?= JText::sprintf('COM_BOTIGA_WELCOME', $user->name); ?></small></div>
@@ -111,7 +125,7 @@ $user_params = json_decode(botigaHelper::getUserData('params', $user->id), true)
 		</div>
 
 		<?php if(count($this->items)) : ?>
-		<div class="table-responsive">
+		<div class="table-responsive" id="checkout">
 			<table class="table table-hover">
 				<?php 
 				$i = 0;
@@ -119,39 +133,45 @@ $user_params = json_decode(botigaHelper::getUserData('params', $user->id), true)
 				<?php $item->image1 != '' ? $image = $item->image1 : $image = 'images/noimage.png'; ?>
 				<?php $total_row = $item->price * $item->qty; ?>
 				<tr>
-					<td width="10%">
+					<td width="5%">
 						<a href="<?= JRoute::_('index.php?option=com_botiga&view=item&id='.$item->idItem); ?>">
 							<img src="<?= $image; ?>" class="img-fluid" alt="<?= $item->name; ?>" width="50" />
 						</a>
 					</td>
-					<td width="5%" class="align-middle estil05 text-primary"><b><?= $item->price.'&euro;'; ?></b></td>
-					<td width="40%" class="align-middle estil05"><span class="estil05 text-primary"><?= $item->name; ?></span><br><?= $item->s_description; ?></td>				
+					<td width="5%" class="align-middle estil05 text-primary phone-hide"><b><?= $item->price.'&euro;'; ?></b></td>
+					<td width="40%" class="align-middle estil05 phone-hide"><span class="estil05 text-primary"><?= $item->name; ?></span><br><?= $item->s_description; ?></td>				
 					<td width="20%" class="align-middle">
 					<div class="col-md-12">
+						<div class="estil05 d-block d-sm-none"><b><?= $item->name; ?>&nbsp;<?= $item->price.'&euro;'; ?><br><?= number_format($total_row, 2) . ' &euro;'; ?><br></b></div>
+						<form name="addtocart" id="addtocart" action="<?= JRoute::_('index.php?option=com_botiga'); ?>" method="get">
+						<input type="hidden" name="id" value="<?= $item->id; ?>">
+						<input type="hidden" name="return" value="<?= $uri; ?>">
+						<input type="hidden" name="task" value="botiga.updateQty">
 						<div class="input-group">
-							<span class="input-group-btn">
+							<span class="input-group-btn phone-hide">
 								<a href="index.php?option=com_botiga&task=botiga.updateQty&id=<?= $item->id; ?>&type=minus" class="quantity-left-minus btn btn-primary btn-number" data-id="<?= $item->id; ?>">
 								 	<span class="fa fa-minus"></span>
 								</a>
 							</span>
-							<input type="text" id="quantity_<?= $item->id; ?>" name="qty" class="form-control bg-qty input-number text-center estil06" value="<?= $item->qty; ?>" min="1" max="100" <?php if($i == 0) : ?>autofocus<?php endif; ?>>
-							<span class="input-group-btn">
+							<input type="text" id="quantity_<?= $item->id; ?>" name="qty" class="form-control bg-qty input-number text-center estil05" value="<?= $item->qty; ?>" min="1" max="100" <?php if($i == 0) : ?>autofocus<?php endif; ?>>
+							<span class="input-group-btn phone-hide">
 								<a href="index.php?option=com_botiga&task=botiga.updateQty&id=<?= $item->id; ?>&type=plus" class="quantity-right-plus btn btn-primary btn-number" data-id="<?= $item->id; ?>">
 									<span class="fa fa-plus"></span>
 								</a>
 							</span>
 						</div>
+						</form>
 					</div>
 					</td>
-					<td width="10%" align="right" class="align-middle"><a href="index.php?option=com_botiga&task=botiga.removeItem&id=<?= $item->id; ?>"><img src="media/com_botiga/icons/papelera.png" alt="" title="<?= JText::_('COM_BOTIGA_CHECKOUT_DELETE'); ?>"></a></td>
-					<td width="15%" align="right" class="align-middle estil05 text-primary"><b><?= number_format($total_row, 2) . ' &euro;'; ?></b></td>				
+					<td width="5%" align="right" class="align-middle"><a href="index.php?option=com_botiga&task=botiga.removeItem&id=<?= $item->id; ?>"><img src="media/com_botiga/icons/papelera.png" alt="" title="<?= JText::_('COM_BOTIGA_CHECKOUT_DELETE'); ?>"></a></td>
+					<td width="15%" align="right" class="align-middle estil05 text-primary phone-hide"><b><?= number_format($total_row, 2) . ' &euro;'; ?></b></td>				
 				</tr>										
 				<?php $subtotal += $total_row; ?>
 				<?php 
 				$i++;
 				endforeach; ?>
 				<tr>
-					<td colspan="3"></div>
+					<td colspan="3" class="phone-hide"></div>
 					<td colspan="3" class="align-middle" align="right">
 					<?php if($showcoupon == 1 && $coupon == 0) : ?>
 					<form name="coupon" id="coupon" action="index.php?option=com_botiga&task=botiga.validateCoupon" method="post">
@@ -167,20 +187,20 @@ $user_params = json_decode(botigaHelper::getUserData('params', $user->id), true)
 				</tr>
 				<tr>
 					<td width="10%" class="align-middle estil03"><span><?= JText::_('COM_BOTIGA_CHECKOUT_SUBTOTAL'); ?></span></td>
-					<td width="5%"></td>
-					<td width="40%"></td>
-					<td width="20%"></td>
+					<td width="5%" class="phone-hide"></td>
+					<td width="40%" class="phone-hide"></td>
+					<td width="20%" class="phone-hide"></td>
 					<td width="10%"></td>
-					<td width="15%" class="align-middle estil05"><span class="blue bold total text-right"><?= number_format($subtotal, 2, '.', ''); ?>&euro;</span></td>
+					<td width="15%" align="right" class="align-middle estil05"><span class="blue bold total text-right"><?= number_format($subtotal, 2, '.', ''); ?>&euro;</span></td>
 				</tr>
 				<tr>
 					<?php $shipment = $model->getShipment($subtotal); ?>
 					<td width="20%" class="align-middle estil03"><span><?= JText::_('COM_BOTIGA_CHECKOUT_TOTAL_SHIPMENT'); ?></span></td>
-					<td width="5%"></td>
-					<td width="40%"></td>
-					<td width="20%"></td>
+					<td width="5%" class="phone-hide"></td>
+					<td width="40%" class="phone-hide"></td>
+					<td width="20%" class="phone-hide"></td>
 					<td width="10%"></td>		
-					<td width="20%" class="align-middle estil05"><span><?= $shipment; ?>&euro;</span></td>
+					<td width="20%" align="right" class="align-middle estil05"><span><?= $shipment; ?>&euro;</span></td>
 				</tr>
 				<?php 
 				$discount = json_decode($model->getDiscounts(), true);
@@ -189,11 +209,11 @@ $user_params = json_decode(botigaHelper::getUserData('params', $user->id), true)
 				?>
 				<tr>
 					<td width="20%" class="align-middle estil03"><span><?= $discount['message']; ?></span></td>
-					<td width="5%"></td>
-					<td width="40%"></td>
-					<td width="20%"></td>
+					<td width="5%" class="phone-hide"></td>
+					<td width="40%" class="phone-hide"></td>
+					<td width="20%" class="phone-hide"></td>
 					<td width="10%"></td>		
-					<td width="20%" class="align-middle estil05"><span><?= $discount_total; ?>&euro;</span></td>
+					<td width="20%" align="right" class="align-middle estil05"><span><?= ($discount_total * -1); ?>&euro;</span></td>
 				</tr>
 				<?php endif; ?>
 				<tr>
@@ -203,11 +223,11 @@ $user_params = json_decode(botigaHelper::getUserData('params', $user->id), true)
 				 	$iva_total   += ($iva_percent / 100) * ($subtotal + $shipment); 
 				 	?>
 					<td width="20%" class="align-middle estil03"><?= 'IVA '.$iva_percent.'%'; ?></td>
-					<td width="5%"></td>
-					<td width="40%"></td>
-					<td width="20%"></td>
+					<td width="5%" class="phone-hide"></td>
+					<td width="40%" class="phone-hide"></td>
+					<td width="20%" class="phone-hide"></td>
 					<td width="10%"></td>				
-					<td width="20%" class="align-middle estil05"><span><?= number_format($iva_total, 2, '.', ''); ?>&euro;</span></td>
+					<td width="20%" align="right" class="align-middle estil05"><span><?= number_format($iva_total, 2, '.', ''); ?>&euro;</span></td>
 				</tr>
 				<?php if($user_params['re_equiv'] == 1) :
 				$re_percent  += botigaHelper::getParameter('re_equiv', 5.2);
@@ -215,32 +235,32 @@ $user_params = json_decode(botigaHelper::getUserData('params', $user->id), true)
 				?>
 				<tr>
 					<td width="20%" class="align-middle estil03"><?= JText::_('COM_BOTIGA_CHECKOUT_RE_EQUIV'); ?></td>
-					<td width="5%"></td>
-					<td width="40%"></td>
-					<td width="20%"></td>
+					<td width="5%" class="phone-hide"></td>
+					<td width="40%" class="phone-hide"></td>
+					<td width="20%" class="phone-hide"></td>
 					<td width="10%"></td>				
-					<td width="20%" class="align-middle estil05"><span><?= number_format($re_total, 2, '.', ''); ?>&euro;</span></td>
+					<td width="20%" align="right" class="align-middle estil05"><span><?= number_format($re_total, 2, '.', ''); ?>&euro;</span></td>
 				</tr>
 				<?php endif; ?>
 				<?php if($coupon != 0) : ?>
 				<?php $cupon = botigaHelper::getCouponDiscount($coupon, $subtotal); ?>
 				<tr>
-					<td width="20%" class="align-middle estil03"><?= JText::_('COM_BOTIGA_CHECKOUT_DISCOUNT'); ?></td>
-					<td width="5%"></td>
-					<td width="40%"></td>
-					<td width="20%"></td>
+					<td width="20%" class="align-middle estil03"><?= JText::_('COM_BOTIGA_CHECKOUT_COUPON'); ?></td>
+					<td width="5%" class="phone-hide"></td>
+					<td width="40%" class="phone-hide"></td>
+					<td width="20%" class="phone-hide"></td>
 					<td width="10%"></td>				
-					<td width="20%" class="align-middle estil05"><span><?= $cupon; ?>&euro;</span></td>
+					<td width="20%" align="right" class="align-middle estil05"><span><?= ($cupon * -1); ?>&euro;</span></td>
 				</tr>
 				<?php endif; ?>
 				<tr>
 					<?php $total = $subtotal + $shipment + $iva_total + $re_total - $cupon; ?>
 					<td width="20%" class="align-middle estil03"><?= JText::_('COM_BOTIGA_CHECKOUT_TOTAL'); ?></td>
-					<td width="5%"></td>
-					<td width="40%"></td>
-					<td width="20%"></td>
+					<td width="5%" class="phone-hide"></td>
+					<td width="40%" class="phone-hide"></td>
+					<td width="20%" class="phone-hide"></td>
 					<td width="10%"></td>				
-					<td width="20%" class="align-middle estil05"><span><?= number_format($total, 2, '.', ''); ?>&euro;</span></td>
+					<td width="20%" align="right" class="align-middle estil05"><span><?= number_format($total, 2, '.', ''); ?>&euro;</span></td>
 				</tr>
 			</table>		
 		</div>
@@ -287,13 +307,13 @@ $user_params = json_decode(botigaHelper::getUserData('params', $user->id), true)
 				<?php endforeach; ?>
 				<?php endif; ?>
 				
-				<a href="index.php?option=com_botiga&view=botiga" class="btn btn-primary"><?= JText::_('COM_BOTIGA_CONTINUE_SHOPPING'); ?></a>
-				<button type="submit" <?php if(count($plugins) > 1) : ?>disabled="true"<?php endif; ?> class="btn btn-primary submit"><?= JText::_('COM_BOTIGA_FINISH_CART'); ?></button>				
+				<a href="index.php?option=com_botiga&view=botiga" class="btn btn-primary btn-xs-block"><?= JText::_('COM_BOTIGA_CONTINUE_SHOPPING'); ?></a>
+				<button type="submit" <?php if(count($plugins) > 1) : ?>disabled="true"<?php endif; ?> class="btn btn-primary btn-xs-block submit"><?= JText::_('COM_BOTIGA_FINISH_CART'); ?></button>				
 				<?php if($show_btn_delete == 1) : ?>
-				<a href="index.php?option=com_botiga&task=botiga.removeCart" class="btn btn-primary"><?= JText::_('COM_BOTIGA_DELETE_CART'); ?></a>	
+				<a href="index.php?option=com_botiga&task=botiga.removeCart" class="btn btn-primary btn-xs-block"><?= JText::_('COM_BOTIGA_DELETE_CART'); ?></a>	
 				<?php endif; ?>
 				<?php if($show_btn_save == 1) : ?>
-				<a href="index.php?option=com_botiga&task=botiga.saveCart" class="btn btn-primary"><?= JText::_('COM_BOTIGA_SAVE_CART'); ?></a>	
+				<a href="index.php?option=com_botiga&task=botiga.saveCart" class="btn btn-primary btn-xs-block"><?= JText::_('COM_BOTIGA_SAVE_CART'); ?></a>	
 				<?php endif; ?>
 			</form>
 		</div>

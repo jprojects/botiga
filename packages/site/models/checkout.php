@@ -157,6 +157,7 @@ class botigaModelCheckout extends JModelList
 		
 		$discount = array();
 		$discount['total'] = 0;
+		$discount['total_products'] = 0;
 		$discount['message'] = '';
 		
 		$db->setQuery('SELECT * FROM #__botiga_comandesDetall WHERE idComanda = '.$idComanda);
@@ -174,6 +175,8 @@ class botigaModelCheckout extends JModelList
 				
 					$num_capces = round($row->qty / $dsc->box_items); //nº de capces
 					$items_sense_capsa = $row->qty - ($num_capces * $dsc->box_items); //items sense capça
+					
+					$discount['total_products'] += $row->qty;
 					
 					//botigaHelper::customLog('capces '.$num_capces.' sense capça '.$items_sense_capsa);
 					
@@ -195,8 +198,10 @@ class botigaModelCheckout extends JModelList
 					
 					$old_price = $row->qty * $row->price;
 					
+					$discount['total_products'] += $row->qty;
+					
 					$discount['total'] += number_format(($old_price - $new_price), 2, '.', '');
-					$discount['message'] = JText::sprintf($dsc->message, $row->qty, $dsc->total);
+					$discount['message'] = JText::sprintf($dsc->message, $discount['total_products']);
 				}		
 			}
 		}		

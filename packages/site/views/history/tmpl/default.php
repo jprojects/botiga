@@ -58,16 +58,16 @@ $user_params = json_decode(botigaHelper::getUserData('params', $user->id), true)
 			
 			<div class="col-12 mt-3">
 				<div class="row">
-					<div class="col-9 text-left">			
+					<div class="col-8 text-left">			
 						<a href="index.php?option=com_botiga&view=botiga" class="pr-1">
 							<img src="media/com_botiga/icons/mosaico<?php if($app->input->getCmd('layout', '') == '') : ?>-active<?php endif; ?>.png">
 						</a>
 						<a href="index.php?option=com_botiga&view=botiga&layout=table">
 							<img src="media/com_botiga/icons/lista<?php if($app->input->getCmd('layout', '') == 'table') : ?>-active<?php endif; ?>.png">
 						</a>
-						<span class="pl-3 phone-hide"><?= JText::sprintf('COM_BOTIGA_FREE_SHIPPING_MSG', $spain, $islands, $world); ?>&nbsp;<img src="media/com_botiga/icons/envio_gratis.png"></span>
+						<span class="pl-3 phone-hide estil02"><?= JText::sprintf('COM_BOTIGA_FREE_SHIPPING_MSG', $spain, $islands, $world); ?>&nbsp;<img src="media/com_botiga/icons/envio_gratis.png"></span>
 					</div>
-					<div class="col-3 text-right">
+					<div class="col-4 text-right">
 						<a href="<?php if($count > 0) : ?>index.php?option=com_botiga&view=checkout<?php else: ?>#<?php endif; ?>" class="pr-1 carrito">
 							<?php if($count > 0) : ?>
 							<span class="badge badge-warning"><?= $count; ?></span>

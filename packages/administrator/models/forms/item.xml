@@ -77,8 +77,8 @@
 		<field
 			name="pes"
 			type="text"
-			label="COM_BOTIGA_ITEM_MIDA_LABEL"
-			description="COM_BOTIGA_ITEM_MIDA_DESC"
+			label="COM_BOTIGA_ITEM_WEIGHT_LABEL"
+			description="COM_BOTIGA_ITEM_WEIGHT_DESC"
 			class="inputbox"
 			default=""
 		/>
@@ -132,41 +132,33 @@
 			class="inputbox"
 			default=""
 		/>
-        <field name="image1"
+        <field 
+        	name="image1"
 			type="media"
 			hide_none="1"
 			label="COM_BOTIGA_ITEM_IMAGE_LABEL"
 			description="COM_BOTIGA_ITEM_IMAGE_DESC"
 			directory="products"
 		/> 
-		<field name="image2"
-			type="media"
-			hide_none="1"
-			label="COM_BOTIGA_ITEM_IMAGE_LABEL"
-			description="COM_BOTIGA_ITEM_IMAGE_DESC"
-			directory="products"
-		/> 
-		<field name="image3"
-			type="media"
-			hide_none="1"
-			label="COM_BOTIGA_ITEM_IMAGE_LABEL"
-			description="COM_BOTIGA_ITEM_IMAGE_DESC"
-			directory="products"
-		/> 
-		<field name="image4"
-			type="media"
-			hide_none="1"
-			label="COM_BOTIGA_ITEM_IMAGE_LABEL"
-			description="COM_BOTIGA_ITEM_IMAGE_DESC"
-			directory="products"
-		/> 
-		<field name="image5"
-			type="media"
-			hide_none="1"
-			label="COM_BOTIGA_ITEM_IMAGE_LABEL"
-			description="COM_BOTIGA_ITEM_IMAGE_DESC"
-			directory="products"
-		/> 
+		<field 
+			name="images"
+			type="repeatable"
+			icon="list"
+			description="COM_BOTIGA_ITEM_IMAGES_DESC"
+			label="COM_BOTIGA_ITEM_IMAGES_LABEL"
+			default='{"image":[""]}'
+			>
+			<fieldset hidden="true" name="price_modal" repeat="true">
+				<field 
+					name="image"
+					type="media"
+					hide_none="1"
+					label="COM_BOTIGA_ITEM_IMAGE_LABEL"
+					description="COM_BOTIGA_ITEM_IMAGE_DESC"
+					directory="products"
+				/>
+			</fieldset>
+		</field> 
 		<field
 			name="garantia"
 			type="list"
@@ -214,6 +206,7 @@
 			name="extres"
 			type="repeatable"
 			icon="list"
+			filter="raw"
 			description="COM_BOTIGA_ITEM_EXTRES_DESC"
 			label="COM_BOTIGA_ITEM_EXTRES_LABEL"
 			default='{"title":[""],
@@ -232,8 +225,7 @@
 					name="content"
 					type="textarea"
 					label="COM_BOTIGA_ITEM_EXTRA_CONTENT_LBL"
-					description="COM_BOTIGA_ITEM_EXTRA_CONTENT_DSC"
-					filter="raw"
+					description="COM_BOTIGA_ITEM_EXTRA_CONTENT_DSC"					
 				/>
 			</fieldset>
 		</field>

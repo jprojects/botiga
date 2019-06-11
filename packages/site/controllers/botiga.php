@@ -94,7 +94,12 @@ class botigaControllerBotiga extends botigaController {
 			$db->query();
 		}
 		
-		$db->setQuery('SELECT MAX(id) FROM #__botiga_comandes WHERE (userid = '.$user->id.' OR sessid = '.$db->quote($sessid).') AND status <= 2');
+		if($user->guest) {
+			$db->setQuery('SELECT MAX(id) FROM #__botiga_comandes WHERE sessid = '.$db->quote($sessid).' AND status <= 2');
+		} else {
+			$db->setQuery('SELECT MAX(id) FROM #__botiga_comandes WHERE userid = '.$user->id.' AND status <= 2');
+		}
+		
 		if($idComanda = $db->loadResult()) {
 			
 			$session->set('idComanda', $idComanda); //recuperem la sessió 						
@@ -262,28 +267,29 @@ class botigaControllerBotiga extends botigaController {
 			}
 		}
      	
-     	$subtotal 	= $data['subtotal'];
-     	$shipment 	= $data['shipment'];
-     	$iva_percent = $data['iva_percent'];
-     	$iva_total  = $data['iva_total'];     	
-     	$re_percent = $data['re_percent'];
-     	$re_total   = $data['re_total']; 
-     	$discount 	= $data['discount'];    	
-     	$total 		= $data['total'];
-     	$processor  = $data['processor'];
-     	$observa    = $data['observa'];
+     	$order				= new stdClass();
+     	$order->id 			= $idComanda;
+     	$order->subtotal 	= $data['subtotal'];
+     	$order->shipment 	= $data['shipment'];
+     	$order->iva_percent = $data['iva_percent'];
+     	$order->iva_total   = $data['iva_total'];     	
+     	$order->re_percent  = $data['re_percent'];
+     	$order->re_total    = $data['re_total']; 
+     	$order->discount 	= $data['discount'];   	
+     	$order->total 		= $data['total'];
+     	$order->processor   = $data['processor'];
+     	$order->observa     = $data['observa'];
      	
      	//actualitza comanda     	
-     	$db->setQuery('UPDATE #__botiga_comandes SET subtotal = '.$db->quote($subtotal).', shipment = '.$db->quote($shipment).', discount = '.$db->quote($discount).', iva_percent = '.$db->quote($iva_percent).', iva_total = '.$db->quote($iva_total).', re_percent = '.$db->quote($re_percent).', re_total = '.$db->quote($re_total).', total = '.$db->quote($total).', processor = '.$db->quote($processor).', observa = '.$db->quote($observa).' WHERE id = '.$idComanda);
-     	$db->query();
+     	$db->updateObject('#__botiga_comandes', $order, 'id');
      	
-     	$this->processPayment();
+     	$this->processPayment($data['processor']);
      	
      	//redirect to payment
-     	$this->setRedirect('index.php?option=com_botiga&view=checkout&layout=payment&processor='.$processor); 
+     	$this->setRedirect('index.php?option=com_botiga&view=checkout&layout=payment&processor='.$data['processor']); 
      }
      
-     public function processPayment()
+     public function processPayment($processor)
      {	
      	$db 		= JFactory::getDbo();
      	$session 	= JFactory::getSession();
@@ -292,13 +298,14 @@ class botigaControllerBotiga extends botigaController {
      	
      	$botiga_name = botigaHelper::getParameter('botiga_name', '');
      	$botiga_mail = botigaHelper::getParameter('botiga_mail', '');
+     	$botiga_iban = botigaHelper::getParameter('botiga_iban', '');
      	$logo		 = botigaHelper::getParameter('botiga_logo', '');
      	
      	$data 	    = $app->input->getArray($_POST);
      	
      	$idComanda  = $session->get('idComanda');
      	
-     	//actualitza comanda
+     	//actualitza comanda, estat 2 pendent de pagament
      	$db->setQuery('UPDATE #__botiga_comandes SET status = 2, data = '.$db->quote(date('Y-m-d H:i:s')).' WHERE id = '.$idComanda);
      	$result = $db->query();
      	
@@ -306,24 +313,26 @@ class botigaControllerBotiga extends botigaController {
      	
      		$uniqid = botigaHelper::getComandaData('uniqid', $idComanda);
      		   	
-     		$subject   = "Nuevo pedido, pedido nº ".$uniqid;
+     		$subject = JText::sprintf('COM_BOTIGA_EMAIL_USER_PROCESS_PAYMENT_SUBJECT', $uniqid);
      		
-			$body      = "<div>Vuestro pedido está en gestión, nos pondremos en contacto para confirmar stock y plazo de entrega.<br>";
-			$body     .= "Adjuntamos factura."; 
-			$body     .= "<p>&nbsp;</p>"; 
-			$body     .= "Gracias por confiar en ".$botiga_name."<p></p>";   
-			$body     .= "<p>&nbsp;</p>"; 
-			$body     .= "<p><img src='".JURI::root().$logo."' alt='".$botiga_name."' width='200' /></p></div>";
+     		if($processor == 'Transferencia') {
+     			$body_user = JText::sprintf('COM_BOTIGA_EMAIL_USER_PROCESS_PAYMENT_BODY_BY_BANK_TRANSFER', $botiga_iban);
+     		} else {
+				$body_user = JText::sprintf('COM_BOTIGA_EMAIL_USER_PROCESS_PAYMENT_BODY', $botiga_name);   
+			}
+			$body_user    .= "<p>&nbsp;</p>"; 
+			$body_user    .= "<p><img src='".JURI::root().$logo."' alt='".$botiga_name."' width='200' /></p></div>";
 			
-			$body2     = "<div>Ha llegado un nuevo pedido desde la web de ".$botiga_name.".<br>";
-			$body2    .= "Adjuntamos factura.</div>"; 
+			$body_admin    = JText::sprintf('COM_BOTIGA_EMAIL_ADMIN_PROCESS_PAYMENT_BODY', $botiga_name); 
+			$body_admin   .= "<p>&nbsp;</p>"; 
+			$body_admin   .= "<p><img src='".JURI::root().$logo."' alt='".$botiga_name."' width='200' /></p></div>";
 			
 			$this->genPdf('F', $idComanda, $uniqid); 			
 		
 			//mail para el user
-			$this->enviar($subject, $body, $user->email, JPATH_ROOT.'/order_'.$uniqid.'.pdf');
+			$this->enviar($subject, $body_user, $user->email, JPATH_ROOT.'/order_'.$uniqid.'.pdf');
 			//mail para el admin
-			$this->enviar($subject, $body2, $botiga_mail, JPATH_ROOT.'/order_'.$uniqid.'.pdf');
+			$this->enviar($subject, $body_admin, $botiga_mail, JPATH_ROOT.'/order_'.$uniqid.'.pdf');
 			
 			unlink(JPATH_ROOT.'/order_'.$uniqid.'.pdf');
      	}    	
@@ -398,13 +407,22 @@ class botigaControllerBotiga extends botigaController {
 		$pdf->SetXY(130, $height); 
 		$pdf->Cell(15, 5, $com->cp.' - '.$com->poblacio, 0, 0, 'R');
 		
-		$height += 20;
+		$height += 10;
 		$pdf->SetFont('Arial', 'B', '10');
+		
+		if($com->status == 4) {
+			$pdf->SetTextColor(255, 0, 0);
+			$pdf->SetXY(20, $height);  
+			$pdf->Cell(30, 5, JText::_('COM_BOTIGA_HISTORY_STATUS_PENDING'), 0, 0, '');$pdf->SetTextColor(255, 0, 0);
+			$pdf->SetTextColor(0, 0, 0);
+		}
+		
+		$height += 10;
 		
 		$pdf->SetXY(20, $height);  
 		$pdf->Cell(30, 5, JText::_('COM_BOTIGA_INVOICE_REF'), 0, 0, '');
 		$pdf->SetXY(60, $height);  
-		$pdf->Cell(90, 5, JText::_('COM_BOTIGA_INVOICE_DESC'), 0, 0, '');
+		$pdf->Cell(90, 5, utf8_decode(JText::_('COM_BOTIGA_INVOICE_DESC')), 0, 0, '');
 		$pdf->SetXY(110, $height); 
 		$pdf->Cell(20, 5, JText::_('COM_BOTIGA_INVOICE_QTY'), 0, 0, 'R');	
 		$pdf->SetXY(145, $height);
@@ -428,10 +446,11 @@ class botigaControllerBotiga extends botigaController {
 				$pdf->useTemplate($tplIdx2, 0, 0, 0, 0, true);
 			}
 			
-			$pdf->SetFont('Arial', '', '10');						
+			$pdf->SetFont('Arial', '', '10');					
 	
 			$pdf->SetXY(20, $height);  
-			$pdf->Cell(30, 5, $detall->referencia, 0, 0, '');			
+			$pdf->Cell(30, 5, $detall->referencia, 0, 0, '');	
+			//$pdf->Image(JURI::root().$detall->image, 20, ($height-4), 5, 10, 'JPG');		
 			$pdf->SetXY(60, $height);  
 			$pdf->Cell(90, 5, utf8_decode($detall->name), 0, 0, '');
 			$pdf->SetXY(110, $height); 
@@ -454,14 +473,16 @@ class botigaControllerBotiga extends botigaController {
 		$pdf->Cell(30, 5, JText::_('COM_BOTIGA_INVOICE_BASE'), 0, 0, '');
 		$pdf->SetXY(50, $height);  
 		$pdf->Cell(30, 5, JText::_('COM_BOTIGA_INVOICE_BASE'), 0, 0, '');
-		$pdf->SetXY(80, $height); 
+		$pdf->SetXY(65, $height); 
 		$pdf->Cell(20, 5, JText::_('COM_BOTIGA_INVOICE_IVA'), 0, 0, 'R');	
-		$pdf->SetXY(100, $height);
+		$pdf->SetXY(90, $height);
 		$pdf->Cell(20, 5, JText::_('COM_BOTIGA_INVOICE_IMPORT_IVA'), 0, 0, '');
-		$pdf->SetXY(125, $height); 
+		$pdf->SetXY(115, $height); 
 		$pdf->Cell(15, 5, JText::_('COM_BOTIGA_INVOICE_RE'), 0, 0, '');
-		$pdf->SetXY(155, $height); 
+		$pdf->SetXY(130, $height); 
 		$pdf->Cell(15, 5, JText::_('COM_BOTIGA_INVOICE_IMPORT_RE'), 0, 0, '');
+		$pdf->SetXY(155, $height); 
+		$pdf->Cell(15, 5, JText::_('COM_BOTIGA_INVOICE_DISCOUNTS'), 0, 0, '');
 		$pdf->SetXY(180, $height); 
 		$pdf->Cell(15, 5, JText::_('COM_BOTIGA_INVOICE_TOTAL'), 0, 0, '');
 		
@@ -472,16 +493,18 @@ class botigaControllerBotiga extends botigaController {
 		$pdf->Cell(30, 5, number_format($com->subtotal, 2, ',', '.').EURO, 0, 0, '');
 		$pdf->SetXY(50, $height);  
 		$pdf->Cell(30, 5, number_format(($com->total/1.21), 2, ',', '.').EURO, 0, 0, '');
-		$pdf->SetXY(80, $height); 
+		$pdf->SetXY(65, $height); 
 		$pdf->Cell(20, 5, $com->iva_percent, 0, 0, 'R');	
-		$pdf->SetXY(100, $height);
+		$pdf->SetXY(90, $height);
 		$pdf->Cell(20, 5, number_format($com->iva_total, 2, ',', '.').EURO, 0, 0, '');
-		$pdf->SetXY(125, $height); 
+		$pdf->SetXY(115, $height); 
 		$pdf->Cell(15, 5, $com->re_percent, 0, 0, '');
-		$pdf->SetXY(155, $height); 
+		$pdf->SetXY(130, $height); 
 		$pdf->Cell(15, 5, number_format($com->re_total, 2, ',', '.').EURO, 0, 0, '');
+		$pdf->SetXY(155, $height); 
+		$pdf->Cell(15, 5, number_format($com->discount, 2, ',', '.').EURO, 0, 0, '');
 		$pdf->SetXY(180, $height); 
-		$pdf->Cell(15, 5, number_format(($com->total), 2, ',', '.').EURO, 0, 0, '');
+		$pdf->Cell(15, 5, number_format($com->total, 2, ',', '.').EURO, 0, 0, '');
 
 		$pdf->Output('order_'.$uniqid.'.pdf', $mode);
 		if($uid == '') { die(); }
@@ -538,21 +561,30 @@ class botigaControllerBotiga extends botigaController {
      	
      	$id = $app->input->get('id');
      	$type = $app->input->get('type');
+     	$qty = $app->input->get('qty', 0);
      	
-     	$db->setQuery('select * from #__botiga_comandesDetall where id = '.$id);
-     	$row = $db->loadObject();
+     	if($qty > 0) { 
      	
-     	if($type == 'minus') {
-     		if($row->qty > 1) {
-     			$db->setQuery('UPDATE #__botiga_comandesDetall SET qty = qty-1 WHERE id = '.$id);
-     			$result = $db->query();
-     		} else {
-     			$db->setQuery('DELETE FROM #__botiga_comandesDetall WHERE id = '.$id);
-     			$result = $db->query();
-     		}
+     		$db->setQuery('UPDATE #__botiga_comandesDetall SET qty = '.$qty.' WHERE id = '.$id);
+     		$result = $db->query();
+     		
      	} else {
-     		$db->setQuery('UPDATE #__botiga_comandesDetall SET qty = qty+1 WHERE id = '.$id);
-     			$result = $db->query();
+     	
+		 	$db->setQuery('select * from #__botiga_comandesDetall where id = '.$id);
+		 	$row = $db->loadObject();
+		 	
+		 	if($type == 'minus') {
+		 		if($row->qty > 1) {
+		 			$db->setQuery('UPDATE #__botiga_comandesDetall SET qty = qty-1 WHERE id = '.$id);
+		 			$result = $db->query();
+		 		} else {
+		 			$db->setQuery('DELETE FROM #__botiga_comandesDetall WHERE id = '.$id);
+		 			$result = $db->query();
+		 		}
+		 	} else {
+		 		$db->setQuery('UPDATE #__botiga_comandesDetall SET qty = qty+1 WHERE id = '.$id);
+		 			$result = $db->query();
+		 	}
      	}
      	
      	if($result) {

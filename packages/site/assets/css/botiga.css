@@ -71,6 +71,8 @@ span.rollover {
 	position: absolute;
 	z-index: 10;
 	opacity: 0;
+	left: 0;
+	top: 0;
 }
 
 span.rollover:hover {
@@ -80,10 +82,20 @@ span.rollover:hover {
 	-webkit-transition: -webkit-transform 1s;
 }
 
+span.rollover img {
+	position: absolute;
+	top:50%;
+	left:44%;
+	width: 60px;
+	height: auto;
+}
+
 .head_botiga {
-	height: 150px;
+	min-height: 150px;
 	border-bottom: 1px solid #683b2b;
 }
+
+.table-text { width: 45%; }
 
 .item {
 	margin-bottom: 50px;
@@ -181,13 +193,23 @@ legend {
 }
 span.pagenav { font-weight: bold; }
 
-@media (max-width: 768px) {
+@media (min-width: 1024px) {
+	.phone-visible { display: none; }
+}
+@media (max-width: 1024px) {
+	#checkout .input-group-btn { display: none; }
 	.phone-hide { display: none; }
 	.phone-visible { display: initial; }
 }
 @media (max-width: 576px) {
 	.head_botiga {
-		height: 110px;
-		padding-top: 60px;
+		height: 50px;
+		min-height: 50px;
 	}
+	.btn-xs-block {
+		display: block;
+		width: 100%;
+		margin-bottom: 5px;
+	}
+	.table-text { width: 25%; }
 }	

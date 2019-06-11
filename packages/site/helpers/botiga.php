@@ -119,7 +119,13 @@ class botigaHelper {
 	public static function getCategories() 
 	{
 		$db = JFactory::getDbo();
-		$db->setQuery('SELECT id, title FROM #__categories WHERE extension = '.$db->quote('com_botiga').'ORDER BY id ASC');
+		$db->setQuery( 
+			'SELECT id, title ' .
+			' FROM #__categories ' .
+			' WHERE extension = ' . $db->quote('com_botiga') .
+				' AND published=1 ' .
+				' AND language = ' . $db->quote(JFactory::getLanguage()->getTag()) .
+			' ORDER BY id ASC' );
 		return $db->loadObjectList();
 	}
 	
@@ -184,9 +190,9 @@ class botigaHelper {
    		$user 	 = JFactory::getUser();
 		
 		$idComanda = $session->get('idComanda', '');
-		
+		//echo $idComanda;
 		if($idComanda != '') {
-   			$db->setQuery('select sum(qty) from #__botiga_comandesDetall where idComanda = '.$idComanda);
+   			$db->setQuery('SELECT SUM(qty) FROM #__botiga_comandesDetall WHERE idComanda = '.$idComanda);
    			return $db->loadResult();
    		} else {
    			return 0;
@@ -211,7 +217,7 @@ class botigaHelper {
    			$value = $total - $row->valor;   
    		}
    		
-   		return number_format($value, 2, '.', '') * -1;
+   		return number_format($value, 2, '.', '');
     }
     
     /**
@@ -276,44 +282,95 @@ class botigaHelper {
 	 * @params int $itemid database id requested
 	 * @return float
 	*/
-	public static function getUserPrice($itemid)
-	{
+	public static function getUserPrice($itemid) {
 		jimport( 'joomla.access.access' );
 		
 		$user      = JFactory::getUser();
 		$db		   = JFactory::getDbo();
-		$resultado = '0.00';				
-		
+		$resultado = 0;				
 		
 		$login_prices = botigaHelper::getParameter('login_prices', 0);
 		
 		//if user is guest hide price
 		if($login_prices == 1 && $user->guest) { return '0.00'; }
 		
-		$groups = JAccess::getGroupsByUser($user->id, false);
+		//check if user is no validated
+		if((!botigaHelper::isValidated() && $user->id!=522) || $user->guest) { 
+			$groups = array(2, 11); 
+		} else {
+			$groups = JAccess::getGroupsByUser($user->id, false);
+		}			
 		
 		$db->setQuery('SELECT price FROM #__botiga_items WHERE id = '.$itemid);
 		$price = $db->loadResult();
 		
 		$prices = json_decode($price, true);
 		
-		foreach ($prices as $sub) 
-      	{
-			foreach ($sub as $k => $v) 
-		    {
+		foreach ($prices as $sub) {
+			foreach ($sub as $k => $v) {
 		        $result[$k][] = $v;
 		    }
       	}
       	
-      	foreach ($result as $index => $value) 
-		{ 
-			//check if user is no validated
-			if(!botigaHelper::isValidated() || $user->guest) { $groups = array(2, 11); }  
-    		if(in_array($value[0], $groups)) { $resultado = $value[1]; }
+      	foreach ($result as $index => $value) { 
+    		if(in_array($value[0], $groups)) { 
+				$resultado = $value[1]; 
+			}
 		}
 		
 		return number_format($resultado, 2);
+	}
+
+	/**
+	 * method to get user the price
+	 * @params int $itemid database id requested
+	 * @return float
+	*/
+	public static function getUserDiscounts($itemid) {
+		jimport( 'joomla.access.access' );
 		
+		$user     	= JFactory::getUser();
+		$db		  	= JFactory::getDbo();
+		$resultat	= '';
+		
+		$login_prices = botigaHelper::getParameter('login_prices', 0);
+		
+		//if user is guest hide price
+		if($login_prices == 1 && $user->guest) { return '0.00'; }
+		
+		//check if user is no validated
+		if((!botigaHelper::isValidated() && $user->id!=522) || $user->guest) { 
+			$groups = array(2, 11); 
+		} else {
+			$groups = JAccess::getGroupsByUser($user->id, false);
+		}			
+		
+		$db->setQuery('SELECT price FROM #__botiga_items WHERE id = '.$itemid);
+		$price = $db->loadResult();
+		
+		$prices = json_decode($price, true);
+		
+		foreach ($prices as $sub) {
+			foreach ($sub as $k => $v) {
+		        $result[$k][] = $v;
+		    }
+      	}
+      	
+      	foreach ($result as $index => $value) { 
+    		if(in_array($value[0], $groups)) { 
+				// grup $value[1]; 
+				// article $itemid
+				$db->setQuery( "SELECT * FROM #__botiga_discounts WHERE idItem=$itemid AND usergroup=$value[0]" );
+				//botigaHelper::customLog("SELECT * FROM #__botiga_discounts WHERE idItem=$itemid AND type=$value[0]");
+				$discounts = $db->loadObjectList();
+				foreach($discounts as $discount) {
+					$resultat .= ($resultat==''?'':'<br/>') . $discount->name . ': ' . $discount->total;
+				}
+				
+			}
+		}
+		
+		return $resultat;
 	}
 	
 	/**
@@ -330,7 +387,33 @@ class botigaHelper {
       	{
 			foreach ($extra as $k => $v) 
 		    {
-		        $result[$k][] = $v;
+		    	if($v != '') {
+		        	$result[$k][] = $v;
+		        }
+		    }
+      	}
+		
+		return $result;
+		
+	}
+	
+	/**
+	 * method to get the extra images in the item view
+	 * @params int $itemid database id requested
+	 * @return mixed
+	*/
+	public static function getImages($itemid)
+	{
+		$result = array();		
+		$extras = json_decode(botigaHelper::getItemData('images', $itemid), true);
+		
+		foreach ($extras as $extra) 
+      	{
+			foreach ($extra as $k => $v) 
+		    {
+		    	if($v != '') {
+		        	$result[$k][] = $v;
+		        }
 		    }
       	}
 		
@@ -348,7 +431,7 @@ class botigaHelper {
 		$db = JFactory::getDbo();
 		$user = JFactory::getUser();
 		$groups  = JAccess::getGroupsByUser($user->id, false);
-		$db->setQuery('SELECT id, name FROM #__botiga_items WHERE child = '.$itemid.' AND published = 1 AND (usergroup = 0 OR usergroup IN('.implode(',', $groups).'))');
+		$db->setQuery('SELECT id, name FROM #__botiga_items WHERE child = '.$itemid.' AND published = 1 AND (usergroup = 1 OR usergroup IN('.implode(',', $groups).'))');
 		return $db->loadObjectList();
 		
 	}

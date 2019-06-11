@@ -52,7 +52,8 @@ CREATE TABLE IF NOT EXISTS `#__botiga_comandes` (
   `status` smallint(1) NOT NULL DEFAULT '0' COMMENT '1-Pendent;2-Pendent pagar;3-Pagada;4-Pagada al 50%',
   `subtotal` float(10,2) NOT NULL DEFAULT '0.00',
   `shipment` float(10,2) NOT NULL DEFAULT '0.00',
-  `discount` float(10,2) NOT NULL DEFAULT '0.00' COMMENT 'total descomptes',
+  `discount` float(10,2) NOT NULL DEFAULT '0.00' COMMENT 'total descomptes inclos cupo si aplicable',
+  `idCoupon` int(11) NOT NULL DEFAULT '0',
   `iva_percent` int(5) NOT NULL DEFAULT '0',
   `iva_total` float(10,2) NOT NULL DEFAULT '0.00',
   `re_percent` float(10,2) NOT NULL DEFAULT '0.00',
@@ -115,17 +116,14 @@ CREATE TABLE IF NOT EXISTS `#__botiga_items` (
   `catid` varchar(150) NOT NULL DEFAULT '0',
   `name` varchar(150) NOT NULL DEFAULT '',
   `child` int(11) NOT NULL DEFAULT '0',
-  `usergroup` int(11) NOT NULL DEFAULT '0',
+  `usergroup` int(11) NOT NULL DEFAULT '1',
   `brand` int(11) NOT NULL DEFAULT '0',
   `s_description` text NOT NULL,
   `description` text NOT NULL,
   `image1` varchar(150) NOT NULL DEFAULT '',
-  `image2` varchar(150) NOT NULL DEFAULT '',
-  `image3` varchar(150) NOT NULL DEFAULT '',
-  `image4` varchar(150) NOT NULL DEFAULT '',
-  `image5` varchar(150) NOT NULL DEFAULT '',
+  `images` text NOT NULL,
   `pdf` varchar(150) NOT NULL DEFAULT '',
-  `price` varchar(150) NOT NULL,
+  `price` text NOT NULL,
   `pvp` float(10,2) NOT NULL,
   `garantia` varchar(150) NOT NULL DEFAULT '',
   `envio` varchar(150) NOT NULL DEFAULT '',
@@ -138,7 +136,21 @@ CREATE TABLE IF NOT EXISTS `#__botiga_items` (
   `mida` varchar(50) NOT NULL DEFAULT '',
   `stock` int(11) NOT NULL DEFAULT '0',
   `factusol_codart` varchar(13) DEFAULT NULL,
-  `sincronitzat` int(11) DEFAULT '0',
+  `sincronitzat` tinyint(1) DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `#__botiga_items_prices`
+--
+
+CREATE TABLE IF NOT EXISTS `#__botiga_items_prices` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `itemId` int(11) NOT NULL DEFAULT '0',
+  `usergroup` int(11) NOT NULL DEFAULT '1',
+  `price` float(10,2) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -151,7 +163,7 @@ CREATE TABLE IF NOT EXISTS `#__botiga_items` (
 CREATE TABLE IF NOT EXISTS `#__botiga_shipments` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` varchar(150) NOT NULL DEFAULT '',
-  `usergroup` int(11) DEFAULT NULL,
+  `usergroup` int(11) DEFAULT NULL DEFAULT '1',
   `type` tinyint(1) NOT NULL DEFAULT '0',
   `conditional` tinyint(1) NOT NULL DEFAULT '0'  COMMENT '1->Mismos paises; T->Distintos paises',
   `country` text NOT NULL,
@@ -175,6 +187,7 @@ CREATE TABLE IF NOT EXISTS `#__botiga_discounts` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` varchar(150) NOT NULL DEFAULT '',
   `type` tinyint(1) DEFAULT NULL DEFAULT '0',
+  `usergroup` int(11) NOT NULL DEFAULT '1',
   `idItem` int(11) DEFAULT NULL,
   `min` int(5) NOT NULL,
   `max` int(5) NOT NULL,

@@ -40,7 +40,9 @@
 			description="COM_BOTIGA_ITEM_CATID_DESC"
 			extension="com_botiga"
 			onchange="this.form.submit();"
-		/>
+		>
+            <option value="">COM_BOTIGA_SELECT_AN_OPTION</option>
+		</field>
 		<field
             name="child"
             type="list"

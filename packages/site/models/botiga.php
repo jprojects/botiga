@@ -131,7 +131,7 @@ class botigaModelBotiga extends JModelList
 
 		$query->where('i.published = 1');
 		$query->where('i.child = ""');
-		$query->where('(i.usergroup = 0 OR i.usergroup IN('.implode(',', $groups).'))');
+		$query->where('(i.usergroup = 1 OR i.usergroup IN('.implode(',', $groups).'))');
 		$query->where('i.language = '.$db->quote(JFactory::getLanguage()->getTag()).' ORDER BY '.$orderby.' ASC');
 
 		//echo $query;
@@ -163,5 +163,44 @@ class botigaModelBotiga extends JModelList
 		$total = count($db->loadObjectList());
 		
 		return JText::sprintf('COM_BOTIGA_TOTAL_ITEMS', $count, $total);
+	}
+	
+	public function getNumItemsRow($id, $price) {
+	
+		$db 	 = JFactory::getDbo();
+		$session = JFactory::getSession();
+		
+		$idComanda = $session->get('idComanda', '');
+		
+		if($idComanda != '') {
+		
+			$db->setQuery('SELECT qty FROM #__botiga_comandesDetall WHERE idItem = '.$id.' AND idComanda = '.$idComanda);
+			
+			$qty = $db->loadResult();
+			
+			if($qty > 0) { $price = $qty * $price; }
+		}
+			
+		return number_format($price, 2);
+	}
+	
+	public function getQtyRow($id) {
+	
+		$db 	 = JFactory::getDbo();
+		$session = JFactory::getSession();
+		
+		$idComanda = $session->get('idComanda', '');
+		$qty = 0;
+		
+		if($idComanda != '') {
+		
+			$db->setQuery('SELECT qty FROM #__botiga_comandesDetall WHERE idItem = '.$id.' AND idComanda = '.$idComanda);
+			
+			$qty = $db->loadResult();
+			
+			if($qty == '') { $qty = 0; }
+		}
+			
+		return $qty;
 	}
 }

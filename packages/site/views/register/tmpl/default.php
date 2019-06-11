@@ -57,16 +57,16 @@ $userToken  = JSession::getFormToken();
 		
 		<div class="col-12 mt-3">
 			<div class="row">
-				<div class="col-9 text-left">			
+				<div class="col-8 text-left">			
 					<a href="index.php?option=com_botiga&view=botiga" class="pr-1">
 						<img src="media/com_botiga/icons/mosaico<?php if($jinput->getCmd('layout', '') == '') : ?>-active<?php endif; ?>.png">
 					</a>
 					<a href="index.php?option=com_botiga&view=botiga&layout=table">
 						<img src="media/com_botiga/icons/lista<?php if($jinput->getCmd('layout', '') == 'table') : ?>-active<?php endif; ?>.png">
 					</a>
-					<span class="pl-3 phone-hide"><?= JText::_('COM_BOTIGA_FREE_SHIPPING_MSG'); ?>&nbsp;<img src="media/com_botiga/icons/envio_gratis.png"></span>
+					<span class="pl-3 phone-hide estil02"><?= JText::_('COM_BOTIGA_FREE_SHIPPING_MSG'); ?>&nbsp;<img src="media/com_botiga/icons/envio_gratis.png"></span>
 				</div>
-				<div class="col-3 text-right">
+				<div class="col-4 text-right">
 					<a href="index.php?option=com_botiga&view=checkout" class="pr-1 carrito">
 						<?php if(botigaHelper::getCarritoCount() > 0) : ?>
 						<span class="badge badge-warning"><?= botigaHelper::getCarritoCount(); ?></span>

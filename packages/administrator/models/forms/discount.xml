@@ -41,6 +41,12 @@
 		<option value="1">COM_BOTIGA_SELECT_DISCOUNT_BOXES</option>
 		<option value="2">COM_BOTIGA_SELECT_DISCOUNT_N_ITEMS</option>
 		</field>
+		<field name="usergroup"
+			type="usergroup"
+			label="COM_BOTIGA_SHIPMENT_USERGROUP_LABEL"
+			description="COM_BOTIGA_SHIPMENT_USERGROUP_DESC"
+			required="true"
+		/>
 		<field 
 			name="idItem"
 			type="products"
@@ -53,7 +59,6 @@
 			type="text"
 			label="COM_BOTIGA_DISCOUNT_BOX_ITEMS_LABEL"
 			description="COM_BOTIGA_DISCOUNT_BOX_ITEMS_DESC"
-			required="true"
 			showon="type:1"
 		/> 
 		<field 
@@ -61,7 +66,6 @@
 			type="text"
 			label="COM_BOTIGA_DISCOUNT_MIN_LABEL"
 			description="COM_BOTIGA_DISCOUNT_MIN_DESC"
-			required="true"
 			showon="type:2"
 		/> 
 		<field 
@@ -69,7 +73,6 @@
 			type="text"
 			label="COM_BOTIGA_DISCOUNT_MAX_LABEL"
 			description="COM_BOTIGA_DISCOUNT_MAX_DESC"
-			required="true"
 			showon="type:0"
 		/> 
 		<field 
