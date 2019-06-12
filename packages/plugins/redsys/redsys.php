@@ -53,6 +53,8 @@ class plgBotigaRedsys extends JPlugin
 		$postback = JURI::base().'index.php?option=com_botiga&view=callback&method=Redsys';
 		$postback .= '&userid='.$usuari->id.'&idComanda='.$idComanda.'&amount='.$total;
 		$version = "HMAC_SHA256_V1";
+		
+		$logo    = JURI::base().$this->params->get('logo', '');
 
 		$order   = str_pad($idComanda, 4, '0', STR_PAD_LEFT);
 		$order  .= sprintf("%02d",rand(0, 99));
@@ -63,10 +65,10 @@ class plgBotigaRedsys extends JPlugin
 		$myObj = new RedsysAPI;
 
 		$myObj->setParameter("DS_MERCHANT_AMOUNT", $amount);
-		$myObj->setParameter("DS_MERCHANT_CURRENCY", 978);
+		$myObj->setParameter("DS_MERCHANT_CURRENCY", $this->params->get('currency',''));
 		$myObj->setParameter("DS_MERCHANT_ORDER", $order);
 		$myObj->setParameter("DS_MERCHANT_MERCHANTCODE", $this->params->get('code',''));
-		$myObj->setParameter("DS_MERCHANT_TERMINAL", 1);
+		$myObj->setParameter("DS_MERCHANT_TERMINAL", $this->params->get('terminal',''));
 		$myObj->setParameter("DS_MERCHANT_TRANSACTIONTYPE", 0);
 		$myObj->setParameter("DS_MERCHANT_MERCHANTURL", $postback);
 		$myObj->setParameter("DS_MERCHANT_URLOK", $success);      
@@ -81,6 +83,7 @@ class plgBotigaRedsys extends JPlugin
 			'url'			=> $url,
 			'version'		=> $version,
 			'signature'		=> $signature,
+			'logo'          => $logo,
 			'params'		=> $params			
 		);
 

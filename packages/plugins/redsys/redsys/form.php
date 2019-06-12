@@ -7,7 +7,7 @@
 	<input type='hidden' name='Ds_SignatureVersion' value='<?= $data->version; ?>'> 
 	<input type='hidden' name='Ds_MerchantParameters' value='<?= $data->params; ?>'> 
 	<input type='hidden' name='Ds_Signature' value='<?= $data->signature; ?>'> 
-	<input type="image" src="<?= dirname(__FILE__); ?>/bbva.jpg" border="0" name="submit" alt="bbva" />
+	<input type="image" src="<?= $data->logo; ?>" border="0" name="submit" alt="TPV" />
 </form>
 </div>
 

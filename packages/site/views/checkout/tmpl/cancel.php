@@ -12,10 +12,10 @@
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
-$spain 		= botigaHelper::getParameter('total_shipment_spain', 25);
-$islands 	= botigaHelper::getParameter('total_shipment_islands', 50);
-$world 		= botigaHelper::getParameter('total_shipment_world', 60);
-$user = JFactory::getUser();
+$logo 		= botigaHelper::getParameter('botiga_logo', '');
+$user 		= JFactory::getUser();
+$jinput		= JFactory::getApplication()->input;
+$userToken 	= JSession::getFormToken();
 ?>
 
 <?php if(botigaHelper::getParameter('show_header', 0) == 1) : ?>

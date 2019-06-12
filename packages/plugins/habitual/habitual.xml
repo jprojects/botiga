@@ -23,6 +23,13 @@
 				default="Habitual"
 			/>
 			<field 
+					name="label"
+					type="text"
+					label="Etiqueta multillenguatge"
+					description=""
+					default="COM_BOTIGA_PLUGIN_HABITUAL_TITLE"
+				/>
+			<field 
 				name="alies"
 				type="text"
 				label="Alias"

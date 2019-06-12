@@ -294,6 +294,9 @@ jQuery(document).ready(function() {
 						<?php 
 						foreach($plugins as $plugin) : 
 						$params = json_decode($plugin->params);				
+						if($params->test_user != '') {
+							if($user->id != $params->test_user) { continue; }
+						} 
 						?>
 						<option value="<?= $params->alies; ?>" <?php if($user_params['metodo_pago'] == strtolower($params->alies)): ?>selected<?php endif; ?> ><?= $params->title; ?></option>
 						<?php endforeach; ?>

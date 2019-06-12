@@ -74,7 +74,7 @@ class plgBotigaTransferencia extends JPlugin
 		$html .= "<tr><td><strong>Indicar el concepto</strong></td><td> la id de la comanda (".$idComanda.")</td></tr>";
 		$html .= "<tr><td><strong>IBAN</strong></td><td>".$account."</td></tr>";
 		$html .= "</table>";
-		$html .= "<p>IMPORTANTE: No se prepara el pedido hasta recibir el pago.</p>";
+		$html .= "<p class='text-danger'>IMPORTANTE: No se prepara el pedido hasta recibir el pago.</p>";
 		$html .= "<p></p>";
 
 		$html = str_replace('{AMOUNT}', $total, $html);
@@ -86,7 +86,7 @@ class plgBotigaTransferencia extends JPlugin
 		
 		//actualitzar estat comanda a pagada (3) o (4) si es empresa i tenim activat el pagament al 50%
     	$company_pay_percent == 1 && in_array(10, $groups) ? $status = 4 : $status = 3;
-		$db->setQuery('update #__botiga_comandes set status = '.$status.', data = '.$db->quote(date('Y-m-d H:i:s')).' WHERE id = '.$idComanda);
+		$db->setQuery('UPDATE #__botiga_comandes SET status = '.$status.', data = '.$db->quote(date('Y-m-d H:i:s')).' WHERE id = '.$idComanda);
 		$db->query();
 		
 		//tanquem comanda
