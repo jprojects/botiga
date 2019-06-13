@@ -224,9 +224,12 @@ $user_params = json_decode(botigaHelper::getUserData('params', $user->id), true)
 								<option value=""><?= JText::_('COM_BOTIGA_SELECT_AN_OPTION'); ?></option>
 								<?php 								
 								foreach(botigaHelper::getPaymentPlugins() as $plugin) : 
-								$params = json_decode($plugin->params);
+									$params = json_decode($plugin->params);				
+									if($params->test_user != '') {
+										if($user->id != $params->test_user) { continue; }
+									} 
 								?>
-								<option value="<?= strtolower($params->alies); ?>" <?php if(strtolower($params->alies) == $user_params['metodo_pago']) : ?>selected<?php endif; ?>><?= $params->title; ?></option>
+								<option value="<?= $params->alies; ?>" <?php if($user_params['metodo_pago'] == strtolower($params->alies)): ?>selected<?php endif; ?> ><?= JText::_($params->label); ?></option>
 								<?php endforeach; ?>
 							</select>
 						</div>
