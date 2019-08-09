@@ -5,8 +5,8 @@
  * @copyright   Copyright © 2010 - All rights reserved.
  * @license		GNU/GPL
  * @author		kim
- * @author mail administracion@joomlanetprojects.com
- * @website		http://www.joomlanetprojects.com
+ * @author mail kim@aficat.com
+ * @website		http://www.aficat.com
  *
  */
 
@@ -82,6 +82,7 @@ class botigaModelUser extends JModelAdmin
 			$params = json_decode($data->params); 
 			$data->metodo_pago = $data->params['metodo_pago'];
 			$data->re_equiv = $data->params['re_equiv'];
+			$data->pago_habitual = $data->params['pago_habitual'];
 		}
 		return $data;
 	}
@@ -94,26 +95,26 @@ class botigaModelUser extends JModelAdmin
 	{		
 		$row =& $this->getTable();
 		$db  = JFactory::getDbo();
-		$user = JFactory::getUser();
 		
 		$post_data  = JRequest::get( 'post' );
    		$data       = $post_data["jform"];
 	    	
-    	$params['metodo_pago'] = $data['metodo_pago'];
-    	$params['re_equiv']    = $data['re_equiv'];
+    	$params['metodo_pago'] 		= $data['metodo_pago'];
+    	$params['re_equiv']    		= $data['re_equiv'];
+    	$params['pago_habitual']    = $data['pago_habitual'];
     	
-    	unset($data['metodo_pago'], $data['re_equiv']);
+    	unset($data['metodo_pago'], $data['re_equiv'], $data['pago_habitual']);
     	
     	$data['params'] = json_encode($params);
     	
     	//save usergroup 0 customer (11) 1 company (10)
-    	if($data['type'] == 0) {
-    		$db->setQuery('UPDATE #__user_usergroup_map SET group_id = 11 WHERE user_id = '.$user->id.' AND group_id = 10');
+    	/*if($data['type'] == 0) {
+    		$db->setQuery('UPDATE #__user_usergroup_map SET group_id = 11 WHERE user_id = '.$data['userid'].' AND group_id = 10');
     		$db->query();
     	} else {
-    		$db->setQuery('UPDATE #__user_usergroup_map SET group_id = 10 WHERE user_id = '.$user->id.' AND group_id = 11');
+    		$db->setQuery('UPDATE #__user_usergroup_map SET group_id = 10 WHERE user_id = '.$data['userid'].' AND group_id = 11');
     		$db->query();
-    	}
+    	}*/
 	
 		if (!$row->bind( $data )) {
 			return JError::raiseWarning( 500, $row->getError() );

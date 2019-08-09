@@ -11,7 +11,7 @@
 	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
 	<authorEmail>kim@afi.cat</authorEmail>
 	<authorUrl>www.afi.cat</authorUrl>
-	<version>2.0.0</version>
+	<version>2.5.0</version>
 	<description>Productos relacionados</description>
 	<files>
 		<filename module="mod_botiga_related">mod_botiga_related.php</filename>
@@ -20,11 +20,6 @@
 		<filename>index.html</filename>		
 		<filename>mod_botiga_related.xml</filename>
 	</files>
-	
-	<updateservers>
-    	<server type="extension" priority="2" name="Botiga Related Module">http://www.aficat.com/updates/botiga/mod_botiga_related.xml</server>
-  	</updateservers>
-  	
 	<config>
 		<fields name="params">
 			<fieldset

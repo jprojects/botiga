@@ -125,17 +125,17 @@ class botigaModelOrders extends JModelList
 
 		$query = $db->getQuery(true);
 
-		$query->select('a.*, u.nom_empresa, u.id as user_id');
+		$query->select('a.*, u.id as userid, u.username, u.email as email');
 
 		$query->from('#__botiga_comandes as a');
 		
-		$query->join('inner', '#__botiga_users as u on a.userid = u.userid');
+		$query->join('inner', '#__users as u on a.userid = u.id');
                 
         // Filter by search in name.
 		$search = $this->getState('filter.search');
 		if (!empty($search)) {
 			$search = $db->Quote('%'.$db->escape($search, true).'%');
-			$query->where('(u.nom_empresa LIKE '.$search.')');
+			$query->where('(u.username LIKE '.$search.')');
 		}
 		
 		// Filter by processor.

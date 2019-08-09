@@ -20,6 +20,10 @@ $dispatcher = JEventDispatcher::getInstance();
 
 $jinput    	= JFactory::getApplication()->input;
 $idComanda 	= $jinput->get('idComanda');
+$amount	   = $jinput->get('amount');
+
+$_POST['idComanda'] = $idComanda;
+$_POST['amount']    = $amount;
 
 $dispatcher->trigger( 'onPaymentCallback', array( $_GET['method'], $_POST, $_GET['userid'], $idComanda)); 
 

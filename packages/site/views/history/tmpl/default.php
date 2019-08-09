@@ -58,35 +58,37 @@ $user_params = json_decode(botigaHelper::getUserData('params', $user->id), true)
 			
 			<div class="col-12 mt-3">
 				<div class="row">
-					<div class="col-8 text-left">			
+					<div class="col-6 col-md-8 text-left">			
 						<a href="index.php?option=com_botiga&view=botiga" class="pr-1">
 							<img src="media/com_botiga/icons/mosaico<?php if($app->input->getCmd('layout', '') == '') : ?>-active<?php endif; ?>.png">
 						</a>
+						<?php if(botigaHelper::isEmpresa()) : ?>					
 						<a href="index.php?option=com_botiga&view=botiga&layout=table">
 							<img src="media/com_botiga/icons/lista<?php if($app->input->getCmd('layout', '') == 'table') : ?>-active<?php endif; ?>.png">
 						</a>
+						<?php endif; ?>
 						<span class="pl-3 phone-hide estil02"><?= JText::sprintf('COM_BOTIGA_FREE_SHIPPING_MSG', $spain, $islands, $world); ?>&nbsp;<img src="media/com_botiga/icons/envio_gratis.png"></span>
 					</div>
-					<div class="col-4 text-right">
-						<a href="<?php if($count > 0) : ?>index.php?option=com_botiga&view=checkout<?php else: ?>#<?php endif; ?>" class="pr-1 carrito">
+					<div class="col-6 col-md-4 text-right">
+						<a href="<?php if($count > 0) : ?>index.php?option=com_botiga&view=checkout<?php else: ?>#<?php endif; ?>" class="pr-2 carrito">
 							<?php if($count > 0) : ?>
 							<span class="badge badge-warning"><?= $count; ?></span>
 							<?php endif; ?>
 							<img src="media/com_botiga/icons/carrito.png">
 						</a>
 						<?php if($user->guest) : ?>
-						<a href="index.php?option=com_users&view=login" title="Login" class="hasTip"class="pr-1">
-							<img src="media/com_botiga/icons/iniciar-sesion.png">
-						</a>
-						<?php else: ?>
-						<a href="index.php?option=com_users&task=user.logout&<?= $userToken; ?>=1" title="Logout" class="hasTip pr-1">
-							<img src="media/com_botiga/icons/salir.png">
-						</a>
-						<a href="index.php?option=com_botiga&view=history" title="Mis pedidos" class="hasTip">
-							<img src="media/com_botiga/icons/sesion-iniciada.png">
-						</a>
-						<div class="d-none d-sm-block"><small><?= JText::sprintf('COM_BOTIGA_WELCOME', $user->name); ?></small></div>
-						<?php endif; ?>
+					<a href="index.php?option=com_users&view=login" title="Login" class="hasTip">
+						<img src="media/com_botiga/icons/iniciar-sesion.png">
+					</a>
+					<?php else: ?>
+					<a class="ml-4 hasTip" href="index.php?option=com_users&task=user.logout&<?= $userToken; ?>=1" title="Logout" title="Salir">
+						<img src="media/com_botiga/icons/salir.png">
+					</a>
+					<a class="ml-4 hasTip" href="index.php?option=com_botiga&view=history" title="History" title="Perfil"s>
+						<img src="media/com_botiga/icons/sesion-iniciada.png">
+					</a>
+					<div class="d-none d-sm-block"><small><?= JText::sprintf('COM_BOTIGA_WELCOME', $user->name); ?></small></div>
+					<?php endif; ?>
 					</div>
 				</div>
 			</div>
@@ -105,12 +107,12 @@ $user_params = json_decode(botigaHelper::getUserData('params', $user->id), true)
 		<!-- Nav tabs -->
 		<nav class="mt-4 estil08">
 		  	<div class="nav nav-tabs nav-fill" role="tablist">
-				<a class="nav-item nav-link active text-primary" href="#tab1" aria-controls="tab1" role="tab" data-toggle="tab"><?= strtoupper(JText::_('COM_BOTIGA_HISTORY_MY_ORDERS')); ?></a>
+				<a class="nav-item nav-link <?php if($app->input->getInt('tab', 1) == 1) : ?>active<?php endif; ?> text-primary" href="#tab1" aria-controls="tab1" role="tab" data-toggle="tab"><?= strtoupper(JText::_('COM_BOTIGA_HISTORY_MY_ORDERS')); ?></a>
 				<span class="nav-span">/</span>
-				<a class="nav-item nav-link text-primary" href="#tab2" aria-controls="tab2" role="tab" data-toggle="tab"><?= strtoupper(JText::_('COM_BOTIGA_HISTORY_MY_SETTINGS')); ?></a>
+				<a class="nav-item nav-link <?php if($app->input->getInt('tab', 1) == 2) : ?>active<?php endif; ?> text-primary" href="#tab2" aria-controls="tab2" role="tab" data-toggle="tab"><?= strtoupper(JText::_('COM_BOTIGA_HISTORY_MY_SETTINGS')); ?></a>
 				<?php if($showsavedcarts == 1): ?>
 				<span class="nav-span">/</span>
-				<a class="nav-item nav-link text-primary" href="#tab3" aria-controls="tab3" role="tab" data-toggle="tab"><?= strtoupper(JText::_('COM_BOTIGA_HISTORY_MY_CARTS')); ?></a>
+				<a class="nav-item nav-link <?php if($app->input->getInt('tab', 1) == 3) : ?>active<?php endif; ?> text-primary" href="#tab3" aria-controls="tab3" role="tab" data-toggle="tab"><?= strtoupper(JText::_('COM_BOTIGA_HISTORY_MY_CARTS')); ?></a>
 				<?php endif; ?>
 		  	</div>
 	  	</nav>
@@ -118,7 +120,7 @@ $user_params = json_decode(botigaHelper::getUserData('params', $user->id), true)
 	  	<!-- Tab panes -->
 	  	<div class="tab-content col-12 py-3 px-3 px-sm-0">
 	  	
-	  		<div role="tabpanel" class="tab-pane fade show active" id="tab1">
+	  		<div role="tabpanel" class="tab-pane fade <?php if($app->input->getInt('tab', 1) == 1) : ?>show active<?php endif; ?>" id="tab1">
 				<?php if(count($this->items)) : ?>
 				<table class="table">
 					<?php foreach($this->items as $item) : ?>
@@ -130,7 +132,7 @@ $user_params = json_decode(botigaHelper::getUserData('params', $user->id), true)
 						<td class="phone-hide"><?= $status; ?></td>
 						<td align="right" class="phone-hide"><b class="estil05"><?= number_format(($item->total), 2); ?>&euro;</b></td>
 						<td align="right">
-							<a href="index.php?option=com_botiga&task=botiga.genPdf&id=<?= $item->id; ?>" target="_blank">
+							<a href="index.php?option=com_botiga&task=genPdf&id=<?= $item->id; ?>" target="_blank">
 								<img src="media/com_botiga/icons/descargar.png" alt="Descargar" class="img-fluid">
 							</a>
 						</td>
@@ -141,7 +143,7 @@ $user_params = json_decode(botigaHelper::getUserData('params', $user->id), true)
 				<div><?= JText::_('COM_BOTIGA_HISTORY_NO_ORDERS'); ?></div>
 				<?php endif; ?>
 			</div>
-			<div role="tabpanel" class="tab-pane fade" id="tab2">
+			<div role="tabpanel" class="tab-pane fade <?php if($app->input->getInt('tab', 1) == 2) : ?>show active<?php endif; ?>" id="tab2">
 				<div class="col-xs-12 col-md-6 mx-auto">
 					<form name="register" id="register" action="index.php?option=com_botiga&task=profile.profile" method="post" class="form-validate">
 						<input type="hidden" name="jform[userid]" value="<?= $user->id; ?>" />
@@ -178,12 +180,12 @@ $user_params = json_decode(botigaHelper::getUserData('params', $user->id), true)
 						
 						<div class="form-group">
 							<label for="jform_password1 estil03"><?= JText::_('COM_BOTIGA_REGISTER_PWD_LBL'); ?></label>
-							<input type="email" name="jform[password1]" id="jform_password1" class="form-control" value="">
+							<input type="password" name="jform[password1]" id="jform_password1" class="form-control" value="">
 						</div>
 						
 						<div class="form-group">
 							<label for="jform_password2 estil03"><?= JText::_('COM_BOTIGA_REGISTER_PWD2_LBL'); ?></label>
-							<input type="email" name="jform[password2]" id="jform_password2" class="form-control" value="">
+							<input type="password" name="jform[password2]" id="jform_password2" class="form-control" value="">
 						</div>
 						
 						<div class="form-group">
@@ -225,9 +227,10 @@ $user_params = json_decode(botigaHelper::getUserData('params', $user->id), true)
 								<?php 								
 								foreach(botigaHelper::getPaymentPlugins() as $plugin) : 
 									$params = json_decode($plugin->params);				
-									if($params->test_user != '') {
-										if($user->id != $params->test_user) { continue; }
+									if($params->test_user != '' && $params->sandbox == 1) {
+										if($user->id != $params->test_user) { continue; }										
 									} 
+									if($user_params['pago_habitual'] == 0 && strtolower($params->alies) == 'habitual') { continue; }
 								?>
 								<option value="<?= $params->alies; ?>" <?php if($user_params['metodo_pago'] == strtolower($params->alies)): ?>selected<?php endif; ?> ><?= JText::_($params->label); ?></option>
 								<?php endforeach; ?>
@@ -255,7 +258,7 @@ $user_params = json_decode(botigaHelper::getUserData('params', $user->id), true)
 				</div>
 			</div>
 			<?php if($showsavedcarts == 1): ?>
-			<div role="tabpanel" class="tab-pane fade" id="tab3">
+			<div role="tabpanel" class="tab-pane fade <?php if($app->input->getInt('tab', 1) == 3) : ?>show active<?php endif; ?>" id="tab3">
 				<?php 
 				$carts = $model->getSavedCarts();
 				if(count($carts)) : ?>

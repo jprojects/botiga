@@ -71,7 +71,7 @@ class plgBotigaTransferencia extends JPlugin
 		$html .= "<div><h1>Ha escogido pago por transferencia</h1></div>";
 		$html .= "<table class='table'>";
 		$html .= "<tr><td><strong>Importe a ingressar</strong></td><td>{AMOUNT}€</td></tr>";
-		$html .= "<tr><td><strong>Indicar el concepto</strong></td><td> la id de la comanda (".$idComanda.")</td></tr>";
+		$html .= "<tr><td><strong>Indicar el concepto</strong></td><td>PEDIDO ".$idComanda."</td></tr>";
 		$html .= "<tr><td><strong>IBAN</strong></td><td>".$account."</td></tr>";
 		$html .= "</table>";
 		$html .= "<p class='text-danger'>IMPORTANTE: No se prepara el pedido hasta recibir el pago.</p>";
@@ -88,6 +88,10 @@ class plgBotigaTransferencia extends JPlugin
     	$company_pay_percent == 1 && in_array(10, $groups) ? $status = 4 : $status = 3;
 		$db->setQuery('UPDATE #__botiga_comandes SET status = '.$status.', data = '.$db->quote(date('Y-m-d H:i:s')).' WHERE id = '.$idComanda);
 		$db->query();
+		
+		//instanciar el controller base i allà tenir la funció dels emails i la del pdf
+		$controller = JControllerLegacy::getInstance('botiga');
+		$controller->sendOrderEmails('Transferencia');	
 		
 		//tanquem comanda
 		$session->set('idComanda', null);

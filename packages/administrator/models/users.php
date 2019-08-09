@@ -134,7 +134,7 @@ class botigaModelUsers extends JModelList
 
 		$query->join('inner', '#__usergroups as ug ON ug.id = u.usergroup');
 		
-		$query->join('inner', '#__botiga_countries c ON c.country_id = u.pais');
+		$query->join('left', '#__botiga_countries c ON c.country_id = u.pais');
                 
         // Filter by search in name.
 		$search = $this->getState('filter.search');

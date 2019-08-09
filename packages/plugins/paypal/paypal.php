@@ -126,6 +126,10 @@ class plgBotigaPaypal extends JPlugin
 		$db->setQuery('update #__botiga_comandes set status = '.$status.', data = '.$db->quote(date('Y-m-d H:i:s')).' WHERE id = '.$idComanda);
 		$db->query();
 		
+		//instanciar el controller base i allà tenir la funció dels emails i la del pdf
+		$controller = JControllerLegacy::getInstance('botiga');
+		$controller->sendOrderEmails('Paypal');
+		
 		//tanquem comanda
 		$session->set('idComanda', null);
 					

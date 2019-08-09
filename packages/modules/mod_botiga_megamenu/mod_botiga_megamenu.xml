@@ -7,7 +7,7 @@
 	<license>GNU/GPL</license>
 	<authorEmail>kim@aficat.com</authorEmail>
 	<authorUrl>http://www.afi.cat</authorUrl>
-	<version>2.0.0</version>
+	<version>1.0.0</version>
 	<description>Botiga Megamenu</description>
 	<files>
 		<filename module="mod_botiga_megamenu">mod_botiga_megamenu.php</filename>
@@ -18,10 +18,6 @@
     <languages folder="languages/en-GB">
 		<language tag="en-GB">en-GB.mod_botiga_megamenu.ini</language>
 	</languages>
-	
-	<updateservers>
-    	<server type="extension" priority="2" name="Botiga Megamenu Module">http://www.aficat.com/updates/botiga/mod_botiga_megamenu.xml</server>
-  	</updateservers>
 	
 	<config>
         <fields name="params">

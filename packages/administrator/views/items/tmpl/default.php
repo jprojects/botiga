@@ -13,23 +13,25 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
 JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.multiselect');
 JHtml::_('formbehavior.chosen', 'select');
 
-$user		= JFactory::getUser();
-$userId		= $user->get('id');
-$listOrder	= $this->state->get('list.ordering');
-$listDirn	= $this->state->get('list.direction');
+$user      = JFactory::getUser();
+$userId    = $user->get('id');
+$listOrder = $this->escape($this->state->get('list.ordering'));
+$listDirn  = $this->escape($this->state->get('list.direction'));
 $canOrder	= $user->authorise('core.edit.state', 'com_botiga');
-$saveOrder	= $listOrder == 'a.ordering';
-$model		= $this->getModel();
+$saveOrder = $listOrder == 'i.ordering';
+$model	   = $this->getModel();
 if ($saveOrder)
 {
 	$saveOrderingUrl = 'index.php?option=com_botiga&task=items.saveOrderAjax&tmpl=component';
 	JHtml::_('sortablelist.sortable', 'adminList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
 }
 ?>
+
 <script type="text/javascript">
 	Joomla.orderTable = function() {
 		table = document.getElementById("sortTable");
@@ -44,63 +46,57 @@ if ($saveOrder)
 	}
 </script>
 
-<?php
-//Joomla Component Creator code to allow adding non select list filters
-if (!empty($this->extra_sidebar)) {
-    $this->sidebar .= $this->extra_sidebar;
-}
-?>
-
 <form action="<?= JRoute::_('index.php?option=com_botiga&view=items'); ?>" method="post" name="adminForm" id="adminForm">
-<?php if(!empty($this->sidebar)): ?>
+
 	<div id="j-sidebar-container" class="span2">
 		<?= $this->sidebar; ?>
 	</div>
 	<div id="j-main-container" class="span10">
-<?php else : ?>
-	<div id="j-main-container">
-<?php endif;?>
 
-	<?= JLayoutHelper::render('joomla.searchtools.default', array('view' => $this)); ?>
-
-		<div class="clearfix"> </div>
+		<?php
+		// Search tools bar
+		echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+		?>
+		<?php if (empty($this->items)) : ?>
+			<div class="alert alert-no-items">
+				<?= JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
+			</div>
+		<?php else : ?>
 		
-		<table class="table table-striped" class="adminList">
+		<table class="table table-striped" id="adminList">
 			<thead>
 				<tr>
-					<?php if (isset($this->items[0]->ordering)): ?>
 					<th width="1%" class="nowrap center hidden-phone">
-						<?php echo JHtml::_('grid.sort', '<i class="icon-menu-2"></i>', 'a.ordering', $listDirn, $listOrder, null, 'asc', 'JGRID_HEADING_ORDERING'); ?>
-					</th>
-               		<?php endif; ?>
+							<?php echo JHtml::_('searchtools.sort', '', 'i.ordering', $listDirn, $listOrder, null, 'asc', 'JGRID_HEADING_ORDERING', 'icon-menu-2'); ?>
+						</th>
 					<th width="1%" class="hidden-phone">
-						<input type="checkbox" name="checkall-toggle" value="" title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)" />
+						<input type="checkbox" name="checkall-toggle" value="" title="<?= JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)" />
 					</th>
                 	<?php if (isset($this->items[0]->published)): ?>
 					<th width="1%" class="nowrap center">
-						<?php echo JHtml::_('grid.sort', 'JSTATUS', 'a.published', $listDirn, $listOrder); ?>
+						<?= JHtml::_('grid.sort', 'JSTATUS', 'i.published', $listDirn, $listOrder); ?>
 					</th>
                		<?php endif; ?>		
 					<th>
-						<?= JHtml::_('grid.sort',  'COM_BOTIGA_ITEMS_HEADING_REF', 'a.ref', $listDirn, $listOrder); ?>
+						<?= JHtml::_('grid.sort',  'COM_BOTIGA_ITEMS_HEADING_REF', 'i.ref', $listDirn, $listOrder); ?>
 					</th>
 					<th>
-						<?= JHtml::_('grid.sort',  'COM_BOTIGA_ITEMS_HEADING_NAME', 'a.name', $listDirn, $listOrder); ?>
+						<?= JHtml::_('grid.sort',  'COM_BOTIGA_ITEMS_HEADING_NAME', 'i.name', $listDirn, $listOrder); ?>
 					</th>
 					<th>
-						<?= JHtml::_('grid.sort',  'COM_BOTIGA_ITEMS_HEADING_CHILD', 'a.child', $listDirn, $listOrder); ?>
+						<?= JHtml::_('grid.sort',  'COM_BOTIGA_ITEMS_HEADING_CHILD', 'i.child', $listDirn, $listOrder); ?>
 					</th>
 					<th>
-						<?= JHtml::_('grid.sort',  'COM_BOTIGA_ITEMS_HEADING_PVP', 'a.pvp', $listDirn, $listOrder); ?>
+						<?= JHtml::_('grid.sort',  'COM_BOTIGA_ITEMS_HEADING_PVP', 'i.pvp', $listDirn, $listOrder); ?>
 					</th>
 					<th>
-						<?= JHtml::_('grid.sort',  'COM_BOTIGA_ITEMS_HEADING_BRAND', 'a.marca_name', $listDirn, $listOrder); ?>
+						<?= JHtml::_('grid.sort',  'COM_BOTIGA_ITEMS_HEADING_BRAND', 'i.marca_name', $listDirn, $listOrder); ?>
 					</th> 
 					<th>
-						<?= JHtml::_('grid.sort',  'COM_BOTIGA_ITEMS_HEADING_CAT', 'a.catid', $listDirn, $listOrder); ?>
+						<?= JHtml::_('grid.sort',  'COM_BOTIGA_ITEMS_HEADING_CAT', 'i.catid', $listDirn, $listOrder); ?>
 					</th>         
 					<th width="5%">
-						<?= JHtml::_('grid.sort', 'JGRID_HEADING_LANGUAGE', 'a.language', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
+						<?= JHtml::_('grid.sort', 'JGRID_HEADING_LANGUAGE', 'i.language', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
 					</th>
 				</tr>
 			</thead>
@@ -121,7 +117,7 @@ if (!empty($this->extra_sidebar)) {
 			</tfoot>
 			<tbody>
 				<?php foreach ($this->items as $i => $item) :
-				$ordering   = ($listOrder == 'a.ordering');
+				$ordering   = ($listOrder == 'i.ordering');
                 $canCreate	= $user->authorise('core.create',		'com_botiga');
                 $canEdit	= $user->authorise('core.edit',			'com_botiga');
                 $canCheckin	= $user->authorise('core.manage',		'com_botiga');
@@ -129,32 +125,32 @@ if (!empty($this->extra_sidebar)) {
 				?>
 				<tr class="row<?= $i % 2; ?>">
                     
-				     <?php if (isset($this->items[0]->ordering)): ?>
+				    <?php if (isset($this->items[0]->ordering)): ?>
 					<td class="order nowrap center hidden-phone">
-						<?php if ($canChange) :
-							$disableClassName = '';
-							$disabledLabel	  = '';
-							if (!$saveOrder) :
-								$disabledLabel    = JText::_('JORDERINGDISABLED');
-								$disableClassName = 'inactive tip-top';
-							endif; ?>
-							<span class="sortable-handler hasTooltip <?php echo $disableClassName?>" title="<?php echo $disabledLabel?>">
-								<i class="icon-menu"></i>
-							</span>
-							<input type="text" style="display:none" name="order[]" size="5" value="<?php echo $item->ordering;?>" class="width-20 text-area-order " />
-						<?php else : ?>
-							<span class="sortable-handler inactive" >
-								<i class="icon-menu"></i>
-							</span>
-						<?php endif; ?>
+					<?php if ($canChange) :
+						$disableClassName = '';
+						$disabledLabel	  = '';
+						if (!$saveOrder) :
+							$disabledLabel    = JText::_('JORDERINGDISABLED');
+							$disableClassName = 'inactive tip-top';
+						endif; ?>
+						<span class="sortable-handler hasTooltip <?= $disableClassName?>" title="<?= $disabledLabel?>">
+							<i class="icon-menu"></i>
+						</span>
+						<input type="text" style="display:none" name="order[]" size="5" value="<?= $item->ordering;?>" class="width-20 text-area-order " />
+					<?php else : ?>
+						<span class="sortable-handler inactive">
+							<i class="icon-menu"></i>
+						</span>
+					<?php endif; ?>
 					</td>
-		            <?php endif; ?>
+                	<?php endif; ?>
 					<td class="center hidden-phone">
-							<?php echo JHtml::_('grid.id', $i, $item->id); ?>
+							<?= JHtml::_('grid.id', $i, $item->id); ?>
 					</td>
 		            <?php if (isset($this->items[0]->published)): ?>
 					<td class="center">
-							<?php echo JHtml::_('jgrid.published', $item->published, $i, 'items.', $canChange, 'cb'); ?>
+							<?= JHtml::_('jgrid.published', $item->published, $i, 'items.', $canChange, 'cb'); ?>
 					</td>
 		            <?php endif; ?>
 		            <td>
@@ -186,10 +182,11 @@ if (!empty($this->extra_sidebar)) {
 				<?php endforeach; ?>
 			</tbody>
 	</table>
+	<?php endif; ?>
 
 		<input type="hidden" name="task" value="" />
 		<input type="hidden" name="boxchecked" value="0" />
-        <input type="hidden" name="filter_order" value="<?= $listOrder; ?>" />
+		<input type="hidden" name="filter_order" value="<?= $listOrder; ?>" />
 		<input type="hidden" name="filter_order_Dir" value="<?= $listDirn; ?>" />
 		<?= JHtml::_('form.token'); ?>
 	</div>

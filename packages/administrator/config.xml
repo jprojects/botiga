@@ -79,6 +79,17 @@
         	description="COM_BOTIGA_SETTINGS_IVA_DSC" 
         />
         <field 
+        	type="radio" 
+        	name="prices_iva" 
+        	default="1" 
+        	class="btn-group"
+        	label="COM_BOTIGA_SETTINGS_PRICES_IVA_LBL" 
+        	description="COM_BOTIGA_SETTINGS_PRICE_IVA_DSC"
+		>
+		<option value="0">JNO</option>
+		<option value="1">JYES</option> 
+        </field>
+        <field 
         	type="text" 
         	name="re_equiv" 
         	default="5.2" 
@@ -114,6 +125,17 @@
         	class="btn-group"
         	label="COM_BOTIGA_SETTINGS_PRICES_LBL" 
         	description="COM_BOTIGA_SETTINGS_PRICES_DSC"
+		>
+		<option value="0">JNO</option>
+		<option value="1">JYES</option> 
+        </field>
+        <field 
+        	type="radio" 
+        	name="show_discount" 
+        	default="0" 
+        	class="btn-group"
+        	label="COM_BOTIGA_SETTINGS_SHOW_DISCOUNT_LBL" 
+        	description="COM_BOTIGA_SETTINGS_SHOW_DISCOUNT_DSC"
 		>
 		<option value="0">JNO</option>
 		<option value="1">JYES</option> 
@@ -160,6 +182,15 @@
         />
   </fieldset>
   <fieldset name="items" label="COM_BOTIGA_ITEMS_SETTINGS" description="COM_BOTIGA_ITEMS_SETTINGS_DESC">
+  		<field 
+        	type="usergroup" 
+        	name="table_access" 
+        	default="" 
+        	label="COM_BOTIGA_SETTINGS_TABLE_ACCESS_LBL" 
+        	description="COM_BOTIGA_SETTINGS_TABLE_ACCESS_DSC"
+        	multiple="true"
+        	size="300"
+		/>
   		<field 
         	type="radio" 
         	name="show_ref" 

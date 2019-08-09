@@ -15,7 +15,7 @@
 			description="COM_BANNERS_FIELD_STATE_DESC"
 			class="chzn-color-state"
 			size="1"
-			default="1"
+			default=""
             onchange="this.form.submit();"
 		>
 			<option value="1">JPUBLISHED</option>
@@ -29,8 +29,10 @@
 			label="COM_BOTIGA_USER_USERGROUP_LABEL"
 			description="COM_BOTIGA_USER_USERGROUP_DESC"
             onchange="this.form.submit();"
-            default="2"
-		/>
+            default=""
+		>
+			<option value="">COM_BOTIGA_SELECT_AN_OPTION</option>
+		</field>
         <field 
 			name="validate" 
 			type="list" 

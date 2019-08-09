@@ -2,13 +2,7 @@ jQuery(document).ready(function() {
 
 	var quantitiy = 0;
 	
-	jQuery('#finishCart').change(function() {
-		if(jQuery('#processor').val() != '') {  
-		    jQuery('.submit').removeAttr('disabled');  
-		} else {  
-		    jQuery('.submit').attr('disabled', 'true');  
-		} 
-	});
+	if(jQuery('.fancybox').length) { jQuery(".fancybox").fancybox(); }
 	
 	jQuery('#variacions').change(function() {
 		
@@ -38,5 +32,13 @@ jQuery(document).ready(function() {
             jQuery('#quantity_'+id).val(quantity - 1);
         }
     });
+    
+    jQuery('#jform_type').change(function() {
+		if(jQuery(this).val() == 1) {
+			jQuery('#passwordHelpBlock').show();
+		} else {
+			jQuery('#passwordHelpBlock').hide();
+		}
+	});
 	
 });

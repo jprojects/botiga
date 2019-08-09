@@ -44,7 +44,14 @@ class com_botigaInstallerScript
 		$group->parent_id = 2;
 		$group->lft = 15;
 		$group->rgt = 16;
-		$group->title = 'Clientes';
+		$group->title = 'Particular';
+		
+		$db->insertObject('#__usergroups', $group);	
+		
+		$group->parent_id = 2;
+		$group->lft = 15;
+		$group->rgt = 16;
+		$group->title = 'Demo';
 		
 		$db->insertObject('#__usergroups', $group);				
 		

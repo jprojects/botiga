@@ -164,7 +164,8 @@ class botigaModelCheckout extends JModelList
 		$rows = $db->loadObjectList();				
 		
 		foreach($rows as $row) {														
-
+			$preu_detall = round($row->price * (1- $row->dte_linia/100), 2);
+			
 			$db->setQuery('SELECT * FROM #__botiga_discounts WHERE idItem = '.$row->idItem.' AND published = 1');
 			$dsc = $db->loadObject();
 			
@@ -180,9 +181,9 @@ class botigaModelCheckout extends JModelList
 					
 					//botigaHelper::customLog('capces '.$num_capces.' sense capça '.$items_sense_capsa);
 					
-					$new_price = ($num_capces * $dsc->box_items) * $dsc->total;
+					$new_price = ($num_capces * $dsc->box_items) * $preu_detall * (1-$dsc->total/100);
 					
-					$old_price = ($num_capces * $dsc->box_items) * $row->price;
+					$old_price = ($num_capces * $dsc->box_items) * $preu_detall;
 					
 					$discount['total'] += number_format(($old_price - $new_price), 2, '.', '');
 					$discount['message'] = JText::sprintf($dsc->message, $num_capces, $dsc->box_items);
@@ -194,9 +195,9 @@ class botigaModelCheckout extends JModelList
 
 				if($row->qty >= $dsc->min) {
 					
-					$new_price = $row->qty * $dsc->total;
+					$new_price = $row->qty * $preu_detall * (1-$dsc->total/100);
 					
-					$old_price = $row->qty * $row->price;
+					$old_price = $row->qty * $preu_detall;
 					
 					$discount['total_products'] += $row->qty;
 					
@@ -230,7 +231,7 @@ class botigaModelCheckout extends JModelList
 		$db->setQuery('SELECT pais, cp FROM #__botiga_users WHERE userid = '.$user->id);
 		$usr = $db->loadObject();
 		
-		$db->setQuery('SELECT * FROM #__botiga_shipments WHERE published = 1 AND usergroup IN ('.implode(',', $groups).')');
+		$db->setQuery('SELECT * FROM #__botiga_shipments WHERE published = 1 AND usergroup IN ('.implode(',', $groups).') ORDER BY ordering ASC');
 		$rows = $db->loadObjectList();				
 		
 		foreach($rows as $row) {			
@@ -247,17 +248,19 @@ class botigaModelCheckout extends JModelList
 					//botigaHelper::customLog($row->id.' distinct countries fail');
 					continue; //distinct countries fail end iteration
 				}
-			}
-			
-			if($amount > $row->free) { return 0; } //el pedido supera el porte mínimo, salimos retornando 0
+			}						
 			
 			$total 		= $row->total;
 			$operator 	= $row->operator;
 			
 			//type 1 shippment by zip code method
-			if($row->type == 1) {									
+			if($row->type == 1) {																					
 				
-				if($usr->cp >= $row->min && $usr->cp <= $row->max) {												
+				if($usr->cp >= $row->min && $usr->cp <= $row->max) {	
+				
+					if($amount > $row->free) { return 0; } //el pedido supera el porte mínimo, salimos retornando 0
+				
+					botigaHelper::customLog($row->type.' ');											
 					
 					//make operations
 					if($operator == '%') {
@@ -266,13 +269,17 @@ class botigaModelCheckout extends JModelList
 					if($operator == '+') {
 						$shipment_discount += $total;
 					}
-				}
+					
+					return number_format($shipment_discount, 2, '.', '');
+				}							
 			}
 			
 			//type 2 shippment by weight method
 			if($row->type == 2) {
 			
-				//botigaHelper::customLog($row->id.' inside type 2');
+				botigaHelper::customLog($row->type.' ');
+			
+				if($amount > $row->free) { return 0; } //el pedido supera el porte mínimo, salimos retornando 0
 				
 				$db->setQuery('SELECT SUM(i.pes) FROM #__botiga_items AS i INNER JOIN #__botiga_comandesDetall AS cd ON cd.idItem = i.id  where cd.idComanda = '.$idComanda);
 				$weight   = $db->loadResult() / 10;
@@ -286,11 +293,16 @@ class botigaModelCheckout extends JModelList
 				}
 				
 				$shipment_discount * $weight; //multiplicamos la cantidad a sumar al carro por las veces que se repite el peso
-			
+				
+				return number_format($shipment_discount, 2, '.', '');			
 			}
 			
 			//type 3 shippment by country method
-			if($row->type == 3) {								
+			if($row->type == 3) {
+			
+				botigaHelper::customLog($row->type.' ');
+			
+				if($amount > $row->free) { return 0; } //el pedido supera el porte mínimo, salimos retornando 0								
 				
 				//make operations
 				if($operator == '%') {
@@ -299,8 +311,10 @@ class botigaModelCheckout extends JModelList
 				if($operator == '+') {
 					$shipment_discount += $total;
 				}
+				
+				return number_format($shipment_discount, 2, '.', '');
 			
-			}
+			}						
 		}		
 		
 		return number_format($shipment_discount, 2, '.', '');		

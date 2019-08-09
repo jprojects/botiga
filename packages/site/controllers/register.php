@@ -56,7 +56,7 @@ class botigaControllerRegister extends botigaController {
 			$type = 'danger';
 			$valid = false;
 		}
-		if($data['address'] == '' || $data['cp'] == '' || $data['city'] == '' || $data['pais'] == '') {
+		if($data['address'] == '' || $data['cp'] == '' || $data['city'] == '' || $data['pais'] == '' || $data['phone'] == '') {
 			$msg  = JText::_('COM_BOTIGA_REGISTER_SHIPMENT_MANDATORY');
 			$type = 'danger';
 			$valid = false;
@@ -107,14 +107,14 @@ class botigaControllerRegister extends botigaController {
 				//create acj user
 				$acjuser            	= new stdClass();
 				$acjuser->userid    	= $userid;
-			    $acjuser->usergroup 	= 2;
+			    $acjuser->usergroup 	= $data['type'] == 1 ? 10 : 11;
 			    $acjuser->nombre        = $data['nombre'];
 			    $acjuser->type			= $data['type'];
 			    $acjuser->nom_empresa	= $data['empresa'];
 			    $acjuser->mail_empresa	= $data['email1'];
 			    $acjuser->telefon		= $data['phone'];
 			    $acjuser->adreca		= $data['address'];
-			    $acjuser->cp			= $data['zip'];
+			    $acjuser->cp			= $data['cp'];
 			    $acjuser->poblacio		= $data['city'];
 			    $acjuser->pais   		= $data['pais'];	
 			    $acjuser->cif   		= $data['cif'];
@@ -141,6 +141,7 @@ class botigaControllerRegister extends botigaController {
 				$sender[]	= $config->get('mailfrom');
 				
 				$botiga_name = botigaHelper::getParameter('botiga_name');
+				$botiga_mail = botigaHelper::getParameter('botiga_mail', '');
 				
 				$mail->setSender( $sender );
 				
@@ -148,7 +149,9 @@ class botigaControllerRegister extends botigaController {
 				
 					$link 		= JURI::root().'index.php?option=com_botiga&task=register.validateUser&id='.$userid;
 					$subject 	= JText::sprintf('COM_BOTIGA_REGISTER_SUBJECT', $botiga_name);
-					$body 		= JText::sprintf('COM_BOTIGA_REGISTER_BODY', $data['email1'], $link);					
+					$body 		= JText::sprintf('COM_BOTIGA_REGISTER_BODY', $data['email1'], $link);
+					//Si es empresa enviem el texte per presentació de credenacials
+					if($data['type'] == 1) { $body .= '<p>'.JText::sprintf('COM_BOTIGA_REGISTER_FIELD_TYPE_HELP', $botiga_mail).'</p>'; }				
 					$this->sendEmail($data['email1'], $subject, $body);
 					
 				}
@@ -158,7 +161,7 @@ class botigaControllerRegister extends botigaController {
 					$config 	= JFactory::getConfig();				
 					$subject 	= JText::sprintf('COM_BOTIGA_REGISTER_ADMIN_SUBJECT', $botiga_name);
 					$data['type'] == 1 ? $type = 'empresa' : $type = 'client';
-					$body 		= JText::sprintf('COM_BOTIGA_REGISTER_ADMIN_BODY', $botiga_name, $type);
+					$body 		= JText::sprintf('COM_BOTIGA_REGISTER_ADMIN_BODY', $botiga_name, $data['nombre'], $data['email1'], $type);
 					$this->sendEmail($config->get('mailfrom'), $subject, $body);
 				}
 				

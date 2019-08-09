@@ -34,11 +34,10 @@ class botigaHelper {
 	 * method to get percent discount
 	 * @return int
 	*/
-	public static function getPercentDiff($pvp, $price) 
-    {
-		$diff = $pvp - $price; 
-		$result = ($diff / $pvp) * 100;   
-		return round($result);
+	public static function getPercentDiff($price, $percent) 
+    {		
+		$result = ($price * $percent) / 100;   
+		return number_format(($price-$result), 2, '.', '');
     }
     
     /**
@@ -270,11 +269,29 @@ class botigaHelper {
     /**
 	 * method to write in a debug log
 	*/
-    public static function customLog($text) {
-
-		$handle = fopen(JPATH_COMPONENT.'/logs/botiga.log', 'a');
+    public static function customLog($text, $logfile=null) {
+		if ($logfile==null) {
+			$logfile = JPATH_COMPONENT.'/logs/botiga.log';
+		}
+		$handle = fopen($logfile, 'a');
 		fwrite($handle, date('d-M-Y H:i:s') . ': ' . $text . "\n");
 		fclose($handle);
+	}
+	
+	/**
+	 * method to know if a user is a company
+	*/
+    public static function isEmpresa() {
+		$user   = JFactory::getUser();
+		$groups = JAccess::getGroupsByUser($user->id, false);
+		$access = botigaHelper::getParameter('table_access', '');
+		
+		foreach($access as $a) {
+			if(in_array($a, $groups)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	/**
@@ -282,7 +299,7 @@ class botigaHelper {
 	 * @params int $itemid database id requested
 	 * @return float
 	*/
-	public static function getUserPrice($itemid) {
+	public static function getUserPrice($itemid, $activaIVA=1) {
 		jimport( 'joomla.access.access' );
 		
 		$user      = JFactory::getUser();
@@ -290,32 +307,43 @@ class botigaHelper {
 		$resultado = 0;				
 		
 		$login_prices = botigaHelper::getParameter('login_prices', 0);
+		$prices_iva   = botigaHelper::getParameter('prices_iva', 1);
+		$iva   		  = botigaHelper::getParameter('iva', 21);
 		
-		//if user is guest hide price
+		// if user is guest hide price
 		if($login_prices == 1 && $user->guest) { return '0.00'; }
 		
-		//check if user is no validated
-		if((!botigaHelper::isValidated() && $user->id!=522) || $user->guest) { 
+		$groups = JAccess::getGroupsByUser($user->id, false);
+		
+		// check if user is no validated and not demo, or guest
+		if((!botigaHelper::isValidated() && !in_array(12, $groups)) || $user->guest) { 
 			$groups = array(2, 11); 
-		} else {
-			$groups = JAccess::getGroupsByUser($user->id, false);
-		}			
+		}		
+		
+		//eliminem l'usuari demo (usergroup 12) i aixì agafarà la tarifa que li toqui
+		if (($key = array_search(12, $groups)) !== false) {
+    		unset($groups[$key]);
+		}
+		
+		$usergroup = max($groups);
+		//IMPORTANT: l'id del grup demo ha de ser inferior a tota la resta de grups que es creïn
 		
 		$db->setQuery('SELECT price FROM #__botiga_items WHERE id = '.$itemid);
 		$price = $db->loadResult();
 		
 		$prices = json_decode($price, true);
 		
-		foreach ($prices as $sub) {
-			foreach ($sub as $k => $v) {
-		        $result[$k][] = $v;
-		    }
-      	}
-      	
-      	foreach ($result as $index => $value) { 
-    		if(in_array($value[0], $groups)) { 
-				$resultado = $value[1]; 
-			}
+		$db->setQuery('SELECT price FROM #__botiga_items_prices WHERE itemId = '.$itemid.' AND usergroup = '.$usergroup);
+		$resultado = $db->loadResult();
+		
+		if($resultado === null) { $resultado = 0; }
+		
+		//si el preu s'ha de mostrar amb IVA l'apliquem aquí
+		// 19/06/2019 (Carles): crec que no cal comprovar si l'usuari és validat o no per determinar si aplicar IVA o no
+		//if($prices_iva == 1 && ($user->guest || $usergroup == 11 || !botigaHelper::isValidated()) && $activaIVA == 1) {
+		if($prices_iva == 1 && ($user->guest || $usergroup == 11) && $activaIVA == 1) {
+			$iva_percent = ($iva / 100) * $resultado;
+			$resultado += $iva_percent;
 		}
 		
 		return number_format($resultado, 2);
@@ -338,11 +366,11 @@ class botigaHelper {
 		//if user is guest hide price
 		if($login_prices == 1 && $user->guest) { return '0.00'; }
 		
+		$groups = JAccess::getGroupsByUser($user->id, false);
+		
 		//check if user is no validated
-		if((!botigaHelper::isValidated() && $user->id!=522) || $user->guest) { 
+		if((!botigaHelper::isValidated() && in_array(12, $groups)) || $user->guest) { 
 			$groups = array(2, 11); 
-		} else {
-			$groups = JAccess::getGroupsByUser($user->id, false);
 		}			
 		
 		$db->setQuery('SELECT price FROM #__botiga_items WHERE id = '.$itemid);
@@ -360,13 +388,12 @@ class botigaHelper {
     		if(in_array($value[0], $groups)) { 
 				// grup $value[1]; 
 				// article $itemid
-				$db->setQuery( "SELECT * FROM #__botiga_discounts WHERE idItem=$itemid AND usergroup=$value[0]" );
+				$db->setQuery( "SELECT * FROM #__botiga_discounts WHERE idItem=$itemid AND usergroup=$value[0] AND published=1" );
 				//botigaHelper::customLog("SELECT * FROM #__botiga_discounts WHERE idItem=$itemid AND type=$value[0]");
 				$discounts = $db->loadObjectList();
 				foreach($discounts as $discount) {
 					$resultat .= ($resultat==''?'':'<br/>') . $discount->name . ': ' . $discount->total;
-				}
-				
+				}				
 			}
 		}
 		
@@ -434,5 +461,9 @@ class botigaHelper {
 		$db->setQuery('SELECT id, name FROM #__botiga_items WHERE child = '.$itemid.' AND published = 1 AND (usergroup = 1 OR usergroup IN('.implode(',', $groups).'))');
 		return $db->loadObjectList();
 		
+	}
+	
+	public static function euroFormat($value) {
+		return number_format($value, 2, '.', '') . '&euro;';
 	}
 }

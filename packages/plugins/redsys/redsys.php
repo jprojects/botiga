@@ -2,7 +2,7 @@
 /**
  * @copyright	Copyright (C) 2005 - 2009 Open Source Matters, Inc. All rights reserved.
  * @license		GNU General Public License version 2 or later; see LICENSE.txt
- */
+*/
 
 // No direct access
 defined('_JEXEC') or die;
@@ -50,8 +50,10 @@ class plgBotigaRedsys extends JPlugin
 		
 		$success  = JURI::base().$this->params->get('successURL', '');
 		$cancel   = JURI::base().$this->params->get('cancelURL', '');
-		$postback = JURI::base().'index.php?option=com_botiga&view=callback&method=Redsys';
-		$postback .= '&userid='.$usuari->id.'&idComanda='.$idComanda.'&amount='.$total;
+		
+		$base     = str_replace('https', 'http', JURI::base());
+		$postback = JURI::base().'index.php?option=com_botiga&view=callback&method='.$this->gateway;
+		$postback .= '&userid='.$user->id.'&idComanda='.$idComanda.'&amount='.$total;
 		$version = "HMAC_SHA256_V1";
 		
 		$logo    = JURI::base().$this->params->get('logo', '');
@@ -62,22 +64,22 @@ class plgBotigaRedsys extends JPlugin
 		$amount  = $total * 100;
 		
 		include dirname(__FILE__).'/redsys/apiRedsys.php';
-		$myObj = new RedsysAPI;
+		$redsys = new RedsysAPI;
 
-		$myObj->setParameter("DS_MERCHANT_AMOUNT", $amount);
-		$myObj->setParameter("DS_MERCHANT_CURRENCY", $this->params->get('currency',''));
-		$myObj->setParameter("DS_MERCHANT_ORDER", $order);
-		$myObj->setParameter("DS_MERCHANT_MERCHANTCODE", $this->params->get('code',''));
-		$myObj->setParameter("DS_MERCHANT_TERMINAL", $this->params->get('terminal',''));
-		$myObj->setParameter("DS_MERCHANT_TRANSACTIONTYPE", 0);
-		$myObj->setParameter("DS_MERCHANT_MERCHANTURL", $postback);
-		$myObj->setParameter("DS_MERCHANT_URLOK", $success);      
-		$myObj->setParameter("DS_MERCHANT_URLKO", $cancel);
-		$myObj->setParameter("DS_MERCHANT_MERCHANTNAME", JFactory::getConfig()->get( 'sitename' )); 
-		$myObj->setParameter("DS_MERCHANT_CONSUMERLANGUAGE", 3);    
+		$redsys->setParameter("DS_MERCHANT_AMOUNT", $amount);
+		$redsys->setParameter("DS_MERCHANT_CURRENCY", $this->params->get('currency',''));
+		$redsys->setParameter("DS_MERCHANT_ORDER", $order);
+		$redsys->setParameter("DS_MERCHANT_MERCHANTCODE", $this->params->get('code',''));
+		$redsys->setParameter("DS_MERCHANT_TERMINAL", $this->params->get('terminal',''));
+		$redsys->setParameter("DS_MERCHANT_TRANSACTIONTYPE", 0);
+		$redsys->setParameter("DS_MERCHANT_MERCHANTURL", $postback);
+		$redsys->setParameter("DS_MERCHANT_URLOK", $success);      
+		$redsys->setParameter("DS_MERCHANT_URLKO", $cancel);
+		$redsys->setParameter("DS_MERCHANT_MERCHANTNAME", JFactory::getConfig()->get( 'sitename' )); 
+		$redsys->setParameter("DS_MERCHANT_CONSUMERLANGUAGE", 3);    
 
-		$params = $myObj->createMerchantParameters();
-		$signature = $myObj->createMerchantSignature($this->params->get('signature',''));
+		$params = $redsys->createMerchantParameters();
+		$signature = $redsys->createMerchantSignature($this->params->get('signature',''));
 
 		$data = (object)array(
 			'url'			=> $url,
@@ -97,57 +99,66 @@ class plgBotigaRedsys extends JPlugin
 	public function onPaymentCallback($paymentmethod, $data, $userid, $idComanda)
 	{
 		// Check if we're supposed to handle this
-		if($paymentmethod != $this->gateway) return false;		
+		if($paymentmethod != $this->gateway) return false;	
+		
+		require_once(JPATH_ROOT.DS.'components'.DS.'com_botiga'.DS.'helpers'.DS.'botiga.php');	
+		
+		//botigaHelper::customLog('entrem a la funció');
 		
 		include dirname(__FILE__).'/redsys/apiRedsys.php';
-		$myObj = new RedsysAPI;
+		$redsys = new RedsysAPI;
+	
+		$db = JFactory::getDbo();
+		$session = JFactory::getSession();
 		
-    		$db = JFactory::getDbo();
-    		$session = JFactory::getSession();
-    		
-    		if(isset($data['Ds_Signature'])) {
-    		
-    		$version 	= $_POST['Ds_SignatureVersion'];
+		if(isset($data['Ds_Signature'])) {
+		
+			$version 	= $_POST['Ds_SignatureVersion'];
 			$params 	= $_POST['Ds_MerchantParameters'];
 			$signature 	= $_POST['Ds_Signature'];
 			
-			$decode 	= $myObj->decodeMerchantParameters($params);
+			$decode 	= $redsys->decodeMerchantParameters($params);
 			
-			$response 	= $myObj->getParameter('Ds_Response');
-			$amount 	= $myObj->getParameter('Ds_Merchant_Amount');
-			$order 		= $myObj->getParameter('Ds_Order');
+			$response 	= $redsys->getParameter('Ds_Response');
+			$amount 	= $redsys->getParameter('Ds_Merchant_Amount');
+			$order 		= $redsys->getParameter('Ds_Order');
 			
 			$clave 		= $this->params->get('signature', '');
 			
-			$signaturaCalculada = $myObj->createMerchantSignatureNotif($clave, $params); 
+			$signaturaCalculada = $redsys->createMerchantSignatureNotif($clave, $params); 
 	
 			if($signature === $signaturaCalculada) {
 			
+				//botigaHelper::customLog('validació signatura');
+			
 				// menos de 100 es un codigo aprobado
-				if(intval($response) >= 0 && intval($response) < 100) {
+				if(intval($response) <= 99) {
 				
-			    	$pagat = 1;
-			    		
-			    	$rebut 					= new stdClass();
-			    	$rebut->data 			= date('Y-m-d');
-			    	$rebut->userid 			= $userid;
-			    	$rebut->import 			= $_POST['amount'];
-			    	$rebut->tipus 			= 'A';
-			    	$rebut->idComanda 		= $idComanda;
-			    	$rebut->formaPag 		= 'C';
-			    	$rebut->payment_status 	= 'C'; 		
-			    		
-			    	$db->insertObject('#__botiga_rebuts', $rebut);				
-			    		
-			    	//actualitzar estat comanda a pagada (3) o (4) si es empresa i tenim activat el pagament al 50%
-    				$company_pay_percent == 1 && in_array(10, $groups) ? $status = 4 : $status = 3;
-			    	$db->setQuery('update #__botiga_comandes set status = '.$status.', data = '.$db->quote(date('Y-m-d H:i:s')).' WHERE id = '.$idComanda);
-			    	$db->query();
-			    	
-			    	//tanquem comanda
-					$session->set('idComanda', null);
-		    	}
-		    }
+					//botigaHelper::customLog('resposta vàlida');															
+						
+					$rebut 					= new stdClass();
+					$rebut->data 			= date('Y-m-d');
+					$rebut->userid 			= $userid;
+					$rebut->import 			= $_POST['amount'];
+					$rebut->idComanda 		= $idComanda;
+					$rebut->formaPag 		= 'C';
+					$rebut->payment_status 	= 'C'; 		
+						
+					$db->insertObject('#__botiga_rebuts', $rebut);				
+						
+					//actualitzar estat comanda a pagada (3) o (4) si es empresa i tenim activat el pagament al 50%
+					$company_pay_percent == 1 && in_array(10, $groups) ? $status = 4 : $status = 3;
+					$db->setQuery('UPDATE #__botiga_comandes SET status = '.$status.', data = '.$db->quote(date('Y-m-d H:i:s')).' WHERE id = '.$idComanda);
+					$db->query();
+					
+					//instanciar el controller base i allà tenir la funció dels emails i la del pdf
+					$controller = JControllerLegacy::getInstance('botiga');
+					$controller->sendOrderEmails('Redsys');
+					
+					//tanquem comanda
+					$session->set('idComanda', null);										
+				}
+			}
 		}
 		
 		return true;

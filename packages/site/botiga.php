@@ -18,6 +18,8 @@ define('DS', DIRECTORY_SEPARATOR);
 // Require the base controller
 JLoader::registerPrefix('botiga', JPATH_COMPONENT);
 require_once (JPATH_COMPONENT.DS.'helpers'.DS.'botiga.php');
+require_once (JPATH_COMPONENT.DS.'helpers'.DS.'sincro.php');
+require_once (JPATH_COMPONENT.DS.'helpers'.DS.'pdf.php');
 require_once (JPATH_COMPONENT.DS.'controller.php');
 
 JHtml::_('jquery.framework');

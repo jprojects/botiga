@@ -35,8 +35,13 @@ $f[11] = botigaHelper::getParameter('show_field_cp', 1);
 $f[12] = botigaHelper::getParameter('show_field_state', 1);
 $f[13] = botigaHelper::getParameter('show_field_pais', 1);
 
+$spain 		= botigaHelper::getParameter('total_shipment_spain', 25);
+$islands 	= botigaHelper::getParameter('total_shipment_islands', 50);
+$world 		= botigaHelper::getParameter('total_shipment_world', 60);
+
 $show_newsletter = botigaHelper::getParameter('show_newsletter', 1);
 $logo		= botigaHelper::getParameter('botiga_logo', '');
+$email		= botigaHelper::getParameter('botiga_mail', '');
 $userToken  = JSession::getFormToken();
 ?>
 
@@ -61,10 +66,12 @@ $userToken  = JSession::getFormToken();
 					<a href="index.php?option=com_botiga&view=botiga" class="pr-1">
 						<img src="media/com_botiga/icons/mosaico<?php if($jinput->getCmd('layout', '') == '') : ?>-active<?php endif; ?>.png">
 					</a>
+					<?php if(botigaHelper::isEmpresa()) : ?>					
 					<a href="index.php?option=com_botiga&view=botiga&layout=table">
 						<img src="media/com_botiga/icons/lista<?php if($jinput->getCmd('layout', '') == 'table') : ?>-active<?php endif; ?>.png">
 					</a>
-					<span class="pl-3 phone-hide estil02"><?= JText::_('COM_BOTIGA_FREE_SHIPPING_MSG'); ?>&nbsp;<img src="media/com_botiga/icons/envio_gratis.png"></span>
+					<?php endif; ?>
+					<span class="pl-3 phone-hide estil02"><?= JText::sprintf('COM_BOTIGA_FREE_SHIPPING_MSG', $spain, $islands, $world); ?>&nbsp;<img src="media/com_botiga/icons/envio_gratis.png"></span>
 				</div>
 				<div class="col-4 text-right">
 					<a href="index.php?option=com_botiga&view=checkout" class="pr-1 carrito">
@@ -111,6 +118,9 @@ $userToken  = JSession::getFormToken();
 				foreach($this->form->getFieldset('register') as $field): ?>
 				<?php if($f[$i] == 1): ?> 
 				<?= $field->renderField(); ?>
+				<?php if($i == 1) : ?>
+				<small id="passwordHelpBlock" style="display:none;" class="form-text text-muted"><?= JText::sprintf('COM_BOTIGA_REGISTER_FIELD_TYPE_HELP', $email); ?></small>
+				<?php endif; ?>
 				<?php endif; ?>
 				<?php 
 				$i++;

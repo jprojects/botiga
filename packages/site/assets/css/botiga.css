@@ -17,7 +17,7 @@ a {
 	margin-bottom: 50px;
 }
 
-.red { color: #bd0000; }
+.red { color: #e30613; }
 
 .botiga-img { position: relative; }
 .item .botiga-img { position: relative; height: 25s0px; }
@@ -29,23 +29,23 @@ a {
     position: absolute;
     top: 5px;
     right: 5px;
-    width: 50px;
-    height: 50px;
-    background-color: #bd0000;
+    width: 60px;
+    height: 60px;
+    background-color: #e30613;
     border-radius: 30px;
 }
 .pvp-badge span {
     position: absolute;
-    top: 33%;
-    left: 25%;
+    top: 38%;
+    left: 17%;
     font-size: 12px;
     font-weight: bold;
     color: #fff;
 }
 .big {
     right: 15px;
-    width: 70px;
-    height: 70px;
+    width: 90px;
+    height: 90px;
     border-radius: 50px;
 }
 .big span {
@@ -55,7 +55,7 @@ a {
 .thumbnail > img, .thumbnail > a > img { height: 250px; } 
 .additional-img a { display: inline-block; }
 .additional-img img {
-	width: 80px;
+	width: auto;
 	height: 100px;
 }
 
@@ -86,7 +86,6 @@ span.rollover img {
 	position: absolute;
 	top:50%;
 	left:44%;
-	width: 60px;
 	height: auto;
 }
 
@@ -106,8 +105,7 @@ span.rollover img {
 .price { font-size: 20px; }
 .item-ref { font-size: 10px; }
 .item-divider { height: 10px; }
-.item-title-item { height: 30px; }
-.item-title-ref { margin-top: 20px; }
+.item-title, .item-desc { height: 90px; }
 
 .brand { margin-top: 50px; }
 .brand img { height: 40px; }
@@ -205,6 +203,7 @@ span.pagenav { font-weight: bold; }
 		height: 50px;
 		min-height: 50px;
 	}
+	.btn-item-cart { margin-top: 5px; }
 	.btn-xs-block {
 		display: block;
 		width: 100%;

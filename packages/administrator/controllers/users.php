@@ -36,8 +36,10 @@ class botigaControllerUsers extends JControllerAdmin
 		$db = JFactory::getDbo();
 		$userid = JFactory::getApplication()->input->get('userid');
 		
-		$db->setQuery('UPDATE #__botiga_users SET validate = 1 WHERE userid = '.$userid);
+		$db->setQuery('UPDATE #__botiga_users SET validate = 1 WHERE userid = '.$userid);		
 		if($db->query()) {
+			$db->setQuery('UPDATE #__users SET block = 0 WHERE id = '.$userid);
+			$db->query();
 			$msg = JText::_('COM_BOTIGA_USERS_VALIDATE_SUCCESS');
 			$type = 'success';
 		} else {

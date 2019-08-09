@@ -81,7 +81,7 @@ if (!empty($this->extra_sidebar)) {
 					</th>
 		            <?php endif; ?>
 					<th width="1%" class="nowrap center">
-						<?= JHtml::_('grid.sort', 'COM_BOTIGA_ORDERS_HEADING_NOM', 'a.nom_empresa', $listDirn, $listOrder); ?>
+						<?= JHtml::_('grid.sort', 'COM_BOTIGA_ORDERS_HEADING_NOM', 'u.username', $listDirn, $listOrder); ?>
 					</th>		
 					<th>
 						<?= JHtml::_('grid.sort',  'COM_BOTIGA_ORDERS_HEADING_DATA', 'a.data', $listDirn, $listOrder); ?>
@@ -178,7 +178,7 @@ if (!empty($this->extra_sidebar)) {
 						<?php endif; ?>
 					</td>
 					<td>
-						<a href="index.php?option=com_botiga&view=user&layout=edit&id=<?php $item->user_id; ?>"><?= $item->nom_empresa; ?></a>
+						<a href="index.php?option=com_botiga&view=user&layout=edit&id=<?php $item->userid; ?>"><?= $item->username.' ('.$item->email.')'; ?></a>
 					</td>
 					<td>
 						<?= date('d-m-Y H:i', strtotime($item->data)); ?>

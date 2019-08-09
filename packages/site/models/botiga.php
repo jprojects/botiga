@@ -92,6 +92,12 @@ class botigaModelBotiga extends JModelList
 		$query->from($db->quoteName('#__botiga_items').' AS i');
 		
 		$query->join('LEFT', $db->quoteName('#__botiga_brands').' AS b ON b.id = i.brand');
+		
+		// TODO:
+		// 1. buscar l'usuari de la sessió en afi_botiga_users i determinar el valor del camp usergroup
+		// 2. si l'usuari no existeix, s'agafarà el grup 1 (públic)
+		// 3. afegir un join amb la taula afi_botiga_items_prices, i un where per seleccionar sols les files del grup que correspongui 
+		// 4. canviar l'order by del preu
 
         // Filters
        	$catid   	= $app->input->getInt('catid', 0);
@@ -102,7 +108,7 @@ class botigaModelBotiga extends JModelList
 		
 		$groups  = JAccess::getGroupsByUser($user->id, false);
 		
-		//order by pice
+		//order by price
 		if($orderby == 'pvp') {			
 			if(in_array(10, $groups)) {
 				$orderby = 'CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(i.price, \'pricing":["\',-1), \'"\', -2), \'"\', 1) AS double(10,2))'; //empresa
@@ -178,7 +184,9 @@ class botigaModelBotiga extends JModelList
 			
 			$qty = $db->loadResult();
 			
-			if($qty > 0) { $price = $qty * $price; }
+			if($qty > 0) { $price = $qty * $price; } else { $price = 0; }
+		} else {
+			$price = 0;
 		}
 			
 		return number_format($price, 2);

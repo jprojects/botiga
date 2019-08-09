@@ -23,6 +23,7 @@ $uri 		= base64_encode(JFactory::getURI()->toString());
 $modal 		= $jinput->get('m', 0);
 $logo		= botigaHelper::getParameter('botiga_logo', '');
 $showprices = botigaHelper::getParameter('show_prices', 1);
+$showdiscount = botigaHelper::getParameter('show_discount', 0);
 $loginprices = botigaHelper::getParameter('login_prices', 0);
 $shownotice = botigaHelper::getParameter('show_notice', 1);
 $showref 	= botigaHelper::getParameter('show_ref_item', 1);
@@ -35,6 +36,8 @@ $showfav 	= botigaHelper::getParameter('show_fav_item', 1);
 $showpvp 	= botigaHelper::getParameter('show_pvp_item', 1);
 $showrel 	= botigaHelper::getParameter('show_related_item', 1);
 $userToken  = JSession::getFormToken();
+
+$dte_linia  = botigaHelper::getUserData('dte_linia', $user->id); 
 
 $spain 		= botigaHelper::getParameter('total_shipment_spain', 25);
 $islands 	= botigaHelper::getParameter('total_shipment_islands', 50);
@@ -94,19 +97,19 @@ jQuery(document).ready(function() {
 		
 		<div class="col-12 mt-3">
 			<div class="row">
-				<div class="col-9 text-left">			
+				<div class="col-6 col-md-8 text-left">			
 					<a href="index.php?option=com_botiga&view=botiga" class="pr-1">
 						<img src="media/com_botiga/icons/mosaico<?php if($jinput->getCmd('layout', '') == '') : ?>-active<?php endif; ?>.png">
 					</a>
-					<?php/*
+					<?php if(botigaHelper::isEmpresa()) : ?>					
 					<a href="index.php?option=com_botiga&view=botiga&layout=table">
 						<img src="media/com_botiga/icons/lista<?php if($jinput->getCmd('layout', '') == 'table') : ?>-active<?php endif; ?>.png">
-					</a>*/
-					?>
+					</a>
+					<?php endif; ?>
 					<span class="pl-3 phone-hide estil02"><?= JText::sprintf('COM_BOTIGA_FREE_SHIPPING_MSG', $spain, $islands, $world); ?>&nbsp;<img src="media/com_botiga/icons/envio_gratis.png"></span>
 				</div>
-				<div class="col-3 text-right">
-					<a href="<?php if($count > 0) : ?>index.php?option=com_botiga&view=checkout<?php else: ?>#<?php endif; ?>" class="pr-1 carrito">
+				<div class="col-6 col-md-4 text-right">
+					<a href="<?php if($count > 0) : ?>index.php?option=com_botiga&view=checkout<?php else: ?>#<?php endif; ?>" class="pr-2 carrito">
 						<?php if($count > 0) : ?>
 						<span class="badge badge-warning"><?= $count; ?></span>
 						<?php endif; ?>
@@ -117,12 +120,13 @@ jQuery(document).ready(function() {
 						<img src="media/com_botiga/icons/iniciar-sesion.png">
 					</a>
 					<?php else: ?>
-					<a class="ml-4" href="index.php?option=com_users&task=user.logout&<?= $userToken; ?>=1" title="Logout" class="hasTip">
+					<a class="ml-4 hasTip" href="index.php?option=com_users&task=user.logout&<?= $userToken; ?>=1" title="Logout" title="Salir">
 						<img src="media/com_botiga/icons/salir.png">
 					</a>
-					<a class="ml-4" href="index.php?option=com_botiga&view=history" title="History" class="hasTip">
+					<a class="ml-4 hasTip" href="index.php?option=com_botiga&view=history" title="History" title="Perfil"s>
 						<img src="media/com_botiga/icons/sesion-iniciada.png">
 					</a>
+					<div class="d-none d-sm-block"><small><?= JText::sprintf('COM_BOTIGA_WELCOME', $user->name); ?></small></div>
 					<?php endif; ?>
 				</div>
 			</div>
@@ -155,16 +159,20 @@ jQuery(document).ready(function() {
 	
 			<div class="botiga-img text-center">
 				<a href="<?= $image; ?>" data-fancybox="gallery">
-				<?php if(!$user->guest && $this->item->pvp > 0 && $show_prices == 1) : ?>
-				<div class="pvp-badge big"><span><?= botigaHelper::getPercentDiff($this->item->pvp, $precio); ?>%</span></div>
+				<?php if($dte_linia != 0.00 && $showdiscount == 1 && $showprices == 1) : ?>
+				<div class="pvp-badge big"><span>-<?= $dte_linia; ?>%</span></div>
 				<?php endif; ?>
-				<span class="rollover"><img src="media/com_botiga/icons/lupa.png"></span>
+				<span class="rollover"><img src="media/com_botiga/icons/lupa.png" width="60"></span>
 					<img src="<?= $image; ?>" class="img-fluid" alt="<?= $this->item->name; ?>" rel="gallery" />
+					<?php 
+					$extra_images = botigaHelper::getImages($this->item->id);
+					foreach($extra_images as $k => $v) : ?>
+					<img src="<?= $v[0]; ?>" class="img-fluid" alt="<?= $this->item->name; ?>" rel="gallery" style="display:none;" />
+					<?php endforeach; ?>
 				</a>
 			</div>
 
-			<?php 
-			$extra_images = botigaHelper::getImages($this->item->id);
+			<?php 			
 			if(count($extra_images)) : ?>
 			<div class="additional-img">
 				<ul class="preview-thumbnail nav">
@@ -192,8 +200,12 @@ jQuery(document).ready(function() {
 			<div class="row no-gutters mb-2">
 			<div class="col-12 col-md-6 text-left estil07 text-primary"><b class="titol"><?= strtoupper($this->item->name); ?></b></div>
 			<div class="col-12 col-md-6 text-right estil08 text-primary">
-				<?php if($showprices == 1 || ($loginprices == 1 && !$user->guest)) : ?>
-					<b><?= $precio; ?> &euro;</b>
+				<?php if($dte_linia != 0.00 && $showdiscount == 1 && $showprices == 1) : ?>
+					<strike class="faded"><?= $precio; ?>&euro;</strike>
+					<br>
+					<b><?= botigaHelper::getPercentDiff($precio, $dte_linia); ?>&euro;</b>
+				<?php else : ?>
+					<b><?= $precio; ?> &euro;</b>	
 					<?php if($dtos!='') : ?>
 						<br/><span class='estil02'><?= $dtos; ?>&euro;</span>
 					<?php endif; ?>						
@@ -230,14 +242,14 @@ jQuery(document).ready(function() {
 			
 			
 			<div class="row">
-				<div class="col-12 col-md-4">
+				<div class="col-12 col-md-5">
 					<div class="addtocart">
 						<form name="addtocart" id="addtocart" action="index.php?option=com_botiga&task=botiga.setItem" method="get" class="form-inline">
 							<input type="hidden" name="option" value="com_botiga" />
 							<input type="hidden" name="task" value="botiga.setItem" />
 							<input type="hidden" name="id" value="<?= $this->item->id; ?>" />
 							<input type="hidden" name="return" value="<?= $uri; ?>" />
-							<div>
+							<div style="width:100%;">
 								<div class="input-group">
 				                    <span class="input-group-btn">
 				                        <button type="button" class="quantity-left-minus btn btn-primary btn-number" data-id="<?= $this->item->id; ?>">
@@ -251,13 +263,14 @@ jQuery(document).ready(function() {
 				                        </button>
 				                    </span>
 				                </div>														    
-							</div>				
+							</div>
+							<?php echo JHtml::_( 'form.token' ); ?>				
 						</form>
 					</div>
 				</div>
-				<div class="col-xs-12 col-md-8">
+				<div class="col-xs-12 col-md-7">
 					<?php if(botigaHelper::isValidated() && botigaHelper::validateStock($this->item->stock)) : ?>
-					<button onclick="addtocart.submit();" class="btn btn-primary btn-block estil03">
+					<button onclick="addtocart.submit();" class="btn btn-primary btn-block estil03 btn-item-cart">
 						<?= JText::_('COM_BOTIGA_BTN_BUY'); ?>
 					</button>
 					<?php else: ?>
@@ -354,7 +367,8 @@ jQuery(document).ready(function() {
 		<div class="row">
 			<div class="col-xs-12 col-md-6">
 			<?php 
-			$img = botigaHelper::getItemData('image1', $modal);
+			$img  = botigaHelper::getItemData('image1', $modal);
+			$preu = botigaHelper::getUserPrice($modal);
 			$img != '' ? $image = $img : $image = 'components/com_botiga/assets/images/noimage.jpg';
 			?>
 			<img src="<?= $image; ?>" alt="" class="img-fluid" width="50">
@@ -362,7 +376,11 @@ jQuery(document).ready(function() {
 			<div class="col-xs-12 col-md-6 text-left py-3">
 				<b><?= botigaHelper::getItemData('name', $modal); ?></b>
 				<?= botigaHelper::getItemData('s_description', $modal); ?><br>
-				<b><?= botigaHelper::getUserPrice($modal); ?>&euro;</b>
+				<?php if($dte_linia != 0.00 && $showdiscount == 1 && $showprices == 1) : ?>
+					<strike class="faded"><?= $preu; ?>&euro;</strike>&nbsp;<b><?= botigaHelper::getPercentDiff($preu, $dte_linia); ?>&euro;</b>
+					<?php else: ?>
+					<b><?= botigaHelper::getUserPrice($modal); ?>&euro;</b>
+					<?php endif; ?>
 			</div>
 		</div>
 		<a href="index.php?option=com_botiga&view=checkout" class="btn btn-primary btn-block mt-2"><?= JText::_('COM_BOTIGA_GOTO_CHECKOUT'); ?></a>

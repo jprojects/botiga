@@ -60,7 +60,7 @@
         buttons : [
             'slideShow',
             'fullScreen',
-            'thumbs',
+            //'thumbs',
             'close'
         ],
 
