@@ -1,13 +1,11 @@
 <?php
+
 /**
- * @version		1.0.0 botiga $
- * @package		botiga
- * @copyright   Copyright © 2010 - All rights reserved.
- * @license		GNU/GPL
- * @author		kim
- * @author mail kim@aficat.com
- * @website		http://www.aficat.com
- *
+ * @version     1.0.0
+ * @package     com_botiga
+ * @copyright   Copyleft (C) 2019
+ * @license     Licencia Pública General GNU versión 3 o posterior. Consulte LICENSE.txt
+ * @author      aficat <kim@aficat.com> - http://www.afi.cat
 */
 
 // No direct access to this file
@@ -20,29 +18,26 @@ $jinput	= JFactory::getApplication()->input;
 JHtml::_('behavior.formvalidator');
 $link = '';
 
-$f  = array();
-$f[1] = botigaHelper::getParameter('show_field_tipus', 1);
-$f[2] = botigaHelper::getParameter('show_field_empresa', 1);
-$f[3] = botigaHelper::getParameter('show_field_cif', 1);
-$f[4] = botigaHelper::getParameter('show_field_nom', 1);
-$f[5] = botigaHelper::getParameter('show_field_phone', 1);
-$f[6] = 1;
-$f[7] = 1;
-$f[8] = 1;
-$f[9] = 1;
-$f[10] = botigaHelper::getParameter('show_field_address', 1);
-$f[11] = botigaHelper::getParameter('show_field_cp', 1);
-$f[12] = botigaHelper::getParameter('show_field_state', 1);
-$f[13] = botigaHelper::getParameter('show_field_pais', 1);
+$show_type 			= botigaHelper::getParameter('show_field_tipus', 1);
+$show_empresa 		= botigaHelper::getParameter('show_field_empresa', 1);
+$show_cif 			= botigaHelper::getParameter('show_field_cif', 1);
+$show_nom 			= botigaHelper::getParameter('show_field_nom', 1);
+$show_surname 		= botigaHelper::getParameter('show_field_surname', 1);
+$show_phone 		= botigaHelper::getParameter('show_field_phone', 1);
+$show_address 		= botigaHelper::getParameter('show_field_address', 1);
+$show_cp 			= botigaHelper::getParameter('show_field_cp', 1);
+$show_state 		= botigaHelper::getParameter('show_field_state', 1);
+$show_pais 			= botigaHelper::getParameter('show_field_pais', 1);
+$show_newsletter 	= botigaHelper::getParameter('show_newsletter', 1);
 
-$spain 		= botigaHelper::getParameter('total_shipment_spain', 25);
-$islands 	= botigaHelper::getParameter('total_shipment_islands', 50);
-$world 		= botigaHelper::getParameter('total_shipment_world', 60);
-
-$show_newsletter = botigaHelper::getParameter('show_newsletter', 1);
-$logo		= botigaHelper::getParameter('botiga_logo', '');
-$email		= botigaHelper::getParameter('botiga_mail', '');
-$userToken  = JSession::getFormToken();
+$spain 			= botigaHelper::getParameter('total_shipment_spain', 25);
+$islands 		= botigaHelper::getParameter('total_shipment_islands', 50);
+$world 			= botigaHelper::getParameter('total_shipment_world', 60);
+$validation 	= botigaHelper::getParameter('validation_type', 0); //by default 0 Joomla system 1 is google recaptcha
+$sitekey 		= botigaHelper::getParameter('captcha_sitekey');
+$logo			= botigaHelper::getParameter('botiga_logo', '');
+$email			= botigaHelper::getParameter('botiga_mail', '');
+$userToken  	= JSession::getFormToken();
 ?>
 
 <?php if(botigaHelper::getParameter('show_header', 0) == 1) : ?>
@@ -66,7 +61,7 @@ $userToken  = JSession::getFormToken();
 					<a href="index.php?option=com_botiga&view=botiga" class="pr-1">
 						<img src="media/com_botiga/icons/mosaico<?php if($jinput->getCmd('layout', '') == '') : ?>-active<?php endif; ?>.png">
 					</a>
-					<?php if(botigaHelper::isEmpresa()) : ?>					
+					<?php if(botigaHelper::hasAccesstoTableView()) : ?>					
 					<a href="index.php?option=com_botiga&view=botiga&layout=table">
 						<img src="media/com_botiga/icons/lista<?php if($jinput->getCmd('layout', '') == 'table') : ?>-active<?php endif; ?>.png">
 					</a>
@@ -113,18 +108,112 @@ $userToken  = JSession::getFormToken();
 
 		<form name="register" id="register" action="index.php?option=com_botiga&task=register.register" method="post" class="form-horizontal form-validate">
 		
-				<?php 
-				$i = 1;
-				foreach($this->form->getFieldset('register') as $field): ?>
-				<?php if($f[$i] == 1): ?> 
-				<?= $field->renderField(); ?>
-				<?php if($i == 1) : ?>
-				<small id="passwordHelpBlock" style="display:none;" class="form-text text-muted"><?= JText::sprintf('COM_BOTIGA_REGISTER_FIELD_TYPE_HELP', $email); ?></small>
+			<?php if($show_type == 1) : ?>
+			<div class="control-group" id="fieldType">
+				<div class="control-label"><?php echo $this->form->getLabel('type'); ?></div>
+				<div class="controls"><?php echo $this->form->getInput('type'); ?></div>
+			</div>
+			<small id="passwordHelpBlock" style="display:none;" class="form-text text-muted"><?= JText::sprintf('COM_BOTIGA_REGISTER_FIELD_TYPE_HELP', $email); ?></small>
+
+			<div id="form-login-submit" class="control-group">
+				<div class="controls">
+					<a href="#" class="btn btn-primary btn-block estil03 next mt-2"><?= JText::_('COM_BOTIGA_NEXT'); ?></a>
+				</div>
+			</div>
+			<?php endif; ?>
+				
+			<div id="registerFields" <?php if($show_type == 1) : ?>style="display:none;"<?php endif; ?>>
+
+				<div id="empresaFields" <?php if($show_type == 1) : ?>style="display:none;"<?php endif; ?>>
+					<?php if($show_empresa == 1) : ?>
+					<div class="control-group">
+						<div class="control-label"><?php echo $this->form->getLabel('empresa'); ?></div>
+						<div class="controls"><?php echo $this->form->getInput('empresa'); ?></div>
+					</div>
+					<?php endif; ?>
+
+					<?php if($show_cif == 1) : ?>
+					<div class="control-group">
+						<div class="control-label"><?php echo $this->form->getLabel('cif'); ?></div>
+						<div class="controls"><?php echo $this->form->getInput('cif'); ?></div>
+					</div>
+					<?php endif; ?>
+				</div>
+
+				<?php if($show_nom == 1) : ?>
+				<div class="control-group">
+					<div class="control-label"><?php echo $this->form->getLabel('nombre'); ?></div>
+					<div class="controls"><?php echo $this->form->getInput('nombre'); ?></div>
+				</div>
 				<?php endif; ?>
+
+				<?php if($show_surname == 1) : ?>
+				<div class="control-group">
+					<div class="control-label"><?php echo $this->form->getLabel('apellidos'); ?></div>
+					<div class="controls"><?php echo $this->form->getInput('apellidos'); ?></div>
+				</div>
 				<?php endif; ?>
-				<?php 
-				$i++;
-				endforeach; ?>
+
+				<div class="control-group">
+					<div class="control-label"><?php echo $this->form->getLabel('email1'); ?></div>
+					<div class="controls"><?php echo $this->form->getInput('email1'); ?></div>
+				</div>
+
+				<div class="control-group">
+					<div class="control-label"><?php echo $this->form->getLabel('email2'); ?></div>
+					<div class="controls"><?php echo $this->form->getInput('email2'); ?></div>
+				</div>
+
+				<div class="control-group">
+					<div class="control-label"><?php echo $this->form->getLabel('password1'); ?></div>
+					<div class="controls"><?php echo $this->form->getInput('password1'); ?></div>
+				</div>
+
+				<div class="control-group">
+					<div class="control-label"><?php echo $this->form->getLabel('password2'); ?></div>
+					<div class="controls"><?php echo $this->form->getInput('password2'); ?></div>
+				</div>
+
+				<?php if($show_phone == 1) : ?>
+				<div class="control-group">
+					<div class="control-label"><?php echo $this->form->getLabel('phone'); ?></div>
+					<div class="controls"><?php echo $this->form->getInput('phone'); ?></div>
+				</div>
+				<?php endif; ?>
+
+				<?php if($show_address == 1) : ?>
+				<div class="control-group">
+					<div class="control-label"><?php echo $this->form->getLabel('address'); ?></div>
+					<div class="controls"><?php echo $this->form->getInput('address'); ?></div>
+				</div>
+				<?php endif; ?>
+
+				<?php if($show_cp == 1) : ?>
+				<div class="control-group">
+					<div class="control-label"><?php echo $this->form->getLabel('cp'); ?></div>
+					<div class="controls"><?php echo $this->form->getInput('cp'); ?></div>
+				</div>
+				<?php endif; ?>
+
+				<?php if($show_state == 1) : ?>
+				<div class="control-group">
+					<div class="control-label"><?php echo $this->form->getLabel('city'); ?></div>
+					<div class="controls"><?php echo $this->form->getInput('city'); ?></div>
+				</div>
+				<?php endif; ?>
+
+				<?php if($show_pais == 1) : ?>
+				<div class="control-group">
+					<div class="control-label"><?php echo $this->form->getLabel('pais'); ?></div>
+					<div class="controls"><?php echo $this->form->getInput('pais'); ?></div>
+				</div>
+				<?php endif; ?>
+				
+				<?php if($validation == 1) : ?>
+				<div class="form-group pt-4">
+	   		 		<div class="g-recaptcha" data-callback="recaptchaCallback" data-sitekey="<?= $sitekey; ?>"></div>
+				</div>
+				<?php endif; ?>
 				
 				<div class="checkbox estil01 pt-4">
 				  <label>
@@ -153,6 +242,8 @@ $userToken  = JSession::getFormToken();
 				<?= JHtml::_('form.token'); ?>
 				
 				<div class="estil01 mt-3"><?= JText::_('COM_BOTIGA_REGISTER_SUBTITLE'); ?></div>
+
+			</div>
 				
 		</form>
 	</div>

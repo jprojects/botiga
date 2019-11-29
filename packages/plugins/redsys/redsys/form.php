@@ -7,16 +7,13 @@
 	<input type='hidden' name='Ds_SignatureVersion' value='<?= $data->version; ?>'> 
 	<input type='hidden' name='Ds_MerchantParameters' value='<?= $data->params; ?>'> 
 	<input type='hidden' name='Ds_Signature' value='<?= $data->signature; ?>'> 
-	<input type="image" src="<?= $data->logo; ?>" border="0" name="submit" alt="TPV" />
+	<input type="image" src="<?= $data->logo; ?>" width="100%" border="0" name="submit" alt="TPV" />
 </form>
+<p><h5><?= $data->msg; ?></h5></p>
 </div>
 
 </div>
 
 <script>
-window.setTimeout(function(){
-
-        tpv.submit();
-
-    }, 2000);
+window.setTimeout(function() { tpv.submit(); }, 2000);
 </script>

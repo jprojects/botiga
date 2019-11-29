@@ -5,8 +5,8 @@
  * @copyright   Copyright © 2010 - All rights reserved.
  * @license		GNU/GPL
  * @author		kim
- * @author mail administracion@joomlanetprojects.com
- * @website		http://www.joomlanetprojects.com
+ * @author mail kim@aficat.com
+ * @website		http://www.aficat.com
  *
  */
 
@@ -118,7 +118,10 @@ if (!empty($this->extra_sidebar)) {
 					</th>    
 					<th>
 						<?= JHtml::_('grid.sort',  'COM_BOTIGA_ORDERS_HEADING_STATUS', 'a.status', $listDirn, $listOrder); ?>
-					</th>  
+					</th> 
+					<th>
+						#
+					</th> 
 				</tr>
 			</thead>
 			<tfoot>
@@ -221,6 +224,9 @@ if (!empty($this->extra_sidebar)) {
 						<?php endif; ?>
 						<?php if($item->status == 3): ?><span class="label label-success"><?= JText::_('COM_BOTIGA_STATUS_COMPLETED'); ?></span><?php endif; ?>
 						<?php if($item->status == 4): ?><span class="label label-important"><?= JText::_('COM_BOTIGA_STATUS_PENDING_50_PERCENT'); ?></span><?php endif; ?>
+					</td>
+					<td>
+						<a href="<?= JURI::root(); ?>index.php?option=com_botiga&task=genPdf&id=<?= $item->id; ?>"><span class="icon-file-2"> </span></a>
 					</td>
 				</tr>
 				<?php endforeach; ?>

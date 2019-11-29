@@ -164,6 +164,17 @@
         </field>
         <field 
         	type="radio" 
+        	name="login_buy" 
+        	default="0" 
+        	class="btn-group"
+        	label="COM_BOTIGA_SETTINGS_LOGIN_BUY_LBL" 
+        	description="COM_BOTIGA_SETTINGS_LOGIN_BUY_DSC"
+		>
+		<option value="0">JNO</option>
+		<option value="1">JYES</option> 
+        </field>
+        <field 
+        	type="radio" 
         	name="control_stock" 
         	default="0" 
         	class="btn-group"
@@ -483,6 +494,33 @@
         </field>
         <field 
         	type="radio" 
+        	name="validation_type" 
+        	default="0" 
+        	class="btn-group"
+        	label="COM_BOTIGA_SETTINGS_TYPE_VALIDATION_LBL" 
+        	description="COM_BOTIGA_SETTINGS_TYPE_VALIDATION_DSC"
+		>
+		<option value="0">Joomla</option>
+		<option value="1">Captcha</option> 
+        </field>
+        <field 
+        	name="captcha_sitekey" 
+        	type="text" 
+        	default="" 
+        	label="reCaptcha sitekey" 
+        	description="" 
+        	showon="validation_type:1"
+        />
+		<field 
+        	name="captcha_secretkey" 
+        	type="text" 
+        	default="" 
+        	label="reCaptcha secretkey" 
+        	description="" 
+        	showon="validation_type:1"
+        />
+        <field 
+        	type="radio" 
         	name="show_newsletter" 
         	default="1" 
         	class="btn-group"
@@ -575,6 +613,15 @@
 		<option value="0">JNO</option>
 		<option value="1">JYES</option> 
         </field>
+  </fieldset>
+  <fieldset name="mail" label="COM_BOTIGA_MAIL_PDF" description="COM_BOTIGA_MAIL_PDF_DESC"> 
+  		<field 
+        	type="media" 
+        	name="botiga_mail_logo" 
+        	default="" 
+        	label="COM_BOTIGA_SETTINGS_MAIL_LOGO_LBL" 
+        	description="COM_BOTIGA_SETTINGS_MAIL_LOGO_DSC" 
+        />
   </fieldset>
   <fieldset
 		name="permissions"

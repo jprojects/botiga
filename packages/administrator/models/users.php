@@ -132,7 +132,7 @@ class botigaModelUsers extends JModelList
 
 		$query->from('#__botiga_users u');
 
-		$query->join('inner', '#__usergroups as ug ON ug.id = u.usergroup');
+		$query->join('left', '#__usergroups as ug ON ug.id = u.usergroup');
 		
 		$query->join('left', '#__botiga_countries c ON c.country_id = u.pais');
                 
@@ -140,7 +140,7 @@ class botigaModelUsers extends JModelList
 		$search = $this->getState('filter.search');
 		if (!empty($search)) {
 			$search = $db->Quote('%'.$db->escape($search, true).'%');
-			$query->where('(u.nom_empresa LIKE '.$search.' OR u.mail_empresa LIKE '.$search.')');
+			$query->where('(u.nom_empresa LIKE '.$search.' OR u.mail_empresa LIKE '.$search.' OR u.nombre LIKE '.$search.')');
 		}
 
 		// Filter by published.

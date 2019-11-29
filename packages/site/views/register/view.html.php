@@ -86,6 +86,12 @@ class botigaViewRegister extends JViewLegacy
 		} else {
 			$title = JText::_('COM_BOTIGA_DEFAULT_PAGE_TITLE');
 		}
+		
+		$validation = botigaHelper::getParameter('validation_type', 0); //by default Joomla system
+		
+		if($validation == 1) {
+			$document->addScript('https://www.google.com/recaptcha/api.js');
+		}
 
 		$this->document->setTitle($title);
 	}

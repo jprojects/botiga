@@ -92,7 +92,7 @@ class botigaController extends JControllerLegacy
      }
      
      //ToDo:: esta función viene con el sistema de documentos de la tienda, valorar si borrar o mejorar
-     function sendPdf()
+     public function sendPdf()
      {
      	$user   = JFactory::getUser();
      	$config = JFactory::getConfig();
@@ -146,8 +146,15 @@ class botigaController extends JControllerLegacy
 		$this->setRedirect(JRoute::_('index.php?option=com_botiga&view=docs&Itemid='.$menuItem->id), $msg, $type);
      }
 
-	function sincronitza() {
-		sincroHelper::sincronitza();
+	public function sincronitza() 
+	{
+		JLoader::import('joomla.plugin.helper');
+		JPluginHelper::importPlugin( 'botiga' );
+
+		$dispatcher = JEventDispatcher::getInstance();
+		$dispatcher->trigger( 'sincronitza');
+
+		//sincroHelper::sincronitza();
 	}
 						
 	public function sendEmail($email, $subject, $body, $attachment='')
@@ -175,7 +182,7 @@ class botigaController extends JControllerLegacy
 	/**
 	* 07/01/2017: Utilitat per passar  a minúscules totes les imatges de la carpeta images/botiga_items
 	*/
-	function lcasefiles() {
+	public function lcasefiles() {
 		$files = scandir('/var/www/vhosts/acjsystems.com/httpdocs/images/botiga_items');
 		foreach ($files as $file) {
 			if ($file!=strtolower($file)) {

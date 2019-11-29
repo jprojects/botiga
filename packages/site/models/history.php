@@ -27,8 +27,8 @@ class botigaModelHistory extends JModelList
 		if (empty($config['filter_fields'])) {
 			$config['filter_fields'] = array(
 				'id', 'id',
-                'data', 'data',
-                'status', 'status',
+        'data', 'data',
+        'status', 'status',
 			);
 		}
 
@@ -48,7 +48,7 @@ class botigaModelHistory extends JModelList
 		// Initialise variables.
 		$app = JFactory::getApplication();
 
-        // List state information
+    // List state information
 		//$value = $app->getUserStateFromRequest('global.list.limit', 'limit', $app->getCfg('list_limit'));
 		$value = JRequest::getInt('limit', $app->getCfg('list_limit', 0));
 		$this->setState('list.limit', $value);
@@ -90,22 +90,22 @@ class botigaModelHistory extends JModelList
 	*/
 	function getListQuery()
 	{
-    	$user = JFactory::getUser();
-        
+    $user = JFactory::getUser();
+
 		$db   = $this->getDbo();
 
 		$query = $db->getQuery(true);
-		
+
 		$query->select('c.*');
 		$query->from('#__botiga_comandes as c');
 		$query->join('inner', '#__botiga_comandesDetall as cd on c.id = cd.idComanda');
 		$query->where('c.userid = '.$user->id.' and c.status > 2 group by c.id, c.data, c.status ORDER BY c.id DESC');
-		
-        $params = JComponentHelper::getParams( 'com_botiga' );
+
+    $params = JComponentHelper::getParams( 'com_botiga' );
 
 		return $query;
 	}
-	
+
 	/**
 	 * Gets a list of saved carts
 	 *
@@ -114,13 +114,13 @@ class botigaModelHistory extends JModelList
 	*/
 	public function getSavedCarts()
 	{
-    	$user 	= JFactory::getUser();      
+    $user 	= JFactory::getUser();
 		$db   	= JFactory::getDbo();
 
 		$db->setQuery('select * from #__botiga_savedCarts where userid = '.$user->id);
 		return $db->loadObjectList();
 	}
-	
+
 	/**
 	 * Get a list of items.
 	 *
@@ -129,7 +129,7 @@ class botigaModelHistory extends JModelList
 	*/
 	public function getItems()
 	{
-        $items	= parent::getItems();
+    $items	= parent::getItems();
 
 		return $items;
 	}

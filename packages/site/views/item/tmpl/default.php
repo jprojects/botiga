@@ -1,49 +1,51 @@
 <?php
+
 /**
- * @version		1.0.0 botiga $
- * @package		botiga
- * @copyright   Copyright © 2010 - All rights reserved.
- * @license		GNU/GPL
- * @author		kim
- * @author mail kim@aficat.com
- * @website		http://www.aficat.com
- *
+ * @version     1.0.0
+ * @package     com_botiga
+ * @copyright   Copyleft (C) 2019
+ * @license     Licencia Pública General GNU versión 3 o posterior. Consulte LICENSE.txt
+ * @author      aficat <kim@aficat.com> - http://www.afi.cat
 */
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
+
 $this->item->image1 != '' ? $image = $this->item->image1 : $image = 'components/com_botiga/assets/images/noimage.jpg';
-$model 		= $this->getModel('item');
-$user  		= JFactory::getUser();
-$doc   		= JFactory::getDocument();
-$jinput		= JFactory::getApplication()->input;
-$precio 	= botigaHelper::getUserPrice($this->item->id);
-$dtos 		= botigaHelper::getUserDiscounts($this->item->id);
-$uri 		= base64_encode(JFactory::getURI()->toString());
-$modal 		= $jinput->get('m', 0);
-$logo		= botigaHelper::getParameter('botiga_logo', '');
-$showprices = botigaHelper::getParameter('show_prices', 1);
-$showdiscount = botigaHelper::getParameter('show_discount', 0);
-$loginprices = botigaHelper::getParameter('login_prices', 0);
-$shownotice = botigaHelper::getParameter('show_notice', 1);
-$showref 	= botigaHelper::getParameter('show_ref_item', 1);
-$showsdesc 	= botigaHelper::getParameter('show_sdesc_item', 1);
-$showdesc 	= botigaHelper::getParameter('show_desc_item', 1);
-$showgar 	= botigaHelper::getParameter('show_garantia_item', 1);
-$showenvio 	= botigaHelper::getParameter('show_envio_item', 1);
-$showbrand 	= botigaHelper::getParameter('show_brand_item', 1);
-$showfav 	= botigaHelper::getParameter('show_fav_item', 1);
-$showpvp 	= botigaHelper::getParameter('show_pvp_item', 1);
-$showrel 	= botigaHelper::getParameter('show_related_item', 1);
-$userToken  = JSession::getFormToken();
 
-$dte_linia  = botigaHelper::getUserData('dte_linia', $user->id); 
+$model 			= $this->getModel('item');
+$user  			= JFactory::getUser();
+$doc   			= JFactory::getDocument();
+$jinput			= JFactory::getApplication()->input;
+$precio 		= botigaHelper::getUserPrice($this->item->id);
+$dtos 			= botigaHelper::getUserDiscounts($this->item->id);
+$uri 			= base64_encode(JFactory::getURI()->toString());
+$modal 			= $jinput->get('m', 0);
+$logo			= botigaHelper::getParameter('botiga_logo', '');
+$botiga_name	= botigaHelper::getParameter('botiga_name', '');
+$showprices 	= botigaHelper::getParameter('show_prices', 1);
+$showdiscount 	= botigaHelper::getParameter('show_discount', 0);
+$loginprices 	= botigaHelper::getParameter('login_prices', 0);
+$loginforbuy 	= botigaHelper::getParameter('login_buy', 1);
+$shownotice 	= botigaHelper::getParameter('show_notice', 1);
+$showref 		= botigaHelper::getParameter('show_ref_item', 1);
+$showsdesc 		= botigaHelper::getParameter('show_sdesc_item', 1);
+$showdesc 		= botigaHelper::getParameter('show_desc_item', 1);
+$showgar 		= botigaHelper::getParameter('show_garantia_item', 1);
+$showenvio 		= botigaHelper::getParameter('show_envio_item', 1);
+$showbrand 		= botigaHelper::getParameter('show_brand_item', 1);
+$showfav 		= botigaHelper::getParameter('show_fav_item', 1);
+$showpvp 		= botigaHelper::getParameter('show_pvp_item', 1);
+$showrel 		= botigaHelper::getParameter('show_related_item', 1);
+$userToken  	= JSession::getFormToken();
 
-$spain 		= botigaHelper::getParameter('total_shipment_spain', 25);
-$islands 	= botigaHelper::getParameter('total_shipment_islands', 50);
-$world 		= botigaHelper::getParameter('total_shipment_world', 60);
+$dte_linia  	= botigaHelper::getUserData('dte_linia', $user->id); 
 
-$count 	    = botigaHelper::getCarritoCount();
+$spain 			= botigaHelper::getParameter('total_shipment_spain', 25);
+$islands 		= botigaHelper::getParameter('total_shipment_islands', 50);
+$world 			= botigaHelper::getParameter('total_shipment_world', 60);
+
+$count 	    	= botigaHelper::getCarritoCount();
 
 $js = '{
   "@context": "http://schema.org/",
@@ -60,7 +62,7 @@ $js = '{
     "priceCurrency": "EUR",
     "seller": {
       "@type": "Organization",
-      "name": "'.botigaHelper::getParameter('botiga_name', '').'"
+      "name": "'.$botiga_name.'"
     }
   }
 }';
@@ -69,6 +71,8 @@ $doc->addScript('components/com_botiga/assets/js/jquery.fancybox.js');
 $doc->addStylesheet('components/com_botiga/assets/css/jquery.fancybox.css');
 ?>
 
+<!--
+//20/8/19 treiem el autofoco per mostrar l'imatge del producte
 <script>
 jQuery(document).ready(function() {
 	jQuery('.input-number').keypress(function(event) {
@@ -79,6 +83,7 @@ jQuery(document).ready(function() {
 	});
 });
 </script>
+-->
 
 <?php if(botigaHelper::getParameter('show_header', 0) == 1) : ?>
 <header class="head_botiga">
@@ -90,7 +95,7 @@ jQuery(document).ready(function() {
 		<?php if($logo != '') : ?>
 		<div class="col-12 text-right d-none d-sm-block">
 			<a href="index.php">
-				<img src="<?= $logo; ?>" alt="<?= botigaHelper::getParameter('botiga_name', ''); ?>" class="img-fluid botiga-logo">
+				<img src="<?= $logo; ?>" alt="<?= $botiga_name; ?>" class="img-fluid botiga-logo">
 			</a>
 		</div>
 		<?php endif; ?>	
@@ -101,7 +106,7 @@ jQuery(document).ready(function() {
 					<a href="index.php?option=com_botiga&view=botiga" class="pr-1">
 						<img src="media/com_botiga/icons/mosaico<?php if($jinput->getCmd('layout', '') == '') : ?>-active<?php endif; ?>.png">
 					</a>
-					<?php if(botigaHelper::isEmpresa()) : ?>					
+					<?php if(botigaHelper::hasAccesstoTableView()) : ?>					
 					<a href="index.php?option=com_botiga&view=botiga&layout=table">
 						<img src="media/com_botiga/icons/lista<?php if($jinput->getCmd('layout', '') == 'table') : ?>-active<?php endif; ?>.png">
 					</a>
@@ -113,7 +118,7 @@ jQuery(document).ready(function() {
 						<?php if($count > 0) : ?>
 						<span class="badge badge-warning"><?= $count; ?></span>
 						<?php endif; ?>
-						<img src="media/com_botiga/icons/carrito.png">
+						<img src="media/com_botiga/icons/carrito.png" alt="carrito">
 					</a>
 					<?php if($user->guest) : ?>
 					<a href="index.php?option=com_users&view=login" title="Login" class="hasTip">
@@ -121,10 +126,10 @@ jQuery(document).ready(function() {
 					</a>
 					<?php else: ?>
 					<a class="ml-4 hasTip" href="index.php?option=com_users&task=user.logout&<?= $userToken; ?>=1" title="Logout" title="Salir">
-						<img src="media/com_botiga/icons/salir.png">
+						<img src="media/com_botiga/icons/salir.png" alt="logout">
 					</a>
 					<a class="ml-4 hasTip" href="index.php?option=com_botiga&view=history" title="History" title="Perfil"s>
-						<img src="media/com_botiga/icons/sesion-iniciada.png">
+						<img src="media/com_botiga/icons/sesion-iniciada.png" alt="login">
 					</a>
 					<div class="d-none d-sm-block"><small><?= JText::sprintf('COM_BOTIGA_WELCOME', $user->name); ?></small></div>
 					<?php endif; ?>
@@ -143,15 +148,16 @@ jQuery(document).ready(function() {
 
 	<div class="row">
 	
-		<?php if($showprices == 1 && ($loginprices == 0 && $user->guest) && $shownotice == 1) : ?>
+		<?php if($user->guest && $shownotice == 1) : ?>
 		<div class="col-12">
-			<a href="index.php?option=com_botiga&view=register">
-				<div class="alert alert-warning"><?= JText::_('COM_BOTIGA_PRICES_NOTICE'); ?></div>
-			</a>
+			<?php 
+			$link1 = 'index.php?option=com_botiga&view=register';
+			?>
+			<div class="alert alert-warning"><?= JText::sprintf('COM_BOTIGA_PRICES_NOTICE', $link1); ?></div>
 		</div>
 		<?php endif; ?>	
 		
-		<div class="col-12 mt-4 mb-5">
+		<div class="col-12 mt-4">
 			<h2 class="estil08 text-primary"><?= strtoupper(botigaHelper::getCategoryName($this->item->catid)); ?></h2>
 		</div>
 
@@ -163,7 +169,7 @@ jQuery(document).ready(function() {
 				<div class="pvp-badge big"><span>-<?= $dte_linia; ?>%</span></div>
 				<?php endif; ?>
 				<span class="rollover"><img src="media/com_botiga/icons/lupa.png" width="60"></span>
-					<img src="<?= $image; ?>" class="img-fluid" alt="<?= $this->item->name; ?>" rel="gallery" />
+					<img src="<?= $image; ?>" class="img-primary" alt="<?= $this->item->name; ?>" rel="gallery" />
 					<?php 
 					$extra_images = botigaHelper::getImages($this->item->id);
 					foreach($extra_images as $k => $v) : ?>
@@ -199,21 +205,23 @@ jQuery(document).ready(function() {
 			
 			<div class="row no-gutters mb-2">
 			<div class="col-12 col-md-6 text-left estil07 text-primary"><b class="titol"><?= strtoupper($this->item->name); ?></b></div>
+			<?php if(botigaHelper::isPriceVisible()) : ?>
 			<div class="col-12 col-md-6 text-right estil08 text-primary">
-				<?php if($dte_linia != 0.00 && $showdiscount == 1 && $showprices == 1) : ?>
+				<?php if($dte_linia != 0.00 && $showdiscount == 1) : ?>
 					<strike class="faded"><?= $precio; ?>&euro;</strike>
 					<br>
 					<b><?= botigaHelper::getPercentDiff($precio, $dte_linia); ?>&euro;</b>
 				<?php else : ?>
-					<b><?= $precio; ?> &euro;</b>	
+					<b><?php if(!botigaHelper::isEmpresa()) : ?>PVP <?php endif; ?><?= $precio; ?> &euro;</b>	
 					<?php if($dtos!='') : ?>
 						<br/><span class='estil02'><?= $dtos; ?>&euro;</span>
 					<?php endif; ?>						
 				<?php endif; ?>						
 			</div>
+			<?php endif; ?>	
 			</div>
 			
-			<?php if($showpvp == 1) : ?>
+			<?php if($showpvp == 1 && botigaHelper::isPriceVisible()) : ?>
 			<div class="col-12 col-md-12">			
 				<div class="text-left faded pvp">PVP <strike><?= $this->item->pvp; ?> &euro;</strike></div>			
 			</div>
@@ -240,9 +248,10 @@ jQuery(document).ready(function() {
 			</div>
 			<?php endif; ?>
 			
-			
+			<?php if($showprices == 1 && ($loginforbuy == 0 || ($loginforbuy == 1 && !$user->guest))) : ?>
 			<div class="row">
 				<div class="col-12 col-md-5">
+					
 					<div class="addtocart">
 						<form name="addtocart" id="addtocart" action="index.php?option=com_botiga&task=botiga.setItem" method="get" class="form-inline">
 							<input type="hidden" name="option" value="com_botiga" />
@@ -256,7 +265,7 @@ jQuery(document).ready(function() {
 				                          <span class="fa fa-minus"></span>
 				                        </button>
 				                    </span>
-				                    <input type="text" id="quantity_<?= $this->item->id; ?>" name="qty" class="form-control bg-qty input-number text-center" value="1" min="1" max="100" autofocus>
+				                    <input type="text" id="quantity_<?= $this->item->id; ?>" name="qty" class="form-control bg-qty input-number text-center" value="1" min="1" max="100">
 				                    <span class="input-group-btn">
 				                        <button type="button" class="quantity-right-plus btn btn-primary btn-number" data-id="<?= $this->item->id; ?>">
 				                            <span class="fa fa-plus"></span>
@@ -267,6 +276,7 @@ jQuery(document).ready(function() {
 							<?php echo JHtml::_( 'form.token' ); ?>				
 						</form>
 					</div>
+					
 				</div>
 				<div class="col-xs-12 col-md-7">
 					<?php if(botigaHelper::isValidated() && botigaHelper::validateStock($this->item->stock)) : ?>
@@ -278,6 +288,7 @@ jQuery(document).ready(function() {
 					<?php endif; ?>
 				</div>
 		    </div>
+		    <?php endif; ?>
 		    
 		    <?php if($showfav == 1) : ?>
 		    <div class="item-favorite">
@@ -313,7 +324,13 @@ jQuery(document).ready(function() {
 			<?php 
 			$i = 0;
 			foreach(botigaHelper::getExtras($this->item->id) as $k => $v) : ?>
-			<div class="estil07 text-primary <?php if($i == 0): ?>mt-5<?php else: ?>mt-4<?php endif; ?>" data-toggle="collapse" href="#collapse<?= $i; ?>"><?= strtoupper($v[0]); ?>&nbsp;<i class="fa fa-plus text-yellow pl-2"></i></div>
+			<div class="estil07 text-primary acordion <?php if($i == 0): ?>mt-5<?php else: ?>mt-4<?php endif; ?>" data-toggle="collapse" href="#collapse<?= $i; ?>"><?= strtoupper($v[0]); ?>&nbsp;
+				<?php if($i != 0): ?>
+				<i class="fa fa-plus text-yellow pl-2" style="cursor:pointer;"></i>
+				<?php else: ?>
+				<i class="fa fa-minus text-yellow pl-2" style="cursor:pointer;"></i>
+				<?php endif; ?>
+			</div>
 			<div class="collapse <?php if($i == 0): ?>show<?php endif; ?> estil03 text-primary mt-2" id="collapse<?= $i; ?>"><?= $v[1]; ?></div>
 			<?php 
 			$i++;
@@ -353,6 +370,25 @@ jQuery(document).ready(function() {
 	</div>
 	
 </div>
+
+<!-- Modal login -->
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginLabel">
+  	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+	  		<div class="modal-header">
+	    		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	  		</div>
+	  		<div class="modal-body loginBody">
+			    <?php
+			    $document	= JFactory::getDocument();
+				$renderer	= $document->loadRenderer('module');
+				echo $renderer->render(JModuleHelper::getModule('mod_login'));
+			    ?>
+	  		</div>
+		</div>
+  	</div>
+</div>
+<!-- end login modal -->
 
 <?php if($modal != 0) : ?>
 <!-- start Modal success -->

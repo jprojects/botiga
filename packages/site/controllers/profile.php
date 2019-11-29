@@ -32,18 +32,18 @@ class botigaControllerProfile extends botigaController {
 
 		return $model;
 	}
-	
+
 	public function profile() {
-	
+
 		// Check for request forgeries.
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
-		
+
 		$db 		= JFactory::getDbo();
 		$app   	   	= JFactory::getApplication();
 		$data 	   	= $app->input->post->get('jform', array(), 'array');
 		$valid      = true;
-		
-		if($data['password1'] !== $data['password2']) {
+
+		if($data['password2'] != '' && ($data['password1'] !== $data['password2'])) {
 			$msg  = JText::_('COM_BOTIGA_REGISTER_PASSWORD_NOT_MATCH');
 			$type = 'danger';
 			$valid = false;
@@ -53,23 +53,23 @@ class botigaControllerProfile extends botigaController {
 			$type = 'danger';
 			$valid = false;
 		}
-		if($data['address'] == '' || $data['zip'] == '' || $data['city'] == '' || $data['pais'] == '') {
+		if($data['pais'] == '') {
 			$msg  = JText::_('COM_BOTIGA_REGISTER_SHIPMENT_MANDATORY');
 			$type = 'danger';
 			$valid = false;
 		}
 
-		if($valid) {	
-		
+		if($valid) {
+
 			$mail = false;
-			$pass = false;	
-		
+			$pass = false;
+
 			//create joomla user
 			$user                   = new stdClass();
 			$user->id               = $data['userid'];
 			$user->username         = $data['nombre'];
-			
-			if($data['email2'] != '' && ($data['email1'] == $data['email2'])) {				
+
+			if($data['email2'] != '' && ($data['email1'] == $data['email2'])) {
 				$user->email            = $data['email1'];
 				$mail = true;
 			}
@@ -80,39 +80,57 @@ class botigaControllerProfile extends botigaController {
 				$user->password         = $password;
 				$pass = true;
 			}
-			
+
 			if($mail || $pass) { $valid = $db->updateObject('#__users', $user, 'id'); }
-			
+
 			$params['metodo_pago'] = $data['metodo_pago'];
 			$params['re_equiv']    = $data['re_equiv'];
-			
+
 			unset($data['metodo_pago'], $data['re_equiv']);
-		
+
 			//edit botiga user
 			$acjuser            	= new stdClass();
 			$acjuser->userid    	= $data['userid'];
-			$acjuser->type			= $data['type'];
-		    $acjuser->nom_empresa	= $data['empresa'];
-		    $acjuser->nombre		= $data['nombre'];
-		    $acjuser->mail_empresa	= $data['email1'];
-		    $acjuser->telefon		= $data['phone'];
-		    $acjuser->adreca		= $data['address'];
-		    $acjuser->cp			= $data['zip'];
-		    $acjuser->poblacio		= $data['city'];
-		    $acjuser->pais   		= $data['pais'];	
-		    $acjuser->cif   		= $data['cif'];	
-		    $acjuser->params 		= json_encode($params);
-		    
-		    $db->updateObject('#__botiga_users', $acjuser, 'userid');    	        	
-		
+			$acjuser->type				= $data['type'];
+	    $acjuser->nom_empresa	= $data['empresa'];
+	    $acjuser->nombre			= $data['nombre'];
+	    $acjuser->mail_empresa	= $data['email1'];
+	    $acjuser->telefon			= $data['phone'];
+	    $acjuser->pais   			= $data['pais'];
+	    $acjuser->cif   			= $data['cif'];
+	    $acjuser->params 			= json_encode($params);
+
+		  $db->updateObject('#__botiga_users', $acjuser, 'userid');
+
+			//save addresses
+			$db->setQuery('DELETE FROM #__botiga_user_address WHERE userid = '.$user->id);
+			$db->query();
+
+			$i = 0;
+			foreach($_POST as $post) {
+
+				$address  					= new stdClass();
+				$address->userid 		= $data['userid'];
+				$address->adreca 		= $_POST['address_'.$i.''];
+				$address->cp 				= $_POST['zip_'.$i.''];
+				$address->poblacio 	= $_POST['city_'.$i.''];
+				$address->activa 	  = 0;
+
+				if($address->adreca != '' && $address->cp != '' && $address->poblacio != '') {
+					$db->insertObject('#__botiga_user_address', $address);
+				}
+
+				$i++;
+			}
+
 			$msg  = JText::_('COM_BOTIGA_PROFILE_SUCCESS');
 			$type = 'success';
-		
+
 		} else {
 			$msg  = JText::_('COM_BOTIGA_PROFILE_ERROR');
 			$type = 'error';
 		}
-		
+
 		$this->setRedirect('index.php?option=com_botiga&view=history', $msg, $type);
 	}
 }

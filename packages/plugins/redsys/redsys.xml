@@ -13,6 +13,9 @@
 		<filename plugin="redsys">redsys.php</filename>
 		<folder>redsys</folder>
 	</files>
+	<languages folder="administrator/languages/en-GB">
+			<language tag="en-GB">en-GB.plg_botiga_redsys.ini</language>
+    </languages>
 	<config>
 		<fields name="params">
 			<fieldset name="basic">

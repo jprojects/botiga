@@ -62,6 +62,7 @@ class botigaViewBotiga extends JViewLegacy
 						'INNER JOIN #__botiga_items AS i ON cd.idItem = i.id ' .
 					'WHERE cd.idComanda = '.$comanda->id);
 				$data[$i]['detall'] = $db->loadObjectList();				
+				//var_dump($data[$i]['detall']);
 			}
 			$i++;
 		}

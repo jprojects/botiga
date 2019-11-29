@@ -1,13 +1,11 @@
 <?php
+
 /**
- * @version		1.0.0 botiga $
- * @package		botiga
- * @copyright   Copyright © 2010 - All rights reserved.
- * @license		GNU/GPL
- * @author		kim
- * @author mail kim@aficat.com
- * @website		http://www.aficat.com
- *
+ * @version     1.0.0
+ * @package     com_botiga
+ * @copyright   Copyleft (C) 2019
+ * @license     Licencia Pública General GNU versión 3 o posterior. Consulte LICENSE.txt
+ * @author      aficat <kim@aficat.com> - http://www.afi.cat
 */
 
 defined('_JEXEC') or die;
@@ -21,9 +19,7 @@ class botigaModelBotiga extends JModelList
 { 
 	/**
 	 * Method to auto-populate the model state.
-	 *
 	 * Note. Calling getState in this method will result in recursion.
-	 *
 	 * @return	void
 	 * @since	1.6
 	*/
@@ -80,9 +76,9 @@ class botigaModelBotiga extends JModelList
 	*/
 	protected function getListQuery()
 	{
-    	$user = JFactory::getUser();
-    	$app  = JFactory::getApplication();
-        
+	    $user = JFactory::getUser();
+	    $app  = JFactory::getApplication();
+		
 		$db         = $this->getDbo();
 		
 		$query      = $db->getQuery(true);
@@ -99,8 +95,8 @@ class botigaModelBotiga extends JModelList
 		// 3. afegir un join amb la taula afi_botiga_items_prices, i un where per seleccionar sols les files del grup que correspongui 
 		// 4. canviar l'order by del preu
 
-        // Filters
-       	$catid   	= $app->input->getInt('catid', 0);
+		// Filters
+		$catid   	= $app->input->getInt('catid', 0);
 		$marca   	= $app->input->getInt('marca', 0);
 		$collection = $app->input->getString('collection', '');
 		$ref     	= $app->input->get('ref', '');
@@ -140,7 +136,7 @@ class botigaModelBotiga extends JModelList
 		$query->where('(i.usergroup = 1 OR i.usergroup IN('.implode(',', $groups).'))');
 		$query->where('i.language = '.$db->quote(JFactory::getLanguage()->getTag()).' ORDER BY '.$orderby.' ASC');
 
-		//echo $query;
+		// echo $query;
 		return $query;
 	}
 	
@@ -152,11 +148,17 @@ class botigaModelBotiga extends JModelList
 	*/
 	public function getItems()
 	{
-        $items	= parent::getItems();
+        	$items	= parent::getItems();
 		
 		return $items;
 	}
 	
+	/**
+	 * Get a the number of items.
+	 *
+	 * @return	string
+	 * @since	1.6
+	*/
 	public function getNumItems() {
 	
 		$db = JFactory::getDbo();

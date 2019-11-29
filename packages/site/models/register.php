@@ -1,13 +1,11 @@
 <?php
+
 /**
- * @version		1.0.0 botiga $
- * @package		botiga
- * @copyright   Copyright © 2010 - All rights reserved.
- * @license		GNU/GPL
- * @author		kim
- * @author mail administracion@joomlanetprojects.com
- * @website		http://www.joomlanetprojects.com
- *
+ * @version     1.0.0
+ * @package     com_botiga
+ * @copyright   Copyleft (C) 2019
+ * @license     Licencia Pública General GNU versión 3 o posterior. Consulte LICENSE.txt
+ * @author      aficat <kim@aficat.com> - http://www.afi.cat
 */
 
 // No direct access to this file

@@ -89,6 +89,11 @@ span.rollover img {
 	height: auto;
 }
 
+.img-primary {
+	max-width: 100%;
+	height: auto
+}
+
 .head_botiga {
 	min-height: 150px;
 	border-bottom: 1px solid #683b2b;
@@ -105,7 +110,7 @@ span.rollover img {
 .price { font-size: 20px; }
 .item-ref { font-size: 10px; }
 .item-divider { height: 10px; }
-.item-title, .item-desc { height: 90px; }
+.item-title, .item-desc { height: 80px; }
 
 .brand { margin-top: 50px; }
 .brand img { height: 40px; }
@@ -139,7 +144,7 @@ legend {
    width: 100%;
    padding: 5px;
    font-size: 16px;
-   line-height: 1;
+   line-height: 1.5;
    border: 0;
    border-radius: 0;
    height: 38px;
@@ -210,4 +215,7 @@ span.pagenav { font-weight: bold; }
 		margin-bottom: 5px;
 	}
 	.table-text { width: 25%; }
+	.img-primary {
+		max-width: 35%;
+	}
 }	

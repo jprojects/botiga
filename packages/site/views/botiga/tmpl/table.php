@@ -1,64 +1,65 @@
 <?php
+
 /**
- * @version		1.0.0 botiga $
- * @package		botiga
- * @copyright   Copyright © 2010 - All rights reserved.
- * @license		GNU/GPL
- * @author		kim
- * @author mail kim@aficat.com
- * @website		http://www.aficat.com
- *
+ * @version     1.0.0
+ * @package     com_botiga
+ * @copyright   Copyleft (C) 2019
+ * @license     Licencia Pública General GNU versión 3 o posterior. Consulte LICENSE.txt
+ * @author      aficat <kim@aficat.com> - http://www.afi.cat
 */
   
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
+
 $app = JFactory::getApplication();
 
-if(!botigaHelper::isEmpresa()) { $app->redirect('index.php'); }
+if(!botigaHelper::hasAccesstoTableView()) { $app->redirect('index.php'); }
 
 $doc   		= JFactory::getDocument();
 $doc->addScript('components/com_botiga/assets/js/jquery.fancybox.js');
 $doc->addStylesheet('components/com_botiga/assets/css/jquery.fancybox.css');
 
-$model 		= $this->getModel('botiga');
-$user  		= JFactory::getUser();
-$uri 		= base64_encode(JFactory::getURI()->toString());
-$jinput		= $app->input;
-$catid      = $jinput->get('catid', '');
-$marca      = $jinput->get('marca', '');
-$itemid     = $jinput->get('Itemid', '');
-$orderby    = $jinput->get('orderby', 'ref');
-$limit      = $jinput->get('limit', 24);
-$lang 		= JFactory::getLanguage()->getTag();
-$logo		= botigaHelper::getParameter('botiga_logo', '');
-$showprices = botigaHelper::getParameter('show_prices', 1);
-$showdiscount = botigaHelper::getParameter('show_discount', 0);
-$loginprices = botigaHelper::getParameter('login_prices', 0);
-$shownotice = botigaHelper::getParameter('show_notice', 1);
-$showref 	= botigaHelper::getParameter('show_ref', 1);
-$showdesc 	= botigaHelper::getParameter('show_desc', 1);
-$showbrand 	= botigaHelper::getParameter('show_brand', 1);
-$showfav 	= botigaHelper::getParameter('show_fav', 1);
-$showpvp 	= botigaHelper::getParameter('show_pvp', 1);
-$userToken  = JSession::getFormToken();
+$model 			= $this->getModel('botiga');
+$user  			= JFactory::getUser();
+$uri 			= base64_encode(JFactory::getURI()->toString());
+$jinput			= $app->input;
+$catid      	= $jinput->get('catid', '');
+$marca      	= $jinput->get('marca', '');
+$itemid     	= $jinput->get('Itemid', '');
+$orderby    	= $jinput->get('orderby', 'ref');
+$limit      	= $jinput->get('limit', 24);
+$lang 			= JFactory::getLanguage()->getTag();
+$logo			= botigaHelper::getParameter('botiga_logo', '');
+$showprices 	= botigaHelper::getParameter('show_prices', 1);
+$showdiscount 	= botigaHelper::getParameter('show_discount', 0);
+$loginprices 	= botigaHelper::getParameter('login_prices', 0);
+$loginforbuy 	= botigaHelper::getParameter('login_buy', 1);
+$shownotice 	= botigaHelper::getParameter('show_notice', 1);
+$showref 		= botigaHelper::getParameter('show_ref', 1);
+$showdesc 		= botigaHelper::getParameter('show_desc', 1);
+$showbrand 		= botigaHelper::getParameter('show_brand', 1);
+$showfav 		= botigaHelper::getParameter('show_fav', 1);
+$showpvp 		= botigaHelper::getParameter('show_pvp', 1);
+$userToken  	= JSession::getFormToken();
 
-$dte_linia  = botigaHelper::getUserData('dte_linia', $user->id);
+$dte_linia  	= botigaHelper::getUserData('dte_linia', $user->id);
 
-$spain 		= botigaHelper::getParameter('total_shipment_spain', 25);
-$islands 	= botigaHelper::getParameter('total_shipment_islands', 50);
-$world 		= botigaHelper::getParameter('total_shipment_world', 60);
+$spain 			= botigaHelper::getParameter('total_shipment_spain', 25);
+$islands 		= botigaHelper::getParameter('total_shipment_islands', 50);
+$world 			= botigaHelper::getParameter('total_shipment_world', 60);
 
-$control_stock = botigaHelper::getParameter('control_stock', 0);
+$control_stock 	= botigaHelper::getParameter('control_stock', 0);
 
-$count 	    = botigaHelper::getCarritoCount();
-$subtotal   = 0;
+$count 	    	= botigaHelper::getCarritoCount();
+$subtotal   	= 0;
 ?>
 
 <script>
 jQuery(document).ready(function() {
 	jQuery('.input-number').keypress(function(event) {
+		var itemid = jQuery(this).attr('data-itemid');
 		if (event.keyCode == 13 || event.which == 13) {
-		    document.forms.addtocart.submit();
+		    jQuery('#addtocart-'+itemid).submit();
 		    event.preventDefault();
 		}
 	});
@@ -84,7 +85,7 @@ jQuery(document).ready(function() {
 					<a href="index.php?option=com_botiga&view=botiga" class="pr-1">
 						<img src="media/com_botiga/icons/mosaico<?php if($jinput->getCmd('layout', '') == '') : ?>-active<?php endif; ?>.png">
 					</a>
-					<?php if(botigaHelper::isEmpresa()) : ?>					
+					<?php if(botigaHelper::hasAccesstoTableView()) : ?>					
 					<a href="index.php?option=com_botiga&view=botiga&layout=table">
 						<img src="media/com_botiga/icons/lista<?php if($jinput->getCmd('layout', '') == 'table') : ?>-active<?php endif; ?>.png">
 					</a>
@@ -126,11 +127,13 @@ jQuery(document).ready(function() {
 
 		<div class="row">
 		
-			<?php if($showprices == 1 && ($loginprices == 0 && $user->guest) && $shownotice == 1) : ?>
+			<?php if($user->guest && $shownotice == 1) : ?>
 			<div class="col-12">
-				<a href="index.php?option=com_botiga&view=register">
-					<div class="alert alert-danger"><?= JText::_('COM_BOTIGA_PRICES_NOTICE'); ?></div>
-				</a>
+				<?php 
+				$link1 = 'index.php?option=com_botiga&view=register';
+				$link2 = 'index.php?option=com_users&view=login';
+				?>
+				<div class="alert alert-warning"><?= JText::sprintf('COM_BOTIGA_PRICES_NOTICE', $link2, $link1); ?></div>
 			</div>
 			<?php endif; ?>	
 			
@@ -155,8 +158,9 @@ jQuery(document).ready(function() {
 						<div class="styled-select">
 							<select name="orderby" id="orderby" class="form-control estil03 text-primary" style="width:100%;">
 								<option value="id"><?= JText::_('COM_BOTIGA_ORDERBY'); ?></div>
-								<option value="ref" <?php if($orderby == 'ref') : ?>selected<?php endif; ?>>Código</option>
-								<option value="pvp" <?php if($orderby == 'pvp') : ?>selected<?php endif; ?>>Precio</option>
+								<option value="ref" <?php if($orderby == 'ref') : ?>selected<?php endif; ?>><?= JText::_('COM_BOTIGA_FILTER_REF'); ?></option>
+								<option value="s_description" <?php if($orderby == 's_description') : ?>selected<?php endif; ?>><?= JText::_('COM_BOTIGA_FILTER_DESC'); ?></option>
+								<option value="pvp" <?php if($orderby == 'pvp') : ?>selected<?php endif; ?>><?= JText::_('COM_BOTIGA_FILTER_PRICE'); ?></option>
 							</select>
 						</div>
 					</div>					
@@ -202,7 +206,7 @@ jQuery(document).ready(function() {
 								<?php endforeach; ?>
 							</div>
 						</td>
-						<?php if($showprices == 1 || ($loginprices == 1 && !$user->guest)) : ?>
+						<?php if($showprices == 1) : ?>
 						<td width="12%" class="align-middle phone-hide">
 							<?php if($dte_linia != 0.00 && $showdiscount == 1 && $showprices == 1) : ?>
 							<span class="bold estil05 text-dark"><strike class="faded"><?= $price; ?>&euro;</strike>
@@ -223,17 +227,24 @@ jQuery(document).ready(function() {
 							<span class="estil03 text-danger"><?= JText::_('COM_BOTIGA_ITEM_WITHOUT_STOCK'); ?></span>
 							<?php endif; ?>
 							
-							<span class="estil03 text-dark"><?php if($showdesc == 1) : ?><br><?= $item->s_description; ?><?php endif; ?></span>
+							<span class="estil03 text-dark"><?php if($showdesc == 1) : ?><br><?= $item->s_description; ?><?php endif; ?></span>	
+							<?php if(botigaHelper::isPriceVisible()) : ?>
 							<span class="estil03 text-dark d-block d-md-none">
 							<?= $price; ?>&euro;
 							</span>
+							<?php endif; ?>
 						</td>						
 						<?php if($showbrand == 1) : ?>
 						<td class="align-middle"><?= $item->brandname; ?></td>
 						<?php endif; ?>
 						<td class="align-middle">
-							<form name="addtocart" id="addtocart" action="<?= JRoute::_('index.php?option=com_botiga'); ?>" method="get">
+							<form name="addtocart" id="addtocart-<?= $item->id; ?>" action="<?= JRoute::_('index.php?option=com_botiga'); ?>" method="get">
+					
+							<?php if(botigaHelper::isPriceVisible()) : ?>
 							<div class="estil05 text-left text-dark phone-visible"><?= $item->name; ?>&nbsp;<?= $price; ?>&euro;</div>
+							<?php endif; ?>
+							
+							<?php if($showprices == 1 && ($loginforbuy == 0 || ($loginforbuy == 1 && !$user->guest))) : ?>
 							<div class="row text-right">
 								<div class="col-8">								
 									<input type="hidden" name="id" value="<?= $item->id; ?>">
@@ -246,7 +257,7 @@ jQuery(document).ready(function() {
 			                                  <span class="fa fa-minus"></span>
 			                                </button>
 			                            </span>
-			                            <input type="text" id="quantity_<?= $item->id; ?>" name="qty" class="form-control bg-qty input-number text-center estil05" min="1" max="100" <?php if($i == 0) : ?>autofocus<?php endif; ?> value="<?= $model->getQtyRow($item->id); ?>">
+			                            <input type="text" id="quantity_<?= $item->id; ?>" name="qty" data-itemid="<?= $item->id; ?>" class="form-control bg-qty input-number text-center estil05" min="1" max="100" <?php if($i == 0) : ?>autofocus<?php endif; ?> value="<?= $model->getQtyRow($item->id); ?>">
 			                            <span class="input-group-btn">
 			                                <button type="button" class="quantity-right-plus btn btn-primary btn-number" data-id="<?= $item->id; ?>">
 			                                    <span class="fa fa-plus"></span>
@@ -264,19 +275,25 @@ jQuery(document).ready(function() {
 							</div>
 							<?php echo JHtml::_( 'form.token' ); ?>
 							</form>
+							
 						</td>
-						<?php if($showprices == 1 || ($loginprices == 1 && !$user->guest)) : ?>
-						<?php if($dte_linia != 0.00 && $showdiscount == 1 && $showprices == 1) { $price = botigaHelper::getPercentDiff($price, $dte_linia); } ?>
+						<?php if(botigaHelper::isPriceVisible()) : ?>
+						<?php if($dte_linia != 0.00 && $showdiscount == 1) { $price = botigaHelper::getPercentDiff($price, $dte_linia); } ?>
 						<?php $total_row = $model->getNumItemsRow($item->id, $price); ?>
-						<td class="align-middle phone-hide"><div class="bold estil05 text-dark"><?= $total_row; ?>&euro;</div></td>
+						<td class="align-middle phone-hide">
+							<?php if($showprices == 1 && ($loginprices == 1 && !$user->guest)) : ?>
+							<div class="bold estil05 text-dark"><?= $total_row; ?>&euro;</div>
+							<?php endif; ?>
+						</td>
 						<?php $subtotal += $total_row; ?>
+						<?php endif; ?>
 						<?php endif; ?>
 						<?php if($showfav == 1) : ?> 
 						<td class="align-middle d-none d-md-block">
 						<?php if(!botigaHelper::isFavorite($item->id)) : ?>
-									<a <?php if(!$user->guest) : ?>href="index.php?option=com_botiga&task=setFavorite&id=<?= $item->id; ?>&return=<?= $uri; ?>"<?php else : ?>disabled="true"<?php endif; ?>><span class="glyphicon glyphicon-heart"></span> Favorito</a>
+									<a <?php if(!$user->guest) : ?>href="index.php?option=com_botiga&task=setFavorite&id=<?= $item->id; ?>&return=<?= $uri; ?>"<?php else : ?>disabled="true"<?php endif; ?>><span class="glyphicon glyphicon-heart"></span> <?= JText::_('COM_BOTIGA_BTN_FAV'); ?></a>
 								<?php else : ?>
-									<a <?php if(!$user->guest) : ?>href="index.php?option=com_botiga&task=unsetFavorite&id=<?= $item->id; ?>&return=<?= $uri; ?>"<?php else : ?>disabled="true"<?php endif; ?>><span class="glyphicon glyphicon-heart red"></span> No Favorito</a>
+									<a <?php if(!$user->guest) : ?>href="index.php?option=com_botiga&task=unsetFavorite&id=<?= $item->id; ?>&return=<?= $uri; ?>"<?php else : ?>disabled="true"<?php endif; ?>><span class="glyphicon glyphicon-heart red"></span> <?= JText::_('COM_BOTIGA_BTN_UNFAV'); ?></a>
 								<?php endif; ?>
 						</td>
 						<?php endif; ?>

@@ -12,29 +12,33 @@
 	<files>
 		<filename plugin="habitual">habitual.php</filename>
 	</files>
+	<languages folder="administrator/languages/en-GB">
+			<language tag="en-GB">en-GB.plg_botiga_habitual.ini</language>
+    </languages>
 	<config>
 		<fields name="params">
 			<fieldset name="basic">
-			<field 
+			<field
 				name="title"
 				type="text"
 				label="Title"
 				description=""
 				default="Habitual"
 			/>
-			<field 
+			<field
 					name="label"
 					type="text"
 					label="Etiqueta multillenguatge"
 					description=""
 					default="COM_BOTIGA_PLUGIN_HABITUAL_TITLE"
 				/>
-			<field 
+			<field
 				name="alies"
 				type="text"
 				label="Alias"
 				description=""
 				default="Habitual"
+				readonly="true"
 			/>
 			</fieldset>
 		</fields>

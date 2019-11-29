@@ -1,140 +1,150 @@
 <?php
-
 /**
- * @version     1.0.0
- * @package     com_botiga
- * @copyright   Copyright (C) 2015. Todos los derechos reservados.
- * @license     Licencia Pública General GNU versión 2 o posterior. Consulte LICENSE.txt
- * @author      aficat <kim@aficat.com> - http://www.afi.cat
-*/
+ * @copyright	Copyleft (C) 2019
+ * @license		GNU General Public License version 3 or later; see LICENSE.txt
+ */
 
 // No direct access
 defined('_JEXEC') or die;
 
 /**
- * helper.
+ * Joomla Botiga plugin
+ *
+ * @package		Joomla.Plugin
+ * @subpackage	Botiga.joomla
+ * @since		3.5
  */
-class sincroHelper {
-
+class plgBotigaBotiga_sync extends JPlugin
+{
 	public static $IMPORTAR_MARQUES = false;
-	public static $IMPORTAR_CATEGORIES = true; 
+	public static $IMPORTAR_CATEGORIES = true;
 	public static $IMPORTAR_TARIFES = true;
 	public static $IMPORTAR_PREUS = true;
 	public static $IMPORTAR_ARTICLES = true;
 	public static $IMPORTAR_CLIENTS = true;
 	public static $TARIFA_PARTICULARS = 'WEB_WEBPARTICULARS';
-	
+
 	public static $LOGFILE;
-	
-	function sincronitza() {
+
+	public function __construct(&$subject, $config = array())
+	{
+		parent::__construct($subject, $config);
+	}
+
+	public function sincronitza()
+	{
 		$db = JFactory::getDbo();
-		sincroHelper::$LOGFILE = JPATH_COMPONENT.'/logs/sincro_' . date('Ymd') . '.log';
-		sincroHelper::customLog( "INICI SINCRO", 1 );
-		
-		$integritat = sincroHelper::comprovaIntegritat();
-		
-		$errors_brands = 0;
-		$errors_categories = 0;
-		$errors_tarifes = 0;
-		$errors_items = 0;
-		$errors_preus = 0;
-		
-		if ($integritat==true) {
-			sincroHelper::customLog("Integritat arxius XML: OK ;-))");
-			
-			if (sincroHelper::$IMPORTAR_MARQUES) {
-				$errors_brands = sincroHelper::importaMarques();
-			}
-			
-			if (sincroHelper::$IMPORTAR_CATEGORIES) {
-				$errors_categories = sincroHelper::importaCategories();
+
+		$this->$LOGFILE = JPATH_COMPONENT.'/logs/sincro_' . date('Ymd') . '.log';
+		$this->customLog( "INICI SINCRO", 1 );
+
+		$integritat = $this->comprovaIntegritat();
+
+		$errors_brands 		= 0;
+		$errors_categories 	= 0;
+		$errors_tarifes 	= 0;
+		$errors_items 		= 0;
+		$errors_preus 		= 0;
+
+		if ($integritat==true)
+		{
+			$this->customLog("Integritat arxius XML: OK ;-))");
+
+			if ($this->$IMPORTAR_MARQUES) {
+				$errors_brands = $this->importaMarques();
 			}
 
-			if (sincroHelper::$IMPORTAR_TARIFES) {
-				$errors_tarifes = sincroHelper::importaTarifes();
-			}
-			
-			if (sincroHelper::$IMPORTAR_ARTICLES) {
-				$errors_items = sincroHelper::importaArticles();
+			if ($this->$IMPORTAR_CATEGORIES) {
+				$errors_categories = $this->importaCategories();
 			}
 
-			if (sincroHelper::$IMPORTAR_PREUS) {
-				$errors_preus = sincroHelper::importaPreus();
+			if ($this->$IMPORTAR_TARIFES) {
+				$errors_tarifes = $this->importaTarifes();
 			}
 
-			if (sincroHelper::$IMPORTAR_CLIENTS) {
-				$errors_clients = sincroHelper::importaClients();
-			}			
+			if ($this->$IMPORTAR_ARTICLES) {
+				$errors_items = $this->importaArticles();
+			}
+
+			if ($this->$IMPORTAR_PREUS) {
+				$errors_preus = $this->importaPreus();
+			}
+
+			if ($this->$IMPORTAR_CLIENTS) {
+				$errors_clients = $this->importaClients();
+			}
 		}
-		
+
 		$success = $integritat && ($errors_brands + $errors_categories + $errors_tarifes + $errors_items + $errors_preus == 0);
-		
-		sincroHelper::customLog( $success?"FINAL SINCRO AMB ÈXIT\n":"FINAL SINCRO AMB ERRORS\n" );
-		
+
+		$this->customLog( $success?"FINAL SINCRO AMB ÈXIT\n":"FINAL SINCRO AMB ERRORS\n" );
+
 		$zip = new ZipArchive();
 		$zipfile = JPATH_COMPONENT.'/logs/sincro_' . date('Ymd') . '.zip';
 		$zip->open($zipfile, ZipArchive::CREATE);
-		$zip->addFile(sincroHelper::$LOGFILE, 'sincro_' . date('Ymd') . '.log');
+		$zip->addFile($this->$LOGFILE, 'sincro_' . date('Ymd') . '.log');
 		$zip->close();
-		//unlink(sincroHelper::$LOGFILE);
-		
-		/*if($success) { 
+		//unlink($this->$LOGFILE);
+
+		/*if($success) {
 		 	$this->sendEmail( JText::_('COM_BOTIGA_CRON_SUBJECT_OK'), JText::_('COM_BOTIGA_CRON_BODY_OK'), $zipfile );
 		} else {
 		 	$this->sendEmail( JText::_('COM_BOTIGA_CRON_SUBJECT_ERR'), JText::_('COM_BOTIGA_CRON_BODY_ERR'), $zipfile );
 		}*/
 	}
 
-	function comprovaIntegritat() {
+	private function comprovaIntegritat()
+	{
 		$integritat = true;
-		if (sincroHelper::is_valid_xml(JURI::base().'sincro/brands.xml') || !sincroHelper::$IMPORTAR_MARQUES) {
-			sincroHelper::customLog("Integritat XML marques: CORRECTE!" );
+		if ($this->is_valid_xml(JURI::base().'sincro/brands.xml') || !$this->$IMPORTAR_MARQUES) {
+			$this->customLog("Integritat XML marques: CORRECTE!" );
 		} else {
-			sincroHelper::customLog("Integritat XML marques: ERROR!" );
+			$this->customLog("Integritat XML marques: ERROR!" );
 			$integritat = false;
 		}
-		if (sincroHelper::is_valid_xml(JURI::base().'sincro/categories.xml') || !sincroHelper::$IMPORTAR_CATEGORIES) {
-			sincroHelper::customLog("Integritat XML categories: CORRECTE!" );
+		if ($this->is_valid_xml(JURI::base().'sincro/categories.xml') || !$this->$IMPORTAR_CATEGORIES) {
+			$this->customLog("Integritat XML categories: CORRECTE!" );
 		} else {
-			sincroHelper::customLog("Integritat XML categories: ERROR!" );
+			$this->customLog("Integritat XML categories: ERROR!" );
 			$integritat = false;
 		}
-		if (sincroHelper::is_valid_xml(JURI::base().'sincro/items.xml') || !sincroHelper::$IMPORTAR_ARTICLES) {
-			sincroHelper::customLog("Integritat XML articles: CORRECTE!" );
+		if ($this->is_valid_xml(JURI::base().'sincro/items.xml') || !$this->$IMPORTAR_ARTICLES) {
+			$this->customLog("Integritat XML articles: CORRECTE!" );
 		} else {
-			sincroHelper::customLog("Integritat XML articles: ERROR!" );
-			$integritat = false;			
+			$this->customLog("Integritat XML articles: ERROR!" );
+			$integritat = false;
 		}
-		if (sincroHelper::is_valid_xml(JURI::base().'sincro/preus.xml') || !sincroHelper::$IMPORTAR_PREUS) {
-			sincroHelper::customLog("Integritat XML preus especials: CORRECTE!" );
+		if ($this->is_valid_xml(JURI::base().'sincro/preus.xml') || !$this->$IMPORTAR_PREUS) {
+			$this->customLog("Integritat XML preus especials: CORRECTE!" );
 		} else {
-			sincroHelper::customLog("Integritat XML preus especials: ERROR!" );
-			$integritat = false;			
+			$this->customLog("Integritat XML preus especials: ERROR!" );
+			$integritat = false;
 		}
 		return $integritat;
 	}
-	
-	function importaMarques() {
+
+	private function importaMarques()
+	{
 		$db = JFactory::getDbo();
 		$error_brands=0;
-		
+
 		$xmlfile = JURI::base().'sincro/brands.xml';
 		$nodes = simplexml_load_file($xmlfile, 'SimpleXMLElement');
 		if (!$nodes) {
-			sincroHelper::customLog("Error carregant $xmlfile" );
+			$this->customLog("Error carregant $xmlfile" );
 			$errors_brands = 1;
 		} else {
-			sincroHelper::customLog("MARQUES : sincro/brands.xml" );
+			$this->customLog("MARQUES : sincro/brands.xml" );
 			$marca = array();
 			$updates_brands=0;
 			$inserts_brands=0;
 			$deletes_brands=0;
 			$errors_brands=0;
 			$errors_brands_detalls = array();
-			foreach($nodes as $brand) {				
+			foreach($nodes as $brand) {
 				if(isset($brand->name) && !empty($brand->name) && $brand->name != '') {
 					$marca[] = $brand->factusol_codfte;
-					$update_query = 
+					$update_query =
 						"UPDATE #__botiga_brands " .
 						"SET name = " . $db->quote($brand->name) .
 						" WHERE factusol_codfte = " . $brand->factusol_codfte . " AND @factusol_codfte:=factusol_codfte";
@@ -144,10 +154,10 @@ class sincroHelper {
 					$db->setQuery('SET @factusol_codfte := 0;');
 					$db->query();
 					$db->setQuery( $update_query );
-					
-					if($db->query()) { 
-						$db->setQuery('select @factusol_codfte'); 
-						$factusol_codfte_updated = $db->loadResult(); 
+
+					if($db->query()) {
+						$db->setQuery('select @factusol_codfte');
+						$factusol_codfte_updated = $db->loadResult();
 						if ($factusol_codfte_updated == 0) {
 							$db->setQuery( $insert_query );
 							if ($db->query()) {
@@ -156,52 +166,53 @@ class sincroHelper {
 								$errors_brands++;
 								$errors_brands_detalls[] = $brand->name;
 							}
-							sincroHelper::customLog($insert_query );
+							$this->customLog($insert_query );
 						} else {
 							$updates_brands++;
-							sincroHelper::customLog($update_query );
+							$this->customLog($update_query );
 						}
-					} else { 
+					} else {
 						$errors_brands++;
-						sincroHelper::customLog($update_query );
+						$this->customLog($update_query );
 						$errors_brands_detalls[] = $brand->name;
-					}	
-				}	
+					}
+				}
 			}
 		}
 
 		//esborrar marques...
 		if (count($marca)>0) {
-			sincroHelper::customLog("DELETE FROM #__botiga_brands WHERE factusol_codfte NOT IN (" . implode( ",", $marca ) . ")"  );
+			$this->customLog("DELETE FROM #__botiga_brands WHERE factusol_codfte NOT IN (" . implode( ",", $marca ) . ")"  );
 			$db->setQuery( "DELETE FROM #__botiga_brands WHERE factusol_codfte NOT IN (" . implode( ",", $marca ) . " )" );
 			$db->query();
 			$deletes_brands = $db->getAffectedRows();
 		} else {
 			$deletes_brands = 0;
 		}
-		
-		sincroHelper::customLog(
-			sprintf( "INSERTS: %d\nUPDATES: %d\nDELETES: %d\nERRORS: %d\nERRORS EN: %s\n", 
-				$inserts_brands, 
-				$updates_brands, 
-				$deletes_brands, 
-				$errors_brands, 
+
+		$this->customLog(
+			sprintf( "INSERTS: %d\nUPDATES: %d\nDELETES: %d\nERRORS: %d\nERRORS EN: %s\n",
+				$inserts_brands,
+				$updates_brands,
+				$deletes_brands,
+				$errors_brands,
 				implode(",", $errors_brands_detalls)) );
-		
+
 		return $error_brands;
 	}
-	
-	function importaCategories() {
+
+	private function importaCategories()
+	{
 		$db = JFactory::getDbo();
 		$errors_categories = 0;
-		
+
 		$xmlfile = JURI::base().'sincro/categories.xml';
 		$nodes = simplexml_load_file($xmlfile, 'SimpleXMLElement');
-		if (!$nodes) { 
-			sincroHelper::customLog("Error carregant $xmlfile"); 
+		if (!$nodes) {
+			$this->customLog("Error carregant $xmlfile");
 			$errors_categories = 1;
-		} else {					
-			sincroHelper::customLog("CATEGORIES : " . JURI::base() . "sincro/categories.xml"  );
+		} else {
+			$this->customLog("CATEGORIES : " . JURI::base() . "sincro/categories.xml"  );
 			$categoria = array();
 			$updates_categories=0;
 			$inserts_categories=0;
@@ -211,24 +222,24 @@ class sincroHelper {
 			foreach($nodes as $cat) {
 				$categoria[] = $cat->factusol_codfam;
 				$catid = 0;
-				//$parent = sincroHelper::getCatIdFromFactusol($cat->parent, $cat->language);
+				//$parent = $this->getCatIdFromFactusol($cat->parent, $cat->language);
 				//if (!$parent) $parent=1;
 				// comprovem si la categoria existeix
-				$catid = sincroHelper::getCatIdFromFactusol($cat->factusol_codfam, $cat->language, $log);
+				$catid = $this->getCatIdFromFactusol($cat->factusol_codfam, $cat->language, $log);
 				if ($catid) { // la categoria existeix. fem un update
 					//Només s'actualitza el títol, no el parent
-					$update_query = 
+					$update_query =
 						"UPDATE #__categories " .
 						"SET title = " . $db->quote($cat->title) .
 						" WHERE id = " . $catid;
 					$db->setQuery( $update_query );
 					if ($db->execute()) {
 						$updates_categories++;
-						sincroHelper::customLog($update_query );
+						$this->customLog($update_query );
 					} else {
 						$errors_categories++;
-						sincroHelper::customLog($update_query );
-						$errors_categories_detalls[] = $cat->title;	
+						$this->customLog($update_query );
+						$errors_categories_detalls[] = $cat->title;
 					}
 				} else { // la categoria no existeix. fem un insert a #__categories i a #__botiga_categories
 					$insert_query1 =
@@ -238,7 +249,7 @@ class sincroHelper {
 							$db->quote($cat->title)    . ", " .
 							"1, 1, 1, " .
 							$db->quote($cat->language) . ")";
-					sincroHelper::customLog($insert_query1 );
+					$this->customLog($insert_query1 );
 					$db->setQuery( $insert_query1 );
 					if ($db->query()) {
 						$catid = $db->insertid();
@@ -252,24 +263,24 @@ class sincroHelper {
 						$inserts_categories++;
 					} else {
 						$errors_categories++;
-						sincroHelper::customLog($insert_query1 );
+						$this->customLog($insert_query1 );
 						$errors_categories_detalls[] = $cat->title;
 					}
 				}
 			}
 			//especifiquem el pare de cada categoria
-			sincroHelper::customLog("Especificar el pare de cata categoria" );
+			$this->customLog("Especificar el pare de cata categoria" );
 			foreach($nodes as $cat) {
 				// // echo date("d-m-Y H:i:s") . ' ' . $cat->factusol_codfam . ' (' . $cat->language . ') ...';
 				if ($cat->parent && $cat->parent!='') {
-					$parent = sincroHelper::getCatIdFromFactusol($cat->parent, $cat->language);
+					$parent = $this->getCatIdFromFactusol($cat->parent, $cat->language);
 					if (!$parent) $parent=1; //si no es troba la categoria pare, se li assigna 1
-					$catid = sincroHelper::getCatIdFromFactusol($cat->factusol_codfam, $cat->language, $log);
-					$update_query = 
+					$catid = $this->getCatIdFromFactusol($cat->factusol_codfam, $cat->language, $log);
+					$update_query =
 						"UPDATE #__categories " .
 						"SET parent_id = " . $parent .
 						" WHERE id = " . $catid;
-					sincroHelper::customLog($update_query  );
+					$this->customLog($update_query  );
 					// // echo $update_query . "<br/>";
 					$db->setQuery($update_query);
 					$db->query();
@@ -285,51 +296,52 @@ class sincroHelper {
 
 			//esborrar categories...
 			// eliminem les categories que no pertanyin a cap de les famílies que figuren en l'XML
-			// en primer lloc, esborrem de la taula #__botiga_categories. 
+			// en primer lloc, esborrem de la taula #__botiga_categories.
 			// en segon lloc, esborrem totes les categories de la taula #_categories que no tinguin correspondència amb #_botiga_categories
-			sincroHelper::customLog(
+			$this->customLog(
 				"DELETE #__botiga_categories " .
 				"FROM #__botiga_categories INNER JOIN #__categories ON #__botiga_categories.catid=#__categories.id " .
 				"WHERE factusol_codfam NOT IN ('" . implode( "','", $categoria ) . "') AND parent_id>1" );
-			$db->setQuery( 
+			$db->setQuery(
 				"DELETE #__botiga_categories " .
 				"FROM #__botiga_categories INNER JOIN #__categories ON #__botiga_categories.catid=#__categories.id " .
 				"WHERE factusol_codfam NOT IN ('" . implode( "','", $categoria ) . "') AND parent_id>1" );
-			$db->query();	
-			sincroHelper::customLog(
+			$db->query();
+			$this->customLog(
 				"DELETE #__categories " .
 				"FROM #__categories LEFT JOIN #__botiga_categories ON #__categories.id = #__botiga_categories.catid " .
 				"WHERE #__categories.extension='com_botiga' AND #__botiga_categories.catid IS NULL AND parent_id>1" );
-			$db->setQuery( 
+			$db->setQuery(
 				"DELETE #__categories " .
 				"FROM #__categories LEFT JOIN #__botiga_categories ON #__categories.id = #__botiga_categories.catid " .
 				"WHERE #__categories.extension='com_botiga' AND #__botiga_categories.catid IS NULL AND parent_id>1" );
 			$db->query();
 			$deletes_categories = $db->getAffectedRows();
-			
-			sincroHelper::customLog(
-				sprintf( 
-					"INSERTS: %d\nUPDATES: %d\nDELETES: %d\nERRORS: %d\nERRORS EN: %s\n", 
-					$inserts_categories, 
-					$updates_categories, 
-					$deletes_categories, 
-					$errors_categories, 
+
+			$this->customLog(
+				sprintf(
+					"INSERTS: %d\nUPDATES: %d\nDELETES: %d\nERRORS: %d\nERRORS EN: %s\n",
+					$inserts_categories,
+					$updates_categories,
+					$deletes_categories,
+					$errors_categories,
 					implode(",", $errors_categories_detalls)) );
 		}
 		return $errors_categories;
 	}
-	
-	function importaArticles() {
+
+	private function importaArticles()
+	{
 		$db = JFactory::getDbo();
 		$errors_items = 0;
-		
+
 		$xmlfile = JURI::base().'sincro/items.xml';
-		$nodes = simplexml_load_file($xmlfile, 'SimpleXMLElement');  
-		if (!$nodes) { 
-			sincroHelper::customLog("Error carregant $xmlfile"); 
+		$nodes = simplexml_load_file($xmlfile, 'SimpleXMLElement');
+		if (!$nodes) {
+			$this->customLog("Error carregant $xmlfile");
 			$errors_items = 1;
 		} else {
-			sincroHelper::customLog("ITEMS : " . JURI::base() . "sincro/items.xml" );
+			$this->customLog("ITEMS : " . JURI::base() . "sincro/items.xml" );
 			$updates_items=0;
 			$inserts_items=0;
 			$deletes_items=0;
@@ -344,17 +356,17 @@ class sincroHelper {
 					$catid = $db->loadResult();
 					if ($catid!==null) {
 						//carreguem l'id de la marca
-						$db->setQuery( 
+						$db->setQuery(
 							"SELECT id FROM #__botiga_brands " .
 							"WHERE LOWER(language)='es-es' AND factusol_codfte=" . $item->factusol_codfte );
 						$db->execute();
 						$brandid = $db->loadResult();
-						$update_query = 
+						$update_query =
 							"UPDATE #__botiga_items " .
 							"SET " .
 								"catid = " . $catid . ", " .
 								"brand = " . $brandid . ", " .
-								"sincronitzat = 1, " .  
+								"sincronitzat = 1, " .
 								"name = " . $db->quote($item->name . (($item->capacitat=='' || $item->capacitat==0) ? '' : ' ' . $item->capacitat . 'ml')) . ", " .
 								"s_description = " . $db->quote($item->name . (($item->capacitat=='' || $item->capacitat==0) ? '' : ' ' . $item->capacitat . 'ml')) . ", " .
 								"pes = " . $item->pesgrams . ", " .
@@ -380,9 +392,9 @@ class sincroHelper {
 						$db->setQuery('SET @factusol_codart := 0;');
 						$db->query();
 						$db->setQuery( $update_query );
-						if($db->query()) { 
-							$db->setQuery('select @factusol_codart'); 
-							$factusol_codart_updated = $db->loadResult(); 
+						if($db->query()) {
+							$db->setQuery('select @factusol_codart');
+							$factusol_codart_updated = $db->loadResult();
 							if ($factusol_codart_updated==0) {
 								$db->setQuery( $insert_query );
 								if ($db->query()) {
@@ -391,19 +403,19 @@ class sincroHelper {
 									$errors_items++;
 									$errors_items_detalls[] = $item->ref;
 								}
-								sincroHelper::customLog($insert_query );
+								$this->customLog($insert_query );
 							} else {
 								$updates_items++;
-								sincroHelper::customLog($update_query );
+								$this->customLog($update_query );
 							}
-						} else { 
+						} else {
 							$errors_items++;
-							sincroHelper::customLog( 'Error ' . $update_query );
+							$this->customLog( 'Error ' . $update_query );
 							$errors_items_detalls[] = $item->ref;
 						}
 						// actualització del preu per caixes (definit a la taula botiga_discounts)
 						// determinar l'id de l'item en funció de ref i language
-						/*$db->setQuery( 
+						/*$db->setQuery(
 							"SELECT id FROM #__botiga_items " .
 							"WHERE LOWER(language)=" . $db->quote(strtolower($item->language)) .
 								"AND factusol_codart=" . $db->quote($item->ref) );
@@ -413,54 +425,55 @@ class sincroHelper {
 							$db->setQuery( 'DELETE FROM #__botiga_discounts WHERE iditem=' . $itemid );
 							$db->query();
 							if ($item->price3!=0) {
-								$db->setQuery( 
+								$db->setQuery(
 									"INSERT INTO #__botiga_discounts(name, type, iditem, min, max, box_items, total, message, published) " .
 									"VALUES ('+12uds', 2, $itemid, 12, 12, 12, $item->price3, 'COM_BOTIGA_DISCOUNT_N_ITEMS', 1)" );
-								$db->query();	
-							}									
+								$db->query();
+							}
 						}*/
 					} else {
 						// l'article pertany a una categoria inexistent
 						$errors_items++;
-						sincroHelper::customLog("L'article " . $item->ref . " correspon a una categoria inexistent (" . $item->factusol_codfam . ". És possible que en el Factusol falti activar-la a Internet?" );
-						$errors_items_detalls[] = $item->ref;						
+						$this->customLog("L'article " . $item->ref . " correspon a una categoria inexistent (" . $item->factusol_codfam . ". És possible que en el Factusol falti activar-la a Internet?" );
+						$errors_items_detalls[] = $item->ref;
 					}
 				}
 
 				//esborrar items...
-				sincroHelper::customLog("DELETE FROM #__botiga_items WHERE sincronitzat=0"  );
+				$this->customLog("DELETE FROM #__botiga_items WHERE sincronitzat=0"  );
 				$db->setQuery( "DELETE FROM #__botiga_items WHERE sincronitzat=0" );
-				$db->query();	
+				$db->query();
 				$deletes_items = $db->getAffectedRows();
-				sincroHelper::customLog(
-					sprintf( 
-						"INSERTS: %d\nUPDATES: %d\nDELETES: %d\nERRORS: %d\n", 
-						$inserts_items, 
-						$updates_items, 
-						$deletes_items, 
+				$this->customLog(
+					sprintf(
+						"INSERTS: %d\nUPDATES: %d\nDELETES: %d\nERRORS: %d\n",
+						$inserts_items,
+						$updates_items,
+						$deletes_items,
 						$errors_items) );
 			} else {
-				sincroHelper::customLog("Error al marcar 'sincronitzar=0'. La sincronització dels articles no s'ha pogut dur a terme."  );
+				$this->customLog("Error al marcar 'sincronitzar=0'. La sincronització dels articles no s'ha pogut dur a terme."  );
 			}
 		}
 		return $errors_items;
 	}
-	
-	function importaTarifes() {
+
+	private function importaTarifes()
+	{
 		$db = JFactory::getDbo();
 		$errors_tarifes = 0;
-		
+
 		$xmlfile = JURI::base().'sincro/tarifes.xml';
-		$nodes = simplexml_load_file($xmlfile, 'SimpleXMLElement');  
-		if (!$nodes) { 
-			sincroHelper::customLog("Error carregant $xmlfile"); 
+		$nodes = simplexml_load_file($xmlfile, 'SimpleXMLElement');
+		if (!$nodes) {
+			$this->customLog("Error carregant $xmlfile");
 			$errors_tarifes = 1;
 		} else {
-			sincroHelper::customLog( "TARIFES : " . JURI::base() . "sincro/tarifes.xml" );
+			$this->customLog( "TARIFES : " . JURI::base() . "sincro/tarifes.xml" );
 			foreach($nodes as $item) {
 				$db->setQuery( 'SELECT COUNT(*) FROM #__usergroups WHERE title=' . $db->quote($item->tarifa) );
 				if ($db->loadResult()==0) {
-					sincroHelper::customLog( "Tarifa nova: " . $item->tarifa );	
+					$this->customLog( "Tarifa nova: " . $item->tarifa );
 					$usergroupTable = JTable::getInstance('UserGroup', 'JTable');
 					$data = array(
 					  'id' => 0,
@@ -477,22 +490,23 @@ class sincroHelper {
 					  return false;
 					}
 				}
-			}			
+			}
 		}
 		return $errors_tarifes;
 	}
 
-	function importaPreus() {
+	private function importaPreus()
+	{
 		$db = JFactory::getDbo();
 		$errors_preus = 0;
 		$i=0;
 		$xmlfile = JURI::base().'sincro/preus.xml';
-		$nodes = simplexml_load_file($xmlfile, 'SimpleXMLElement');  
-		if (!$nodes) { 
-			sincroHelper::customLog("Error carregant $xmlfile"); 
+		$nodes = simplexml_load_file($xmlfile, 'SimpleXMLElement');
+		if (!$nodes) {
+			$this->customLog("Error carregant $xmlfile");
 			$errors_preus = 1;
 		} else {
-			sincroHelper::customLog("PREUS : " . JURI::base() . "sincro/preus.xml" );
+			$this->customLog("PREUS : " . JURI::base() . "sincro/preus.xml" );
 			$db->setQuery( 'UPDATE #__botiga_items_prices SET sincronitzat=0' );
 			$db->query();
 			foreach($nodes as $xml) {
@@ -504,42 +518,43 @@ class sincroHelper {
 					$tarifaId = $db->loadResult();
 					$itemId = $row->id;
 					if ($tarifaId===null) {
-						sincroHelper::customLog( 'Error en preu per a ref ' . $xml->ref . ' i tarifa ' . $xml->tarifa . ': tarifa inexistent!' );
+						$this->customLog( 'Error en preu per a ref ' . $xml->ref . ' i tarifa ' . $xml->tarifa . ': tarifa inexistent!' );
 					} else {
-						sincroHelper::aplicaPreu( $itemId, $tarifaId, $xml->tarifa, $xml->ref, $xml->preu );
+						$this->aplicaPreu( $itemId, $tarifaId, $xml->tarifa, $xml->ref, $xml->preu );
 					}
 					// Si el preu és de particulars, s'ha de copiar també per al grup 1 (public)
-					if ($xml->tarifa == sincroHelper::$TARIFA_PARTICULARS) {
-						sincroHelper::aplicaPreu( $itemId, 1, 'Public', $xml->ref, $xml->preu );
+					if ($xml->tarifa == $this->$TARIFA_PARTICULARS) {
+						$this->aplicaPreu( $itemId, 1, 'Public', $xml->ref, $xml->preu );
 					}
 				}
 			}
 			$db->setQuery( 'DELETE FROM #__botiga_items_prices WHERE sincronitzat=0' );
-			sincroHelper::referJsonPreus(); //s'han de fer tots els json de preus que hi ha a la taula #__botiga_items, a partir de la subtaula de preus
+			$this->referJsonPreus(); //s'han de fer tots els json de preus que hi ha a la taula #__botiga_items, a partir de la subtaula de preus
 		}
 		return $errors_preus;
 	}
-	
-	function importaClients() {
+
+	private function importaClients()
+	{
 		$db = JFactory::getDbo();
-		
+
 		$errors_clients = 0;
-		
+
 		$xmlfile = JURI::base().'sincro/clients.xml';
-		$nodes = simplexml_load_file($xmlfile, 'SimpleXMLElement');  
-		if (!$nodes) { 
-			sincroHelper::customLog("Error carregant $xmlfile"); 
+		$nodes = simplexml_load_file($xmlfile, 'SimpleXMLElement');
+		if (!$nodes) {
+			$this->customLog("Error carregant $xmlfile");
 			$errors_clients = 1;
 		} else {
-			sincroHelper::customLog("CLIENTS : " . JURI::base() . "sincro/clients.xml" );
+			$this->customLog("CLIENTS : " . JURI::base() . "sincro/clients.xml" );
 			foreach ($nodes as $xml) {
 				//comprovar si existeix
 				$db->setQuery( 'SELECT * FROM #__users WHERE username=' . $db->quote($xml->usuari) );
 				$usuari = $db->loadObject();
 				if ($usuari==null) {
-					sincroHelper::crearUsuari($xml);
+					$this->crearUsuari($xml);
 				} else {
-					sincroHelper::actualitzarUsuari($xml,$usuari->id);
+					$this->actualitzarUsuari($xml,$usuari->id);
 				}
 			}
 		}
@@ -549,7 +564,8 @@ class sincroHelper {
 	/**
 	*  Takes XML string and returns a boolean result where valid XML returns true
 	*/
-	function is_valid_xml( $file ) {
+	private function is_valid_xml( $file )
+	{
 		libxml_use_internal_errors( true );
 		$doc = new DOMDocument('1.0', 'utf-8');
 		$xml = file_get_contents($file);
@@ -558,39 +574,42 @@ class sincroHelper {
 		$errors = libxml_get_errors();
 		return empty( $errors );
 	}
-	
-	function customLog( $text, $resetLog=0 ) {
+
+	private function customLog( $text, $resetLog=0 )
+	{
 		if ($resetLog!=0) {
-			$handle = fopen(sincroHelper::$LOGFILE, 'w');
+			$handle = fopen($this->$LOGFILE, 'w');
 			fclose($handle);
 		}
-		botigaHelper::customLog( $text, sincroHelper::$LOGFILE );
+		botigaHelper::customLog( $text, $this->$LOGFILE );
 		return;
 	}
-	
-	function aplicaPreu( $itemId, $tarifaId, $tarifaNom, $ref, $preu) {
+
+	private function aplicaPreu( $itemId, $tarifaId, $tarifaNom, $ref, $preu)
+	{
 		$db = JFactory::getDbo();
 		$db->setQuery( 'SELECT * FROM #__botiga_items_prices WHERE itemId=' . $itemId . ' AND usergroup=' . $tarifaId );
 		$rowPreu = $db->loadObject();
-		if ($rowPreu===null) { 
+		if ($rowPreu===null) {
 			// no trobat: cal inserir
-			$db->setQuery( 
+			$db->setQuery(
 				'INSERT INTO #__botiga_items_prices(itemId, usergroup, price, sincronitzat) ' .
 				'VALUES (' . $itemId . ', ' . $tarifaId . ', ' . $preu . ', 1)' );
-			sincroHelper::customLog( 'Preu per a ref ' . $ref . ' i tarifa ' . $tarifaNom . ' inserit amb èxit.' );
+			$this->customLog( 'Preu per a ref ' . $ref . ' i tarifa ' . $tarifaNom . ' inserit amb èxit.' );
 			$db->query();
 		} else {
 			// trobat: cal actualitzar
 			$db->setQuery(
 				'UPDATE #__botiga_items_prices SET sincronitzat=1, price=' . $preu .
 				' WHERE itemId=' . $itemId . ' AND usergroup=' . $tarifaId );
-			sincroHelper::customLog( 'Preu per a ref ' . $ref . ' i tarifa ' . $tarifaNom . ' actualitzat amb èxit.' );
+			$this->customLog( 'Preu per a ref ' . $ref . ' i tarifa ' . $tarifaNom . ' actualitzat amb èxit.' );
 			$db->query();
 		}
 		return;
 	}
-	
-	function referJsonPreus() {
+
+	private function referJsonPreus()
+	{
 		$db = JFactory::getDbo();
 		$db->setQuery( 'SELECT * FROM #__botiga_items ORDER BY id' );
 		$items = $db->loadObjectList();
@@ -610,8 +629,9 @@ class sincroHelper {
 			$db->query();
 		}
 	}
-	
-	function crearUsuari($node) {
+
+	private function crearUsuari($node)
+	{
 		$db = JFactory::getDbo();
 		jimport('joomla.user.helper');
 		$password = JUserHelper::hashPassword(substr($node->nif,-4));
@@ -625,36 +645,28 @@ class sincroHelper {
 		$user->registerDate     = date('Y-m-d H:i:s');
 		$db->insertObject('#__users', $user);
 		$userId = $db->insertid();
-	
+
 		//assignar a grup 2 (registered)
 		$group              = new stdClass();
 		$group->user_id     = $userId;
 		$group->group_id    = 2;
 		$db->insertObject('#__user_usergroup_map', $group);
-			
+
 		//assignar grup en funció de la tarifa
-		$tarifaId = sincroHelper::getGroupIdFromTarifa($node->tarifa);
+		$tarifaId = $this->getGroupIdFromTarifa($node->tarifa);
 		if ($tarifaId!==null) {
 			$group              = new stdClass();
 			$group->user_id     = $userId;
 			$group->group_id    = $tarifaId;
 			$db->insertObject('#__user_usergroup_map', $group);
 		}
-		
-		// assignem l'usuari al grup 10 (negocis) o 11 (particulars) depenent del tipus
-		// aquests grups s'utilitzen per fer que determinats articles només surtin per a determinats clients (estem parlant, bàsicament, dels expositors)
-		if ($node->tarifa==sincroHelper::$TARIFA_PARTICULARS) {
-			$db->setQuery( "INSERT INTO #__user_usergroup_map(user_id, group_id) VALUES($userId, 11)" );
-		} else {
-			$db->setQuery( "INSERT INTO #__user_usergroup_map(user_id, group_id) VALUES($userId, 10)" );
-		}
-		$db->query();
-		
+
+
 		//crear usuari com_botiga
 		$usrBotiga = new stdClass();
 		$usrBotiga->usergroup 		= $tarifaId;
 		$usrBotiga->userId			= $userId;
-		$usrBotiga->type			= ($node->tarifa==sincroHelper::$TARIFA_PARTICULARS?0:1);
+		$usrBotiga->type			= ($node->tarifa==$this->$TARIFA_PARTICULARS?0:1);
 		$usrBotiga->mail_empresa 	= strval($node->usuari);
 		$usrBotiga->nombre 			= strval($node->nom);
 		$usrBotiga->nom_empresa 	= strval($node->nom_empresa);
@@ -674,7 +686,7 @@ class sincroHelper {
 			'"metodo_pago":"habitual",' .
 			'"aplicar_iva":"' . $node->aplicar_iva . '",' .
 			'"re_equiv":"' . $node->re . '",' .
-			'"pago_habitual":"' . ($node->tarifa==sincroHelper::$TARIFA_PARTICULARS?0:1) . '"' .
+			'"pago_habitual":"' . ($node->tarifa==$this->$TARIFA_PARTICULARS?0:1) . '"' .
 			'}';
 		*/
 		$usrBotiga->params			= '{' .
@@ -687,17 +699,18 @@ class sincroHelper {
 		$usrBotiga->published		= 1;
 		$usrBotiga->validate		= 1;
 		$db->insertObject('#__botiga_users', $usrBotiga);
-		
-		sincroHelper::customLog( 'Nou usuari ' . $node->usuari . "'(" . $node->nom . "')");
+
+		$this->customLog( 'Nou usuari ' . $node->usuari . "'(" . $node->nom . "')");
 	}
-	
-	function actualitzarUsuari($node, $userId) {
+
+	private function actualitzarUsuari($node, $userId)
+	{
 		$db = JFactory::getDbo();
 		jimport('joomla.user.helper');
 		// actualitzar usuari joomla
-		$db->setQuery( 
-			'UPDATE #__users ' . 
-			'SET name=' 	. $db->quote(utf8_decode($node->nom)) . 
+		$db->setQuery(
+			'UPDATE #__users ' .
+			'SET name=' 	. $db->quote(utf8_decode($node->nom)) .
 			', username=' 	. $db->quote(strtolower(utf8_decode($node->usuari))) .
 			', email=' 		. $db->quote(strtolower(utf8_decode($node->usuari))) .
 			', password=' 	. $db->quote(JUserHelper::hashPassword(substr($node->nif,-4))) .
@@ -707,7 +720,7 @@ class sincroHelper {
 		$db->setQuery( "DELETE FROM #__user_usergroup_map WHERE user_id=$userId" );
 		$db->query();
 		// assignem l'usuari al grup segons la tarifa actual
-		$tarifaId = sincroHelper::getGroupIdFromTarifa($node->tarifa);
+		$tarifaId = $this->getGroupIdFromTarifa($node->tarifa);
 		if ($tarifaId!==null) {
 			$db->setQuery( "INSERT INTO #__user_usergroup_map(user_id, group_id) VALUES($userId, $tarifaId)" );
 			$db->query();
@@ -715,22 +728,12 @@ class sincroHelper {
 		// assignem l'usuari al grup 2
 		$db->setQuery( "INSERT INTO #__user_usergroup_map(user_id, group_id) VALUES($userId, 2)" );
 		$db->query();
-		// assignem l'usuari al grup 10 (negocis) o 11 (particulars) depenent del tipus
-		// aquests grups s'utilitzen per fer que determinats articles només surtin per a determinats clients (estem parlant, bàsicament, dels expositors)
-		if ($node->tarifa==sincroHelper::$TARIFA_PARTICULARS) {
-			$query = "INSERT INTO #__user_usergroup_map(user_id, group_id) VALUES($userId, 11)";
-		} else {
-			$query = "INSERT INTO #__user_usergroup_map(user_id, group_id) VALUES($userId, 10)";
-		}
-		sincroHelper::customLog( "La consulta és: $query" );
-		$db->setQuery( $query );
-		$db->query();
-		
+
 		// actualitzar usuari com_botiga
 		$usrBotiga = new stdClass();
 		$usrBotiga->usergroup 		= $tarifaId;
 		$usrBotiga->userId			= $userId;
-		$usrBotiga->type			= ($node->tarifa==sincroHelper::$TARIFA_PARTICULARS?0:1);
+		$usrBotiga->type			= ($node->tarifa==$this->$TARIFA_PARTICULARS?0:1);
 		$usrBotiga->mail_empresa 	= strval($node->usuari);
 		$usrBotiga->nombre 			= strval($node->nom);
 		$usrBotiga->nom_empresa 	= strval($node->nom_empresa);
@@ -750,7 +753,7 @@ class sincroHelper {
 			'"metodo_pago":"habitual",' .
 			'"aplicar_iva":"' . $node->aplicar_iva . '",' .
 			'"re_equiv":"' . $node->re . '",' .
-			'"pago_habitual":"' . ($node->tarifa==sincroHelper::$TARIFA_PARTICULARS?0:1) . '"' .
+			'"pago_habitual":"' . ($node->tarifa==$this->$TARIFA_PARTICULARS?0:1) . '"' .
 			'}';
 		*/
 		$usrBotiga->params			= '{' .
@@ -765,28 +768,30 @@ class sincroHelper {
 		$db->setQuery( "SELECT id FROM #__botiga_users WHERE userid=$userId" );
 		$usrBotigaId = $db->loadResult();
 		if ($usrBotigaId == null) {
-			$db->insertObject('#__botiga_users', $usrBotiga); 
+			$db->insertObject('#__botiga_users', $usrBotiga);
 			//en teoria, aquí no hauria de passar-hi mai (situació en la que existeix usuari de Joomla però no usuari de com_botiga
 		} else {
 			$usrBotiga->id = $usrBotigaId;
 			$db->updateObject('#__botiga_users', $usrBotiga, 'id', $usrBotigaId);
 		}
-		
-		sincroHelper::customLog( "Usuari actualitzat " . $node->usuari . "'(" . $node->nom . "'" . $node->dte_linia . ")");
+
+		$this->customLog( "Usuari actualitzat " . $node->usuari . "'(" . $node->nom . "'" . $node->dte_linia . ")");
 	}
-	
-	function getGroupIdFromTarifa($nomTarifa) {
+
+	private function getGroupIdFromTarifa($nomTarifa)
+	{
 		$db = JFactory::getDbo();
 		$db->setQuery( 'SELECT id FROM #__usergroups WHERE title=' . $db->quote($nomTarifa) );
 		return $db->loadResult();
 	}
-	
-	function getCatIdFromFactusol($codfam, $idioma, $log) {
+
+	private function getCatIdFromFactusol($codfam, $idioma, $log)
+	{
 		$db = JFactory::getDbo();
 		if (!$codfam) {
 			return 0;
 		} else {
-			$select_query = 
+			$select_query =
 				"SELECT catid " .
 				"FROM #__categories " .
 				"INNER JOIN #__botiga_categories ON #__categories.id = #__botiga_categories.catid " .

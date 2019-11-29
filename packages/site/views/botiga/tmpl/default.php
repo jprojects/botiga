@@ -1,49 +1,48 @@
 <?php
+
 /**
- * @version		1.0.0 botiga $
- * @package		botiga
- * @copyright   Copyright © 2010 - All rights reserved.
- * @license		GNU/GPL
- * @author		kim
- * @author mail kim@aficat.com
- * @website		http://www.aficat.com
- *
+ * @version     1.0.0
+ * @package     com_botiga
+ * @copyright   Copyleft (C) 2019
+ * @license     Licencia Pública General GNU versión 3 o posterior. Consulte LICENSE.txt
+ * @author      aficat <kim@aficat.com> - http://www.afi.cat
 */
   
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
-$model 		= $this->getModel('botiga');
-$user  		= JFactory::getUser();
-$uri 		= base64_encode(JFactory::getURI()->toString());
-$jinput		= JFactory::getApplication()->input;
-$modal 		= $jinput->get('m', 0);
-$catid      = $jinput->get('catid', '');
-$marca      = $jinput->get('marca', '');
-$itemid     = $jinput->get('Itemid', '');
-$orderby    = $jinput->get('orderby', 'ref');
-$limit      = $jinput->get('limit', 24);
-$lang 		= JFactory::getLanguage()->getTag();
-$logo		= botigaHelper::getParameter('botiga_logo', '');
-$showprices = botigaHelper::getParameter('show_prices', 1);
-$showdiscount = botigaHelper::getParameter('show_discount', 0);
-$loginprices = botigaHelper::getParameter('login_prices', 0);
-$shownotice = botigaHelper::getParameter('show_notice', 1);
-$showref 	= botigaHelper::getParameter('show_ref', 1);
-$showdesc 	= botigaHelper::getParameter('show_desc', 1);
-$showbrand 	= botigaHelper::getParameter('show_brand', 1);
-$showfav 	= botigaHelper::getParameter('show_fav', 1);
-$showpvp 	= botigaHelper::getParameter('show_pvp', 1);
-$userToken  = JSession::getFormToken();
+$model 			= $this->getModel('botiga');
+$user  			= JFactory::getUser();
+$uri 			= base64_encode(JFactory::getURI()->toString());
+$jinput			= JFactory::getApplication()->input;
+$modal 			= $jinput->get('m', 0);
+$catid      	= $jinput->get('catid', '');
+$marca      	= $jinput->get('marca', '');
+$itemid     	= $jinput->get('Itemid', '');
+$orderby    	= $jinput->get('orderby', 'ref');
+$limit      	= $jinput->get('limit', 24);
+$lang 			= JFactory::getLanguage()->getTag();
+$logo			= botigaHelper::getParameter('botiga_logo', '');
+$showprices 	= botigaHelper::getParameter('show_prices', 1);
+$showdiscount 	= botigaHelper::getParameter('show_discount', 0);
+$loginprices 	= botigaHelper::getParameter('login_prices', 0);
+$loginforbuy 	= botigaHelper::getParameter('login_buy', 1);
+$shownotice 	= botigaHelper::getParameter('show_notice', 1);
+$showref 		= botigaHelper::getParameter('show_ref', 1);
+$showdesc 		= botigaHelper::getParameter('show_desc', 1);
+$showbrand 		= botigaHelper::getParameter('show_brand', 1);
+$showfav 		= botigaHelper::getParameter('show_fav', 1);
+$showpvp 		= botigaHelper::getParameter('show_pvp', 1);
+$userToken  	= JSession::getFormToken();
 
-$dte_linia  = botigaHelper::getUserData('dte_linia', $user->id); 
+$dte_linia  	= botigaHelper::getUserData('dte_linia', $user->id); 
 
-$spain 		= botigaHelper::getParameter('total_shipment_spain', 25);
-$islands 	= botigaHelper::getParameter('total_shipment_islands', 50);
-$world 		= botigaHelper::getParameter('total_shipment_world', 60);
+$spain 			= botigaHelper::getParameter('total_shipment_spain', 25);
+$islands 		= botigaHelper::getParameter('total_shipment_islands', 50);
+$world 			= botigaHelper::getParameter('total_shipment_world', 60);
 
-$control_stock = botigaHelper::getParameter('control_stock', 0);
+$control_stock 	= botigaHelper::getParameter('control_stock', 0);
 
-$count 	    = botigaHelper::getCarritoCount();
+$count 	    	= botigaHelper::getCarritoCount();
 ?>
 
 <?php if(botigaHelper::getParameter('show_header', 0) == 1) : ?>
@@ -53,48 +52,50 @@ $count 	    = botigaHelper::getCarritoCount();
 
 		<div class="row">
 
-		<?php if($logo != '') : ?>
-		<div class="col-12 text-right d-none d-sm-block">
-			<a href="index.php"><img src="<?= $logo; ?>" alt="<?= botigaHelper::getParameter('botiga_name', ''); ?>" class="img-fluid"></a>
-		</div>
-		<?php endif; ?>	
-		
-		<div class="col-12 mt-3">
-			<div class="row">
-				<div class="col-6 col-md-8 text-left">			
-					<a href="index.php?option=com_botiga&view=botiga" class="pr-1">
-						<img src="media/com_botiga/icons/mosaico<?php if($jinput->getCmd('layout', '') == '') : ?>-active<?php endif; ?>.png">
-					</a>
-					<?php if(botigaHelper::isEmpresa()) : ?>				
-					<a href="index.php?option=com_botiga&view=botiga&layout=table">
-						<img src="media/com_botiga/icons/lista<?php if($jinput->getCmd('layout', '') == 'table') : ?>-active<?php endif; ?>.png">
-					</a>
-					<?php endif; ?>
-					<span class="pl-3 phone-hide estil02"><?= JText::sprintf('COM_BOTIGA_FREE_SHIPPING_MSG', $spain, $islands, $world); ?>&nbsp;<img src="media/com_botiga/icons/envio_gratis.png"></span>
-				</div>
-				<div class="col-6 col-md-4 text-right">
-					<a href="<?php if($count > 0) : ?>index.php?option=com_botiga&view=checkout<?php else: ?>#<?php endif; ?>" class="pr-2 carrito">
-						<?php if($count > 0) : ?>
-						<span class="badge badge-warning"><?= $count; ?></span>
+			<?php if($logo != '') : ?>
+			<div class="col-12 text-right d-none d-sm-block">
+				<a href="index.php"><img src="<?= $logo; ?>" alt="<?= botigaHelper::getParameter('botiga_name', ''); ?>" class="img-fluid"></a>
+			</div>
+			<?php endif; ?>	
+			
+			<div class="col-12 mt-3">
+				<div class="row">
+					<div class="col-6 col-md-8 text-left">			
+						<a href="index.php?option=com_botiga&view=botiga" class="pr-1">
+							<img src="media/com_botiga/icons/mosaico<?php if($jinput->getCmd('layout', '') == '') : ?>-active<?php endif; ?>.png">
+						</a>
+						<?php if(botigaHelper::hasAccesstoTableView()) : ?>				
+						<a href="index.php?option=com_botiga&view=botiga&layout=table">
+							<img src="media/com_botiga/icons/lista<?php if($jinput->getCmd('layout', '') == 'table') : ?>-active<?php endif; ?>.png">
+						</a>
 						<?php endif; ?>
-						<img src="media/com_botiga/icons/carrito.png">
-					</a>
-					<?php if($user->guest) : ?>
-					<a href="index.php?option=com_users&view=login" title="Login" class="hasTip">
-						<img src="media/com_botiga/icons/iniciar-sesion.png">
-					</a>
-					<?php else: ?>
-					<a class="ml-4 hasTip" href="index.php?option=com_users&task=user.logout&<?= $userToken; ?>=1" title="Logout" title="Salir">
-						<img src="media/com_botiga/icons/salir.png">
-					</a>
-					<a class="ml-4 hasTip" href="index.php?option=com_botiga&view=history" title="History" title="Perfil"s>
-						<img src="media/com_botiga/icons/sesion-iniciada.png">
-					</a>
-					<div class="d-none d-sm-block"><small><?= JText::sprintf('COM_BOTIGA_WELCOME', $user->name); ?></small></div>
-					<?php endif; ?>
+						<span class="pl-3 phone-hide estil02">
+							<?= JText::sprintf('COM_BOTIGA_FREE_SHIPPING_MSG', $spain, $islands, $world); ?>&nbsp;<img src="media/com_botiga/icons/envio_gratis.png">
+						</span>
+					</div>
+					<div class="col-6 col-md-4 text-right">
+						<a href="<?php if($count > 0) : ?>index.php?option=com_botiga&view=checkout<?php else: ?>#<?php endif; ?>" class="pr-2 carrito">
+							<?php if($count > 0) : ?>
+							<span class="badge badge-warning"><?= $count; ?></span>
+							<?php endif; ?>
+							<img src="media/com_botiga/icons/carrito.png">
+						</a>
+						<?php if($user->guest) : ?>
+						<a href="index.php?option=com_users&view=login" title="Login" class="hasTip">
+							<img src="media/com_botiga/icons/iniciar-sesion.png">
+						</a>
+						<?php else: ?>
+						<a class="ml-4 hasTip" href="index.php?option=com_users&task=user.logout&<?= $userToken; ?>=1" title="Logout" title="Salir">
+							<img src="media/com_botiga/icons/salir.png">
+						</a>
+						<a class="ml-4 hasTip" href="index.php?option=com_botiga&view=history" title="History" title="Perfil"s>
+							<img src="media/com_botiga/icons/sesion-iniciada.png">
+						</a>
+						<div class="d-none d-sm-block"><small><?= JText::sprintf('COM_BOTIGA_WELCOME', $user->name); ?></small></div>
+						<?php endif; ?>
+					</div>
 				</div>
 			</div>
-		</div>
 		
 		</div>	
 	
@@ -107,11 +108,12 @@ $count 	    = botigaHelper::getCarritoCount();
 
 		<div class="row">
 
-			<?php if($showprices == 1 && ($loginprices == 0 && $user->guest) && $shownotice == 1) : ?>
+			<?php if($user->guest && $shownotice == 1) : ?>
 			<div class="col-12">
-				<a href="index.php?option=com_botiga&view=register">
-					<div class="alert alert-warning"><?= JText::_('COM_BOTIGA_PRICES_NOTICE'); ?></div>
-				</a>
+				<?php 
+				$link1 = 'index.php?option=com_botiga&view=register';
+				?>
+				<div class="alert alert-warning"><?= JText::sprintf('COM_BOTIGA_PRICES_NOTICE', $link1); ?></div>
 			</div>
 			<?php endif; ?>		
 			
@@ -136,8 +138,9 @@ $count 	    = botigaHelper::getCarritoCount();
 						<div class="styled-select">
 							<select name="orderby" id="orderby" class="form-control estil03 text-primary" style="width:100%;">
 								<option value="id"><?= JText::_('COM_BOTIGA_ORDERBY'); ?></div>
-								<option value="ref" <?php if($orderby == 'ref') : ?>selected<?php endif; ?>>Código</option>
-								<option value="pvp" <?php if($orderby == 'pvp') : ?>selected<?php endif; ?>>Precio</option>
+								<option value="ref" <?php if($orderby == 'ref') : ?>selected<?php endif; ?>><?= JText::_('COM_BOTIGA_FILTER_REF'); ?></option>
+								<option value="s_description" <?php if($orderby == 's_description') : ?>selected<?php endif; ?>><?= JText::_('COM_BOTIGA_FILTER_DESC'); ?></option>
+								<option value="pvp" <?php if($orderby == 'pvp') : ?>selected<?php endif; ?>><?= JText::_('COM_BOTIGA_FILTER_PRICE'); ?></option>
 							</select>
 						</div>
 					</div>					
@@ -155,16 +158,16 @@ $count 	    = botigaHelper::getCarritoCount();
 					
 					$item->image1 != '' ? $image = $item->image1 : $image = 'components/com_botiga/assets/images/noimage.jpg';
 					$precio = botigaHelper::getUserPrice($item->id);
-					$dtos = botigaHelper::getUserDiscounts($item->id);
+					$dtos   = botigaHelper::getUserDiscounts($item->id);
 					//botigaHelper::customLog("descomptes".$item->id." ".$dtos);
 					
-					if ($precio!=0) :
+					//if ($precio != 0) :
 					?>
-					<div class="col-xs-12 col-md-3 item px-5">
+					<div class="col-xs-12 col-md-3 item px-3">
 						
 						<div class="botiga-img text-center">
 							<a href="<?= JRoute::_('index.php?option=com_botiga&view=item&id='.$item->id); ?>">
-								<?php if($dte_linia != 0.00 && $showdiscount == 1 && $showprices == 1) : ?>
+								<?php if($dte_linia != 0.00 && $showdiscount == 1 && botigaHelper::isPriceVisible()) : ?>
 								<div class="pvp-badge"><span>-<?= $dte_linia; ?>%</span></div>
 								<?php endif; ?>
 								<img src="<?= $image; ?>" class="img-fluid" alt="<?= $item->name; ?>" />
@@ -186,22 +189,29 @@ $count 	    = botigaHelper::getCarritoCount();
 						<?php if($showbrand == 1) : ?>				
 						<div class="text-left"><?= $item->brandname; ?></div>
 						<?php endif; ?>	
-						<?php if($showpvp == 1) : ?>
+						<?php if($showpvp == 1 && botigaHelper::isPriceVisible()) : ?>
 						<div class="text-left faded pvp">PVP <strike><?= $item->pvp; ?> &euro;</strike></div>
 						<?php endif; ?>
 						
 						<div class="row">
-							<?php if($showprices == 1 || ($loginprices == 1 && !$user->guest)) : ?>
-								<?php if($dte_linia != 0.00 && $showdiscount == 1 && $showprices == 1) : ?>
-									<div class="col-6">
-									<div class="text-left bold estil05 faded mt-2"><strike><?= $precio; ?>&euro;</strike></div>
-									<div class="text-left bold estil05 text-dark mt-2"><?= botigaHelper::getPercentDiff($precio, $dte_linia); ?>&euro;</div>
-									</div>
-								<?php else : ?>
-									<div class="col-6 text-left bold estil05 text-dark mt-2"><?= $precio; ?>&euro;</div>
+							<div class="col-6">
+							<?php if(botigaHelper::isPriceVisible()) : ?>
+								
+								<div class="text-left bold estil05 faded mt-2">
+									<?php if($showdiscount == 1 && $dte_linia != 0.00) : ?>
+									<strike><?php if(!botigaHelper::isEmpresa()) : ?>PVP <?php endif; ?><?= $precio; ?>&euro;</strike>	
+									<?php else: ?>
+									<?php if(!botigaHelper::isEmpresa()) : ?>PVP <?php endif; ?><?= $precio; ?>&euro;
+									<?php endif; ?>							
+								</div>
+								<?php if($showdiscount == 1 && $dte_linia != 0.00) : ?>
+								<div class="text-left bold estil05 text-dark mt-2"><?= botigaHelper::getPercentDiff($precio, $dte_linia); ?>&euro;</div>
 								<?php endif; ?>
 							<?php endif; ?>
+							</div>
 							<div class="col-6 text-right pr-3">
+							<?php if($showprices == 1 && ($loginforbuy == 0 || ($loginforbuy == 1 && !$user->guest))) : ?>
+							
 								<?php if(botigaHelper::isValidated() && botigaHelper::validateStock($item->stock)) : ?>
 								<a href="index.php?view=botiga&task=botiga.setItem&id=<?= $item->id; ?>&return=<?= $uri; ?>&<?= JSession::getFormToken(); ?>=1">
 									<img src="media/com_botiga/icons/addtocart.png" alt="<?= JText::_('COM_BOTIGA_BTN_BUY'); ?>">
@@ -211,14 +221,18 @@ $count 	    = botigaHelper::getCarritoCount();
 									<img src="media/com_botiga/icons/carrito_desactivado.png" alt="<?= JText::_('COM_BOTIGA_BTN_BUY'); ?>">
 								</a>
 								<?php endif; ?>
+							
+							<?php endif; ?>
 							</div>
 						</div>
-						<?php // Mostrar preus especials ?>
+						
+						<?php if(botigaHelper::isPriceVisible()) : ?>
 						<div class="row">
-							<?php if( ($showprices == 1 || ($loginprices == 1 && !$user->guest)) && $dtos!='' ) : ?>
+							<?php if($dtos !='') : ?>
 								<div class="col-12 text-left estil02 mt-2"><?= $dtos; ?>&euro;</div>
 							<?php endif; ?>
 						</div>
+						<?php endif; ?>
 						
 						<?php if($showfav == 1) : ?> 
 						  	<?php if(!botigaHelper::isFavorite($item->id)) : ?>
@@ -230,7 +244,7 @@ $count 	    = botigaHelper::getCarritoCount();
 						
 					</div>
 				<?php
-				endif;
+				//endif;
 				$i++;
 				endforeach; 
 				endif;
@@ -246,6 +260,25 @@ $count 	    = botigaHelper::getCarritoCount();
 	</div>
 	
 </div>
+
+<!-- Modal login -->
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginLabel">
+  	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+	  		<div class="modal-header">
+	    		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	  		</div>
+	  		<div class="modal-body loginBody">
+			    <?php
+			    $document	= JFactory::getDocument();
+				$renderer	= $document->loadRenderer('module');
+				echo $renderer->render(JModuleHelper::getModule('mod_login'));
+			    ?>
+	  		</div>
+		</div>
+  	</div>
+</div>
+<!-- end login modal -->
 
 <?php if($modal != 0) : ?>
 <!-- start Modal success -->

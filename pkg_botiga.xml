@@ -21,7 +21,9 @@
    <file type="library" id="PhpOffice">PhpOffice.zip</file>
    <file type="plugin" id="plg_paypal" group="botiga">plg_paypal.zip</file>
    <file type="plugin" id="plg_redsys" group="botiga">plg_redsys.zip</file>
+   <file type="plugin" id="plg_habitual" group="botiga">plg_habitual.zip</file>
    <file type="plugin" id="plg_transferencia" group="botiga">plg_transferencia.zip</file>
    <file type="plugin" id="plg_botiga_users" group="users">plg_botiga_users.zip</file>
+   <file type="plugin" id="plg_botiga_sync" group="users">plg_botiga_sync.zip</file>
  </files>
  </extension>

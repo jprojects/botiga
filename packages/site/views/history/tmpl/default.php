@@ -41,7 +41,40 @@ $world 		= botigaHelper::getParameter('total_shipment_world', 60);
 
 $count 	    = botigaHelper::getCarritoCount();
 $user_params = json_decode(botigaHelper::getUserData('params', $user->id), true);
+
+$addresses = botigaHelper::getAddresses();
 ?>
+
+<script>
+jQuery(document).ready(function() {
+	jQuery('.repeatable').repeater({
+		btnAddClass: 'r-btnAdd',
+		btnRemoveClass: 'r-btnRemove',
+		groupClass: 'r-group',
+		minItems: 1,
+		maxItems: 0,
+		startingIndex: 0,
+		showMinItemsOnLoad: true,
+		reindexOnDelete: true,
+		repeatMode: 'append',
+		animation: 'fade',
+		animationSpeed: 400,
+		animationEasing: 'swing',
+		clearValues: true
+	}, [
+		<?php
+		$i = 0;
+		foreach($addresses as $adreca) : ?>
+				{"address_<?= $i; ?>" : "<?= $adreca->adreca; ?>",
+				"zip_<?= $i; ?>" : "<?= $adreca->cp; ?>",
+				"city_<?= $i; ?>" : "<?= $adreca->poblacio; ?>"}
+		<?php
+		$i++;
+		if($i < count($addresses)) { echo ','; }
+		endforeach; ?>
+	]);
+});
+</script>
 
 <?php if(botigaHelper::getParameter('show_header', 0) == 1) : ?>
 <header class="head_botiga">
@@ -54,15 +87,15 @@ $user_params = json_decode(botigaHelper::getUserData('params', $user->id), true)
 			<div class="col-12 text-right d-none d-sm-block">
 				<img src="<?= $logo; ?>" alt="<?= botigaHelper::getParameter('botiga_name', ''); ?>" class="img-fluid">
 			</div>
-			<?php endif; ?>	
-			
+			<?php endif; ?>
+
 			<div class="col-12 mt-3">
 				<div class="row">
-					<div class="col-6 col-md-8 text-left">			
+					<div class="col-6 col-md-8 text-left">
 						<a href="index.php?option=com_botiga&view=botiga" class="pr-1">
 							<img src="media/com_botiga/icons/mosaico<?php if($app->input->getCmd('layout', '') == '') : ?>-active<?php endif; ?>.png">
 						</a>
-						<?php if(botigaHelper::isEmpresa()) : ?>					
+						<?php if(botigaHelper::hasAccesstoTableView()) : ?>
 						<a href="index.php?option=com_botiga&view=botiga&layout=table">
 							<img src="media/com_botiga/icons/lista<?php if($app->input->getCmd('layout', '') == 'table') : ?>-active<?php endif; ?>.png">
 						</a>
@@ -92,18 +125,18 @@ $user_params = json_decode(botigaHelper::getUserData('params', $user->id), true)
 					</div>
 				</div>
 			</div>
-		
-		</div>	
-	
+
+		</div>
+
 	</div>
-	
+
 </header>
 <?php endif; ?>
 
 <div class="col-md-11 mx-auto pb-5">
 
 	<div class="row">
-		
+
 		<!-- Nav tabs -->
 		<nav class="mt-4 estil08">
 		  	<div class="nav nav-tabs nav-fill" role="tablist">
@@ -116,10 +149,10 @@ $user_params = json_decode(botigaHelper::getUserData('params', $user->id), true)
 				<?php endif; ?>
 		  	</div>
 	  	</nav>
-	  
+
 	  	<!-- Tab panes -->
 	  	<div class="tab-content col-12 py-3 px-3 px-sm-0">
-	  	
+
 	  		<div role="tabpanel" class="tab-pane fade <?php if($app->input->getInt('tab', 1) == 1) : ?>show active<?php endif; ?>" id="tab1">
 				<?php if(count($this->items)) : ?>
 				<table class="table">
@@ -149,65 +182,65 @@ $user_params = json_decode(botigaHelper::getUserData('params', $user->id), true)
 						<input type="hidden" name="jform[userid]" value="<?= $user->id; ?>" />
 						<input type="hidden" name="option" value="com_botiga" />
 						<input type="hidden" name="task" value="profile.profile" />
-						<?php echo JHtml::_('form.token');?>						
-						
+						<?php echo JHtml::_('form.token');?>
+
 						<?php if(botigaHelper::getUserData('type', $user->id) == 1) : ?>
 						<div class="form-group">
 							<label for="jform_empresa estil03"><?= JText::_('COM_BOTIGA_REGISTER_NOMBRE_EMPRESA_LBL'); ?> *</label>
 							<input type="text" required="required" name="jform[empresa]" id="jform_empresa" class="form-control required" value="<?= botigaHelper::getUserData('nom_empresa', $user->id); ?>">
 						</div>
-						
+
 						<div class="form-group">
 							<label for="jform_cif estil03"><?= JText::_('COM_BOTIGA_REGISTER_CIF_LBL'); ?> *</label>
 							<input type="text" required="required" name="jform[cif]" id="jform_cif" class="form-control required" value="<?= botigaHelper::getUserData('cif', $user->id); ?>">
 						</div>
 						<?php endif; ?>
-						
+
 						<div class="form-group">
 							<label for="jform_nombre estil03"><?= JText::_('COM_BOTIGA_REGISTER_NOMBRE_LBL'); ?> *</label>
 							<input type="text" required="required" name="jform[nombre]" id="jform_nombre" class="form-control required" value="<?= botigaHelper::getUserData('nombre', $user->id); ?>">
 						</div>
-						
+
 						<div class="form-group">
 							<label for="jform_email1 estil03"><?= JText::_('COM_BOTIGA_REGISTER_EMAIL_LBL'); ?></label>
 							<input type="email" name="jform[emal1]" id="jform_email1" class="form-control" value="<?= $user->email; ?>">
 						</div>
-						
+
 						<div class="form-group">
 							<label for="jform_email2 estil03"><?= JText::_('COM_BOTIGA_REGISTER_EMAIL2_LBL'); ?></label>
 							<input type="email" name="jform[emal2]" id="jform_email2" class="form-control" value="">
 						</div>
-						
+
 						<div class="form-group">
 							<label for="jform_password1 estil03"><?= JText::_('COM_BOTIGA_REGISTER_PWD_LBL'); ?></label>
 							<input type="password" name="jform[password1]" id="jform_password1" class="form-control" value="">
 						</div>
-						
+
 						<div class="form-group">
 							<label for="jform_password2 estil03"><?= JText::_('COM_BOTIGA_REGISTER_PWD2_LBL'); ?></label>
 							<input type="password" name="jform[password2]" id="jform_password2" class="form-control" value="">
 						</div>
-						
+
 						<div class="form-group">
 							<label for="jform_phone estil03"><?= JText::_('COM_BOTIGA_REGISTER_PHONE_LBL'); ?></label>
 							<input type="text" name="jform[phone]" id="jform_phone" class="form-control required" value="<?= botigaHelper::getUserData('telefon', $user->id); ?>">
 						</div>
-						
+						<!--
 						<div class="form-group">
-							<label for="jform_address estil03"><?= JText::_('COM_BOTIGA_REGISTER_ADDRESS_LBL'); ?> *</label>
-							<input type="text" required="required" name="jform[address]" id="jform_address" class="form-control required" value="<?= botigaHelper::getUserData('adreca', $user->id); ?>">
+							<label for="jform_address estil03"><?//= JText::_('COM_BOTIGA_REGISTER_ADDRESS_LBL'); ?> *</label>
+							<input type="text" required="required" name="jform[address]" id="jform_address" class="form-control required" value="<?//= botigaHelper::getUserData('adreca', $user->id); ?>">
 						</div>
-						
+
 						<div class="form-group">
-							<label for="jform_zip estil03"><?= JText::_('COM_BOTIGA_REGISTER_CP_LBL'); ?> *</label>
-							<input type="text" required="required" name="jform[zip]" id="jform_zip" class="form-control required" value="<?= botigaHelper::getUserData('cp', $user->id); ?>">
+							<label for="jform_zip estil03"><?//= JText::_('COM_BOTIGA_REGISTER_CP_LBL'); ?> *</label>
+							<input type="text" required="required" name="jform[zip]" id="jform_zip" class="form-control required" value="<?//= botigaHelper::getUserData('cp', $user->id); ?>">
 						</div>
-						
+
 						<div class="form-group">
-							<label for="jform_city estil03"><?= JText::_('COM_BOTIGA_REGISTER_CITY_LBL'); ?> *</label>
-							<input type="text" required="required" name="jform[city]" id="jform_city" class="form-control required" value="<?= botigaHelper::getUserData('poblacio', $user->id); ?>">
+							<label for="jform_city estil03"><?//= JText::_('COM_BOTIGA_REGISTER_CITY_LBL'); ?> *</label>
+							<input type="text" required="required" name="jform[city]" class="form-control required" value="<?//= botigaHelper::getUserData('poblacio', $user->id); ?>">
 						</div>
-						
+						-->
 						<div class="form-group">
 							<label for="jform_pais estil03"><?= JText::_('COM_BOTIGA_REGISTER_PAIS_LABEL'); ?> *</label>
 							<select name="jform[pais]" required="required" id="jform_pais" class="form-control required">
@@ -217,26 +250,49 @@ $user_params = json_decode(botigaHelper::getUserData('params', $user->id), true)
 								<?php endforeach; ?>
 							</select>
 						</div>
-						
+
+						<legend><?= JText::_('COM_BOTIGA_ADDRESSES_SETTINGS'); ?></legend>
+
+						<div class="repeatable">
+							<div class="r-group">
+								<div class="form-group">
+									<label for="jform_address estil03"><?= JText::_('COM_BOTIGA_REGISTER_ADDRESS_LBL'); ?> *</label>
+									<input type="text" required="required" name="address_0" id="address_0" class="form-control" value="" data-pattern-name="address_++" data-pattern-id="address_++">
+								</div>
+
+								<div class="form-group">
+									<label for="jform_zip estil03"><?= JText::_('COM_BOTIGA_REGISTER_CP_LBL'); ?> *</label>
+									<input type="text" required="required" name="zip_0" id="zip_0" class="form-control"  value="" data-pattern-name="zip_++" data-pattern-id="zip_++">
+								</div>
+
+								<div class="form-group">
+									<label for="jform_city estil03"><?= JText::_('COM_BOTIGA_REGISTER_CITY_LBL'); ?> *</label>
+									<input type="text" required="required" name="city_0" class="form-control" id="city_0"  value="" data-pattern-name="city_++" data-pattern-id="city_++">
+								</div>
+								<button type="button" class="r-btnRemove btn btn-danger">Eliminar</button>
+							</div>
+							<button type="button" class="r-btnAdd btn btn-primary">Añadir dirección</button>
+						</div>
+
 						<legend><?= JText::_('COM_BOTIGA_USER_SETTINGS'); ?></legend>
-						
+
 						<div class="form-group">
 							<label for="jform_pais estil03"><?= JText::_('COM_BOTIGA_REGISTER_METODO_PAGO_LABEL'); ?> *</label>
 							<select name="jform[metodo_pago]" id="jform_metodo_pago" class="form-control">
 								<option value=""><?= JText::_('COM_BOTIGA_SELECT_AN_OPTION'); ?></option>
-								<?php 								
-								foreach(botigaHelper::getPaymentPlugins() as $plugin) : 
-									$params = json_decode($plugin->params);				
+								<?php
+								foreach(botigaHelper::getPaymentPlugins() as $plugin) :
+									$params = json_decode($plugin->params);
 									if($params->test_user != '' && $params->sandbox == 1) {
-										if($user->id != $params->test_user) { continue; }										
-									} 
+										if($user->id != $params->test_user) { continue; }
+									}
 									if($user_params['pago_habitual'] == 0 && strtolower($params->alies) == 'habitual') { continue; }
 								?>
 								<option value="<?= $params->alies; ?>" <?php if($user_params['metodo_pago'] == strtolower($params->alies)): ?>selected<?php endif; ?> ><?= JText::_($params->label); ?></option>
 								<?php endforeach; ?>
 							</select>
 						</div>
-						
+
 						<div class="form-group">
 							<label for="jform_pais estil03"><?= JText::_('COM_BOTIGA_REGISTER_RE_EQUIV_LABEL'); ?></label>
 							<div class="form-check form-check-inline">
@@ -248,7 +304,7 @@ $user_params = json_decode(botigaHelper::getUserData('params', $user->id), true)
 							  	<label class="form-check-label" for="jform_re_equiv1"><?= JText::_('JYES'); ?></label>
 							</div>
 						</div>
-						
+
 						<div id="form-login-submit" class="control-group">
 							<div class="controls">
 								<button type="submit" class="btn btn-primary btn-block validate submit estil03"><?= JText::_('JSUBMIT'); ?></button>
@@ -259,7 +315,7 @@ $user_params = json_decode(botigaHelper::getUserData('params', $user->id), true)
 			</div>
 			<?php if($showsavedcarts == 1): ?>
 			<div role="tabpanel" class="tab-pane fade <?php if($app->input->getInt('tab', 1) == 3) : ?>show active<?php endif; ?>" id="tab3">
-				<?php 
+				<?php
 				$carts = $model->getSavedCarts();
 				if(count($carts)) : ?>
 				<table class="table table-striped">
@@ -281,8 +337,7 @@ $user_params = json_decode(botigaHelper::getUserData('params', $user->id), true)
 				<?php endif; ?>
 			</div>
 			<?php endif; ?>
-			
-		</div>
-	</div>	
-</div>
 
+		</div>
+	</div>
+</div>

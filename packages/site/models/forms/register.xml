@@ -21,7 +21,6 @@
 			label="COM_BOTIGA_REGISTER_NOMBRE_EMPRESA_LBL"
 			description="COM_BOTIGA_REGISTER_NOMBRE_EMPRESA_DSC" 
 			default="" 
-			showon="type:1"
 			class="form-control estil02" 
 			labelclass="control-label estil03 pt-4"			
         />
@@ -31,7 +30,6 @@
 			label="COM_BOTIGA_REGISTER_CIF_LBL"
 			description="COM_BOTIGA_REGISTER_CIF_DSC" 
 			default="" 
-			showon="type:1"
 			class="form-control estil02" 
 			labelclass="control-label estil03 pt-4" 
         />        
@@ -46,8 +44,18 @@
 			required="true"
         />
         <field 
-			name="email1"  
+			name="apellidos"  
 			type="text" 
+			label="COM_BOTIGA_REGISTER_APELLIDOS_LBL"
+			description="COM_BOTIGA_REGISTER_APELLIDOS_DSC" 
+			default="" 
+			class="form-control estil02" 
+			labelclass="control-label estil03 pt-4"
+			required="true"
+        />
+        <field 
+			name="email1"  
+			type="email" 
 			label="COM_BOTIGA_REGISTER_EMAIL_LBL"
 			description="COM_BOTIGA_REGISTER_EMAIL_DSC" 
 			default="" 
@@ -61,7 +69,7 @@
         />
         <field 
 			name="email2"  
-			type="text" 
+			type="email" 
 			label="COM_BOTIGA_REGISTER_EMAIL2_LBL"
 			description="COM_BOTIGA_REGISTER_EMAIL2_DSC" 
 			default="" 

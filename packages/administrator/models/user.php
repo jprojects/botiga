@@ -12,10 +12,10 @@
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
- 
+
 // import Joomla modelform library
 jimport('joomla.application.component.modeladmin');
- 
+
 class botigaModelUser extends JModelAdmin
 {
     /**
@@ -32,7 +32,7 @@ class botigaModelUser extends JModelAdmin
 		// Check specific edit permission then general edit permission.
 		return JFactory::getUser()->authorise('core.edit', 'com_botiga.message.'.((int) isset($data[$key]) ? $data[$key] : 0)) or parent::allowEdit($data, $key);
 	}
-	
+
 	/**
 	 * Returns a reference to the a Table object, always creating it.
 	 *
@@ -42,11 +42,11 @@ class botigaModelUser extends JModelAdmin
 	 * @return	JTable	A database object
 	 * @since	1.6
 	*/
-	public function getTable($type = 'Users', $prefix = 'botigaTable', $config = array()) 
+	public function getTable($type = 'Users', $prefix = 'botigaTable', $config = array())
 	{
 		return JTable::getInstance($type, $prefix, $config);
 	}
-	
+
 	/**
 	 * Method to get the record form.
 	 *
@@ -55,67 +55,78 @@ class botigaModelUser extends JModelAdmin
 	 * @return	mixed	A JForm object on success, false on failure
 	 * @since	1.6
 	*/
-	public function getForm($data = array(), $loadData = true) 
+	public function getForm($data = array(), $loadData = true)
 	{
 		// Get the form.
 		$form = $this->loadForm('com_botiga.user', 'user', array('control' => 'jform', 'load_data' => $loadData));
-		if (empty($form)) 
+		if (empty($form))
 		{
 			return false;
 		}
 		return $form;
 	}
-	
+
 	/**
 	 * Method to get the data that should be injected in the form.
 	 *
 	 * @return	mixed	The data for the form.
 	 * @since	1.6
 	*/
-	protected function loadFormData() 
+	protected function loadFormData()
 	{
 		// Check the session for previously entered form data.
 		$data = JFactory::getApplication()->getUserState('com_botiga.edit.user.data', array());
-		if (empty($data)) 
+		if (empty($data))
 		{
 			$data = $this->getItem();
-			$params = json_decode($data->params); 
+			$params = json_decode($data->params);
 			$data->metodo_pago = $data->params['metodo_pago'];
+			$data->aplicar_iva = $data->params['aplicar_iva'];
 			$data->re_equiv = $data->params['re_equiv'];
 			$data->pago_habitual = $data->params['pago_habitual'];
 		}
 		return $data;
 	}
-	
+
 	/**
 	 * method to store data into the database
 	 * @param boolean
 	*/
-    function store()
-	{		
+  function store()
+	{
 		$row =& $this->getTable();
 		$db  = JFactory::getDbo();
-		
+
 		$post_data  = JRequest::get( 'post' );
-   		$data       = $post_data["jform"];
-	    	
-    	$params['metodo_pago'] 		= $data['metodo_pago'];
-    	$params['re_equiv']    		= $data['re_equiv'];
-    	$params['pago_habitual']    = $data['pago_habitual'];
-    	
-    	unset($data['metodo_pago'], $data['re_equiv'], $data['pago_habitual']);
-    	
-    	$data['params'] = json_encode($params);
-    	
-    	//save usergroup 0 customer (11) 1 company (10)
-    	/*if($data['type'] == 0) {
-    		$db->setQuery('UPDATE #__user_usergroup_map SET group_id = 11 WHERE user_id = '.$data['userid'].' AND group_id = 10');
-    		$db->query();
-    	} else {
-    		$db->setQuery('UPDATE #__user_usergroup_map SET group_id = 10 WHERE user_id = '.$data['userid'].' AND group_id = 11');
-    		$db->query();
-    	}*/
-	
+		$data       = $post_data["jform"];
+
+		$params['metodo_pago'] 		= $data['metodo_pago'];
+		$params['aplicar_iva']		= $data['aplicar_iva'];
+		$params['re_equiv']    		= $data['re_equiv'];
+		$params['pago_habitual']    = $data['pago_habitual'];
+		$params['pago_habitual_desc'] = $data['pago_habitual_desc'];
+
+		unset($data['metodo_pago'], $data['aplicar_iva'], $data['re_equiv'], $data['pago_habitual'], $data['pago_habitual_desc']);
+
+		$data['params'] = json_encode($params);
+
+		//save usergroup into joomla database
+		$usergroup = $data['usergroup'];
+		$userid    = $data['userid'];
+
+		if($userid != '' && $usergroup != '') {
+		  $db->setQuery('SELECT usergroup FROM #__botiga_users WHERE userid = '.$userid);
+		  $old_usergroup = $db->loadResult();
+		  if($old_usergroup != $usergroup) {
+			$db->setQuery("DELETE FROM `#__user_usergroup_map` WHERE group_id = ".$old_usergroup." AND user_id = ".$userid);
+			$db->query();
+			$group = new stdClass();
+			$group->group_id = $usergroup;
+			$group->user_id = $userid;
+			$db->insertObject('#__user_usergroup_map', $group);
+		  }
+		}
+
 		if (!$row->bind( $data )) {
 			return JError::raiseWarning( 500, $row->getError() );
 		}
@@ -125,8 +136,7 @@ class botigaModelUser extends JModelAdmin
 		}
 
 		return true;
+  }
 
-	}
-    
 }
 ?>

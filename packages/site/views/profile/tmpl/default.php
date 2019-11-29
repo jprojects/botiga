@@ -28,15 +28,16 @@ $f[1] = botigaHelper::getParameter('show_field_tipus', 1);
 $f[2] = botigaHelper::getParameter('show_field_empresa', 1);
 $f[3] = botigaHelper::getParameter('show_field_cif', 1);
 $f[4] = botigaHelper::getParameter('show_field_nom', 1);
-$f[5] = botigaHelper::getParameter('show_field_phone', 1);
-$f[6] = 1;
+$f[5] = botigaHelper::getParameter('show_field_surname', 1);
+$f[6] = botigaHelper::getParameter('show_field_phone', 1);
 $f[7] = 1;
 $f[8] = 1;
 $f[9] = 1;
-$f[10] = botigaHelper::getParameter('show_field_address', 1);
-$f[11] = botigaHelper::getParameter('show_field_cp', 1);
-$f[12] = botigaHelper::getParameter('show_field_state', 1);
-$f[13] = botigaHelper::getParameter('show_field_pais', 1);
+$f[10] = 1;
+$f[11] = botigaHelper::getParameter('show_field_address', 1);
+$f[12] = botigaHelper::getParameter('show_field_cp', 1);
+$f[13] = botigaHelper::getParameter('show_field_state', 1);
+$f[14] = botigaHelper::getParameter('show_field_pais', 1);
 ?>
 
 <style>#page-header { border: none; }</style>
@@ -52,16 +53,16 @@ $f[13] = botigaHelper::getParameter('show_field_pais', 1);
 		<div class="col-12 text-right d-none d-sm-block">
 			<a href="index.php"><img src="<?= $logo; ?>" alt="<?= botigaHelper::getParameter('botiga_name', ''); ?>" class="img-fluid"></a>
 		</div>
-		<?php endif; ?>	
-		
+		<?php endif; ?>
+
 		<div class="col-12 mt-3">
 			<div class="row">
-				<div class="col-9 text-left">			
+				<div class="col-9 text-left">
 					<a href="index.php?option=com_botiga&view=botiga" class="pr-1">
-						<img src="media/com_botiga/icons/mosaico<?php if($jinput->getCmd('layout', '') == '') : ?>-active<?php endif; ?>.png">
+						<img src="media/com_botiga/icons/mosaico<?php if($app->input->getCmd('layout', '') == '') : ?>-active<?php endif; ?>.png">
 					</a>
 					<a href="index.php?option=com_botiga&view=botiga&layout=table">
-						<img src="media/com_botiga/icons/lista<?php if($jinput->getCmd('layout', '') == 'table') : ?>-active<?php endif; ?>.png">
+						<img src="media/com_botiga/icons/lista<?php if($app->input->getCmd('layout', '') == 'table') : ?>-active<?php endif; ?>.png">
 					</a>
 					<span class="pl-3 phone-hide"><?= JText::sprintf('COM_BOTIGA_FREE_SHIPPING_MSG', $spain, $islands, $world); ?>&nbsp;<img src="media/com_botiga/icons/envio_gratis.png"></span>
 				</div>
@@ -88,11 +89,11 @@ $f[13] = botigaHelper::getParameter('show_field_pais', 1);
 				</div>
 			</div>
 		</div>
-		
-		</div>	
-	
+
+		</div>
+
 	</div>
-	
+
 </header>
 <?php endif; ?>
 
@@ -110,23 +111,23 @@ $f[13] = botigaHelper::getParameter('show_field_pais', 1);
 
 			<form name="register" id="register" action="<?= JRoute::_('index.php?option=com_botiga&view=profile&task=profile.profile'); ?>" method="post" class="form-horizontal form-validate">
 					<input type="hidden" name="jform[id]" value="<?= $user->id; ?>" />
-					<?php 
+					<?php
 					$i = 1;
 					foreach($this->form->getFieldset('profile') as $field): ?>
-					<?php if($f[$i] == 1): ?> 
+					<?php if($f[$i] == 1): ?>
 					<?= $field->renderField(); ?>
 					<?php endif; ?>
-					<?php 
+					<?php
 					$i++;
 					endforeach; ?>
-					
+
 					<div class="checkbox text-right">
 					  <label>
 						<input type="checkbox" value="" class="tos">
 						<?= JText::_('COM_BOTIGA_REGISTER_LOPD'); ?>
 					  </label>
 					</div>
-					
+
 					<div id="form-login-submit" class="control-group">
 						<div class="controls text-right">
 							<button disabled="disabled" type="submit" class="btn btn-primary validate submit"><?= JText::_('JSUBMIT'); ?></button>
@@ -135,8 +136,8 @@ $f[13] = botigaHelper::getParameter('show_field_pais', 1);
 					<input type="hidden" name="option" value="com_botiga" />
 					<input type="hidden" name="task" value="profile.profile" />
 					<?php echo JHtml::_('form.token');?>
-					
+
 			</form>
 		</div>
-	</div>	
+	</div>
 </div>

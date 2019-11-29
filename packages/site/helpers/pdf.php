@@ -15,7 +15,7 @@ defined('_JEXEC') or die;
  * helper.
  */
 class botigaHelperPdf {
-	
+
 	/**
 	 * method to get component parameters
 	 * @param string $param
@@ -26,103 +26,57 @@ class botigaHelperPdf {
 	{
 		$params = JComponentHelper::getParams( 'com_botiga' );
 		$param = $params->get( $param, $default );
-	
+
 		return $param;
 	}
-	
-	/**
-	 * method to send order emails from every payment plugin
-	 * @param string $processor
-	 * @return mixed
+  /*
+	* TODO:: esborrar aquesta funció si només es fa servir als plugins
 	*/
-	public static function sendOrderEmails($processor)
-     {	
-     	$db 		= JFactory::getDbo();
-     	$session 	= JFactory::getSession();
-     	$user 		= JFactory::getUser();
-     	$app        = JFactory::getApplication();
-     	
-     	$botiga_name = botigaHelperPdf::getParameter('botiga_name', '');
-     	$botiga_mail = botigaHelperPdf::getParameter('botiga_mail', '');
-     	$botiga_iban = botigaHelperPdf::getParameter('botiga_iban', '');
-     	$logo		 = botigaHelperPdf::getParameter('botiga_logo', '');
-     	
-     	$idComanda  = $session->get('idComanda');
-     	
- 		$db->setQuery('SELECT uniqid FROM #__botiga_comandes WHERE id = '.$idComanda);
- 		$uniqid = $db->loadResult();
- 		   	
- 		$subject = JText::sprintf('COM_BOTIGA_EMAIL_USER_PROCESS_PAYMENT_SUBJECT', $uniqid);
- 		
- 		if($processor == 'Transferencia') {
- 			$body_user = JText::sprintf('COM_BOTIGA_EMAIL_USER_PROCESS_PAYMENT_BODY_BY_BANK_TRANSFER', $botiga_iban);
- 		} else {
-			$body_user = JText::sprintf('COM_BOTIGA_EMAIL_USER_PROCESS_PAYMENT_BODY', $botiga_name);   
-		}
-		
-		$body_user    .= "<p>&nbsp;</p>"; 
-		$body_user    .= "<p><img src='".JURI::root().$logo."' alt='".$botiga_name."' width='200' /></p></div>";
-		
-		$body_admin    = JText::sprintf('COM_BOTIGA_EMAIL_ADMIN_PROCESS_PAYMENT_BODY', $botiga_name); 
-		$body_admin   .= "<p>&nbsp;</p>"; 
-		$body_admin   .= "<p><img src='".JURI::root().$logo."' alt='".$botiga_name."' width='200' /></p></div>";
-		
-		botigaHelperPdf::genPdf($idComanda, 'F', $idComanda, $uniqid); 			
-	
-		//mail para el user
-		botigaHelperPdf::enviar($subject, $body_user, $user->email, JPATH_ROOT.'/order_'.$uniqid.'.pdf');
-		
-		//mail para el admin
-		botigaHelperPdf::enviar($subject, $body_admin, $botiga_mail, JPATH_ROOT.'/order_'.$uniqid.'.pdf');
-		
-		unlink(JPATH_ROOT.'/order_'.$uniqid.'.pdf');    	
-     }     
-     
-	public static function enviar($subject, $body, $email, $attach='') 
+	public static function enviar($subject, $body, $email, $attach='')
 	{
 		$mailer 	= JFactory::getMailer();
 		$config 	= JFactory::getConfig();
 
 		$fromname  	= $config->get('fromname');
-		$mailfrom	= $config->get('mailfrom');	
-	
+		$mailfrom	= $config->get('mailfrom');
+
 		$sender[]  	= $fromname;
-		$sender[]	= $mailfrom;	
-		
+		$sender[]	= $mailfrom;
+
 	    $mailer->setSender( $sender );
 	    $mailer->addRecipient( $email );
 	    $mailer->setSubject( $subject );
 	    $mailer->isHTML(true);
 	    $mailer->Encoding = 'base64';
-	    $mailer->setBody( $body );   
-	    
+	    $mailer->setBody( $body );
+
 	    if(attach != '') {
-	    	$mailer->addAttachment($attach);     
+	    	$mailer->addAttachment($attach);
 	    }
-	    
-		return $mailer->Send();			
+
+		return $mailer->Send();
 	}
-     
+
      public static function genPdf($id, $mode = 'D', $uid = '', $uniqid = '')
 	 {
 		jimport('fpdf.fpdf');
 		jimport('fpdfi.fpdi');
-		
+
 		$db = JFactory::getDbo();
 
 		$pdf = new FPDI();
-		
+
 		$pdf->AddPage();
-		
+
 		$pdf->setSourceFile(JPATH_COMPONENT.'/assets/pdf/invoice.pdf');
-		
+
 		$showdiscount = botigaHelperPdf::getParameter('show_discount', 0);
-		
+
 		$tplIdx = $pdf->importPage(1);
 		$pdf->useTemplate($tplIdx, 0, 0, 0, 0, true);
 
 		define('EURO', chr(128));
-		
+
 		$db->setQuery(
 			'SELECT c.*, u.mail_empresa as email, u.nom_empresa, u.nombre, u.cif, u.telefon, u.adreca, u.cp, u.poblacio, ju.name ' .
 			'FROM #__botiga_comandes c ' .
@@ -131,96 +85,103 @@ class botigaHelperPdf {
 			'WHERE c.id = '.$id);
 		$com = $db->loadObject();
 		
+		$user_params = json_decode(botigaHelper::getUserData('params', $com->userid), true);
+		
 		if($uniqid == '') $uniqid = $com->uniqid;
 
 		$db->setQuery('SELECT cd.*, i.name, i.ref as referencia, i.image1 as image, i.description FROM #__botiga_comandesDetall cd INNER JOIN #__botiga_items i ON cd.iditem = i.id WHERE cd.idComanda = '.$id);
 		$num_rows = $db->getNumRows();
 		$detalls  = $db->loadObjectList();
-		
+
 		$height = 10;
-		
+
 		$pdf->SetFont('Arial', '', '10');
-		
+
 		$pag = 1;
-		
-		//$pdf->SetXY(175, $height); 
+
+		//$pdf->SetXY(175, $height);
 		//$pdf->Cell(25, 5, '1/'.$pag, 0, 0, 'R');
-		
+
 		$pdf->SetFont('Arial', 'B', '10');
-		
+
 		//metadata
-		$pdf->SetXY(130, $height); 
+		$pdf->SetXY(130, $height);
 		$pdf->Cell(15, 5, utf8_decode('Pedido: '), 0, 0, 'R');
 		$pdf->SetXY(160, $height);
 		$pdf->Cell(15, 5, utf8_decode('Fecha: '), 0, 0, 'R');
-		
+
 		$pdf->SetFont('Arial', '', '10');
-		
-		$pdf->SetXY(140, $height); 
+
+		$pdf->SetXY(140, $height);
 		$pdf->Cell(15, 5, $id, 0, 0, 'R');
 		$pdf->SetXY(180, $height);
 		$pdf->Cell(15, 5, date('d-m-Y', strtotime($com->data)), 0, 0, 'R');
-		
+
 		$height += 10;
-		
+
 		//user
-		$pdf->SetXY(130, $height); 
+		$pdf->SetXY(130, $height);
 		$pdf->Cell(15, 5, utf8_decode($com->nom_empresa), 0, 0, 'L');
 		$height += 5;
-		$pdf->SetXY(130, $height); 
+		$pdf->SetXY(130, $height);
 		$pdf->Cell(15, 5, utf8_decode($com->nombre), 0, 0, 'L');
 		$height += 5;
-		$pdf->SetXY(130, $height); 
+		$pdf->SetXY(130, $height);
 		$pdf->Cell(15, 5, utf8_decode($com->adreca), 0, 0, 'L');
 		$height += 5;
-		$pdf->SetXY(130, $height); 
+		$pdf->SetXY(130, $height);
 		$pdf->Cell(15, 5, $com->email, 0, 0, 'L');
 		$height += 5;
-		$pdf->SetXY(130, $height); 
+		$pdf->SetXY(130, $height);
 		$pdf->Cell(15, 5, $com->cp.' - '.utf8_decode($com->poblacio), 0, 0, 'L');
 		$height += 5;
-		$pdf->SetXY(130, $height); 
+		$pdf->SetXY(130, $height);
 		$pdf->Cell(15, 5, $com->telefon, 0, 0, 'L');
-		
+
 		$height += 10;
 		$pdf->SetFont('Arial', 'B', '10');
-		
+
 		if($com->status == 4) {
 			$pdf->SetTextColor(255, 0, 0);
-			$pdf->SetXY(20, $height);  
+			$pdf->SetXY(20, $height);
 			$pdf->Cell(30, 5, JText::_('COM_BOTIGA_HISTORY_STATUS_PENDING'), 0, 0, '');
 			$pdf->SetTextColor(255, 0, 0);
 			$pdf->SetTextColor(0, 0, 0);
 		}
-		
+
 		$height += 5;
-		$pdf->SetXY(20, $height);  
-		$pdf->Cell(30, 5, JText::_('COM_BOTIGA_HISTORY_PROCESSOR').': '.$com->processor, 0, 0, '');
+		$pdf->SetXY(20, $height);
 		
+		$formaPag = $com->processor;
+		if (strtolower($com->processor)=='habitual' && $user_params['pago_habitual_desc']!='') {
+			$formaPag .= ' - ' . $user_params['pago_habitual_desc'];
+		}
+		$pdf->Cell(30, 5, JText::_('COM_BOTIGA_HISTORY_PROCESSOR').': '.$formaPag, 0, 0, '');
+
 		$height += 10;
 		$pdf->SetFont('Arial', 'B', '8');
-		
-		$pdf->SetXY(20, $height);  
+
+		$pdf->SetXY(20, $height);
 		$pdf->Cell(30, 5, JText::_('COM_BOTIGA_INVOICE_REF'), 0, 0, '');
-		$pdf->SetXY(45, $height);  
+		$pdf->SetXY(45, $height);
 		$pdf->Cell(90, 5, utf8_decode(JText::_('COM_BOTIGA_INVOICE_DESC')), 0, 0, '');
-		$pdf->SetXY(130, $height); 
-		$pdf->Cell(20, 5, JText::_('COM_BOTIGA_INVOICE_QTY'), 0, 0, 'R');	
+		$pdf->SetXY(130, $height);
+		$pdf->Cell(20, 5, JText::_('COM_BOTIGA_INVOICE_QTY'), 0, 0, 'R');
 		$pdf->SetXY(145, $height);
 		$pdf->Cell(20, 5, JText::_('COM_BOTIGA_INVOICE_UNIT_PRICE'), 0, 0, 'R');
 		$pdf->SetXY(160, $height);
 		$pdf->Cell(20, 5, JText::_('%dto'), 0, 0, 'R');
-		$pdf->SetXY(180, $height); 
+		$pdf->SetXY(180, $height);
 		$pdf->Cell(15, 5, JText::_('COM_BOTIGA_INVOICE_AMOUNT'), 0, 0, 'R');
-		
+
 		// Detall del document
-		$total   = 0;		
+		$total   = 0;
 		$height  += 10;
 		$counter = 0;
 		$total_qty = 0;
-		
+
 		foreach($detalls as $detall) {
-		
+
 			if($counter == 40) {
 				$pdf->AddPage();
 				$pag++;
@@ -228,86 +189,86 @@ class botigaHelperPdf {
 				$tplIdx2 = $pdf->importPage(1);
 				$pdf->useTemplate($tplIdx2, 0, 0, 0, 0, true);
 			}
-			
+
 			$pdf->SetFont('Arial', '', '8');
-	
-			$pdf->SetXY(20, $height);  
-			$pdf->Cell(30, 5, $detall->referencia, 0, 0, '');	
-			//$pdf->Image(JURI::root().$detall->image, 20, ($height-4), 5, 10, 'JPG');		
-			
-			$pdf->SetXY(45, $height);  
+
+			$pdf->SetXY(20, $height);
+			$pdf->Cell(30, 5, $detall->referencia, 0, 0, '');
+			//$pdf->Image(JURI::root().$detall->image, 20, ($height-4), 5, 10, 'JPG');
+
+			$pdf->SetXY(45, $height);
 			$pdf->Cell(90, 5, utf8_decode($detall->name), 0, 0, '');
-			
-			$pdf->SetXY(130, $height); 
-			$pdf->Cell(20, 5, $detall->qty, 0, 0, 'R');	
-			
+
+			$pdf->SetXY(130, $height);
+			$pdf->Cell(20, 5, $detall->qty, 0, 0, 'R');
+
 			$pdf->SetXY(145, $height);
 			if($detall->dte_linia > 0) { $preu = botigaHelper::getPercentDiff($detall->price, $detall->dte_linia); } else { $preu = $detall->price; }
 			$pdf->Cell(20, 5, number_format($preu, 2, ',', '.'), 0, 0, 'R');
-			
+
 			$pdf->SetXY(160, $height);
 			$pdf->Cell(20, 5, number_format($detall->dte_linia, 2, ',', '.'), 0, 0, 'R');
-			
-			$pdf->SetXY(180, $height); 
+
+			$pdf->SetXY(180, $height);
 			$pdf->Cell(15, 5, number_format(($preu * $detall->qty), 2, ',', '.').EURO, 0, 0, 'R');
-			
+
 			$height += 5;
 			$counter++;
 			$total_qty += $detall->qty;
 		}
-		
+
 		// Total d'unitats al peu del detall
 		$pdf->SetFont('Arial', 'B', '8');
-	
-		$pdf->SetXY(45, $height);  
+
+		$pdf->SetXY(45, $height);
 		$pdf->Cell(90, 5, 'Total unidades:', 0, 0, 'R');
-		
-		$pdf->SetXY(130, $height); 
-		$pdf->Cell(20, 5, $total_qty, 0, 0, 'R');	
-		
+
+		$pdf->SetXY(130, $height);
+		$pdf->Cell(20, 5, $total_qty, 0, 0, 'R');
+
 		// Peu del document
 		$height = 244;
 		$pdf->SetFont('Arial', 'B', '10');
-		
-		$pdf->SetXY(20, $height);  
+
+		$pdf->SetXY(20, $height);
 		$pdf->Cell(19, 5, JText::_('COM_BOTIGA_INVOICE_GROSS'), 0, 0, '');
-		$pdf->SetXY(40, $height); 
+		$pdf->SetXY(40, $height);
 		$pdf->Cell(18, 5, JText::_('COM_BOTIGA_INVOICE_DISCOUNTS'), 0, 0, '');
-		$pdf->SetXY(59, $height); 
+		$pdf->SetXY(59, $height);
 		$pdf->Cell(19, 5, JText::_('COM_BOTIGA_INVOICE_SHIPMENT'), 0, 0, '');
-		$pdf->SetXY(79, $height); 
+		$pdf->SetXY(79, $height);
 		$pdf->Cell(18, 5, JText::_('COM_BOTIGA_INVOICE_BASE'), 0, 0, '');
-		$pdf->SetXY(98, $height); 
-		$pdf->Cell(18, 5, JText::_('COM_BOTIGA_INVOICE_IVA'), 0, 0, 'R');	
+		$pdf->SetXY(98, $height);
+		$pdf->Cell(18, 5, JText::_('COM_BOTIGA_INVOICE_IVA'), 0, 0, 'R');
 		$pdf->SetXY(117, $height);
 		$pdf->Cell(18, 5, JText::_('COM_BOTIGA_INVOICE_IMPORT_IVA'), 0, 0, 'R');
-		$pdf->SetXY(136, $height); 
+		$pdf->SetXY(136, $height);
 		$pdf->Cell(18, 5, JText::_('COM_BOTIGA_INVOICE_RE'), 0, 0, 'R');
-		$pdf->SetXY(155, $height); 
-		$pdf->Cell(19, 5, JText::_('COM_BOTIGA_INVOICE_IMPORT_RE'), 0, 0, 'R');		
-		$pdf->SetXY(175, $height); 
+		$pdf->SetXY(155, $height);
+		$pdf->Cell(19, 5, JText::_('COM_BOTIGA_INVOICE_IMPORT_RE'), 0, 0, 'R');
+		$pdf->SetXY(175, $height);
 		$pdf->Cell(20, 5, JText::_('COM_BOTIGA_INVOICE_TOTAL'), 0, 0, 'R');
-		
+
 		$height += 10;
 		$pdf->SetFont('Arial', '', '10');
-		
-		$pdf->SetXY(20, $height);  
-		$pdf->Cell(19, 5, number_format($com->subtotal, 2, ',', '.').EURO, 0, 0, '');	
-		$pdf->SetXY(40, $height);		
-		$pdf->Cell(18, 5, number_format($com->discount, 2, ',', '.').EURO, 0, 0, 'R');		
-		$pdf->SetXY(59, $height); 
-		$pdf->Cell(19, 5, number_format($com->shipment, 2, ',', '.').EURO, 0, 0, 'R');	
-		$pdf->SetXY(79, $height); 
-		$pdf->Cell(19, 5, number_format($com->subtotal-$com->discount+$com->shipment, 2, ',', '.').EURO, 0, 0, 'R');	
+
+		$pdf->SetXY(20, $height);
+		$pdf->Cell(19, 5, number_format($com->subtotal, 2, ',', '.').EURO, 0, 0, '');
+		$pdf->SetXY(40, $height);
+		$pdf->Cell(18, 5, number_format($com->discount, 2, ',', '.').EURO, 0, 0, 'R');
+		$pdf->SetXY(59, $height);
+		$pdf->Cell(19, 5, number_format($com->shipment, 2, ',', '.').EURO, 0, 0, 'R');
+		$pdf->SetXY(79, $height);
+		$pdf->Cell(19, 5, number_format($com->subtotal-$com->discount+$com->shipment, 2, ',', '.').EURO, 0, 0, 'R');
 		$pdf->SetXY(98, $height);
 		$pdf->Cell(18, 5, $com->iva_percent . '%', 0, 0, 'R');
-		$pdf->SetXY(117, $height); 
-		$pdf->Cell(18, 5, number_format($com->iva_total, 2, ',', '.').EURO, 0, 0, 'R');		
-		$pdf->SetXY(136, $height); 
+		$pdf->SetXY(117, $height);
+		$pdf->Cell(18, 5, number_format($com->iva_total, 2, ',', '.').EURO, 0, 0, 'R');
+		$pdf->SetXY(136, $height);
 		$pdf->Cell(18, 5, $com->re_percent . '%', 0, 0, 'R');
-		$pdf->SetXY(155, $height); 
-		$pdf->Cell(18, 5, number_format($com->re_total, 2, ',', '.').EURO, 0, 0, 'R');		
-		$pdf->SetXY(175, $height); 
+		$pdf->SetXY(155, $height);
+		$pdf->Cell(18, 5, number_format($com->re_total, 2, ',', '.').EURO, 0, 0, 'R');
+		$pdf->SetXY(175, $height);
 		$pdf->Cell(18, 5, number_format($com->total, 2, ',', '.').EURO, 0, 0, 'R');
 
 		$pdf->Output('order_'.$uniqid.'.pdf', $mode);

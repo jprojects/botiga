@@ -20,6 +20,8 @@ class plgBotigaPaypal extends JPlugin
 	
 	public function __construct(&$subject, $config = array())
 	{
+		$lang = JFactory::getLanguage();
+		$lang->load('plg_botiga_paypal', JPATH_ADMINISTRATOR);
 		parent::__construct($subject, $config);
 	}
 
