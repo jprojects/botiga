@@ -2,11 +2,11 @@
 /**
  * @version		1.0.0 botiga $
  * @package		botiga
- * @copyright   Copyright © 2010 - All rights reserved.
+ * @copyright Copyright © 2010 - All rights reserved.
  * @license		GNU/GPL
  * @author		kim
- * @author mail administracion@joomlanetprojects.com
- * @website		http://www.joomlanetprojects.com
+ * @author mail kim@aficat.com
+ * @website		http://www.aficat.com
  *
 */
 
@@ -19,18 +19,6 @@ $jinput		= JFactory::getApplication()->input;
 $modal 		= $jinput->get('m', 0);
 $lang 		= JFactory::getLanguage()->getTag();
 ?>
-
-<style>
-.item {
-	margin-bottom: 50px;
-	padding-left: 0 !important;
-	padding-right: 0 !important;
-}
-.item-wrap {
-	padding-left: 10px;
-	padding-right: 10px;
-}
-</style>
 
 <?php if(botigaHelper::getParameter('show_header', 0) == 1) :
   $layout = new JLayoutFile('header', JPATH_ROOT .'/components/com_botiga/layouts');
@@ -111,47 +99,14 @@ endif; ?>
 	endif;
 	?>
 
-
 	<div class="pagination">
 		<?php echo $this->pagination->getPagesLinks(); ?>
 	</div>
 
-	<?php if(botigaHelper::getParameter('show_ask', 1) == 1) : ?>
-	<!-- Modal -->
-	<div class="modal fade" id="budget" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-	  <div class="modal-dialog" role="document">
-		<div class="modal-content">
-		  <div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-			<h4 class="modal-title" id="myModalLabel"><strong><?= JText::_('COM_BOTIGA_BUDGET_TITLE'); ?></strong></h4>
-		  </div>
-		  <div class="modal-body">
-			<form id="budgetForm" name="budgetForm" action="index.php?option=com_botiga&task=sendModalEmail" method="post">
-				<input type="hidden" name="url" value="<?= JUri::getInstance(); ?>" />
-				<div class="form-group">
-					<input type="text" name="maquina" id="modal-maquina" value="" />
-				</div>
-				<div class="form-group">
-					<input type="text" name="nombre" value="" placeholder="<?= JText::_('COM_BOTIGA_BUDGET_NAME'); ?>" />
-				</div>
-				<div class="form-group">
-					<input type="text" name="email" value="" placeholder="<?= JText::_('COM_BOTIGA_BUDGET_EMAIL'); ?>" />
-				</div>
-				<div class="form-group">
-					<input type="text" name="phone" value="" placeholder="<?= JText::_('COM_BOTIGA_BUDGET_PHONE'); ?>" />
-				</div>
-				<div class="form-group">
-					<textarea style="width:100%" rows="8" name="mensaje" placeholder="<?= JText::_('COM_BOTIGA_BUDGET_MESSAGE'); ?>"></textarea>
-				</div>
-			</form>
-		  </div>
-		  <div class="modal-footer">
-		  	<span class="small" style="margin-right:20px;"><?= JText::_('COM_BOTIGA_BUDGET_TOS'); ?></span>
-			<button onclick="budgetForm.submit();" type="button" class="btn btn-default btn-rounded"><?= JText::_('COM_BOTIGA_SEND'); ?></button>
-		  </div>
-		</div>
-	  </div>
-	</div>
-	<?php endif; ?>
+	<?php if(botigaHelper::getParameter('show_ask', 1) == 1) :
+    $layout = new JLayoutFile('ask', JPATH_ROOT .'/components/com_botiga/layouts');
+    $data   = array();
+    echo $layout->render($data);
+  endif; ?>
 
 </div>

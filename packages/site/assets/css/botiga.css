@@ -107,6 +107,12 @@ span.rollover img {
 
 .item {
 	margin-bottom: 50px;
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+}
+.item-wrap {
+	padding-left: 10px;
+	padding-right: 10px;
 }
 
 .btn-link, .btn-link:hover { border: 1px solid #1d1d1d; color: #1d1d1d; text-decoration:none; }
