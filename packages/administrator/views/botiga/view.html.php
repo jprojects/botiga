@@ -15,40 +15,38 @@ defined('_JEXEC') or die('Restricted access');
 
 class botigaViewBotiga extends JViewLegacy
 {
-    protected $items;
+  protected $items;
 	protected $pagination;
 	protected $state;
-        
-	function display($tpl = null) 
+
+	function display($tpl = null)
 	{
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {
 			throw new Exception(implode("\n", $errors));
 		}
- 
-		botigaHelper::addSubmenu('botiga');
 
-        $this->addToolbar();
+    $this->addToolbar();
 
-        $this->sidebar = JHtmlSidebar::render();
- 
+    $this->sidebar = JHtmlSidebar::render();
+
 		// Display the template
 		parent::display($tpl);
 	}
- 
+
 	/**
 	 * Setting the toolbar
 	*/
-	protected function addToolBar() 
+	protected function addToolBar()
 	{
 		$canDo = botigaHelper::getActions();
 		JToolBarHelper::title(JText::_('COM_BOTIGA_MENU_NAME'), 'joomla');
 
-		if ($canDo->get('core.admin')) 
+		if ($canDo->get('core.admin'))
 		{
-            JToolBarHelper::divider();
+      JToolBarHelper::divider();
 			JToolBarHelper::preferences('com_botiga');
-		}	
+		}
 	}
 }
 ?>

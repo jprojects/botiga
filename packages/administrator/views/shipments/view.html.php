@@ -15,11 +15,11 @@ defined('_JEXEC') or die('Restricted access');
 
 class botigaViewShipments extends JViewLegacy
 {
-    protected $items;
+  protected $items;
 	protected $pagination;
 	protected $state;
-        
-	function display($tpl = null) 
+
+	function display($tpl = null)
 	{
 		$this->state		= $this->get('State');
 		$this->items		= $this->get('Items');
@@ -31,46 +31,44 @@ class botigaViewShipments extends JViewLegacy
 		if (count($errors = $this->get('Errors'))) {
 			throw new Exception(implode("\n", $errors));
 		}
- 
-		botigaHelper::addSubmenu('shipments');
 
-        $this->addToolbar();
+    $this->addToolbar();
 
-        $this->sidebar = JHtmlSidebar::render();
- 
+    $this->sidebar = JHtmlSidebar::render();
+
 		// Display the template
 		parent::display($tpl);
 	}
- 
+
 	/**
 	 * Setting the toolbar
 	*/
-	protected function addToolBar() 
+	protected function addToolBar()
 	{
 		$canDo = botigaHelper::getActions();
 		JToolBarHelper::title(JText::_('COM_BOTIGA_MANAGER_SHIPMENTS'), 'puzzle');
 
-		if ($canDo->get('core.create')) 
+		if ($canDo->get('core.create'))
 		{
 			JToolBarHelper::addNew('shipment.add', 'JTOOLBAR_NEW');
 		}
-		if ($canDo->get('core.edit')) 
+		if ($canDo->get('core.edit'))
 		{
 			JToolBarHelper::editList('shipment.edit', 'JTOOLBAR_EDIT');
-            JToolBarHelper::divider();
-            JToolBarHelper::custom('shipments.publish', 'publish.png', 'publish_f2.png', 'JTOOLBAR_PUBLISH', true);
-            JToolBarHelper::custom('shipments.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
+      JToolBarHelper::divider();
+      JToolBarHelper::custom('shipments.publish', 'publish.png', 'publish_f2.png', 'JTOOLBAR_PUBLISH', true);
+      JToolBarHelper::custom('shipments.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
 		}
-		if ($canDo->get('core.delete')) 
-		{   
-            JToolBarHelper::divider();
+		if ($canDo->get('core.delete'))
+		{
+      JToolBarHelper::divider();
 			JToolBarHelper::deleteList('', 'shipments.delete', 'JTOOLBAR_DELETE');
 		}
-		if ($canDo->get('core.admin')) 
+		if ($canDo->get('core.admin'))
 		{
-            JToolBarHelper::divider();
+      JToolBarHelper::divider();
 			JToolBarHelper::preferences('com_botiga');
-		}	
+		}
 	}
 }
 ?>

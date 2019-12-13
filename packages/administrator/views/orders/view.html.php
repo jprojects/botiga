@@ -15,7 +15,7 @@ defined('_JEXEC') or die('Restricted access');
 
 class botigaViewOrders extends JViewLegacy
 {
-    protected $items;
+  protected $items;
 	protected $pagination;
 	protected $state;
 
@@ -32,11 +32,9 @@ class botigaViewOrders extends JViewLegacy
 			throw new Exception(implode("\n", $errors));
 		}
 
-		botigaHelper::addSubmenu('orders');
+    $this->addToolbar();
 
-        $this->addToolbar();
-
-        $this->sidebar = JHtmlSidebar::render();
+    $this->sidebar = JHtmlSidebar::render();
 
 		// Display the template
 		parent::display($tpl);
@@ -53,16 +51,16 @@ class botigaViewOrders extends JViewLegacy
 
 		if ($canDo->get('core.delete'))
 		{
-            JToolBarHelper::divider();
+      JToolBarHelper::divider();
 			JToolBarHelper::deleteList('', 'orders.delete', 'JTOOLBAR_DELETE');
 		}
 		if ($canDo->get('core.edit'))
 		{
-            JToolBarHelper::custom('orders.excel', 'checkin.png', 'checkin_f2.png', 'Excel', false);            
+      JToolBarHelper::custom('orders.excel', 'checkin.png', 'checkin_f2.png', 'Excel', false);
 		}
 		if ($canDo->get('core.admin'))
 		{
-            JToolBarHelper::divider();
+      JToolBarHelper::divider();
 			JToolBarHelper::preferences('com_botiga');
 		}
 
