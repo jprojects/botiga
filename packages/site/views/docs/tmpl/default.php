@@ -2,7 +2,7 @@
 /**
  * @version		1.0.0 botiga $
  * @package		botiga
- * @copyright   Copyright © 2010 - All rights reserved.
+ * @copyright Copyright © 2010 - All rights reserved.
  * @license		GNU/GPL
  * @author		kim
  * @author mail kim@aficat.com
@@ -22,9 +22,9 @@ $search = JFactory::getApplication()->input->get('filter_search');
   echo $layout->render($data);
 endif; ?>
 
-<div class="container margin50">
+<div class="container my-5">
 
-	<div class="col-sm-12 col-md-11">
+	<div class="col-12">
 		<?php if(count($this->items) > 0) : ?>
 		<table class="table table-striped">
 			<?php foreach($this->items as $item) : ?>
@@ -35,13 +35,13 @@ endif; ?>
 			<?php endforeach; ?>
 		</table>
 		<?php else : ?>
-		<?php echo JText::sprintf('COM_BOTIGA_NO_SEARCH_ITEMS', $search); ?>
+		<?= JText::sprintf('COM_BOTIGA_NO_SEARCH_ITEMS', $search); ?>
 		<?php endif; ?>
 
 		<?php if(count($this->items) > 0) : ?>
 		<div id="system">
 			<div class="pagination">
-				<?php echo $this->pagination->getPagesLinks(); ?>
+				<?= $this->pagination->getPagesLinks(); ?>
 			</div>
 		</div>
 		<?php endif; ?>

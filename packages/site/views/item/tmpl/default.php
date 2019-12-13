@@ -13,15 +13,13 @@ defined('_JEXEC') or die('Restricted access');
 
 $this->item->image1 != '' ? $image = $this->item->image1 : $image = 'components/com_botiga/assets/images/noimage.jpg';
 
-$model 			= $this->getModel('item');
 $user  			= JFactory::getUser();
 $doc   			= JFactory::getDocument();
 $jinput			= JFactory::getApplication()->input;
 $precio 		= botigaHelper::getUserPrice($this->item->id);
 $dtos 			= botigaHelper::getUserDiscounts($this->item->id);
-$uri 			= base64_encode(JFactory::getURI()->toString());
+$uri 			= base64_encode(JUri::current());
 $modal 			= $jinput->get('m', 0);
-$logo			= botigaHelper::getParameter('botiga_logo', '');
 $botiga_name	= botigaHelper::getParameter('botiga_name', '');
 $showprices 	= botigaHelper::getParameter('show_prices', 1);
 $showdiscount 	= botigaHelper::getParameter('show_discount', 0);
@@ -37,15 +35,7 @@ $showbrand 		= botigaHelper::getParameter('show_brand_item', 1);
 $showfav 		= botigaHelper::getParameter('show_fav_item', 1);
 $showpvp 		= botigaHelper::getParameter('show_pvp_item', 1);
 $showrel 		= botigaHelper::getParameter('show_related_item', 1);
-$userToken  	= JSession::getFormToken();
-
 $dte_linia  	= botigaHelper::getUserData('dte_linia', $user->id);
-
-$spain 			= botigaHelper::getParameter('total_shipment_spain', 25);
-$islands 		= botigaHelper::getParameter('total_shipment_islands', 50);
-$world 			= botigaHelper::getParameter('total_shipment_world', 60);
-
-$count 	    	= botigaHelper::getCarritoCount();
 
 $js = '{
   "@context": "http://schema.org/",
@@ -70,20 +60,6 @@ $doc->addScriptDeclaration($js, 'application/ld+json');
 $doc->addScript('components/com_botiga/assets/js/jquery.fancybox.js');
 $doc->addStylesheet('components/com_botiga/assets/css/jquery.fancybox.css');
 ?>
-
-<!--
-//20/8/19 treiem el autofoco per mostrar l'imatge del producte
-<script>
-jQuery(document).ready(function() {
-	jQuery('.input-number').keypress(function(event) {
-		if (event.keyCode == 13 || event.which == 13) {
-		    document.forms.addtocart.submit();
-		    event.preventDefault();
-		}
-	});
-});
-</script>
--->
 
 <?php if(botigaHelper::getParameter('show_header', 0) == 1) :
   $layout = new JLayoutFile('header', JPATH_ROOT .'/components/com_botiga/layouts');

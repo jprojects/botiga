@@ -11,38 +11,29 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
-$user  			= JFactory::getUser();
-$uri 			  = base64_encode(JUri::current());
-$jinput			= JFactory::getApplication()->input;
-$modal 			= $jinput->get('m', 0);
-$catid      = $jinput->get('catid', '');
-$marca      = $jinput->get('marca', '');
-$itemid     = $jinput->get('Itemid', '');
-$orderby    = $jinput->get('orderby', 'ref');
-$limit      = $jinput->get('limit', 24);
-$lang 			= JFactory::getLanguage()->getTag();
-$logo			  = botigaHelper::getParameter('botiga_logo', '');
-$showprices = botigaHelper::getParameter('show_prices', 1);
-$showdiscount 	= botigaHelper::getParameter('show_discount', 0);
+$user  			  = JFactory::getUser();
+$uri 			    = base64_encode(JUri::current());
+$jinput			  = JFactory::getApplication()->input;
+$modal 			  = $jinput->get('m', 0);
+$catid        = $jinput->get('catid', '');
+$marca        = $jinput->get('marca', '');
+$itemid       = $jinput->get('Itemid', '');
+$orderby      = $jinput->get('orderby', 'ref');
+$limit        = $jinput->get('limit', 24);
+$lang 			  = JFactory::getLanguage()->getTag();
+$showprices   = botigaHelper::getParameter('show_prices', 1);
+$showdiscount = botigaHelper::getParameter('show_discount', 0);
 $loginprices 	= botigaHelper::getParameter('login_prices', 0);
 $loginforbuy 	= botigaHelper::getParameter('login_buy', 1);
 $shownotice 	= botigaHelper::getParameter('show_notice', 1);
-$showref 		= botigaHelper::getParameter('show_ref', 1);
+$showref 		  = botigaHelper::getParameter('show_ref', 1);
 $showdesc 		= botigaHelper::getParameter('show_desc', 1);
 $showbrand 		= botigaHelper::getParameter('show_brand', 1);
-$showfav 		= botigaHelper::getParameter('show_fav', 1);
-$showpvp 		= botigaHelper::getParameter('show_pvp', 1);
-$userToken  	= JSession::getFormToken();
-
+$showfav 		  = botigaHelper::getParameter('show_fav', 1);
+$showpvp 		  = botigaHelper::getParameter('show_pvp', 1);
 $dte_linia  	= botigaHelper::getUserData('dte_linia', $user->id);
-
-$spain 			= botigaHelper::getParameter('total_shipment_spain', 25);
-$islands 		= botigaHelper::getParameter('total_shipment_islands', 50);
-$world 			= botigaHelper::getParameter('total_shipment_world', 60);
-
 $control_stock 	= botigaHelper::getParameter('control_stock', 0);
 
-$count 	    	= botigaHelper::getCarritoCount();
 ?>
 
 <?php if(botigaHelper::getParameter('show_header', 0) == 1) :
@@ -218,8 +209,8 @@ endif; ?>
 	  		<div class="modal-body loginBody">
 			    <?php
 			    $document	= JFactory::getDocument();
-				$renderer	= $document->loadRenderer('module');
-				echo $renderer->render(JModuleHelper::getModule('mod_login'));
+				  $renderer	= $document->loadRenderer('module');
+				  echo $renderer->render(JModuleHelper::getModule('mod_login'));
 			    ?>
 	  		</div>
 		</div>

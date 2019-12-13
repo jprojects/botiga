@@ -19,52 +19,30 @@ $doc   		= JFactory::getDocument();
 $doc->addScript('components/com_botiga/assets/js/jquery.fancybox.js');
 $doc->addStylesheet('components/com_botiga/assets/css/jquery.fancybox.css');
 
-$model 			= $this->getModel('botiga');
-$user  			= JFactory::getUser();
-$uri 			= base64_encode(JFactory::getURI()->toString());
-$jinput			= $app->input;
+$model 			  = $this->getModel('botiga');
+$user  			  = JFactory::getUser();
+$uri 			    = base64_encode(JFactory::getURI()->toString());
+$jinput			  = $app->input;
 $catid      	= $jinput->get('catid', '');
 $marca      	= $jinput->get('marca', '');
 $itemid     	= $jinput->get('Itemid', '');
 $orderby    	= $jinput->get('orderby', 'ref');
 $limit      	= $jinput->get('limit', 24);
-$lang 			= JFactory::getLanguage()->getTag();
-$logo			= botigaHelper::getParameter('botiga_logo', '');
+$lang 			  = JFactory::getLanguage()->getTag();
 $showprices 	= botigaHelper::getParameter('show_prices', 1);
-$showdiscount 	= botigaHelper::getParameter('show_discount', 0);
+$showdiscount = botigaHelper::getParameter('show_discount', 0);
 $loginprices 	= botigaHelper::getParameter('login_prices', 0);
 $loginforbuy 	= botigaHelper::getParameter('login_buy', 1);
 $shownotice 	= botigaHelper::getParameter('show_notice', 1);
-$showref 		= botigaHelper::getParameter('show_ref', 1);
+$showref 		  = botigaHelper::getParameter('show_ref', 1);
 $showdesc 		= botigaHelper::getParameter('show_desc', 1);
 $showbrand 		= botigaHelper::getParameter('show_brand', 1);
-$showfav 		= botigaHelper::getParameter('show_fav', 1);
-$showpvp 		= botigaHelper::getParameter('show_pvp', 1);
-$userToken  	= JSession::getFormToken();
-
+$showfav 		  = botigaHelper::getParameter('show_fav', 1);
+$showpvp 		  = botigaHelper::getParameter('show_pvp', 1);
 $dte_linia  	= botigaHelper::getUserData('dte_linia', $user->id);
-
-$spain 			= botigaHelper::getParameter('total_shipment_spain', 25);
-$islands 		= botigaHelper::getParameter('total_shipment_islands', 50);
-$world 			= botigaHelper::getParameter('total_shipment_world', 60);
-
 $control_stock 	= botigaHelper::getParameter('control_stock', 0);
-
-$count 	    	= botigaHelper::getCarritoCount();
 $subtotal   	= 0;
 ?>
-
-<script>
-jQuery(document).ready(function() {
-	jQuery('.input-number').keypress(function(event) {
-		var itemid = jQuery(this).attr('data-itemid');
-		if (event.keyCode == 13 || event.which == 13) {
-		    jQuery('#addtocart-'+itemid).submit();
-		    event.preventDefault();
-		}
-	});
-});
-</script>
 
 <?php if(botigaHelper::getParameter('show_header', 0) == 1) :
   $layout = new JLayoutFile('header', JPATH_ROOT .'/components/com_botiga/layouts');
@@ -72,17 +50,16 @@ jQuery(document).ready(function() {
   echo $layout->render($data);
 endif; ?>
 
-<div class="col-md-11 mx-auto">
+<div>
 
 		<div class="row">
 
-			<?php if($user->guest && $shownotice == 1) : ?>
+      <?php if($user->guest && $shownotice == 1) : ?>
 			<div class="col-12">
 				<?php
 				$link1 = 'index.php?option=com_botiga&view=register';
-				$link2 = 'index.php?option=com_users&view=login';
 				?>
-				<div class="alert alert-warning"><?= JText::sprintf('COM_BOTIGA_PRICES_NOTICE', $link2, $link1); ?></div>
+				<div class="alert alert-warning"><?= JText::sprintf('COM_BOTIGA_PRICES_NOTICE', $link1); ?></div>
 			</div>
 			<?php endif; ?>
 
@@ -286,6 +263,25 @@ endif; ?>
 			<div class="paginacion">
 				<?php echo $this->pagination->getPagesLinks(); ?>
 			</div>
+
+      <!-- Modal login -->
+      <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginLabel">
+        	<div class="modal-dialog" role="document">
+      		<div class="modal-content">
+      	  		<div class="modal-header">
+      	    		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      	  		</div>
+      	  		<div class="modal-body loginBody">
+      			    <?php
+      			    $document	= JFactory::getDocument();
+      				  $renderer	= $document->loadRenderer('module');
+      				  echo $renderer->render(JModuleHelper::getModule('mod_login'));
+      			    ?>
+      	  		</div>
+      		</div>
+        	</div>
+      </div>
+      <!-- end login modal -->
 
 	</div>
 

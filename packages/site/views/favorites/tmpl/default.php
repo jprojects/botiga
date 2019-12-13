@@ -2,7 +2,7 @@
 /**
  * @version		1.0.0 botiga $
  * @package		botiga
- * @copyright   Copyright © 2010 - All rights reserved.
+ * @copyright Copyright © 2010 - All rights reserved.
  * @license		GNU/GPL
  * @author		kim
  * @author mail kim@aficat.com
@@ -14,23 +14,11 @@
 defined('_JEXEC') or die('Restricted access');
 $model 		= $this->getModel('favorites');
 $user  		= JFactory::getUser();
-$uri 		= base64_encode(JFactory::getURI()->toString());
+$uri 		  = base64_encode(JFactory::getURI()->toString());
 $jinput		= JFactory::getApplication()->input;
 $lang 		= JFactory::getLanguage()->getTag();
 $showprices = botigaHelper::getParameter('show_prices', 1);
 ?>
-
-<style>
-.item {
-	margin-bottom: 50px;
-	padding-left: 0 !important;
-	padding-right: 0 !important;
-}
-.item-wrap {
-	padding-left: 10px;
-	padding-right: 10px;
-}
-</style>
 
 <?php if(botigaHelper::getParameter('show_header', 0) == 1) :
   $layout = new JLayoutFile('header', JPATH_ROOT .'/components/com_botiga/layouts');
