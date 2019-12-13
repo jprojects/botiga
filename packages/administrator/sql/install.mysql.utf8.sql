@@ -289,7 +289,7 @@ CREATE TABLE IF NOT EXISTS `#__botiga_users` (
   `ordering` int(11) NOT NULL DEFAULT '0',
   `validate` tinyint(1) NOT NULL DEFAULT '0',
   `dte_linia` float(10,2) NOT NULL DEFAULT '0.00',
-  `params` text NOT NULL DEFAULT '',
+  `params` text NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -304,7 +304,7 @@ CREATE TABLE IF NOT EXISTS `#__botiga_savedCarts` (
   `idComanda` int(11) DEFAULT NULL,
   `data` datetime NOT NULL,
   `userid` int(11) DEFAULT '0',
-  `cart` text NOT NULL DEFAULT '',
+  `cart` text NOT NULL,
   `published` tinyint(1) NOT NULL DEFAULT '0',
   `ordering` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
