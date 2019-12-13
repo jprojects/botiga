@@ -54,7 +54,7 @@
 			<menu link="option=com_botiga&amp;view=coupons">Coupons</menu>
 			<menu link="option=com_botiga&amp;view=shipments">Shippments</menu>
 			<menu link="option=com_botiga&amp;view=discounts">Discounts</menu>
-			<menu link="option=com_botiga&amp;view=documents">Documents</menu>
+			<menu link="option=com_botiga&amp;view=docs">Documents</menu>
 			<menu link="option=com_botiga&amp;view=tools&amp;view=edit">Tools</menu>
 		</submenu>
 		<files folder="administrator">
