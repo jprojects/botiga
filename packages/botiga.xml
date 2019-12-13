@@ -21,8 +21,8 @@
 		<folder>assets/</folder>
 	</files>
 	<media destination="com_botiga" folder="media">
-    <folder>icons/</folder>
-    <folder>docs/</folder>
+    <folder>media/icons/</folder>
+    <folder>media/docs/</folder>
   </media>
 	<!-- Language frontend -->
 	<languages folder="site/languages/en-GB">
