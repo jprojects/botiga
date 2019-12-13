@@ -5,17 +5,13 @@
  * @copyright   Copyright © 2010 - All rights reserved.
  * @license		GNU/GPL
  * @author		kim
- * @author mail administracion@joomlanetprojects.com
- * @website		http://www.joomlanetprojects.com
+ * @author mail kim@aficat.com
+ * @website		http://www.aficat.com
  *
 */
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
-
-JHtml::_('bootstrap.tooltip');
-JHtml::_('behavior.multiselect');
-JHtml::_('formbehavior.chosen', 'select');
 
 $user		= JFactory::getUser();
 $userId		= $user->get('id');
@@ -62,9 +58,9 @@ if (!empty($this->extra_sidebar)) {
 
 
 		<?php echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this)); ?>
-       
+
 		<div class="clearfix"> </div>
-		
+
 		<table class="table table-striped" id="adminList">
 			<thead>
 				<tr>
@@ -80,10 +76,10 @@ if (!empty($this->extra_sidebar)) {
 					<th width="1%" class="nowrap center">
 						<?php echo JHtml::_('grid.sort', 'JSTATUS', 'a.published', $listDirn, $listOrder); ?>
 					</th>
-               		<?php endif; ?>			
+               		<?php endif; ?>
 					<th>
 						<?php echo JHtml::_('grid.sort',  'COM_BOTIGA_BRANDS_HEADING_BRAND', 'name', $listDirn, $listOrder); ?>
-					</th>        
+					</th>
 					<th>
 						<?php echo JHtml::_('grid.sort',  'CodFte', 'factusol_codfte', $listDirn, $listOrder); ?>
 					</th>
@@ -100,7 +96,7 @@ if (!empty($this->extra_sidebar)) {
 			</thead>
 			<tfoot>
 				<tr>
-		            <?php 
+		            <?php
 		            if(isset($this->items[0])){
 		                $colspan = count(get_object_vars($this->items[0]));
 		            }
@@ -122,7 +118,7 @@ if (!empty($this->extra_sidebar)) {
                 $canChange	= $user->authorise('core.edit.state',	'com_botiga');
 				?>
 				<tr class="row<?php echo $i % 2; ?>">
-                    
+
 				    <?php if (isset($this->items[0]->ordering)): ?>
 					<td class="order nowrap center hidden-phone">
 						<?php if ($canChange) :
@@ -150,7 +146,7 @@ if (!empty($this->extra_sidebar)) {
 					<td class="center">
 							<?php echo JHtml::_('jgrid.published', $item->published, $i, 'brands.', $canChange, 'cb'); ?>
 					</td>
-		            <?php endif; ?>		         
+		            <?php endif; ?>
 		            <td>
 						<?php if ($canEdit) : ?>
 						<a href="<?php echo JRoute::_('index.php?option=com_botiga&task=brand.edit&id='.(int) $item->id); ?>">

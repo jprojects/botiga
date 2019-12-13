@@ -13,10 +13,6 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
-JHtml::_('bootstrap.tooltip');
-JHtml::_('behavior.multiselect');
-JHtml::_('formbehavior.chosen', 'select');
-
 $user		= JFactory::getUser();
 $userId		= $user->get('id');
 $listOrder	= $this->state->get('list.ordering');
@@ -61,9 +57,9 @@ if (!empty($this->extra_sidebar)) {
 	<div id="j-main-container">
 <?php endif;?>
 
-       
+
 		<div class="clearfix"> </div>
-		
+
 		<table class="table table-striped" class="adminList">
 			<thead>
 				<tr>
@@ -91,12 +87,12 @@ if (!empty($this->extra_sidebar)) {
 					</th>
 					<th>
 						<?= JHtml::_('grid.sort',  'COM_BOTIGA_DISCOUNTS_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>
-					</th>					
+					</th>
 				</tr>
 			</thead>
 			<tfoot>
 				<tr>
-		            <?php 
+		            <?php
 		            if(isset($this->items[0])){
 		                $colspan = count(get_object_vars($this->items[0]));
 		            }
@@ -118,7 +114,7 @@ if (!empty($this->extra_sidebar)) {
                 $canChange	= $user->authorise('core.edit.state',	'com_botiga');
 				?>
 				<tr class="row<?= $i % 2; ?>">
-                    
+
 				    <?php if (isset($this->items[0]->ordering)): ?>
 					<td class="order nowrap center hidden-phone">
 						<?php if ($canChange) :
@@ -149,17 +145,17 @@ if (!empty($this->extra_sidebar)) {
 		            <?php endif; ?>
 		            <td>
 						<a href="index.php?option=com_botiga&task=discount.edit&id=<?= $item->id; ?>"><?= $item->name; ?></a>
-					</td> 
+					</td>
 					<td>
 						<?= $item->type; ?>
 					</td>
 					<td>
 						<?= $item->total; ?>&euro;
-					</td>	
+					</td>
 					<td>
 						<?= $item->id; ?>
-					</td>				            		
-				</tr>	
+					</td>
+				</tr>
 				<?php endforeach; ?>
 			</tbody>
 		</table>

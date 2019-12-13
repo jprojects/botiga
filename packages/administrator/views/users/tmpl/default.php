@@ -13,10 +13,6 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
-JHtml::_('bootstrap.tooltip');
-JHtml::_('behavior.multiselect');
-JHtml::_('formbehavior.chosen', 'select');
-
 $user		= JFactory::getUser();
 $userId		= $user->get('id');
 $listOrder	= $this->state->get('list.ordering');
@@ -62,9 +58,9 @@ if (!empty($this->extra_sidebar)) {
 <?php endif;?>
 
 		<?php echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this)); ?>
-        
+
 		<div class="clearfix"> </div>
-		
+
 		<table class="table table-striped" class="adminList">
 			<thead>
 				<tr>
@@ -80,7 +76,7 @@ if (!empty($this->extra_sidebar)) {
 					<th width="1%" class="nowrap center">
 						<?php echo JHtml::_('grid.sort', 'JSTATUS', 'a.state', $listDirn, $listOrder); ?>
 					</th>
-               		<?php endif; ?>	
+               		<?php endif; ?>
 					<th width="15%">
 						<?= JHtml::_('grid.sort',  'COM_BOTIGA_USERS_HEADING_NAME', 'u.nombre', $listDirn, $listOrder); ?>
 					</th>
@@ -113,12 +109,12 @@ if (!empty($this->extra_sidebar)) {
 					</th>
 					<th width="13%">
 						<?= JHtml::_('grid.sort',  'COM_BOTIGA_USERS_HEADING_VALIDATE', 'u.validate', $listDirn, $listOrder); ?>
-					</th>	
+					</th>
 				</tr>
 			</thead>
 			<tfoot>
 				<tr>
-		            <?php 
+		            <?php
 		            if(isset($this->items[0])){
 		                $colspan = count(get_object_vars($this->items[0]));
 		            }
@@ -140,7 +136,7 @@ if (!empty($this->extra_sidebar)) {
                 $canChange	= $user->authorise('core.edit.state',	'com_botiga');
 				?>
 				<tr class="row<?= $i % 2; ?>">
-                    
+
 				     <?php if (isset($this->items[0]->ordering)): ?>
 					<td class="order nowrap center hidden-phone">
 						<?php if ($canChange) :
@@ -174,7 +170,7 @@ if (!empty($this->extra_sidebar)) {
 					</td>
 					<td>
 						<?= $item->type == 0 ? '<span class="label label-info">'.JText::_('COM_BOTIGA_TYPE_CUSTOMER').'</span>' : '<span class="label label-warning">'.JText::_('COM_BOTIGA_TYPE_COMPANY').'</span>'; ?>
-					</td> 
+					</td>
 					<td>
 						<?= $item->nom_empresa; ?>
 					</td>
@@ -185,11 +181,11 @@ if (!empty($this->extra_sidebar)) {
 						<?= $item->telefon; ?>
 					</td>
 					<td>
-						<?php 
-							echo $item->poblacio; 
+						<?php
+							echo $item->poblacio;
 							if ($item->provincia!='') echo ' ('.$item->provincia.')';
 						?>
-					</td>   
+					</td>
 					<td>
 						<?= $item->country_name; ?>
 					</td>
@@ -198,7 +194,7 @@ if (!empty($this->extra_sidebar)) {
 					</td>
 					<td>
 						<?= $item->cif; ?>
-					</td>	
+					</td>
 					<td align="center">
 						<?= $item->title; ?>
 					</td>
@@ -208,8 +204,8 @@ if (!empty($this->extra_sidebar)) {
 						<?php else : ?>
 						<span class="label label-success"><?= JText::_('COM_BOTIGA_VALIDATED'); ?></span>
 						<?php endif; ?>
-					</td>	              		
-				</tr>	
+					</td>
+				</tr>
 				<?php endforeach; ?>
 			</tbody>
 		</table>

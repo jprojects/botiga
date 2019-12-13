@@ -13,10 +13,6 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
-JHtml::_('bootstrap.tooltip');
-JHtml::_('behavior.multiselect');
-JHtml::_('formbehavior.chosen', 'select');
-
 $user		= JFactory::getUser();
 $userId		= $user->get('id');
 $listOrder	= $this->state->get('list.ordering');
@@ -61,9 +57,9 @@ if (!empty($this->extra_sidebar)) {
 <?php endif;?>
 
         <?php echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this)); ?>
-        
+
 		<div class="clearfix"> </div>
-		
+
 		<table class="table table-striped" class="adminList">
 			<thead>
 				<tr>
@@ -79,10 +75,10 @@ if (!empty($this->extra_sidebar)) {
 					<th width="1%" class="nowrap center">
 						<?php echo JHtml::_('grid.sort', 'JSTATUS', 'a.published', $listDirn, $listOrder); ?>
 					</th>
-               		<?php endif; ?>			
+               		<?php endif; ?>
 					<th>
 						<?php echo JHtml::_('grid.sort',  'COM_BOTIGA_SHIPMENT_NAME', 'a.name', $listDirn, $listOrder); ?>
-					</th>        
+					</th>
 
 					<?php if (isset($this->items[0]->id)): ?>
 					<th width="1%" class="nowrap center hidden-phone">
@@ -93,7 +89,7 @@ if (!empty($this->extra_sidebar)) {
 			</thead>
 			<tfoot>
 				<tr>
-		            <?php 
+		            <?php
 		            if(isset($this->items[0])){
 		                $colspan = count(get_object_vars($this->items[0]));
 		            }
@@ -115,7 +111,7 @@ if (!empty($this->extra_sidebar)) {
                 $canChange	= $user->authorise('core.edit.state',	'com_botiga');
 				?>
 				<tr class="row<?php echo $i % 2; ?>">
-                    
+
 				    <?php if (isset($this->items[0]->ordering)): ?>
 					<td class="order nowrap center hidden-phone">
 						<?php if ($canChange) :
@@ -143,7 +139,7 @@ if (!empty($this->extra_sidebar)) {
 					<td class="center">
 							<?php echo JHtml::_('jgrid.published', $item->published, $i, 'shipments.', $canChange, 'cb'); ?>
 					</td>
-		            <?php endif; ?>		         
+		            <?php endif; ?>
 		            <td>
 						<?php if ($canEdit) : ?>
 						<a href="<?php echo JRoute::_('index.php?option=com_botiga&task=shipment.edit&id='.(int) $item->id); ?>">

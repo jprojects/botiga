@@ -13,10 +13,6 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
-JHtml::_('bootstrap.tooltip');
-JHtml::_('behavior.multiselect');
-JHtml::_('formbehavior.chosen', 'select');
-
 $user		= JFactory::getUser();
 $userId		= $user->get('id');
 $listOrder	= $this->state->get('list.ordering');
@@ -59,11 +55,11 @@ if (!empty($this->extra_sidebar)) {
 <?php else : ?>
 	<div id="j-main-container">
 <?php endif;?>
-       
+
        <?= JLayoutHelper::render('joomla.searchtools.default', array('view' => $this)); ?>
-       
+
 		<div class="clearfix"> </div>
-		
+
 		<table class="table table-striped" class="adminList">
 			<thead>
 				<tr>
@@ -82,51 +78,51 @@ if (!empty($this->extra_sidebar)) {
 		            <?php endif; ?>
 					<th width="1%" class="nowrap center">
 						<?= JHtml::_('grid.sort', 'COM_BOTIGA_ORDERS_HEADING_NOM', 'u.username', $listDirn, $listOrder); ?>
-					</th>		
+					</th>
 					<th>
 						<?= JHtml::_('grid.sort',  'COM_BOTIGA_ORDERS_HEADING_DATA', 'a.data', $listDirn, $listOrder); ?>
-					</th>   
+					</th>
 					<th>
 						<?= JHtml::_('grid.sort',  'COM_BOTIGA_ORDERS_HEADING_SUBTOTAL', 'a.subtotal', $listDirn, $listOrder); ?>
-					</th>  
+					</th>
 					<th>
 						<?= JHtml::_('grid.sort',  'COM_BOTIGA_ORDERS_HEADING_SHIPPMENT', 'a.shipment', $listDirn, $listOrder); ?>
-					</th> 
+					</th>
 					<th>
 						<?= JHtml::_('grid.sort',  'COM_BOTIGA_ORDERS_HEADING_DISCOUNT', 'a.discount', $listDirn, $listOrder); ?>
 					</th>
 					<th>
 						<?= JHtml::_('grid.sort',  'COM_BOTIGA_ORDERS_HEADING_IVA_PERCENT', 'a.iva_percent', $listDirn, $listOrder); ?>
-					</th> 
+					</th>
 					<th>
 						<?= JHtml::_('grid.sort',  'COM_BOTIGA_ORDERS_HEADING_IVA', 'a.iva_total', $listDirn, $listOrder); ?>
-					</th> 
+					</th>
 					<th>
 						<?= JHtml::_('grid.sort',  'COM_BOTIGA_ORDERS_HEADING_RE_PERCENT', 'a.re_percent', $listDirn, $listOrder); ?>
-					</th> 
+					</th>
 					<th>
 						<?= JHtml::_('grid.sort',  'COM_BOTIGA_ORDERS_HEADING_RE', 'a.re_total', $listDirn, $listOrder); ?>
-					</th> 
+					</th>
 					<th>
 						<?= JHtml::_('grid.sort',  'COM_BOTIGA_ORDERS_HEADING_TOTAL', 'a.total', $listDirn, $listOrder); ?>
-					</th> 
+					</th>
 					<th>
 						<?= JHtml::_('grid.sort',  'COM_BOTIGA_ORDERS_HEADING_PROCESSOR', 'a.processor', $listDirn, $listOrder); ?>
-					</th> 
+					</th>
 					<th>
 						<?= JHtml::_('grid.sort',  'COM_BOTIGA_ORDERS_HEADING_COUPON', 'a.idCoupon', $listDirn, $listOrder); ?>
-					</th>    
+					</th>
 					<th>
 						<?= JHtml::_('grid.sort',  'COM_BOTIGA_ORDERS_HEADING_STATUS', 'a.status', $listDirn, $listOrder); ?>
-					</th> 
+					</th>
 					<th>
 						#
-					</th> 
+					</th>
 				</tr>
 			</thead>
 			<tfoot>
 				<tr>
-		            <?php 
+		            <?php
 		            if(isset($this->items[0])){
 		                $colspan = count(get_object_vars($this->items[0]));
 		            }
@@ -148,7 +144,7 @@ if (!empty($this->extra_sidebar)) {
                 $canChange	= $user->authorise('core.edit.state',	'com_botiga');
 				?>
 				<tr class="row<?= $i % 2; ?>">
-                    
+
 				    <?php if (isset($this->items[0]->ordering)): ?>
 					<td class="order nowrap center hidden-phone">
 						<?php if ($canChange) :
@@ -171,7 +167,7 @@ if (!empty($this->extra_sidebar)) {
 		            <?php endif; ?>
 					<td class="center hidden-phone">
 							<?= JHtml::_('grid.id', $i, $item->id); ?>
-					</td>         
+					</td>
 		            <td>
 						<?php if ($canEdit) : ?>
 						<a href="<?= JRoute::_('index.php?option=com_botiga&view=order&id='.(int) $item->id); ?>">
@@ -215,7 +211,7 @@ if (!empty($this->extra_sidebar)) {
 					</td>
 					<td>
 						<a href="index.php?option=com_botiga&view=coupon&layout=edit&id=<?= $item->idCoupon; ?>"><?= $item->idCoupon; ?></a>
-					</td>					
+					</td>
 					<td class="hidden-phone">
 						<?php if($item->status == 1): ?><span class="label label-danger"><?= JText::_('COM_BOTIGA_STATUS_PENDING'); ?></span><?php endif; ?>
 						<?php if($item->status == 2 && $item->processor != 'Transferencia'): ?><span class="label label-warning"><?= JText::_('COM_BOTIGA_STATUS_PENDING_PAYMENT'); ?></span><?php endif; ?>

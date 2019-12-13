@@ -4,8 +4,7 @@
     <field
       name="search"
       type="text"
-      label="COM_BANNERS_BANNERS_FILTER_SEARCH_LABEL"
-      description="COM_BANNERS_BANNERS_FILTER_SEARCH_DESC"
+      label="JSEARCH_FILTER"
       hint="JSEARCH_FILTER"
     />
     <field

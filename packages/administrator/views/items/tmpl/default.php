@@ -13,11 +13,6 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
-JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
-JHtml::_('bootstrap.tooltip');
-JHtml::_('behavior.multiselect');
-JHtml::_('formbehavior.chosen', 'select');
-
 $user      = JFactory::getUser();
 $userId    = $user->get('id');
 $listOrder = $this->escape($this->state->get('list.ordering'));
@@ -62,7 +57,7 @@ if ($saveOrder)
 				<?= JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
 			</div>
 		<?php else : ?>
-		
+
 		<table class="table table-striped" id="adminList">
 			<thead>
 				<tr>
@@ -76,7 +71,7 @@ if ($saveOrder)
 					<th width="1%" class="nowrap center">
 						<?= JHtml::_('grid.sort', 'JSTATUS', 'i.published', $listDirn, $listOrder); ?>
 					</th>
-               		<?php endif; ?>		
+               		<?php endif; ?>
 					<th>
 						<?= JHtml::_('grid.sort',  'COM_BOTIGA_ITEMS_HEADING_REF', 'i.ref', $listDirn, $listOrder); ?>
 					</th>
@@ -91,10 +86,10 @@ if ($saveOrder)
 					</th>
 					<th>
 						<?= JHtml::_('grid.sort',  'COM_BOTIGA_ITEMS_HEADING_BRAND', 'i.marca_name', $listDirn, $listOrder); ?>
-					</th> 
+					</th>
 					<th>
 						<?= JHtml::_('grid.sort',  'COM_BOTIGA_ITEMS_HEADING_CAT', 'i.catid', $listDirn, $listOrder); ?>
-					</th>         
+					</th>
 					<th width="5%">
 						<?= JHtml::_('grid.sort', 'JGRID_HEADING_LANGUAGE', 'i.language', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
 					</th>
@@ -102,7 +97,7 @@ if ($saveOrder)
 			</thead>
 			<tfoot>
 				<tr>
-		            <?php 
+		            <?php
 		            if(isset($this->items[0])){
 		                $colspan = count(get_object_vars($this->items[0]));
 		            }
@@ -124,7 +119,7 @@ if ($saveOrder)
                 $canChange	= $user->authorise('core.edit.state',	'com_botiga');
 				?>
 				<tr class="row<?= $i % 2; ?>">
-                    
+
 				    <?php if (isset($this->items[0]->ordering)): ?>
 					<td class="order nowrap center hidden-phone">
 					<?php if ($canChange) :
@@ -161,24 +156,24 @@ if ($saveOrder)
 					</td>
 					<td>
 						<?= $item->child == 0 ? '<span class="icon-unpublish"></span>' : '<span class="icon-ok"></span>'; ?>
-					</td> 
+					</td>
 					<td>
 						<?= $item->pvp; ?>&euro;
 					</td>
 					<td>
 						<a href="index.php?option=com_botiga&task=brand.edit&id=<?= $item->brand; ?>"><?= $item->bname; ?></a>
-					</td>  
+					</td>
 					<td>
 						<?= $item->ctitle; ?>
-					</td>               
+					</td>
 					<td class="center nowrap">
 						<?php if ($item->language == '*'):?>
 							<?= JText::alt('JALL', 'language'); ?>
 						<?php else:?>
 							<img src="<?= JURI::root(); ?>media/mod_languages/images/<?= str_replace('-', '_', strtolower($item->language)); ?>.gif" alt="<?= $item->language; ?>">
 						<?php endif;?>
-					</td>		
-				</tr>	
+					</td>
+				</tr>
 				<?php endforeach; ?>
 			</tbody>
 	</table>

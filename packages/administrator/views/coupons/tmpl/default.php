@@ -13,10 +13,6 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
-JHtml::_('bootstrap.tooltip');
-JHtml::_('behavior.multiselect');
-JHtml::_('formbehavior.chosen', 'select');
-
 $user		= JFactory::getUser();
 $userId		= $user->get('id');
 $listOrder	= $this->state->get('list.ordering');
@@ -62,9 +58,9 @@ if (!empty($this->extra_sidebar)) {
 <?php endif;?>
 
     	<?php echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this)); ?>
-    	        
+
 		<div class="clearfix"> </div>
-		
+
 		<table class="table table-striped" class="adminList">
 			<thead>
 				<tr>
@@ -80,7 +76,7 @@ if (!empty($this->extra_sidebar)) {
 					<th width="1%" class="nowrap center">
 						<?php echo JHtml::_('grid.sort', 'JSTATUS', 'a.published', $listDirn, $listOrder); ?>
 					</th>
-               		<?php endif; ?>	
+               		<?php endif; ?>
 					<th>
 						<?= JHtml::_('grid.sort',  'Coupon', 'a.coupon', $listDirn, $listOrder); ?>
 					</th>
@@ -92,12 +88,12 @@ if (!empty($this->extra_sidebar)) {
 					</th>
 					<th>
 						<?= JHtml::_('grid.sort',  'Valor', 'a.valor', $listDirn, $listOrder); ?>
-					</th> 
+					</th>
 				</tr>
 			</thead>
 			<tfoot>
 				<tr>
-		            <?php 
+		            <?php
 		            if(isset($this->items[0])){
 		                $colspan = count(get_object_vars($this->items[0]));
 		            }
@@ -119,7 +115,7 @@ if (!empty($this->extra_sidebar)) {
                 $canChange	= $user->authorise('core.edit.state',	'com_botiga');
 				?>
 				<tr class="row<?= $i % 2; ?>">
-                    
+
 				    <?php if (isset($this->items[0]->ordering)): ?>
 					<td class="order nowrap center hidden-phone">
 						<?php if ($canChange) :
@@ -147,20 +143,20 @@ if (!empty($this->extra_sidebar)) {
 					<td class="center">
 							<?php echo JHtml::_('jgrid.published', $item->published, $i, 'brands.', $canChange, 'cb'); ?>
 					</td>
-		            <?php endif; ?>		
+		            <?php endif; ?>
 					<td>
 						<a href="index.php?option=com_botiga&task=coupon.edit&id=<?= $item->id; ?>"><?= $item->coupon; ?></a>
-					</td> 
+					</td>
 					<td>
 						<?= date('d-m-Y', strtotime($item->finishDate)); ?>
 					</td>
 					<td>
 						<?= $item->tipus == 0 ? '%' : '-'; ?>
-					</td>					
+					</td>
 					<td>
 						<?= $item->valor; ?>&euro;
-					</td>		
-				</tr>	
+					</td>
+				</tr>
 				<?php endforeach; ?>
 			</tbody>
 	</table>
