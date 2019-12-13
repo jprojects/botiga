@@ -1,77 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-    <fields name="filter">
-        <field
-            name="search"
-            type="text"
-            label="COM_BANNERS_BANNERS_FILTER_SEARCH_LABEL"
-            description="COM_BANNERS_BANNERS_FILTER_SEARCH_DESC"
-            hint="JSEARCH_FILTER"
-        />
-        <field
-			name="published"
-			type="list"
-			label="JSTATUS"
-			description="COM_BANNERS_FIELD_STATE_DESC"
-			class="chzn-color-state"
-			size="1"
-			default=""
-            onchange="this.form.submit();"
-		>
-			<option value="1">JPUBLISHED</option>
-			<option value="0">JUNPUBLISHED</option>
-			<option value="2">JARCHIVED</option>
-			<option value="-2">JTRASHED</option>
-		</field>
-        <field 
-            name="usergroup"
+  <fields name="filter">
+    <field
+      name="search"
+      type="text"
+      label="COM_BANNERS_BANNERS_FILTER_SEARCH_LABEL"
+      description="COM_BANNERS_BANNERS_FILTER_SEARCH_DESC"
+      hint="JSEARCH_FILTER"
+    />
+    <field
+      name="published"
+      type="status"
+      label="JOPTION_SELECT_PUBLISHED"
+      onchange="this.form.submit();"
+      >
+      <option value="">JOPTION_SELECT_PUBLISHED</option>
+    </field>
+    <field
+      name="usergroup"
 			type="usergroup"
 			label="COM_BOTIGA_USER_USERGROUP_LABEL"
 			description="COM_BOTIGA_USER_USERGROUP_DESC"
-            onchange="this.form.submit();"
-            default=""
+      onchange="this.form.submit();"
+      default=""
 		>
-			<option value="">COM_BOTIGA_SELECT_AN_OPTION</option>
+		<option value="">COM_BOTIGA_SELECT_AN_OPTION</option>
 		</field>
-        <field 
-			name="validate" 
-			type="list" 
-			label="COM_BOTIGA_USER_VALIDATE_LABEL" 
-			description="COM_BOTIGA_USER_VALIDATE_DESC" 
+    <field
+			name="validate"
+			type="list"
+			label="COM_BOTIGA_USER_VALIDATE_LABEL"
+			description="COM_BOTIGA_USER_VALIDATE_DESC"
 			default=""
-            onchange="this.form.submit();"
+      onchange="this.form.submit();"
 		>
-            <option value="">COM_BOTIGA_SELECT_AN_OPTION</option>
+      <option value="">COM_BOTIGA_SELECT_AN_OPTION</option>
 			<option value="0">JNO</option>
 			<option value="1">JYES</option>
 		</field>
-    </fields>
-    <fields name="list">
-        <field
-            name="fullordering"
-            type="list"
-            label="JGLOBAL_SORT_BY"
-            description="JGLOBAL_SORT_BY"
-            statuses="*,0,1,2,-2"
-            onchange="this.form.submit();"
-            default="u.name ASC"
-            >
-            <option value="">JGLOBAL_SORT_BY</option>
-            <option value="u.published ASC">JSTATUS_ASC</option>
-            <option value="u.published DESC">JSTATUS_DESC</option>
-            <option value="u.nom_empresa ASC">COM_BOTIGA_USERS_NOM_EMPRESA_ASC</option>
-            <option value="u.nom_empresa DESC">COM_BOTIGA_USERS_NOM_EMPRESA_DESC</option>
-            <option value="u.id ASC">JGRID_HEADING_ID_ASC</option>
-            <option value="u.id DESC">JGRID_HEADING_ID_DESC</option>
-        </field>
-        <field
-            name="limit"
-            type="limitbox"
-            label="COM_BANNERS_LIST_LIMIT"
-            description="COM_BANNERS_LIST_LIMIT_DESC"
-            class="input-mini"
-            default="25"
-            onchange="this.form.submit();"
-        />
-    </fields>
+  </fields>
+  <fields name="list">
+    <field
+      name="fullordering"
+      type="list"
+      label="JGLOBAL_SORT_BY"
+      onchange="this.form.submit();"
+      default="u.name ASC"
+      >
+      <option value="">JGLOBAL_SORT_BY</option>
+      <option value="u.published ASC">JSTATUS_ASC</option>
+      <option value="u.published DESC">JSTATUS_DESC</option>
+      <option value="u.nom_empresa ASC">COM_BOTIGA_USERS_NOM_EMPRESA_ASC</option>
+      <option value="u.nom_empresa DESC">COM_BOTIGA_USERS_NOM_EMPRESA_DESC</option>
+      <option value="u.id ASC">JGRID_HEADING_ID_ASC</option>
+      <option value="u.id DESC">JGRID_HEADING_ID_DESC</option>
+    </field>
+    <field
+      name="limit"
+      type="limitbox"
+      label="COM_BANNERS_LIST_LIMIT"
+      default="25"
+      onchange="this.form.submit();"
+    />
+  </fields>
 </form>
