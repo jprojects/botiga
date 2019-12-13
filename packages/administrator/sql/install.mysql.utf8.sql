@@ -78,7 +78,7 @@ CREATE TABLE IF NOT EXISTS `#__botiga_comandesDetall` (
   `idItem` int(11) NOT NULL,
   `price` float(10,2) NOT NULL DEFAULT '0.00',
   `qty` int(5) NOT NULL DEFAULT '0',
-  `dte_linia` float(10,2) NOT NULL DEFAULT '0,00',
+  `dte_linia` float(10,2) NOT NULL DEFAULT '0.00',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -288,7 +288,7 @@ CREATE TABLE IF NOT EXISTS `#__botiga_users` (
   `published` tinyint(1) NOT NULL DEFAULT '0',
   `ordering` int(11) NOT NULL DEFAULT '0',
   `validate` tinyint(1) NOT NULL DEFAULT '0',
-  `dte_linia` float(10,2) NOT NULL DEFAULT '0,00',
+  `dte_linia` float(10,2) NOT NULL DEFAULT '0.00',
   `params` text NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
