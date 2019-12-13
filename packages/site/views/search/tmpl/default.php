@@ -9,7 +9,7 @@
  * @website		http://www.joomlanetprojects.com
  *
 */
-  
+
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 $model 		= $this->getModel('botiga');
@@ -32,27 +32,33 @@ $lang 		= JFactory::getLanguage()->getTag();
 }
 </style>
 
+<?php if(botigaHelper::getParameter('show_header', 0) == 1) :
+  $layout = new JLayoutFile('header', JPATH_ROOT .'/components/com_botiga/layouts');
+  $data   = array();
+  echo $layout->render($data);
+endif; ?>
+
 <div>
 
 	<div id="page-header">
 		<h1><?= JText::_('COM_BOTIGA_ITEMS_TITLE'); ?></h1>
 	</div>
-	
+
 	<div class="clearfix"></div>
-	
+
 	<?php if(botigaHelper::getParameter('show_prices', 0) == 1 && $user->guest) : ?>
 	<div class="alert alert-warning"><?= JText::sprintf('COM_BOTIGA_PRICES_NOTICE', 'index.php?option=com_botiga&view=register&Itemid=113'); ?></div>
 	<?php endif; ?>
-	
-	<?php 
+
+	<?php
 	if(count($this->items)) :
 	$i = 0;
 	foreach($this->items as $item) : ?>
 		<?php $item->image1 != '' ? $image = $item->image1 : $image = 'images/noimage.png'; ?>
 
-		<?php 
+		<?php
 		$precio = botigaHelper::getUserPrice($item->id);
-		$precio < 1 ? $price = JText::_('COM_BOTIGA_A_CONSULTAR') : $price = $precio; 
+		$precio < 1 ? $price = JText::_('COM_BOTIGA_A_CONSULTAR') : $price = $precio;
 		if($i == 4) { echo '<div class="clearfix"></div>'; $i = 0; }
 		?>
 		<div class="col-xs-12 col-sm-6 col-md-3 item zoom">
@@ -65,9 +71,9 @@ $lang 		= JFactory::getLanguage()->getTag();
 						<?php endif; ?>
 						<img src="<?= $image; ?>" class="img-responsive" alt="<?= $item->name; ?>" />
 					</a>
-				
+
 				</div>
-				<div class="text-left item-ref"><?= $item->ref; ?></div>	
+				<div class="text-left item-ref"><?= $item->ref; ?></div>
 				<div class="text-left"><strong><?= $item->name; ?></strong></div>
 				<div class="text-left"><strong><?= $item->s_description; ?></strong></div>
 				<div class="text-left"><?= $item->brandname; ?></div>
@@ -80,7 +86,7 @@ $lang 		= JFactory::getLanguage()->getTag();
 				<?php endif; ?>
 			</div>
 			<div class="botiga-btns" style="display:none;">
-			
+
 				<div class="btn-group btn-group-justified" role="group">
 				  <a href="<?= JRoute::_('index.php?option=com_botiga&view=item&id='.$item->id.'&Itemid=115'); ?>" class="btn btn-primary"><i class="fa fa-eye"></i><br><?= JText::_('Ver'); ?></a>
 				  <a href="#" data-id="<?= $item->id; ?>" class="btn btn-primary <?php if(!$user->guest) : ?>setItem<?php endif; ?>"><i class="fa fa-shopping-cart"></i><br><?= JText::_('Comprar'); ?></a>
@@ -90,18 +96,18 @@ $lang 		= JFactory::getLanguage()->getTag();
 						<a <?php if(!$user->guest) : ?>href="index.php?option=com_botiga&task=unsetFavorite&id=<?= $item->id; ?>&return=<?= $uri; ?>"<?php endif; ?> class="btn btn-group btn-primary"><span class="glyphicon glyphicon-heart red"></span><br>Favorito</a>
 					<?php endif; ?>
 				</div>
-				
-				
+
+
 				<?php if(botigaHelper::getParameter('show_ask', 1) == 1) : ?>
 				<a data-toggle="modal" data-name="<?= $item->name; ?>" data-target="#budget" class="btn btn-default btn-block"><?= JText::_('COM_BOTIGA_MORE_INFO'); ?></a>
 				<?php endif; ?>
-				
+
 			</div>
 		</div>
 		</div>
-	<?php 
+	<?php
 	$i++;
-	endforeach; 
+	endforeach;
 	endif;
 	?>
 
@@ -109,7 +115,7 @@ $lang 		= JFactory::getLanguage()->getTag();
 	<div class="pagination">
 		<?php echo $this->pagination->getPagesLinks(); ?>
 	</div>
-	
+
 	<?php if(botigaHelper::getParameter('show_ask', 1) == 1) : ?>
 	<!-- Modal -->
 	<div class="modal fade" id="budget" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -147,5 +153,5 @@ $lang 		= JFactory::getLanguage()->getTag();
 	  </div>
 	</div>
 	<?php endif; ?>
-	
+
 </div>

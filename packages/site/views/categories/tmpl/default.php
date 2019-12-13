@@ -9,7 +9,7 @@
  * @website		http://www.joomlanetprojects.com
  *
 */
-  
+
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 $model 		= $this->getModel('categories');
@@ -46,19 +46,25 @@ if($lang == 'en-GB') { $itemid = 130; }
 .center span { text-shadow: 1px 1px #575757; }
 </style>
 
+<?php if(botigaHelper::getParameter('show_header', 0) == 1) :
+  $layout = new JLayoutFile('header', JPATH_ROOT .'/components/com_botiga/layouts');
+  $data   = array();
+  echo $layout->render($data);
+endif; ?>
+
 <div>
 
 	<div id="page-header">
 		<h1><?= JText::_('COM_BOTIGA_CATEGORIES_TITLE'); ?></h1>
 	</div>
-	
+
 	<div class="clearfix"></div>
-	
+
 	<div class="items">
-	<?php 
+	<?php
 	if(count($this->items)) :
 	$i = 0;
-	foreach($this->items as $item) : 
+	foreach($this->items as $item) :
 	$params  = json_decode($item->params);
 	if($marca == '') {
 		if($params->image != '') {
@@ -67,11 +73,11 @@ if($lang == 'en-GB') { $itemid = 130; }
 			$image = 'images/default.jpg';
 		}
 	}
-	?>	
+	?>
 		<!-- Feature Item <?= $i; ?> -->
 		<div class="col-md-4 text-center">
 			<div class="thumbnail">
-			<?php 
+			<?php
 			if(count($model->getSubCats($item->id))) {
 				$link = 'index.php?option=com_botiga&view=categories&catid='.$item->id.'&Itemid='.$itemid;
 			} else {
@@ -87,11 +93,10 @@ if($lang == 'en-GB') { $itemid = 130; }
 		</div>
 	<?php
 	$i++;
-	endforeach; 
+	endforeach;
 	endif;
 	?>
 
 	<div class="clearfix"></div>
-	
-</div>
 
+</div>

@@ -2,11 +2,11 @@
 /**
  * @version		1.0.0 botiga $
  * @package		botiga
- * @copyright   Copyright © 2010 - All rights reserved.
+ * @copyright Copyright © 2010 - All rights reserved.
  * @license		GNU/GPL
  * @author		kim
- * @author mail administracion@joomlanetprojects.com
- * @website		http://www.joomlanetprojects.com
+ * @author mail kim@aficat.com
+ * @website		http://www.aficat.com
  *
 */
 
@@ -15,20 +15,19 @@ defined('_JEXEC') or die('Restricted access');
 
 class botigaViewHistory extends JViewLegacy
 {
-    protected $state;
+  protected $state;
 	protected $items;
 	protected $pagination;
-    protected $params;
+  protected $params;
 
   function display($tpl = null)
 	{
 		// Initialise variables
-    $app		= JFactory::getApplication();
-    $dispatcher	= JDispatcher::getInstance();
-		$this->state		= $this->get('State');
-		$this->items		= $this->get('Items');
+    $app		          = JFactory::getApplication();
+		$this->state		  = $this->get('State');
+		$this->items		  = $this->get('Items');
 		$this->pagination	= $this->get('Pagination');
-		$this->params       = $app->getParams('com_botiga');
+		$this->params     = $app->getParams('com_botiga');
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {

@@ -7,7 +7,7 @@
 	color: #ffcd00 !important;
 }
 
-a { 
+a {
 	outline: 0;
 	cursor pointer;
 }
@@ -52,7 +52,7 @@ a {
     font-size: 18px;
 }
 
-.thumbnail > img, .thumbnail > a > img { height: 250px; } 
+.thumbnail > img, .thumbnail > a > img { height: 250px; }
 .additional-img a { display: inline-block; }
 .additional-img img {
 	width: auto;
@@ -98,6 +98,10 @@ span.rollover img {
 	min-height: 150px;
 	border-bottom: 1px solid #683b2b;
 }
+
+.head_botiga a:hover { text-decoration: none; }
+
+.head_botiga img.logoBotiga { height: 100px; }
 
 .table-text { width: 45%; }
 
@@ -218,4 +222,4 @@ span.pagenav { font-weight: bold; }
 	.img-primary {
 		max-width: 35%;
 	}
-}	
+}

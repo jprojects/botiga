@@ -2,35 +2,33 @@
 /**
  * @version		1.0.0 laundry $
  * @package		laundry
- * @copyright   Copyright © 2010 - All rights reserved.
+ * @copyright Copyright © 2010 - All rights reserved.
  * @license		GNU/GPL
  * @author		kim
- * @author mail administracion@joomlanetprojects.com
- * @website		http://www.joomlanetprojects.com
+ * @author mail kim@aficat.com
+ * @website		http://www.aficat.com
  *
 */
 
 // no direct access
 defined('_JEXEC') or die;
-jimport('joomla.application.component.view');
 
 class botigaViewBotiga extends JViewLegacy
-{ 		
-	function display( $tpl = null )   {
-	     
-
+{
+	function display( $tpl = null )
+	{
 		$db = JFactory::getDbo();
 		$app = JFactory::getApplication();
-		
+
 		$start = $app->input->get('start', 1, 'get');
-		$end = $app->input->get('end', 0, 'get');
+		$end   = $app->input->get('end', 0, 'get');
 		$token = $app->input->get('token', 0, 'get');
-		
+
 		$db->setQuery('SELECT id FROM #__botiga_comandes WHERE status>2 AND id BETWEEN '.$start.' AND '.$end);
 		$comandes = $db->loadObjectList();
-		
+
 		$i = 0;
-		
+
 		foreach($comandes as $comanda) {
 			$db->setQuery(
 				'SELECT u.email, bu.nom_empresa, bu.nombre AS nom_contacte, ' .
@@ -61,7 +59,7 @@ class botigaViewBotiga extends JViewLegacy
 						'INNER JOIN #__botiga_comandesDetall AS cd ON c.id = cd.idComanda ' .
 						'INNER JOIN #__botiga_items AS i ON cd.idItem = i.id ' .
 					'WHERE cd.idComanda = '.$comanda->id);
-				$data[$i]['detall'] = $db->loadObjectList();				
+				$data[$i]['detall'] = $db->loadObjectList();
 				//var_dump($data[$i]['detall']);
 			}
 			$i++;

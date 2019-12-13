@@ -39,7 +39,7 @@ $showpvp 		= botigaHelper::getParameter('show_pvp_item', 1);
 $showrel 		= botigaHelper::getParameter('show_related_item', 1);
 $userToken  	= JSession::getFormToken();
 
-$dte_linia  	= botigaHelper::getUserData('dte_linia', $user->id); 
+$dte_linia  	= botigaHelper::getUserData('dte_linia', $user->id);
 
 $spain 			= botigaHelper::getParameter('total_shipment_spain', 25);
 $islands 		= botigaHelper::getParameter('total_shipment_islands', 50);
@@ -85,84 +85,31 @@ jQuery(document).ready(function() {
 </script>
 -->
 
-<?php if(botigaHelper::getParameter('show_header', 0) == 1) : ?>
-<header class="head_botiga">
-
-	<div class="col-md-11 mx-auto">
-
-		<div class="row">
-
-		<?php if($logo != '') : ?>
-		<div class="col-12 text-right d-none d-sm-block">
-			<a href="index.php">
-				<img src="<?= $logo; ?>" alt="<?= $botiga_name; ?>" class="img-fluid botiga-logo">
-			</a>
-		</div>
-		<?php endif; ?>	
-		
-		<div class="col-12 mt-3">
-			<div class="row">
-				<div class="col-6 col-md-8 text-left">			
-					<a href="index.php?option=com_botiga&view=botiga" class="pr-1">
-						<img src="media/com_botiga/icons/mosaico<?php if($jinput->getCmd('layout', '') == '') : ?>-active<?php endif; ?>.png">
-					</a>
-					<?php if(botigaHelper::hasAccesstoTableView()) : ?>					
-					<a href="index.php?option=com_botiga&view=botiga&layout=table">
-						<img src="media/com_botiga/icons/lista<?php if($jinput->getCmd('layout', '') == 'table') : ?>-active<?php endif; ?>.png">
-					</a>
-					<?php endif; ?>
-					<span class="pl-3 phone-hide estil02"><?= JText::sprintf('COM_BOTIGA_FREE_SHIPPING_MSG', $spain, $islands, $world); ?>&nbsp;<img src="media/com_botiga/icons/envio_gratis.png"></span>
-				</div>
-				<div class="col-6 col-md-4 text-right">
-					<a href="<?php if($count > 0) : ?>index.php?option=com_botiga&view=checkout<?php else: ?>#<?php endif; ?>" class="pr-2 carrito">
-						<?php if($count > 0) : ?>
-						<span class="badge badge-warning"><?= $count; ?></span>
-						<?php endif; ?>
-						<img src="media/com_botiga/icons/carrito.png" alt="carrito">
-					</a>
-					<?php if($user->guest) : ?>
-					<a href="index.php?option=com_users&view=login" title="Login" class="hasTip">
-						<img src="media/com_botiga/icons/iniciar-sesion.png">
-					</a>
-					<?php else: ?>
-					<a class="ml-4 hasTip" href="index.php?option=com_users&task=user.logout&<?= $userToken; ?>=1" title="Logout" title="Salir">
-						<img src="media/com_botiga/icons/salir.png" alt="logout">
-					</a>
-					<a class="ml-4 hasTip" href="index.php?option=com_botiga&view=history" title="History" title="Perfil"s>
-						<img src="media/com_botiga/icons/sesion-iniciada.png" alt="login">
-					</a>
-					<div class="d-none d-sm-block"><small><?= JText::sprintf('COM_BOTIGA_WELCOME', $user->name); ?></small></div>
-					<?php endif; ?>
-				</div>
-			</div>
-		</div>
-		
-		</div>	
-	
-	</div>
-	
-</header>
-<?php endif; ?>
+<?php if(botigaHelper::getParameter('show_header', 0) == 1) :
+  $layout = new JLayoutFile('header', JPATH_ROOT .'/components/com_botiga/layouts');
+  $data   = array();
+  echo $layout->render($data);
+endif; ?>
 
 <div class="col-md-8 mx-auto pb-5">
 
 	<div class="row">
-	
+
 		<?php if($user->guest && $shownotice == 1) : ?>
 		<div class="col-12">
-			<?php 
+			<?php
 			$link1 = 'index.php?option=com_botiga&view=register';
 			?>
 			<div class="alert alert-warning"><?= JText::sprintf('COM_BOTIGA_PRICES_NOTICE', $link1); ?></div>
 		</div>
-		<?php endif; ?>	
-		
+		<?php endif; ?>
+
 		<div class="col-12 mt-4">
 			<h2 class="estil08 text-primary"><?= strtoupper(botigaHelper::getCategoryName($this->item->catid)); ?></h2>
 		</div>
 
-		<div class="col-12 col-md-5">			
-	
+		<div class="col-12 col-md-5">
+
 			<div class="botiga-img text-center">
 				<a href="<?= $image; ?>" data-fancybox="gallery">
 				<?php if($dte_linia != 0.00 && $showdiscount == 1 && $showprices == 1) : ?>
@@ -170,7 +117,7 @@ jQuery(document).ready(function() {
 				<?php endif; ?>
 				<span class="rollover"><img src="media/com_botiga/icons/lupa.png" width="60"></span>
 					<img src="<?= $image; ?>" class="img-primary" alt="<?= $this->item->name; ?>" rel="gallery" />
-					<?php 
+					<?php
 					$extra_images = botigaHelper::getImages($this->item->id);
 					foreach($extra_images as $k => $v) : ?>
 					<img src="<?= $v[0]; ?>" class="img-fluid" alt="<?= $this->item->name; ?>" rel="gallery" style="display:none;" />
@@ -178,31 +125,31 @@ jQuery(document).ready(function() {
 				</a>
 			</div>
 
-			<?php 			
+			<?php
 			if(count($extra_images)) : ?>
 			<div class="additional-img">
 				<ul class="preview-thumbnail nav">
-				<?php foreach($extra_images as $k => $v) : ?>				
+				<?php foreach($extra_images as $k => $v) : ?>
 				<li>
 					<a href="<?= $v[0]; ?>" data-fancybox="gallery" class="img-thumbnail">
 						<img src="<?= $v[0]; ?>" class="img-fluid" alt="<?= $this->item->name; ?>" width="100" height="100" />
 					</a>
 				</li>
-				<?php endforeach; ?>	
-				</ul>			
+				<?php endforeach; ?>
+				</ul>
 			</div>
 			<?php endif; ?>
-			
+
 		</div>
-		
+
 		<div class="col-12 col-md-7">
-		
+
 			<?php if($showbrand == 1) : ?>
 			<div class="brand">
 			<div class="text-right bold"><?= $this->item->bname; ?></div>
-			</div>	
-			<?php endif; ?>			
-			
+			</div>
+			<?php endif; ?>
+
 			<div class="row no-gutters mb-2">
 			<div class="col-12 col-md-6 text-left estil07 text-primary"><b class="titol"><?= strtoupper($this->item->name); ?></b></div>
 			<?php if(botigaHelper::isPriceVisible()) : ?>
@@ -212,46 +159,46 @@ jQuery(document).ready(function() {
 					<br>
 					<b><?= botigaHelper::getPercentDiff($precio, $dte_linia); ?>&euro;</b>
 				<?php else : ?>
-					<b><?php if(!botigaHelper::isEmpresa()) : ?>PVP <?php endif; ?><?= $precio; ?> &euro;</b>	
+					<b><?php if(!botigaHelper::isEmpresa()) : ?>PVP <?php endif; ?><?= $precio; ?> &euro;</b>
 					<?php if($dtos!='') : ?>
 						<br/><span class='estil02'><?= $dtos; ?>&euro;</span>
-					<?php endif; ?>						
-				<?php endif; ?>						
-			</div>
-			<?php endif; ?>	
-			</div>
-			
-			<?php if($showpvp == 1 && botigaHelper::isPriceVisible()) : ?>
-			<div class="col-12 col-md-12">			
-				<div class="text-left faded pvp">PVP <strike><?= $this->item->pvp; ?> &euro;</strike></div>			
+					<?php endif; ?>
+				<?php endif; ?>
 			</div>
 			<?php endif; ?>
-			
+			</div>
+
+			<?php if($showpvp == 1 && botigaHelper::isPriceVisible()) : ?>
+			<div class="col-12 col-md-12">
+				<div class="text-left faded pvp">PVP <strike><?= $this->item->pvp; ?> &euro;</strike></div>
+			</div>
+			<?php endif; ?>
+
 			<?php if(count(botigaHelper::getChilds($this->item->id))) : ?>
 			<div class="row no-gutters mb-2">
-				<div class="col-12 col-md-12">	
+				<div class="col-12 col-md-12">
 					<div class="form-group">
-						<div class="styled-select">		
+						<div class="styled-select">
 							<select name="variacions" id="variacions" class="form-control">
 								<option value=""><?= JText::_('COM_BOTIGA_SELECT_AN_OPTION'); ?></option>
-								<?php 
+								<?php
 								$i = 0;
 								foreach(botigaHelper::getChilds($this->item->id) as $child) : ?>
 								<option value="<?= $child->id; ?>"><?= $child->name; ?></option>
 								<?php
 								$i++;
 								endforeach; ?>
-							</select>	
+							</select>
 						</div>
-					</div>	
+					</div>
 				</div>
 			</div>
 			<?php endif; ?>
-			
+
 			<?php if($showprices == 1 && ($loginforbuy == 0 || ($loginforbuy == 1 && !$user->guest))) : ?>
 			<div class="row">
 				<div class="col-12 col-md-5">
-					
+
 					<div class="addtocart">
 						<form name="addtocart" id="addtocart" action="index.php?option=com_botiga&task=botiga.setItem" method="get" class="form-inline">
 							<input type="hidden" name="option" value="com_botiga" />
@@ -271,12 +218,12 @@ jQuery(document).ready(function() {
 				                            <span class="fa fa-plus"></span>
 				                        </button>
 				                    </span>
-				                </div>														    
+				                </div>
 							</div>
-							<?php echo JHtml::_( 'form.token' ); ?>				
+							<?php echo JHtml::_( 'form.token' ); ?>
 						</form>
 					</div>
-					
+
 				</div>
 				<div class="col-xs-12 col-md-7">
 					<?php if(botigaHelper::isValidated() && botigaHelper::validateStock($this->item->stock)) : ?>
@@ -289,7 +236,7 @@ jQuery(document).ready(function() {
 				</div>
 		    </div>
 		    <?php endif; ?>
-		    
+
 		    <?php if($showfav == 1) : ?>
 		    <div class="item-favorite">
 		    <?php if(!botigaHelper::isFavorite($this->item->id)) : ?>
@@ -299,29 +246,29 @@ jQuery(document).ready(function() {
 			<?php endif; ?>
 			</div>
 			<?php endif; ?>
-		    
+
 		    <?php if($showref == 1) : ?>
 		    <div class="text-left item-title-ref"><?= $this->item->ref; ?></div>
-		    <?php endif; ?>		    									
-			
+		    <?php endif; ?>
+
 			<?php if($showgar == 1) : ?>
 			<div class="product-extra"><?= JText::_('COM_BOTIGA_ITEM_SHIPPMENT_WARRANTY'); ?></div>
 			<?= JText::_($this->item->garantia); ?>
-			<?php endif; ?>	
-			
+			<?php endif; ?>
+
 			<?php if($showenvio == 1) : ?>
 			<div class="product-extra"><?= JText::_('COM_BOTIGA_ITEM_SHIPPMENT_DAYS'); ?></div>
 			<?= JText::_($this->item->envio); ?>
-			<?php endif; ?>	
-			
+			<?php endif; ?>
+
 			<?php if(count(botigaHelper::getItemDocuments($this->item->id)) > 0) : ?>
 			<div class="product-extra"><?= JText::_('COM_BOTIGA_ITEM_DOCUMENTS'); ?></div>
 			<?php foreach(botigaHelper::getItemDocuments($this->item->id) as $document) : ?>
 			<a href="<?= JURI::root().'media/com_botiga/docs/'.$document->filename; ?>"><i class="fa fa-file" aria-hidden="true"></i>&nbsp;<?= $document->name; ?></a>
  			<?php endforeach; ?>
 			<?php endif; ?>
-			
-			<?php 
+
+			<?php
 			$i = 0;
 			foreach(botigaHelper::getExtras($this->item->id) as $k => $v) : ?>
 			<div class="estil07 text-primary acordion <?php if($i == 0): ?>mt-5<?php else: ?>mt-4<?php endif; ?>" data-toggle="collapse" href="#collapse<?= $i; ?>"><?= strtoupper($v[0]); ?>&nbsp;
@@ -332,29 +279,29 @@ jQuery(document).ready(function() {
 				<?php endif; ?>
 			</div>
 			<div class="collapse <?php if($i == 0): ?>show<?php endif; ?> estil03 text-primary mt-2" id="collapse<?= $i; ?>"><?= $v[1]; ?></div>
-			<?php 
+			<?php
 			$i++;
 			endforeach; ?>
-			
-			<?php if($showdesc == 1) : ?>		
+
+			<?php if($showdesc == 1) : ?>
 			<div class="mt-5"><?= $this->item->description; ?></div>
-			<?php endif; ?>	
-			
+			<?php endif; ?>
+
 			<div class="estil02 pt-4 text-primary"><i><?= JText::_('COM_BOTIGA_SHARE'); ?></i></div>
 			<div class="mt-4">
 				<?php if(botigaHelper::getParameter('show_pinterest', 1) == 1) : ?>
-				<a href="https://pinterest.com/pin/create/button/?url=<?= urlencode(JFactory::getURI()->toString()); ?>&media=<?= urlencode(JURI::root().$image); ?>&description=<?= urlencode($this->item->name); ?>" target="_blank"><img class="pr-3" title="Instagram" src="media/com_botiga/icons/pinterest.png" alt="Pinterest" /></a> 
+				<a href="https://pinterest.com/pin/create/button/?url=<?= urlencode(JFactory::getURI()->toString()); ?>&media=<?= urlencode(JURI::root().$image); ?>&description=<?= urlencode($this->item->name); ?>" target="_blank"><img class="pr-3" title="Instagram" src="media/com_botiga/icons/pinterest.png" alt="Pinterest" /></a>
 				<?php endif; ?>
 				<?php if(botigaHelper::getParameter('show_facebook', 1) == 1) : ?>
-				<a href="https://www.facebook.com/sharer/sharer.php?u=<?= urlencode($this->item->name).'%0A'.urlencode(JFactory::getURI()->toString()); ?>" target="_blank"><img class="pr-3" title="Facebook" src="media/com_botiga/icons/facebook.png" alt="Facebook" /></a> 
+				<a href="https://www.facebook.com/sharer/sharer.php?u=<?= urlencode($this->item->name).'%0A'.urlencode(JFactory::getURI()->toString()); ?>" target="_blank"><img class="pr-3" title="Facebook" src="media/com_botiga/icons/facebook.png" alt="Facebook" /></a>
 				<?php endif; ?>
 				<?php if(botigaHelper::getParameter('show_twitter', 1) == 1) : ?>
 				<a href="https://twitter.com/home?status=<?= urlencode($this->item->name).'%0A'.urlencode(JFactory::getURI()->toString()); ?>" target="_blank"><img title="Twitter" src="media/com_botiga/icons/twiter.png" alt="Twitter" /></a>
 				<?php endif; ?>
 			</p>
-		
-        </div>                
-	
+
+        </div>
+
 		<?php if($showrel == 1) : ?>
 		<div id="page-header">
 			<!-- Modulo related -->
@@ -366,9 +313,9 @@ jQuery(document).ready(function() {
 			?>
 		</div>
 		<?php endif; ?>
-	
+
 	</div>
-	
+
 </div>
 
 <!-- Modal login -->
@@ -402,7 +349,7 @@ jQuery(document).ready(function() {
 		<h2><?= JText::_('COM_BOTIGA_PROCESS_CART'); ?></h2>
 		<div class="row">
 			<div class="col-xs-12 col-md-6">
-			<?php 
+			<?php
 			$img  = botigaHelper::getItemData('image1', $modal);
 			$preu = botigaHelper::getUserPrice($modal);
 			$img != '' ? $image = $img : $image = 'components/com_botiga/assets/images/noimage.jpg';

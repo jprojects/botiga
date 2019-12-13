@@ -9,7 +9,7 @@
  * @website		http://www.aficat.com
  *
 */
-  
+
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 $model 		= $this->getModel('botiga');
@@ -54,60 +54,11 @@ $login_prices = botigaHelper::getParameter('login_prices', 0);
 </div>
 <!-- end Modal success -->
 
-<?php if(botigaHelper::getParameter('show_header', 0) == 1) : ?>
-<header class="head_botiga">
-
-	<div class="col-md-11 mx-auto">
-
-		<div class="row">
-
-		<?php if($logo != '') : ?>
-		<div class="col-12 text-right d-none d-sm-block">
-			<a href="index.php"><img src="<?= $logo; ?>" alt="<?= botigaHelper::getParameter('botiga_name', ''); ?>" class="img-fluid"></a>
-		</div>
-		<?php endif; ?>	
-		
-		<div class="col-12 mt-3">
-			<div class="row">
-				<div class="col-9 text-left">			
-					<a href="index.php?option=com_botiga&view=botiga" class="pr-1">
-						<img src="media/com_botiga/icons/mosaico<?php if($jinput->getCmd('layout', '') == '') : ?>-active<?php endif; ?>.png">
-					</a>
-					<a href="index.php?option=com_botiga&view=botiga&layout=table">
-						<img src="media/com_botiga/icons/lista<?php if($jinput->getCmd('layout', '') == 'table') : ?>-active<?php endif; ?>.png">
-					</a>
-					<span class="pl-3 phone-hide"><?= JText::sprintf('COM_BOTIGA_FREE_SHIPPING_MSG', $spain, $islands, $world); ?>&nbsp;<img src="media/com_botiga/icons/envio_gratis.png"></span>
-				</div>
-				<div class="col-3 text-right">
-					<a href="<?php if($count > 0) : ?>index.php?option=com_botiga&view=checkout<?php else: ?>#<?php endif; ?>" class="pr-1 carrito">
-						<?php if($count > 0) : ?>
-						<span class="badge badge-warning"><?= $count; ?></span>
-						<?php endif; ?>
-						<img src="media/com_botiga/icons/carrito.png">
-					</a>
-					<?php if($user->guest) : ?>
-					<a href="index.php?option=com_users&view=login" title="Login" class="hasTip pr-1">
-						<img src="media/com_botiga/icons/iniciar-sesion.png">
-					</a>
-					<?php else: ?>
-					<a href="index.php?option=com_users&task=user.logout&<?= $userToken; ?>=1" title="Logout" class="hasTip pr-1">
-						<img src="media/com_botiga/icons/salir.png">
-					</a>
-					<a href="index.php?option=com_botiga&view=history" title="History" class="hasTip">
-						<img src="media/com_botiga/icons/sesion-iniciada.png">
-					</a>
-					<div class="d-none d-sm-block"><small><?= JText::sprintf('COM_BOTIGA_WELCOME', $user->name); ?></small></div>
-					<?php endif; ?>
-				</div>
-			</div>
-		</div>
-		
-		</div>	
-	
-	</div>
-	
-</header>
-<?php endif; ?>
+<?php if(botigaHelper::getParameter('show_header', 0) == 1) :
+  $layout = new JLayoutFile('header', JPATH_ROOT .'/components/com_botiga/layouts');
+  $data   = array();
+  echo $layout->render($data);
+endif; ?>
 
 <div class="col-md-11 mx-auto pb-5">
 
@@ -116,11 +67,11 @@ $login_prices = botigaHelper::getParameter('login_prices', 0);
 		<div id="page-header">
 			<h1><?= JText::_('COM_BOTIGA_ITEMS_TITLE'); ?></h1>
 		</div>
-		
+
 		<?php if($showprices == 1 && $user->guest) : ?>
 		<div class="alert alert-primary"><?= JText::sprintf('COM_BOTIGA_PRICES_NOTICE', 'index.php?option=com_botiga&view=register&Itemid=117'); ?></div>
 		<?php endif; ?>
-		
+
 		<div class="pull-left">
 			<form name="filters" id="filters" method="get" action="index.php?option=com_botiga&view=botiga" class="form-inline" onchange="filters.submit();">
 				<input type="hidden" name="option" value="com_botiga" />
@@ -142,9 +93,9 @@ $login_prices = botigaHelper::getParameter('login_prices', 0);
 			<?php $link = str_replace('?layout=table', '', $url); ?>
 			<a href="<?= $link; ?>"><i class="fa fa-th fa-2x"></i></a>
 		</div>
-		
+
 		<div class="clearfix"></div>
-		
+
 		<div class="items">
 		<table class="table table-hover">
 		<tr>
@@ -156,15 +107,15 @@ $login_prices = botigaHelper::getParameter('login_prices', 0);
 			<th></th>
 			<th></th>
 		</tr>
-		<?php 
+		<?php
 		if(count($this->items)) :
 		$i = 0;
-		foreach($this->items as $item) : ?>			
+		foreach($this->items as $item) : ?>
 			<?php $item->image1 != '' ? $image = $item->image1 : $image = 'components/com_botiga/assets/images/noimage.jpg'; ?>
 
-			<?php 
+			<?php
 			$precio = botigaHelper::getUserPrice($item->id);
-			$precio < 1 ? $price = JText::_('COM_BOTIGA_A_CONSULTAR') : $price = $precio; 
+			$precio < 1 ? $price = JText::_('COM_BOTIGA_A_CONSULTAR') : $price = $precio;
 			?>
 			<tr>
 				<!--<td width="15%"><img src="<?= $image; ?>" class="img-responsive" alt="<?= $item->name; ?>" /></td>-->
@@ -183,7 +134,7 @@ $login_prices = botigaHelper::getParameter('login_prices', 0);
 			</tr>
 		<?php
 		$i++;
-		endforeach; 
+		endforeach;
 		else:
 		?>
 		<?= JText::_('COM_BOTIGA_NO_ITEMS'); ?>
@@ -191,11 +142,11 @@ $login_prices = botigaHelper::getParameter('login_prices', 0);
 		endif;
 		?>
 		</table>
-		
+
 		<div class="paginacion">
 			<?php echo $this->pagination->getPagesLinks(); ?>
 		</div>
-	</div>	
+	</div>
 </div>
 
 <?php if($modal == 1) : ?>

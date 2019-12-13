@@ -16,14 +16,20 @@ $model = $this->getModel('search');
 $search = JFactory::getApplication()->input->get('filter_search');
 ?>
 
+<?php if(botigaHelper::getParameter('show_header', 0) == 1) :
+  $layout = new JLayoutFile('header', JPATH_ROOT .'/components/com_botiga/layouts');
+  $data   = array();
+  echo $layout->render($data);
+endif; ?>
+
 <div class="container margin50">
-	
+
 	<div class="col-sm-12 col-md-11">
 		<?php if(count($this->items) > 0) : ?>
 		<table class="table table-striped">
 			<?php foreach($this->items as $item) : ?>
 			<tr>
-				<td><a href="<?= JURI::root(); ?>'media/com_botiga/docs/<?= $item->filename; ?>"><?= $item->name; ?></a></td>	
+				<td><a href="<?= JURI::root(); ?>'media/com_botiga/docs/<?= $item->filename; ?>"><?= $item->name; ?></a></td>
 				<td><?= $item->category; ?></td>
 			</tr>
 			<?php endforeach; ?>

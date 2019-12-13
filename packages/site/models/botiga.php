@@ -16,7 +16,7 @@ use Joomla\Utilities\ArrayHelper;
 JTable::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
 
 class botigaModelBotiga extends JModelList
-{ 
+{
 	/**
 	 * Method to auto-populate the model state.
 	 * Note. Calling getState in this method will result in recursion.
@@ -36,10 +36,10 @@ class botigaModelBotiga extends JModelList
 		//$value = $app->getUserStateFromRequest($this->context.'.limitstart', 'limitstart', 0);
 		$value = $app->input->getInt('limitstart', 0);
 		$this->setState('list.start', $value);
-		
+
 		$catid = $app->input->getInt('catid', 0);
 		$this->setState('list.catid', $catid);
-		
+
 		$orderby = $app->input->getInt('orderby', 'id');
 		$this->setState('list.orderby', $orderby);
 
@@ -48,7 +48,7 @@ class botigaModelBotiga extends JModelList
 		$this->setState('params', $params);
 
 		// List state information.
-		$this->setState('layout', JRequest::getCmd('layout'));
+		$this->setState('layout', $app->input->getCmd('layout'));
 	}
 
     /**
@@ -64,7 +64,7 @@ class botigaModelBotiga extends JModelList
 	 * @since	1.6
 	*/
 	protected function getStoreId($id = '')
-	{		
+	{
 		return parent::getStoreId($id);
 	}
 
@@ -78,21 +78,21 @@ class botigaModelBotiga extends JModelList
 	{
 	    $user = JFactory::getUser();
 	    $app  = JFactory::getApplication();
-		
+
 		$db         = $this->getDbo();
-		
+
 		$query      = $db->getQuery(true);
-		
+
 		$query->select('i.*, b.name AS brandname');
-		
+
 		$query->from($db->quoteName('#__botiga_items').' AS i');
-		
+
 		$query->join('LEFT', $db->quoteName('#__botiga_brands').' AS b ON b.id = i.brand');
-		
+
 		// TODO:
 		// 1. buscar l'usuari de la sessió en afi_botiga_users i determinar el valor del camp usergroup
 		// 2. si l'usuari no existeix, s'agafarà el grup 1 (públic)
-		// 3. afegir un join amb la taula afi_botiga_items_prices, i un where per seleccionar sols les files del grup que correspongui 
+		// 3. afegir un join amb la taula afi_botiga_items_prices, i un where per seleccionar sols les files del grup que correspongui
 		// 4. canviar l'order by del preu
 
 		// Filters
@@ -101,11 +101,11 @@ class botigaModelBotiga extends JModelList
 		$collection = $app->input->getString('collection', '');
 		$ref     	= $app->input->get('ref', '');
 		$orderby 	= $app->input->get('orderby', 'id');
-		
+
 		$groups  = JAccess::getGroupsByUser($user->id, false);
-		
+
 		//order by price
-		if($orderby == 'pvp') {			
+		if($orderby == 'pvp') {
 			if(in_array(10, $groups)) {
 				$orderby = 'CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(i.price, \'pricing":["\',-1), \'"\', -2), \'"\', 1) AS double(10,2))'; //empresa
 			} else {
@@ -113,20 +113,20 @@ class botigaModelBotiga extends JModelList
 			}
 		} else {
 			$orderby = 'i.'.$orderby;
-		}		
+		}
 
 		if($catid != 0) {
 			$query->where('(FIND_IN_SET ('.$catid.', i.catid))');
 		}
-		
+
 		if($marca != 0) {
 			$query->where('(i.brand = '.$marca.')');
 		}
-		
+
 		if($collection != '') {
 			$query->where('(i.collection = '.$db->quote($collection).')');
 		}
-		
+
 		if($ref != '') {
 			$query->where('(i.ref = '.$db->quote($ref).')');
 		}
@@ -139,7 +139,7 @@ class botigaModelBotiga extends JModelList
 		// echo $query;
 		return $query;
 	}
-	
+
 	/**
 	 * Get a list of items.
 	 *
@@ -149,10 +149,10 @@ class botigaModelBotiga extends JModelList
 	public function getItems()
 	{
         	$items	= parent::getItems();
-		
+
 		return $items;
 	}
-	
+
 	/**
 	 * Get a the number of items.
 	 *
@@ -160,57 +160,57 @@ class botigaModelBotiga extends JModelList
 	 * @since	1.6
 	*/
 	public function getNumItems() {
-	
+
 		$db = JFactory::getDbo();
 		$id = JFactory::getApplication()->input->get('id');
-		
+
 		$count = count($this->getItems());
-		
+
 		$db->setQuery($this->getListQuery());
-		
+
 		$total = count($db->loadObjectList());
-		
+
 		return JText::sprintf('COM_BOTIGA_TOTAL_ITEMS', $count, $total);
 	}
-	
+
 	public function getNumItemsRow($id, $price) {
-	
+
 		$db 	 = JFactory::getDbo();
 		$session = JFactory::getSession();
-		
+
 		$idComanda = $session->get('idComanda', '');
-		
+
 		if($idComanda != '') {
-		
+
 			$db->setQuery('SELECT qty FROM #__botiga_comandesDetall WHERE idItem = '.$id.' AND idComanda = '.$idComanda);
-			
+
 			$qty = $db->loadResult();
-			
+
 			if($qty > 0) { $price = $qty * $price; } else { $price = 0; }
 		} else {
 			$price = 0;
 		}
-			
+
 		return number_format($price, 2);
 	}
-	
+
 	public function getQtyRow($id) {
-	
+
 		$db 	 = JFactory::getDbo();
 		$session = JFactory::getSession();
-		
+
 		$idComanda = $session->get('idComanda', '');
 		$qty = 0;
-		
+
 		if($idComanda != '') {
-		
+
 			$db->setQuery('SELECT qty FROM #__botiga_comandesDetall WHERE idItem = '.$id.' AND idComanda = '.$idComanda);
-			
+
 			$qty = $db->loadResult();
-			
+
 			if($qty == '') { $qty = 0; }
 		}
-			
+
 		return $qty;
 	}
 }

@@ -40,65 +40,13 @@ $email			= botigaHelper::getParameter('botiga_mail', '');
 $userToken  	= JSession::getFormToken();
 ?>
 
-<?php if(botigaHelper::getParameter('show_header', 0) == 1) : ?>
-<header class="head_botiga">
+<?php if(botigaHelper::getParameter('show_header', 0) == 1) :
+  $layout = new JLayoutFile('header', JPATH_ROOT .'/components/com_botiga/layouts');
+  $data   = array();
+  echo $layout->render($data);
+endif; ?>
 
-	<div class="col-md-11 mx-auto">
-
-		<div class="row">
-
-		<?php if($logo != '') : ?>
-		<div class="col-12 text-right d-none d-sm-block">
-			<a href="index.php">
-				<img src="<?= $logo; ?>" alt="<?= botigaHelper::getParameter('botiga_name', ''); ?>" class="img-fluid botiga-logo">
-			</a>
-		</div>
-		<?php endif; ?>	
-		
-		<div class="col-12 mt-3">
-			<div class="row">
-				<div class="col-8 text-left">			
-					<a href="index.php?option=com_botiga&view=botiga" class="pr-1">
-						<img src="media/com_botiga/icons/mosaico<?php if($jinput->getCmd('layout', '') == '') : ?>-active<?php endif; ?>.png">
-					</a>
-					<?php if(botigaHelper::hasAccesstoTableView()) : ?>					
-					<a href="index.php?option=com_botiga&view=botiga&layout=table">
-						<img src="media/com_botiga/icons/lista<?php if($jinput->getCmd('layout', '') == 'table') : ?>-active<?php endif; ?>.png">
-					</a>
-					<?php endif; ?>
-					<span class="pl-3 phone-hide estil02"><?= JText::sprintf('COM_BOTIGA_FREE_SHIPPING_MSG', $spain, $islands, $world); ?>&nbsp;<img src="media/com_botiga/icons/envio_gratis.png"></span>
-				</div>
-				<div class="col-4 text-right">
-					<a href="index.php?option=com_botiga&view=checkout" class="pr-1 carrito">
-						<?php if(botigaHelper::getCarritoCount() > 0) : ?>
-						<span class="badge badge-warning"><?= botigaHelper::getCarritoCount(); ?></span>
-						<?php endif; ?>
-						<img src="media/com_botiga/icons/carrito.png">
-					</a>
-					<?php if($user->guest) : ?>
-					<a href="index.php?option=com_users&view=login" title="Login" class="hasTip">
-						<img src="media/com_botiga/icons/iniciar-sesion.png">
-					</a>
-					<?php else: ?>
-					<a href="index.php?option=com_users&task=user.logout&<?= $userToken; ?>=1" title="Logout" class="hasTip">
-						<img src="media/com_botiga/icons/salir.png">
-					</a>
-					<a href="index.php?option=com_botiga&view=history" title="History" class="hasTip">
-						<img src="media/com_botiga/icons/sesion-iniciada.png">
-					</a>
-					<?php endif; ?>
-				</div>
-			</div>
-		</div>
-		
-		</div>	
-	
-	</div>
-	
-</header>
-<?php endif; ?>
-
-<div class="col-md-4 mx-auto  mt-5 mb-5"> 
+<div class="col-md-4 mx-auto  mt-5 mb-5">
 
 	<div class="text-center">
 		<h1 class="text-dark estil09"><?= JText::_('COM_BOTIGA_REGISTER_TITLE'); ?></h1>
@@ -107,7 +55,7 @@ $userToken  	= JSession::getFormToken();
 	<div>
 
 		<form name="register" id="register" action="index.php?option=com_botiga&task=register.register" method="post" class="form-horizontal form-validate">
-		
+
 			<?php if($show_type == 1) : ?>
 			<div class="control-group" id="fieldType">
 				<div class="control-label"><?php echo $this->form->getLabel('type'); ?></div>
@@ -121,7 +69,7 @@ $userToken  	= JSession::getFormToken();
 				</div>
 			</div>
 			<?php endif; ?>
-				
+
 			<div id="registerFields" <?php if($show_type == 1) : ?>style="display:none;"<?php endif; ?>>
 
 				<div id="empresaFields" <?php if($show_type == 1) : ?>style="display:none;"<?php endif; ?>>
@@ -208,20 +156,20 @@ $userToken  	= JSession::getFormToken();
 					<div class="controls"><?php echo $this->form->getInput('pais'); ?></div>
 				</div>
 				<?php endif; ?>
-				
+
 				<?php if($validation == 1) : ?>
 				<div class="form-group pt-4">
 	   		 		<div class="g-recaptcha" data-callback="recaptchaCallback" data-sitekey="<?= $sitekey; ?>"></div>
 				</div>
 				<?php endif; ?>
-				
+
 				<div class="checkbox estil01 pt-4">
 				  <label>
 					<input type="checkbox" value=""  class="tos required" required="required">
 					<?= JText::sprintf('COM_BOTIGA_REGISTER_LOPD', ''); ?>
 				  </label>
 				</div>
-				
+
 				<?php if($show_newsletter == 1) : ?>
 				<div class="checkbox estil01">
 				  <label>
@@ -230,7 +178,7 @@ $userToken  	= JSession::getFormToken();
 				  </label>
 				</div>
 				<?php endif; ?>
-				
+
 				<div id="form-login-submit" class="control-group">
 					<div class="controls">
 						<button disabled="disabled" type="submit" class="btn btn-primary btn-block validate submit estil03"><?= JText::_('COM_BOTIGA_REGISTER'); ?></button>
@@ -240,12 +188,12 @@ $userToken  	= JSession::getFormToken();
 				<input type="hidden" name="jform[newsletter]" class="newsletter" value="0" />
 				<input type="hidden" name="task" value="register.register" />
 				<?= JHtml::_('form.token'); ?>
-				
+
 				<div class="estil01 mt-3"><?= JText::_('COM_BOTIGA_REGISTER_SUBTITLE'); ?></div>
 
 			</div>
-				
+
 		</form>
 	</div>
-	
+
 </div>

@@ -5,10 +5,10 @@
 			<![CDATA[Items Layout]]>
 		</message>
 	</layout>
-        <fields name="request">
+  <fields name="request" addfieldprefix="Joomla\Component\Categories\Administrator\Field">
 		<fieldset name="request" addfieldpath="/administrator/components/com_botiga/models/fields">
-			<field 
-				name="catid" 
+			<field
+				name="catid"
 				type="category"
 				label="Categories"
 				extension="com_botiga"
