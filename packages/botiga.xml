@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension type="component" version="3.5" method="upgrade">
+<extension type="component" version="4.0" method="upgrade">
 	<name>Botiga</name>
 	<creationDate>2017-01-22</creationDate>
 	<author>Kim</author>
@@ -17,7 +17,7 @@
 		<folder>models/</folder>
 		<folder>helpers/</folder>
 		<folder>controllers/</folder>
-		<folder>assets/</folder>  
+		<folder>assets/</folder>
 	</files>
 	<media destination="com_botiga" folder="media">
         <folder>icons/</folder>
@@ -44,7 +44,7 @@
 		</schemas>
 	</update>
 	<administration>
-		<menu link="option=com_botiga&amp;view=items">Botiga</menu>
+		<menu img="class:banners">Botiga</menu>
 		<submenu>
 			<menu link="option=com_botiga&amp;view=brands">Brands</menu>
 			<menu link="option=com_categories&amp;extension=com_botiga">Categories</menu>
