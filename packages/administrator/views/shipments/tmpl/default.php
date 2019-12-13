@@ -2,7 +2,7 @@
 /**
  * @version		1.0.0 botiga $
  * @package		botiga
- * @copyright   Copyright © 2010 - All rights reserved.
+ * @copyright Copyright © 2010 - All rights reserved.
  * @license		GNU/GPL
  * @author		kim
  * @author mail kim@aficat.com
@@ -13,155 +13,126 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
-$user		= JFactory::getUser();
-$userId		= $user->get('id');
-$listOrder	= $this->state->get('list.ordering');
-$listDirn	= $this->state->get('list.direction');
-$canOrder	= $user->authorise('core.edit.state', 'com_botiga');
-$saveOrder	= $listOrder == 'a.ordering';
-if ($saveOrder)
-{
-	$saveOrderingUrl = 'index.php?option=com_botiga&task=shipments.saveOrderAjax&tmpl=component';
-	JHtml::_('sortablelist.sortable', 'adminList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
-}
-?>
-<script type="text/javascript">
-	Joomla.orderTable = function() {
-		table = document.getElementById("sortTable");
-		direction = document.getElementById("directionTable");
-		order = table.options[table.selectedIndex].value;
-		if (order != '<?php echo $listOrder; ?>') {
-			dirn = 'asc';
-		} else {
-			dirn = direction.options[direction.selectedIndex].value;
-		}
-		Joomla.tableOrdering(order, dirn, '');
-	}
-</script>
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Multilanguage;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Session\Session;
 
-<?php
-//Joomla Component Creator code to allow adding non select list filters
-if (!empty($this->extra_sidebar)) {
-    $this->sidebar .= $this->extra_sidebar;
+HTMLHelper::_('behavior.multiselect');
+
+$user      = Factory::getUser();
+$userId    = $user->get('id');
+$listOrder = $this->escape($this->state->get('list.ordering'));
+$listDirn  = $this->escape($this->state->get('list.direction'));
+$saveOrder = $listOrder == 'a.ordering';
+
+if ($saveOrder && !empty($this->items))
+{
+	$saveOrderingUrl = 'index.php?option=com_botiga&task=shipments.saveOrderAjax&tmpl=component&' . Session::getFormToken() . '=1';
+	HTMLHelper::_('draggablelist.draggable');
 }
 ?>
 
 <form action="<?php echo JRoute::_('index.php?option=com_botiga&view=shipments'); ?>" method="post" name="adminForm" id="adminForm">
-<?php if(!empty($this->sidebar)): ?>
-	<div id="j-sidebar-container" class="span2">
-		<?php echo $this->sidebar; ?>
-	</div>
-	<div id="j-main-container" class="span10">
-<?php else : ?>
-	<div id="j-main-container">
-<?php endif;?>
+	<div class="row">
+		<div class="col-md-12">
+			<div id="j-main-container" class="j-main-container">
 
-        <?php echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this)); ?>
-
-		<div class="clearfix"> </div>
-
-		<table class="table table-striped" class="adminList">
-			<thead>
-				<tr>
-					<?php if (isset($this->items[0]->ordering)): ?>
-					<th width="1%" class="nowrap center hidden-phone">
-						<?php echo JHtml::_('grid.sort', '<i class="icon-menu-2"></i>', 'a.ordering', $listDirn, $listOrder, null, 'asc', 'JGRID_HEADING_ORDERING'); ?>
-					</th>
-               		<?php endif; ?>
-					<th width="1%" class="hidden-phone">
-						<input type="checkbox" name="checkall-toggle" value="" title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)" />
-					</th>
-                	<?php if (isset($this->items[0]->state)): ?>
-					<th width="1%" class="nowrap center">
-						<?php echo JHtml::_('grid.sort', 'JSTATUS', 'a.published', $listDirn, $listOrder); ?>
-					</th>
-               		<?php endif; ?>
-					<th>
-						<?php echo JHtml::_('grid.sort',  'COM_BOTIGA_SHIPMENT_NAME', 'a.name', $listDirn, $listOrder); ?>
-					</th>
-
-					<?php if (isset($this->items[0]->id)): ?>
-					<th width="1%" class="nowrap center hidden-phone">
-							<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>
-					</th>
-		            <?php endif; ?>
-				</tr>
-			</thead>
-			<tfoot>
-				<tr>
-		            <?php
-		            if(isset($this->items[0])){
-		                $colspan = count(get_object_vars($this->items[0]));
-		            }
-		            else{
-		                $colspan = 10;
-		            }
-		        	?>
-					<td colspan="<?php echo $colspan ?>">
-						<?php echo $this->pagination->getListFooter(); ?>
-					</td>
-				</tr>
-			</tfoot>
-			<tbody>
-				<?php foreach ($this->items as $i => $item) :
-				$ordering   = ($listOrder == 'a.ordering');
-                $canCreate	= $user->authorise('core.create',		'com_botiga');
-                $canEdit	= $user->authorise('core.edit',			'com_botiga');
-                $canCheckin	= $user->authorise('core.manage',		'com_botiga');
-                $canChange	= $user->authorise('core.edit.state',	'com_botiga');
+				<?php
+				// Search tools bar
+				echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]);
 				?>
-				<tr class="row<?php echo $i % 2; ?>">
 
-				    <?php if (isset($this->items[0]->ordering)): ?>
-					<td class="order nowrap center hidden-phone">
-						<?php if ($canChange) :
-							$disableClassName = '';
-							$disabledLabel	  = '';
-							if (!$saveOrder) :
-								$disabledLabel    = JText::_('JORDERINGDISABLED');
-								$disableClassName = 'inactive tip-top';
-							endif; ?>
-							<span class="sortable-handler hasTooltip <?php echo $disableClassName?>" title="<?php echo $disabledLabel?>">
-								<i class="icon-menu"></i>
-							</span>
-							<input type="text" style="display:none" name="order[]" size="5" value="<?php echo $item->ordering;?>" class="width-20 text-area-order " />
-						<?php else : ?>
-							<span class="sortable-handler inactive" >
-								<i class="icon-menu"></i>
-							</span>
-						<?php endif; ?>
-					</td>
-		            <?php endif; ?>
-					<td class="center hidden-phone">
-							<?php echo JHtml::_('grid.id', $i, $item->id); ?>
-					</td>
-		            <?php if (isset($this->items[0]->state)): ?>
-					<td class="center">
-							<?php echo JHtml::_('jgrid.published', $item->published, $i, 'shipments.', $canChange, 'cb'); ?>
-					</td>
-		            <?php endif; ?>
-		            <td>
-						<?php if ($canEdit) : ?>
-						<a href="<?php echo JRoute::_('index.php?option=com_botiga&task=shipment.edit&id='.(int) $item->id); ?>">
-						<?php echo $item->name; ?></a>
-						<?php else : ?>
-						<?php echo $item->name; ?>
-						<?php endif; ?>
-					</td>
-					<?php if (isset($this->items[0]->id)): ?>
-					<td class="center hidden-phone">
-						<?php echo (int) $item->id; ?>
-					</td>
-                <?php endif; ?>
-				</tr>
-				<?php endforeach; ?>
-			</tbody>
-		</table>
+				<?php if (empty($this->items)) : ?>
+					<div class="alert alert-info">
+						<span class="fa fa-info-circle" aria-hidden="true"></span><span class="sr-only"><?php echo Text::_('INFO'); ?></span>
+						<?php echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
+					</div>
+				<?php else : ?>
 
-		<input type="hidden" name="task" value="" />
-		<input type="hidden" name="boxchecked" value="0" />
-		<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>" />
-		<input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>" />
-		<?php echo JHtml::_('form.token'); ?>
+				<table class="table table-striped" class="adminList">
+					<thead>
+						<tr>
+							<td style="width:1%" class="text-center">
+								<?php echo HTMLHelper::_('grid.checkall'); ?>
+							</td>
+							<th scope="col" style="width:1%" class="text-center d-none d-md-table-cell">
+								<?php echo HTMLHelper::_('searchtools.sort', '', 'a.ordering', $listDirn, $listOrder, null, 'asc', 'JGRID_HEADING_ORDERING', 'icon-menu-2'); ?>
+							</th>
+							<th scope="col" style="width:1%" class="text-center">
+								<?php echo HTMLHelper::_('searchtools.sort', 'JSTATUS', 'a.published', $listDirn, $listOrder); ?>
+							</th>
+							<th scope="col">
+								<?php echo HTMLHelper::_('searchtools.sort',  'COM_BOTIGA_SHIPMENT_NAME', 'a.name', $listDirn, $listOrder); ?>
+							</th>
+							<th scope="col">
+								<?php echo HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>
+							</th>
+						</tr>
+					</thead>
+					<tbody <?php if ($saveOrder) :?> class="js-draggable" data-url="<?php echo $saveOrderingUrl; ?>" data-direction="<?php echo strtolower($listDirn); ?>" data-nested="true"<?php endif; ?>>
+						<?php foreach ($this->items as $i => $item) :
+						$ordering   = ($listOrder == 'a.ordering');
+		        $canCreate	= $user->authorise('core.create',		'com_botiga');
+		        $canEdit	  = $user->authorise('core.edit',			'com_botiga');
+		        $canCheckin	= $user->authorise('core.manage',		'com_botiga');
+		        $canChange	= $user->authorise('core.edit.state',	'com_botiga');
+						?>
+						<tr class="row<?php echo $i % 2; ?>" data-dragable-group="<?php echo $item->catid; ?>">
+							<td class="text-center">
+								<?php echo HTMLHelper::_('grid.id', $i, $item->id); ?>
+							</td>
+							<td class="text-center d-none d-md-table-cell">
+								<?php
+								$iconClass = '';
+
+								if (!$canChange)
+								{
+									$iconClass = ' inactive';
+								}
+								elseif (!$saveOrder)
+								{
+									$iconClass = ' inactive" title="' . Text::_('JORDERINGDISABLED');
+								}
+								?>
+								<span class="sortable-handler <?php echo $iconClass ?>">
+									<span class="fa fa-ellipsis-v" aria-hidden="true"></span>
+								</span>
+								<?php if ($canChange && $saveOrder) : ?>
+									<input type="text" style="display:none" name="order[]" size="5"
+										value="<?php echo $item->ordering; ?>" class="width-20 text-area-order">
+								<?php endif; ?>
+							</td>
+							<td class="center">
+									<?php echo HTMLHelper::_('jgrid.published', $item->published, $i, 'shipments.', $canChange, 'cb'); ?>
+							</td>
+				      <td class="small d-none d-md-table-cell">
+								<?php if ($canEdit) : ?>
+								<a href="<?php echo JRoute::_('index.php?option=com_botiga&task=shipment.edit&id='.(int) $item->id); ?>">
+								<?php echo $item->name; ?></a>
+								<?php else : ?>
+								<?php echo $item->name; ?>
+								<?php endif; ?>
+							</td>
+							<td class="small d-none d-md-table-cell">
+								<?php echo (int) $item->id; ?>
+							</td>
+						</tr>
+						<?php endforeach; ?>
+					</tbody>
+				</table>
+
+				<?php // Load the pagination. ?>
+				<?php echo $this->pagination->getListFooter(); ?>
+
+				<?php endif; ?>
+
+				<input type="hidden" name="task" value="">
+				<input type="hidden" name="boxchecked" value="0">
+				<?php echo HTMLHelper::_('form.token'); ?>
+
 	</div>
 </form>
