@@ -13,55 +13,53 @@ defined('_JEXEC') or die('Acceso Restringido');
 class modBotigaMenuHelper
 {
 	public static function getBrands() {
-				
+
 		$db   = JFactory::getDbo();
 
-		$db->setQuery('select id, name, image from #__botiga_brands where published = 1 order by ordering asc');
+		$db->setQuery("SELECT id, name, image FROM `#__botiga_brands` WHERE published = 1 ORDER BY ordering asc");
 		return $db->loadObjectList();
 	}
-	
-	public static function getCollections() {
-				
-		$db   = JFactory::getDbo();
-		$lang = JFactory::getLanguage()->getTag();
-		$app  = JFactory::getApplication();
-		
-		$marca = $app->input->get('marca', 0);
-		
-		$sql = 'select distinct(collection) from #__botiga_items where published = 1 and language = '.$db->quote($lang).' ';
-		if($marca != 0) { $sql .= 'and brand = '.$marca.' '; } 
-		$sql .= 'order by collection ASC';
 
-		$db->setQuery($sql);
-		return $db->loadObjectList();
-	}
-	
 	public static function getCats() {
-	
+
 		$db   = JFactory::getDbo();
 		$lang = JFactory::getLanguage()->getTag();
-		
-		$db->setQuery('select id, title, parent_id from #__categories where extension = '.$db->quote('com_botiga').' and language = '.$db->quote($lang).' and parent_id = 1 and published = 1 order by lft');
+
+		$db->setQuery("SELECT id, title, parent_id FROM `#__categories` WHERE extension = 'com_botiga' AND (language = '$lang' OR language = '*') AND parent_id = 1 AND published = 1 ORDER BY lft");
 		return $db->loadObjectList();
 	}
-	
+
 	public static function getSubCats($id) {
-	
+
 		$db   = JFactory::getDbo();
 		$lang = JFactory::getLanguage()->getTag();
-		
-		$db->setQuery('select id, title, parent_id from #__categories where parent_id = '.$id.' and language = '.$db->quote($lang).' and published = 1 order by lft');
+
+		$db->setQuery("SELECT id, title, parent_id FROM `#__categories` WHERE parent_id = $id AND (language = '$lang' OR language = '*') AND published = 1 ORDER BY lft");
 		return $db->loadObjectList();
 	}
-	
-	public static function getCategoriesByBrand($brand) {
-	
+
+	public static function getSubCatsId($id) {
+
 		$db   = JFactory::getDbo();
 		$lang = JFactory::getLanguage()->getTag();
-		
-		$db->setQuery('select distinct(catid) from #__botiga_items where marca = '.$brand.' and published = 1 and language = '.$db->quote($lang));
+		$result = array();
+
+		$db->setQuery("SELECT id FROM `#__categories` WHERE parent_id = $id AND (language = '$lang' OR language = '*') AND published = 1 ORDER BY lft");
+		$rows = $db->loadObjectList();
+		foreach($rows as $row) {
+			$result[] = $row->id;
+		}
+		return $result;
+	}
+
+	public static function getCategoriesByBrand($brand) {
+
+		$db   = JFactory::getDbo();
+		$lang = JFactory::getLanguage()->getTag();
+
+		$db->setQuery("SELECT DISTINCT(catid) FROM `#__botiga_items` WHERE marca = '$brand' AND published = 1 AND (language = '$lang' OR language = '*')");
 		return $db->loadObjectList();
-	}	
+	}
 }
 
 ?>

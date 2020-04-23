@@ -2,11 +2,11 @@
 /**
  * @version		1.0.0 botiga $
  * @package		botiga
- * @copyright   Copyright © 2010 - All rights reserved.
+ * @copyright Copyright © 2010 - All rights reserved.
  * @license		GNU/GPL
  * @author		kim
- * @author mail administracion@joomlanetprojects.com
- * @website		http://www.joomlanetprojects.com
+ * @author mail kim@aficat.com
+ * @website		http://www.aficat.com
  *
  */
 
@@ -19,7 +19,7 @@ jimport('joomla.database.table');
 /**
  * Items Table class
  *
- * @package    com_laundry
+ * @package    com_botiga
  *
  */
 class botigaTableItems extends JTable
@@ -32,7 +32,7 @@ class botigaTableItems extends JTable
     function __construct( &$db ) {
     	parent::__construct('#__botiga_items', 'id', $db);
     }
-       
+
 }
 
 ?>

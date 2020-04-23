@@ -1,56 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<form
-        addrulepath="/administrator/components/com_botiga/models/rules"
->
+<form addrulepath="/administrator/components/com_botiga/models/rules">
 	<fieldset name="details" addfieldpath="/administrator/components/com_botiga/models/fields">
-		<field 
-			name="id"  
-			type="text" 
-			class="readonly" 
+		<field
+			name="id"
+			type="number"
 			label="JGLOBAL_FIELD_ID_LABEL"
-			description ="JGLOBAL_FIELD_ID_DESC" 
-			size="10" 
-			default="0" 
-			readonly="true"  
-        />
-        <field
+			default="0"
+			readonly="true"
+			class="readonly"
+		/>
+		<field
+			name="ordering"
+			type="ordering"
+			label="JFIELD_ORDERING_LABEL"
+			table="#__botiga_items"
+		/>
+    <field
 			name="published"
 			type="list"
 			label="JSTATUS"
 			description="COM_BANNERS_FIELD_STATE_DESC"
-			class="chzn-color-state"
+			class="custom-select-color-state"
 			size="1"
 			default="1"
-            onchange="this.form.submit();"
+      onchange="this.form.submit();"
 			>
 			<option value="1">JPUBLISHED</option>
 			<option value="0">JUNPUBLISHED</option>
 			<option value="2">JARCHIVED</option>
 			<option value="-2">JTRASHED</option>
-		</field> 
-		<field 
-			name="language" 
-			type="language" 
-			client="site" 
-			default="en-GB" 
-			label="COM_BOTIGA_ITEM_LANGUAGE_LABEL" 
-			description="COM_BOTIGA_ITEM_LANGUAGE_DESC" 
+		</field>
+		<field
+			name="language"
+			type="contentlanguage"
+			label="JFIELD_LANGUAGE_LABEL"
+			>
+			<option value="*">JALL</option>
+		</field>
+		<field
+			name="child"
+			type="products"
+			client="site"
+			default=""
+			label="COM_BOTIGA_ITEM_CHILD_LBL"
+			description="COM_BOTIGA_ITEM_CHILD_DSC"
 		/>
-		<field 
-			name="child" 
-			type="products" 
-			client="site" 
-			default="" 
-			label="COM_BOTIGA_ITEM_CHILD_LBL" 
-			description="COM_BOTIGA_ITEM_CHILD_DSC" 
-		/>
-		<field 
-			name="usergroup" 
+		<field
+			name="usergroup"
 			type="usergroup"
 			label="COM_BOTIGA_ITEM_USERGROUP_LABEL"
-			description="COM_BOTIGA_ITEM_USERGROUP_DESC" 
+			description="COM_BOTIGA_ITEM_USERGROUP_DESC"
 		/>
-        <field name="catid"
+    <field
+			name="catid"
 			type="category"
 			label="COM_BOTIGA_ITEM_CATID_LABEL"
 			description="COM_BOTIGA_ITEM_CATID_DESC"
@@ -90,7 +92,7 @@
 			class="inputbox"
 			default=""
 		/>
-		<field 
+		<field
 			name="price"
 			type="repeatable"
 			icon="list"
@@ -98,29 +100,29 @@
 			label="COM_BOTIGA_ITEM_PRICE_LABEL"
 			default='{"usergroup":["default"],
 			"pricing":["0.0"]}'
+		>
+		<fieldset hidden="true" name="price_modal" repeat="true">
+			<field
+				name="usergroup"
+				type="sql"
+				default=""
+				label="COM_BOTIGA_ITEM_USERGROUP_LABEL"
+				query="SELECT id, title FROM #__usergroups"
+				key_field="id"
+				value_field="title"
 			>
-			<fieldset hidden="true" name="price_modal" repeat="true">				
-				<field
-					name="usergroup"
-					type="sql"
-					default=""
-					label="COM_BOTIGA_ITEM_USERGROUP_LABEL"
-					query="SELECT id, title FROM #__usergroups"
-					key_field="id"
-					value_field="title"
-				>
-    			<option value="">Please select an option</option>
-				</field>
-				<field 
-					name="pricing"
-					label="COM_BOTIGA_ITEM_PRICE_LABEL"
-					description="COM_BOTIGA_ITEM_PRICE_DESC"
-					size="30"
-					type="text"
-				/>
-			</fieldset>
-		</field>
-		<field
+  			<option value="">Please select an option</option>
+			</field>
+			<field
+				name="pricing"
+				label="COM_BOTIGA_ITEM_PRICE_LABEL"
+				description="COM_BOTIGA_ITEM_PRICE_DESC"
+				size="30"
+				type="text"
+			/>
+		</fieldset>
+	</field>
+	<field
 			name="pvp"
 			type="text"
 			label="COM_BOTIGA_ITEM_PVP_LABEL"
@@ -129,7 +131,7 @@
 			class="inputbox"
 			default=""
 		/>
-        <field
+   <field
 			name="brand"
 			type="brands"
 			label="COM_BOTIGA_ITEM_MARCA_LABEL"
@@ -137,15 +139,15 @@
 			class="inputbox"
 			default=""
 		/>
-        <field 
-        	name="image1"
+    <field
+      name="image1"
 			type="media"
 			hide_none="1"
 			label="COM_BOTIGA_ITEM_IMAGE_LABEL"
 			description="COM_BOTIGA_ITEM_IMAGE_DESC"
 			directory="products"
-		/> 
-		<field 
+		/>
+		<field
 			name="images"
 			type="repeatable"
 			icon="list"
@@ -154,7 +156,7 @@
 			default='{"image":[""]}'
 			>
 			<fieldset hidden="true" name="price_modal" repeat="true">
-				<field 
+				<field
 					name="image"
 					type="media"
 					hide_none="1"
@@ -163,7 +165,7 @@
 					directory="products"
 				/>
 			</fieldset>
-		</field> 
+		</field>
 		<field
 			name="garantia"
 			type="list"
@@ -207,7 +209,7 @@
 			<option value="COM_BOTIGA_3_WEEK">3 semanas</option>
 			<option value="COM_BOTIGA_4_WEEK">4 semanas</option>
 		</field>
-		<field 
+		<field
 			name="extres"
 			type="repeatable"
 			icon="list"
@@ -218,19 +220,19 @@
 			"content":[""]}'
 			>
 			<fieldset hidden="true" name="extres_modal" repeat="true">
-				<field 
+				<field
 					name="title"
 					type="text"
 					label="COM_BOTIGA_ITEM_EXTRA_TITLE_LBL"
 					description="COM_BOTIGA_ITEM_EXTRA_TITLE_DSC"
 					default=""
-					size="30"					 
+					size="30"
 				/>
-				<field 
+				<field
 					name="content"
 					type="textarea"
 					label="COM_BOTIGA_ITEM_EXTRA_CONTENT_LBL"
-					description="COM_BOTIGA_ITEM_EXTRA_CONTENT_DSC"					
+					description="COM_BOTIGA_ITEM_EXTRA_CONTENT_DSC"
 				/>
 			</fieldset>
 		</field>
@@ -240,7 +242,7 @@
 			exclude="\.html$"
 			label="COM_BOTIGA_ITEM_PDF_LABEL"
 			description="COM_BOTIGA_ITEM_PDF_DESC"
-		/> 
+		/>
 		<field
 			name="s_description"
 			type="textarea"
@@ -248,20 +250,20 @@
 			description="COM_BOTIGA_ITEM_SDESCRIPTION_DESC"
 			filter="raw"
 		/>
-        <field
+    <field
 			name="description"
 			type="editor"
 			label="COM_BOTIGA_ITEM_DESCRIPTION_LABEL"
 			description="COM_BOTIGA_ITEM_DESCRIPTION_DESC"
 			filter="safehtml"
 			buttons="false"
-		/>						
+		/>
 	</fieldset>
-        <fields name="params">
+  <fields name="params">
 		<fieldset
 			name="params"
 			label="JGLOBAL_FIELDSET_DISPLAY_OPTIONS"
-		>			
+		>
 		</fieldset>
 	</fields>
 </form>

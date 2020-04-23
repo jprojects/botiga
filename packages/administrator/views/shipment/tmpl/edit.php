@@ -13,10 +13,14 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
-JHtml::_('behavior.tooltip');
-JHtml::_('behavior.formvalidation');
-JHtml::_('formbehavior.chosen', 'select');
-JHtml::_('behavior.keepalive');
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\Router\Route;
+
+HTMLHelper::_('behavior.formvalidator');
+HTMLHelper::_('behavior.keepalive');
+
 $model = $this->getModel('shipment');
 ?>
 
@@ -32,9 +36,9 @@ if(task == 'shipment.cancel'){
     Joomla.submitform(task, document.getElementById('item-form'));
 }
 else{
-    
+
     if (task != 'shipment.cancel' && document.formvalidator.isValid(document.id('item-form'))) {
-        
+
         Joomla.submitform(task, document.getElementById('item-form'));
     }
     else {
@@ -45,7 +49,7 @@ else{
 </script>
 
 <form action="<?php echo JRoute::_('index.php?option=com_botiga&view=shipment&layout=edit&id='.(int) $this->item->id); ?>" method="post" name="adminForm" id="item-form" class="form-validate">
- 
+
 	<div class="row-fluid">
         <div class="span6 form-horizontal">
             <fieldset class="adminform">

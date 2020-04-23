@@ -2,7 +2,7 @@
 /**
  * @version		1.0.0 com_botiga $
  * @package		botiga
- * @copyright   Copyright © 2011 - All rights reserved.
+ * @copyright Copyright © 2011 - All rights reserved.
  * @license		GNU/GPL
  * @author		kim
  * @author mail kim@gwerp.com
@@ -10,9 +10,13 @@
  *
  */
 
-defined('JPATH_BASE') or die;
+ \defined('JPATH_PLATFORM') or die;
 
-jimport('joomla.form.formfield');
+ use Joomla\CMS\Application\ApplicationHelper;
+ use Joomla\CMS\Factory;
+ use Joomla\CMS\Form\Form;
+ use Joomla\CMS\HTML\HTMLHelper;
+ use Joomla\CMS\Language\Text;
 
 /**
  * Supports a modal customer picker.
@@ -29,7 +33,15 @@ class JFormFieldCoupon extends JFormField
 	 * @var		string
 	 * @since	1.6
 	 */
-	protected $type = 'Docs';
+	protected $type = 'Coupon';
+
+  /**
+	 * Layout to render
+	 *
+	 * @var   string
+	 * @since 3.5
+	 */
+	protected $layout = 'components.com_botiga.coupons.modal';
 
 	/**
 	 * Method to get the field input markup.
@@ -39,69 +51,40 @@ class JFormFieldCoupon extends JFormField
 	*/
 	protected function getInput()
 	{
-		// Load the modal behavior script.
-		JHtml::_('behavior.modal', 'a.modal');
-
-		// Build the script.
 		$script = array();
-		$script[] = '	function jSelectDoc_'.$this->id.'(id, name, object) {';
-		$script[] = '		document.id("'.$this->id.'_id").value = id;';
-		$script[] = '		document.id("'.$this->id.'_name").value = name;';
-		$script[] = '		SqueezeBox.close();';
+		$script[] = '	function jSelectCoupon_' . $this->id . '(name) {';
+		$script[] = '		document.getElementById("' . $this->id . '").value = name;';
+		$script[] = '		jModalClose();';
 		$script[] = '	}';
 
 		// Add the script to the document head.
 		JFactory::getDocument()->addScriptDeclaration(implode("\n", $script));
 
-
 		// Setup variables for display.
-		$html	= array();
-		$link	= 'index.php?option=com_botiga&amp;view=phocadownloadcats&amp;task=element&amp;tmpl=component&amp;function=jSelectCoupon_'.$this->id;
-
-		$db	= JFactory::getDBO(); 
-                
-		$db->setQuery(
-			'SELECT title' .
-			' FROM #__botiga_coupons' .
-			' WHERE id = '.(int) $this->value
-		);
-		$title = $db->loadResult();
-
-		if ($error = $db->getErrorMsg()) {
-			JError::raiseWarning(500, $error);
-		}
-
-		if (empty($title)) {
-			$title = JText::_('COM_BOTIGA_SELECT_BRAND');
-		}
-		$title = htmlspecialchars($title, ENT_QUOTES, 'UTF-8');
+		$link	= 'index.php?option=com_botiga&view=coupons&tmpl=component&function=jSelectCoupon_'.$this->id;
 
 		// The current user display field.
-		$html[] = '<div class="fltlft">';
-		$html[] = '  <input type="text" id="'.$this->id.'_name" value="'.$title.'" disabled="disabled" size="35" />';
+		$html[] = '<div class="input-append">';
+		$html[] = parent::getInput()
+			. '<a class="btn" title="' . Text::_('COM_BOTIGA_SELECT_COUPON') . '"  href="' . $link
+			. '"  data-toggle="modal" data-target="#couponModal">'
+			. Text::_('COM_BOTIGA_SELECT_COUPON') . '</a>';
+
+		$html[] = HTMLHelper::_(
+			'bootstrap.renderModal',
+			'couponModal',
+			array(
+				'url'    => $link,
+				'title'  => Text::_('COM_BOTIGA_SELECT_COUPON'),
+				'height' => '100%',
+				'width'  => '100%',
+				'modalWidth'  => '800',
+				'bodyHeight'  => '450',
+				'footer' => '<button type="button" class="btn btn-secondary" data-dismiss="modal" aria-hidden="true">'
+					. Text::_("JLIB_HTML_BEHAVIOR_CLOSE") . '</button>'
+			)
+		);
 		$html[] = '</div>';
-
-		// The user select button.
-		$html[] = '<div class="button2-left">';
-		$html[] = '  <div class="blank">';
-		$html[] = '	<a class="modal" title="'.JText::_('COM_BOTIGA_SELECT_BRAND').'"  href="'.$link.'" rel="{handler: \'iframe\', size: {x: 800, y: 450}}">'.JText::_('COM_BOTIGA_SELECT_BRAND').'</a>';
-		$html[] = '  </div>';
-		$html[] = '</div>';
-
-		// The active article id field.
-		if (0 == (int)$this->value) {
-			$value = '';
-		} else {
-			$value = (int)$this->value;
-		}
-
-		// class='required' for client side validation
-		$class = '';
-		if ($this->required) {
-			$class = ' class="required modal-value"';
-		}
-
-		$html[] = '<input type="hidden" id="'.$this->id.'_id"'.$class.' name="'.$this->name.'" value="'.$value.'" />';
 
 		return implode("\n", $html);
 	}

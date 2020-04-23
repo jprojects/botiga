@@ -2,7 +2,7 @@
 /**
  * @version		1.0.0 com_botiga $
  * @package		botiga
- * @copyright   Copyright © 2011 - All rights reserved.
+ * @copyright Copyright © 2011 - All rights reserved.
  * @license		GNU/GPL
  * @author		kim
  * @author mail kim@aficat.com
@@ -10,9 +10,13 @@
  *
 */
 
-defined('JPATH_BASE') or die;
+\defined('JPATH_PLATFORM') or die;
 
-jimport('joomla.form.formfield');
+use Joomla\CMS\Application\ApplicationHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Form\Form;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 
 /**
  * Supports a modal customer picker.
@@ -32,6 +36,14 @@ class JFormFieldProducts extends JFormField
 	protected $type = 'Products';
 
 	/**
+	 * Layout to render
+	 *
+	 * @var   string
+	 * @since 3.5
+	 */
+	protected $layout = 'components.com_botiga.items.modal';
+
+	/**
 	 * Method to get the field input markup.
 	 *
 	 * @return	string	The field input markup.
@@ -39,63 +51,41 @@ class JFormFieldProducts extends JFormField
 	*/
 	protected function getInput()
 	{
-		// Load the modal behavior script.
-		JHtml::_('behavior.modal', 'a.modal');
-
-		// Build the script.
 		$script = array();
-		$script[] = '	function jSelectProduct_'.$this->id.'(id, name, object) {';
-		$script[] = '		document.id("'.$this->id.'_id").value = id;';
-		$script[] = '		document.id("'.$this->id.'_name").value = name;';
-		$script[] = '		SqueezeBox.close();';
+		$script[] = '	function jSelectProduct_' . $this->id . '(name) {';
+		$script[] = '		document.getElementById("' . $this->id . '").value = name;';
+		$script[] = '		jModalClose();';
 		$script[] = '	}';
 
 		// Add the script to the document head.
 		JFactory::getDocument()->addScriptDeclaration(implode("\n", $script));
 
-
 		// Setup variables for display.
-		$html	= array();
-		$link	= 'index.php?option=com_botiga&amp;view=items&amp;task=element&amp;layout=modal&amp;tmpl=component&amp;function=jSelectProduct_'.$this->id;
-
-		$db	= JFactory::getDBO(); 
-                
-		$db->setQuery(
-			'SELECT name' .
-			' FROM #__botiga_items' .
-			' WHERE id = '.(int) $this->value
-		);
-		$title = $db->loadResult();
-
-		if ($error = $db->getErrorMsg()) {
-			JError::raiseWarning(500, $error);
-		}
-
-		if (empty($title)) {
-			$title = JText::_('COM_BOTIGA_SELECT_ITEM');
-		}
-		$title = htmlspecialchars($title, ENT_QUOTES, 'UTF-8');
+		$html = array();
+		$link	= 'index.php?option=com_botiga&view=items&layout=modal&tmpl=component&function=jSelectProduct_'.$this->id;
 
 		// The current user display field.
 		$html[] = '<div class="input-append">';
-		$html[] = '  <input type="text" id="'.$this->id.'_name" value="'.$title.'" disabled="disabled" size="35" />';
-		$html[] = '	<a class="btn btn-primary button-select modal" title="'.JText::_('COM_BOTIGA_SELECT_ITEM').'"  href="'.$link.'" rel="{handler: \'iframe\', size: {x: 800, y: 450}}">'.JText::_('COM_BOTIGA_SELECT_ITEM').'</a>';
+		$html[] = parent::getInput()
+			. '<a class="btn" title="' . Text::_('COM_BOTIGA_SELECT_ITEM') . '"  href="' . $link
+			. '"  data-toggle="modal" data-target="#productsModal">'
+			. Text::_('COM_BOTIGA_SELECT_ITEM') . '</a>';
+
+		$html[] = HTMLHelper::_(
+			'bootstrap.renderModal',
+			'productsModal',
+			array(
+				'url'    => $link,
+				'title'  => Text::_('COM_BOTIGA_SELECT_ITEM'),
+				'height' => '100%',
+				'width'  => '100%',
+				'modalWidth'  => '800',
+				'bodyHeight'  => '450',
+				'footer' => '<button type="button" class="btn btn-secondary" data-dismiss="modal" aria-hidden="true">'
+					. Text::_("JLIB_HTML_BEHAVIOR_CLOSE") . '</button>'
+			)
+		);
 		$html[] = '</div>';
-
-		// The active article id field.
-		if (0 == (int)$this->value) {
-			$value = '';
-		} else {
-			$value = (int)$this->value;
-		}
-
-		// class='required' for client side validation
-		$class = '';
-		if ($this->required) {
-			$class = ' class="required modal-value"';
-		}
-
-		$html[] = '<input type="hidden" id="'.$this->id.'_id"'.$class.' name="'.$this->name.'" value="'.$value.'" />';
 
 		return implode("\n", $html);
 	}

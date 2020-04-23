@@ -42,6 +42,7 @@ $js = '{
   "@type": "Product",
   "name": "'.$this->item->name.'",
   "image": "'.JURI::root().$image.'",
+  "sku": "'.$this->item->ref.'",
   "description": "'.$this->item->brand.'",
   "mpn": "'.$this->item->ref.'",
   "brand": {
@@ -50,6 +51,7 @@ $js = '{
   "offers": {
     "@type": "Offer",
     "priceCurrency": "EUR",
+    "price": "'.$precio.'",
     "seller": {
       "@type": "Organization",
       "name": "'.$botiga_name.'"

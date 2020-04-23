@@ -2,7 +2,7 @@
 /**
  * @version		1.0.0 botiga $
  * @package		botiga
- * @copyright   Copyright © 2010 - All rights reserved.
+ * @copyright Copyright © 2010 - All rights reserved.
  * @license		GNU/GPL
  * @author		kim
  * @author mail kim@aficat.com
@@ -10,59 +10,35 @@
  *
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+ defined('_JEXEC') or die;
 
-JHtml::_('behavior.tooltip');
-JHtml::_('behavior.formvalidation');
-JHtml::_('formbehavior.chosen', 'select');
-JHtml::_('behavior.keepalive');
-$model = $this->getModel('item');
+ use Joomla\CMS\HTML\HTMLHelper;
+ use Joomla\CMS\Language\Text;
+ use Joomla\CMS\Layout\LayoutHelper;
+ use Joomla\CMS\Router\Route;
+
+ HTMLHelper::_('behavior.formvalidator');
+ HTMLHelper::_('behavior.keepalive');
 ?>
 
-<script type="text/javascript">
-js = jQuery.noConflict();
-js(document).ready(function(){
+<form action="<?= JRoute::_('index.php?option=com_botiga&view=item&layout=edit&id='.(int) $this->item->id); ?>" method="post" name="adminForm" id="item-form" class="form-validate">
 
-});
-
-Joomla.submitbutton = function(task)
-{
-if(task == 'item.cancel'){
-    Joomla.submitform(task, document.getElementById('item-form'));
-}
-else{
-    
-    if (task != 'item.cancel' && document.formvalidator.isValid(document.id('item-form'))) {
-        
-        Joomla.submitform(task, document.getElementById('item-form'));
-    }
-    else {
-        alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED')); ?>');
-    }
-}
-}
-</script>
-
-
-<form action="<?php echo JRoute::_('index.php?option=com_botiga&view=item&layout=edit&id='.(int) $this->item->id); ?>" method="post" name="adminForm" id="item-form" class="form-validate">
- 
 	<div class="row-fluid">
-        <div class="span6 form-horizontal">
-            <fieldset class="adminform">
-			<legend><?php echo JText::_( 'COM_LAUNDRY_PRODUCT_DETAILS' ); ?></legend>
-			
+    <div class="col-12 form-horizontal">
+      <fieldset class="adminform">
+	      <legend><?= JText::_( 'COM_LAUNDRY_PRODUCT_DETAILS' ); ?></legend>
+
 				<?php foreach($this->form->getFieldset('details') as $field): ?>
-						<div class="control-group">
-						<div class="control-label"><?php echo $field->label; ?></div>
-						<div class="controls"><?php echo $field->input ?></div>
-						</div>
-	    		<?php endforeach; ?>
+					<div class="control-group">
+					<div class="control-label"><?= $field->label; ?></div>
+					<div class="controls"><?= $field->input ?></div>
+					</div>
+	    	<?php endforeach; ?>
 
-		</fieldset>
-	</div>
+      </fieldset>
+    </div>
 
-		<input type="hidden" name="task" value="item.edit" />
-		<?php echo JHtml::_('form.token'); ?>
+    <input type="hidden" name="task" value="">
+  	<?php echo HTMLHelper::_('form.token'); ?>
 	</div>
 </form>

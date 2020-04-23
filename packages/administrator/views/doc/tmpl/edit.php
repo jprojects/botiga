@@ -13,10 +13,14 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
-JHtml::_('behavior.tooltip');
-JHtml::_('behavior.formvalidation');
-JHtml::_('formbehavior.chosen', 'select');
-JHtml::_('behavior.keepalive');
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\Router\Route;
+
+HTMLHelper::_('behavior.formvalidator');
+HTMLHelper::_('behavior.keepalive');
+
 $model = $this->getModel('doc');
 ?>
 
@@ -32,9 +36,9 @@ if(task == 'doc.cancel'){
     Joomla.submitform(task, document.getElementById('item-form'));
 }
 else{
-    
+
     if (task != 'doc.cancel' && document.formvalidator.isValid(document.id('item-form'))) {
-        
+
         Joomla.submitform(task, document.getElementById('item-form'));
     }
     else {
@@ -55,14 +59,14 @@ else{
 
 				<?php foreach($this->form->getFieldset('details') as $field): ?>
 				<?php echo $field->renderField() ?>
-	    		<?php endforeach; ?>		
+	    		<?php endforeach; ?>
 
 			</fieldset>
 		</div>
 		<input type="hidden" name="task" value=""/>
 		<?php echo JHtml::_('form.token'); ?>
 		</form>
-		
+
 		<form
 		action="<?php echo JRoute::_('index.php?option=com_botiga&task=doc.upload&id=' . (int) $this->item->id); ?>"
 		method="post" enctype="multipart/form-data" name="adminForm" id="documento-form" class="form-validate">
@@ -75,7 +79,7 @@ else{
 		<input type="hidden" name="task" value="doc.upload"/>
 		<?php echo JHtml::_('form.token'); ?>
 		</form>
-		
-	</div>	
+
+	</div>
 
 </div>

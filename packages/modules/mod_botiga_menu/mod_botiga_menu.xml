@@ -16,33 +16,23 @@
         <folder>assets/</folder>
 	</files>
     <languages folder="languages/en-GB">
-		<language tag="en-GB">en-GB.mod_botiga_menu.ini</language>
+		<language tag="en-GB">mod_botiga_menu.ini</language>
 	</languages>
-	
+
 	<updateservers>
     	<server type="extension" priority="2" name="Botiga Menu Module">http://www.aficat.com/updates/botiga/mod_botiga_menu.xml</server>
   	</updateservers>
-	
+
 	<config>
         <fields name="params">
 	    <fieldset name="settings" group="settings" label="Settings">
-	    		<field name="logos" type="list" default="1" label="Fabricants" description="Mostrar logos o nom de fabricant al menú">
-					<option value="0">Logos</option>
-                	<option value="1">Nom</option>
-            	</field>
-	    		<field name="brands" type="radio" class="btn-group" default="1" label="Marcas" description="Activar menu marcas">
-					<option value="0">JNO</option>
-                	<option value="1">JYES</option>
-            	</field>
-            	<field name="collections" type="radio" class="btn-group" default="1" label="Colecciones" description="Activar menu colecciones">
-					<option value="0">JNO</option>
-                	<option value="1">JYES</option>
-            	</field>
-            	<field name="cache" type="list" default="0" label="MOD_JPF_CACHE_LABEL" description="MOD_JPF_CACHE_DESC">
-					<option value="0">JNO</option>
-                	<option value="1">JYES</option>
-            	</field>
-            	<field name="moduleclass_sfx" type="text" default="" label="MOD_JPF_MODSUFFIX_LABEL" description="MOD_JPF_MODSUFFIX_DESC" />
+	    		<field name="brands" type="radio" class="btn-group" default="0" label="Marcas" description="Activar menu marcas">
+						<option value="0">JNO</option>
+          	<option value="1">JYES</option>
+          </field>
+          <field name="itemid" type="menuitem" default="" label="Itemid" description="The menuitem id" />
+					<field name="color" type="color" default="#373b70" label="Color" description="The module background color" />
+          <field name="moduleclass_sfx" type="text" default="" label="MOD_JPF_MODSUFFIX_LABEL" description="MOD_JPF_MODSUFFIX_DESC" />
 	    </fieldset>
         </fields>
     </config>

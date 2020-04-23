@@ -2,11 +2,11 @@
 /**
  * @version		1.0.0 botiga $
  * @package		botiga
- * @copyright   Copyright © 2010 - All rights reserved.
+ * @copyright Copyright © 2010 - All rights reserved.
  * @license		GNU/GPL
  * @author		kim
- * @author mail administracion@joomlanetprojects.com
- * @website		http://www.joomlanetprojects.com
+ * @author mail kim@aficat.com
+ * @website		http://www.aficat.com
  *
 */
 
@@ -26,35 +26,16 @@ $canOrder	= $user->authorise('core.edit.state', 'com_botiga');
 $saveOrder	= $listOrder == 'a.ordering';
 $model = $this->getModel('brands');
 $function	= JRequest::getCmd('function', 'jSelectBrand');
-if ($saveOrder)
-{
-	$saveOrderingUrl = 'index.php?option=com_botiga&task=brands.saveOrderAjax&tmpl=component';
-	JHtml::_('sortablelist.sortable', 'adminList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
-}
 ?>
-
-<script type="text/javascript">
-	Joomla.orderTable = function() {
-		table = document.getElementById("sortTable");
-		direction = document.getElementById("directionTable");
-		order = table.options[table.selectedIndex].value;
-		if (order != '<?= $listOrder; ?>') {
-			dirn = 'asc';
-		} else {
-			dirn = direction.options[direction.selectedIndex].value;
-		}
-		Joomla.tableOrdering(order, dirn, '');
-	}
-</script>
 
 <form action="<?= JRoute::_('index.php?option=com_botiga&view=brands&layout=modal&tmpl=component&function='.$function);?>" method="post" name="adminForm" id="adminForm">
 
 	<div>
 
     	<?= JLayoutHelper::render('joomla.searchtools.default', array('view' => $this)); ?>
-    	        
+
 		<div class="clearfix"> </div>
-		
+
 		<table class="table table-striped" class="adminList">
 			<thead>
 				<tr>
@@ -70,10 +51,10 @@ if ($saveOrder)
 					<th width="1%" class="nowrap center">
 						<?= JHtml::_('grid.sort', 'JSTATUS', 'a.published', $listDirn, $listOrder); ?>
 					</th>
-               		<?php endif; ?>			
+               		<?php endif; ?>
 					<th>
 						<?= JHtml::_('grid.sort',  'COM_BOTIGA_BRANDS_HEADING_BRAND', 'name', $listDirn, $listOrder); ?>
-					</th>        
+					</th>
 					<th>
 						<?= JHtml::_('grid.sort',  'CodFte', 'factusol_codfte', $listDirn, $listOrder); ?>
 					</th>
@@ -90,7 +71,7 @@ if ($saveOrder)
 			</thead>
 			<tfoot>
 				<tr>
-		            <?php 
+		            <?php
 		            if(isset($this->items[0])){
 		                $colspan = count(get_object_vars($this->items[0]));
 		            }
@@ -112,7 +93,7 @@ if ($saveOrder)
                 $canChange	= $user->authorise('core.edit.state',	'com_botiga');
 				?>
 				<tr class="row<?= $i % 2; ?>">
-                    
+
 				    <?php if (isset($this->items[0]->ordering)): ?>
 					<td class="order nowrap center hidden-phone">
 						<?php if ($canChange) :
@@ -140,7 +121,7 @@ if ($saveOrder)
 					<td class="center">
 							<?= JHtml::_('jgrid.published', $item->published, $i, 'brands.', $canChange, 'cb'); ?>
 					</td>
-		            <?php endif; ?>		         
+		            <?php endif; ?>
 		            <td>
 						<?php if ($canEdit) : ?>
 						<a class="pointer" onclick="if (window.parent) window.parent.<?= $this->escape($function);?>('<?= $item->id; ?>', '<?= $this->escape(addslashes($item->name)); ?>');">
@@ -175,4 +156,4 @@ if ($saveOrder)
 		<input type="hidden" name="filter_order_Dir" value="<?= $listDirn; ?>" />
 		<?= JHtml::_('form.token'); ?>
 	</div>
-</form>			
+</form>

@@ -12,7 +12,8 @@ defined('_JEXEC') or die('Acceso Restringido');
 
 require_once (dirname(__FILE__).DS.'helper.php');
 
-JHtml::stylesheet('modules/mod_botiga_menu/assets/css/menu.css');
+JHtml::stylesheet('modules/mod_botiga_menu/assets/css/botiga_menu.css');
+JHtml::script('modules/mod_botiga_menu/assets/js/botiga_menu.js');
 
 $logos = $params->get('logos', 1);
 $class_sfx = $params->get('moduleclass_sfx', '');

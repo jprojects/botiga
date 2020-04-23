@@ -26,7 +26,7 @@
   </media>
 	<!-- Language frontend -->
 	<languages folder="site/languages/en-GB">
-		<language tag="en-GB">en-GB.com_botiga.ini</language>
+		<language tag="en-GB">com_botiga.ini</language>
 	</languages>
   <install>
 		<sql>
@@ -73,7 +73,7 @@
 			<folder>sql/</folder>
 		</files>
 		<languages folder="administrator/languages/en-GB">
-			<language tag="en-GB">en-GB.com_botiga.ini</language>
+			<language tag="en-GB">com_botiga.ini</language>
     </languages>
 	</administration>
 </extension>
