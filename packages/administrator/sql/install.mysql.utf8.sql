@@ -114,6 +114,7 @@ CREATE TABLE IF NOT EXISTS `#__botiga_items` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `catid` varchar(150) NOT NULL DEFAULT '0',
   `name` varchar(150) NOT NULL DEFAULT '',
+  `alias` varchar(150) NOT NULL DEFAULT '',
   `child` int(11) NOT NULL DEFAULT '0',
   `usergroup` int(11) NOT NULL DEFAULT '1',
   `brand` int(11) NOT NULL DEFAULT '0',

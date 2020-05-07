@@ -69,6 +69,14 @@
 			default=""
 		/>
 		<field
+			name="alias"
+			type="text"
+			label="COM_BOTIGA_ITEM_ALIAS_LABEL"
+			description="COM_BOTIGA_ITEM_ALIAS_DESC"
+			class="inputbox"
+			default=""
+		/>
+		<field
 			name="ref"
 			type="text"
 			label="COM_BOTIGA_ITEM_REF_LABEL"
