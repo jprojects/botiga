@@ -45,6 +45,11 @@ class botigaViewBotiga extends JViewLegacy
 
 		$title = $this->params->get('page_title', '');
 
+		# add Meta tags
+		if($app->input->get('start', 0, 'get') > 0) {
+			$this->document->addCustomTag("<meta name='robots' content='noindex,nofollow'/>");
+		}
+
     $this->document->setTitle($title);
 
     if ($this->params->get('menu-meta_description')) {
