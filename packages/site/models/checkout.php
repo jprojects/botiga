@@ -218,50 +218,43 @@ class botigaModelCheckout extends JModelList
 	public function getShipment($amount)
 	{
 		jimport( 'joomla.access.access' );
-		
+
 		$db 	 = JFactory::getDbo();
 		$user 	 = JFactory::getUser();
 		$session = JFactory::getSession();
+
+		if($user->guest) { return 0; }
+		
 		$groups  = JAccess::getGroupsByUser($user->id, false);
-		
-		$idComanda = $session->get('idComanda', '');					
-		
+
+		$idComanda = $session->get('idComanda', '');
+
 		$shipment_discount = 0;
-		
-		$db->setQuery('SELECT pais, cp FROM #__botiga_users WHERE userid = '.$user->id);
+
+		$db->setQuery('SELECT pais, cp FROM `#__botiga_users` WHERE userid = '.$user->id);
 		$usr = $db->loadObject();
-		
-		$db->setQuery('SELECT * FROM #__botiga_shipments WHERE published = 1 AND usergroup IN ('.implode(',', $groups).') ORDER BY ordering ASC');
-		$rows = $db->loadObjectList();				
-		
-		foreach($rows as $row) {			
-			
+
+		//$db->setQuery('SELECT * FROM `#__botiga_shipments` WHERE published = 1 AND usergroup IN ('.implode(',', $groups).') ORDER BY type DESC');
+		$db->setQuery('SELECT * FROM `#__botiga_shipments` WHERE published = 1 ORDER BY type ASC');
+		$rows = $db->loadObjectList();
+
+		//$db->setQuery('SELECT COUNT(id) FROM `#__botiga_comandesDetall` WHERE idComanda = '.$idComanda);
+		//$count = $db->loadObject();
+
+		foreach($rows as $row) {
+
 			$countries = explode(';', $row->country);
-				
-			if($row->conditional == 0) { 
-				if (!in_array($usr->pais, $countries)) {
-					//botigaHelper::customLog($row->id.' same countries fail');
-					continue; //same countries fail end iteration					
-				}
-			} else {
-				if (in_array($usr->pais, $countries)) {
-					//botigaHelper::customLog($row->id.' distinct countries fail');
-					continue; //distinct countries fail end iteration
-				}
-			}						
-			
-			$total 		= $row->total;
-			$operator 	= $row->operator;
-			
-			//type 1 shippment by zip code method
-			if($row->type == 1) {																					
-				
-				if($usr->cp >= $row->min && $usr->cp <= $row->max) {	
-				
+			$total 	   = $row->total;
+			$operator  = $row->operator;
+
+			//type 4 shippment by itemid method
+			if($row->type == 4) {
+
+				$db->setQuery('SELECT qty FROM `#__botiga_comandesDetall` WHERE idItem = '.$row->itemid.' AND idComanda = '.$idComanda);
+				$qty = $db->loadResult();
+				if($qty > 0)	{
+					//botigaHelper::customLog('Tipus:'.$row->type.' comanda:'.$idComanda);
 					if($amount > $row->free) { return 0; } //el pedido supera el porte mínimo, salimos retornando 0
-				
-					botigaHelper::customLog($row->type.' ');											
-					
 					//make operations
 					if($operator == '%') {
 						$shipment_discount += ($total / 100) * $amount;
@@ -269,21 +262,46 @@ class botigaModelCheckout extends JModelList
 					if($operator == '+') {
 						$shipment_discount += $total;
 					}
-					
-					return number_format($shipment_discount, 2, '.', '');
-				}							
+					//if($count == 1) { // si es l'unic item del carro no continuem sumant ports
+						return number_format($shipment_discount, 2, '.', '');
+					//}
+				}
+
 			}
-			
+
+			//type 1 shippment by zip code method
+			if($row->type == 1) {
+
+				//botigaHelper::customLog('CP:'.$usr->cp.' comanda:'.$idComanda);
+
+				if($usr->cp >= $row->min && $usr->cp <= $row->max) {
+
+					if($amount > $row->free) { return 0; } //el pedido supera el porte mínimo, salimos retornando 0
+
+					//botigaHelper::customLog('Tipus:'.$row->type.' comanda:'.$idComanda);
+
+					//make operations
+					if($operator == '%') {
+						$shipment_discount += ($total / 100) * $amount;
+					}
+					if($operator == '+') {
+						$shipment_discount += $total;
+					}
+
+					return number_format($shipment_discount, 2, '.', '');
+				}
+			}
+
 			//type 2 shippment by weight method
 			if($row->type == 2) {
-			
-				botigaHelper::customLog($row->type.' ');
-			
+
+				//botigaHelper::customLog('Tipus:'.$row->type.' comanda:'.$idComanda);
+
 				if($amount > $row->free) { return 0; } //el pedido supera el porte mínimo, salimos retornando 0
-				
+
 				$db->setQuery('SELECT SUM(i.pes) FROM #__botiga_items AS i INNER JOIN #__botiga_comandesDetall AS cd ON cd.idItem = i.id  where cd.idComanda = '.$idComanda);
 				$weight   = $db->loadResult() / 10;
-				
+
 				//make operations
 				if($operator == '%') {
 					$shipment_discount += ($total / 100) * $amount;
@@ -291,19 +309,42 @@ class botigaModelCheckout extends JModelList
 				if($operator == '+') {
 					$shipment_discount += $total;
 				}
-				
+
 				$shipment_discount * $weight; //multiplicamos la cantidad a sumar al carro por las veces que se repite el peso
-				
-				return number_format($shipment_discount, 2, '.', '');			
+
+				return number_format($shipment_discount, 2, '.', '');
 			}
-			
+
 			//type 3 shippment by country method
 			if($row->type == 3) {
-			
-				botigaHelper::customLog($row->type.' ');
-			
-				if($amount > $row->free) { return 0; } //el pedido supera el porte mínimo, salimos retornando 0								
-				
+
+				if($row->conditional == 0) { //0 mateixos països 1 diferents països
+					if (!in_array($usr->pais, $countries)) {
+						continue; //no concordan els països així que saltem a un altre
+					}
+				} else {
+					if (in_array($usr->pais, $countries)) {
+						continue; //concordan els països així que saltem a un altre
+					}
+				}
+
+				if(!botigaHelper::isEmpresa() && $amount > $row->free) { return 0; } //el pedido supera el porte mínimo, salimos retornando 0
+
+				//botigaHelper::customLog('Tipus:'.$row->type.' comanda:'.$idComanda.' amount:'.$amount);
+
+				// if(botigaHelper::isEmpresa()) {
+				// 	$num = 0;
+				// 	$db->setQuery('SELECT id, qty, idItem FROM `afi_botiga_comandesDetall` WHERE idComanda = '.$idComanda.' GROUP BY idItem');
+				// 	$items = $db->loadObjectList();
+
+				// 	foreach($items as $item) {
+				// 		if($item->qty >= 4) { $num++; }
+				// 		botigaHelper::customLog('Qty:'.$item->qty.' min:'.$row->min);
+				// 	}
+
+				// 	if($num >= $row->min) { return 0; } //es empresa i la quantitat d'items es superior al mínim
+				// }
+
 				//make operations
 				if($operator == '%') {
 					$shipment_discount += ($total / 100) * $amount;
@@ -311,12 +352,12 @@ class botigaModelCheckout extends JModelList
 				if($operator == '+') {
 					$shipment_discount += $total;
 				}
-				
+
 				return number_format($shipment_discount, 2, '.', '');
-			
-			}						
-		}		
-		
-		return number_format($shipment_discount, 2, '.', '');		
+
+			}
+		}
+
+		return number_format($shipment_discount, 2, '.', '');
 	}
 }
