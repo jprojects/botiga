@@ -96,7 +96,7 @@ class botigaModelCheckout extends JModelList
     	$sessid = $session->getId();
     	
     	//check if a comanda exist
-		$db->setQuery('select MAX(id) from #__botiga_comandes where (userid = '.$user->id.' OR sessid = '.$db->quote($sessid).') and status = 1');
+		$db->setQuery('select MAX(id) from #__botiga_comandes where (userid = '.$user->id.' OR sessid = '.$db->quote($sessid).') and status < 3');
 		$id = $db->loadResult();
 		
 		if($id > 0) { $session->set('idComanda', $id); }

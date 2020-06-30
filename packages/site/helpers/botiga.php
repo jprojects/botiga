@@ -210,18 +210,23 @@ class botigaHelper {
 	*/
 	public static function getCarritoCount()
     {
-   		$db 	 = JFactory::getDbo();
-   		$session = JFactory::getSession();
-   		$user 	 = JFactory::getUser();
+		$db 	 = JFactory::getDbo();
+		$session = JFactory::getSession();
+		$user 	 = JFactory::getUser();
+			
+		//check if a comanda exist
+		$db->setQuery('select id from #__botiga_comandes where userid = '.$user->id.' and status < 3 ORDER BY id DESC');
+		$id = $db->loadResult();
+		if($id > 0) { $session->set('idComanda', $id); }
 
 		$idComanda = $session->get('idComanda', '');
 		//echo $idComanda;
 		if($idComanda != '') {
-   			$db->setQuery('SELECT SUM(qty) FROM #__botiga_comandesDetall WHERE idComanda = '.$idComanda);
-   			return $db->loadResult();
-   		} else {
-   			return 0;
-   		}
+			$db->setQuery('SELECT SUM(qty) FROM #__botiga_comandesDetall WHERE idComanda = '.$idComanda);
+			return $db->loadResult();
+		} else {
+			return 0;
+		}
     }
 
     /**
