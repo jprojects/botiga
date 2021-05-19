@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="3.5" type="plugin" group="botiga" method="upgrade">
-	<name>plg_sync_dermosun</name>
+<extension version="3.5" type="plugin" group="botiga_sync" method="upgrade">
+	<name>plg_sync_factusol</name>
 	<author>Afi</author>
 	<creationDate>Setembre 2019</creationDate>
 	<copyright>(C) 2019. All rights reserved.</copyright>
@@ -8,9 +8,9 @@
 	<authorEmail>kim@aficat.com</authorEmail>
 	<authorUrl>www.afi.cat</authorUrl>
 	<version>1.0</version>
-	<description>Botiga mètode de sincronització per Dermosun</description>
+	<description>Botiga mètode de sincronització amb Factusol</description>
 	<files>
-		<filename plugin="sync_dermosun">sync_dermosun.php</filename>
+		<filename plugin="botiga_sync_factusol">botiga_sync_factusol.php</filename>
 	</files>
 	<config>
 		<fields name="params">

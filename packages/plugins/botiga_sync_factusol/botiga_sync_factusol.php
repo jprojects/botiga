@@ -14,7 +14,7 @@ defined('_JEXEC') or die;
  * @subpackage	Botiga.joomla
  * @since		3.5
  */
-class plgBotigaBotiga_sync extends JPlugin
+class plgBotiga_syncBotiga_sync_factusol extends JPlugin
 {
 	public static $IMPORTAR_MARQUES = false;
 	public static $IMPORTAR_CATEGORIES = true;

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="3.5" type="plugin" group="botiga_sync" method="upgrade">
+	<name>plg_sync_aws</name>
+	<author>Afi</author>
+	<creationDate>April 20209</creationDate>
+	<copyright>(C) 2020. All rights reserved.</copyright>
+	<license>GNU General Public License version 3 or later; see LICENSE.txt</license>
+	<authorEmail>kim@aficat.com</authorEmail>
+	<authorUrl>www.afi.cat</authorUrl>
+	<version>1.0</version>
+	<description>Botiga mètode de sincronització amb Amazon Webservices</description>
+	<files>
+		<filename plugin="botiga_sync_aws">botiga_sync_aws.php</filename>
+		<folder>aws</folder>
+	</files>
+	<config>
+		<fields name="params">
+			<fieldset name="basic">
+			<field 
+					name="Marketplace_Id"
+					type="text"
+					label="Marketplace ID"
+					description="Ver http://docs.developer.amazonservices.com/en_US/dev_guide/DG_Endpoints.html para otros paises"
+					default="ARBP9OOSHTCHU"
+				/>
+				<field 
+					name="Seller_Id"
+					type="text"
+					label="Seller ID"
+					description=""
+					default=""
+				/>
+				<field 
+					name="Access_Key_ID"
+					type="text"
+					label="Access_Key_ID"
+					description=""
+					default=""
+				/>
+				<field 
+					name="Secret_Access_Key"
+					type="text"
+					label="Secret_Access_Key"
+					description=""
+					default=""
+				/>
+				<field 
+					name="MWSAuthToken"
+					type="text"
+					label="MWSAuthToken"
+					description=""
+					default=""
+				/>
+			</fieldset>
+		</fields>
+	</config>
+</extension>

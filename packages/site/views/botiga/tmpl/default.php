@@ -11,31 +11,31 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
-$user  			     = JFactory::getUser();
-$uri 			       = base64_encode(JUri::current());
-$jinput			     = JFactory::getApplication()->input;
-$modal 			     = $jinput->get('m', 0);
+$user  			 = JFactory::getUser();
+$uri 			 = base64_encode(JUri::current());
+$jinput			 = JFactory::getApplication()->input;
+$modal 			 = $jinput->get('m', 0);
 $catid           = $jinput->get('catid', '');
 $marca           = $jinput->get('marca', '');
 $itemid          = $jinput->get('Itemid', '');
 $orderby         = $jinput->get('orderby', 'ref');
 $limit           = $jinput->get('limit', 24);
-$lang 			     = JFactory::getLanguage()->getTag();
-$showprices      = botigaHelper::getParameter('show_prices', 1);
-$showdiscount 	 = botigaHelper::getParameter('show_discount', 0);
-$loginprices 	   = botigaHelper::getParameter('login_prices', 0);
-$loginforbuy 	   = botigaHelper::getParameter('login_buy', 1);
-$shownotice 	   = botigaHelper::getParameter('show_notice', 1);
-$showref 		     = botigaHelper::getParameter('show_ref', 1);
-$showdesc 		   = botigaHelper::getParameter('show_desc', 1);
-$showbrand 		   = botigaHelper::getParameter('show_brand', 1);
-$showfav 		     = botigaHelper::getParameter('show_fav', 1);
-$showpvp 		     = botigaHelper::getParameter('show_pvp', 1);
-$dte_linia  	   = botigaHelper::getUserData('dte_linia', $user->id);
-$control_stock 	 = botigaHelper::getParameter('control_stock', 0);
+$lang 			 = JFactory::getLanguage()->getTag();
+$showprices      = $this->params->get('show_prices', 1);
+$showdiscount 	 = $this->params->get('show_discount', 0);
+$loginprices 	 = $this->params->get('login_prices', 0);
+$loginforbuy 	 = $this->params->get('login_buy', 1);
+$shownotice 	 = $this->params->get('show_notice', 1);
+$showref 		 = $this->params->get('show_ref', 1);
+$showdesc 		 = $this->params->get('show_desc', 1);
+$showbrand 		 = $this->params->get('show_brand', 1);
+$showfav 		 = $this->params->get('show_fav', 1);
+$showpvp 		 = $this->params->get('show_pvp', 1);
+$control_stock 	 = $this->params->get('control_stock', 0);
+$dte_linia  	 = botigaHelper::getUserData('dte_linia', $user->id);
 ?>
 
-<?php if(botigaHelper::getParameter('show_header', 0) == 1) :
+<?php if($this->params->get('show_header', 0) == 1) :
   $layout = new JLayoutFile('header', JPATH_ROOT .'/components/com_botiga/layouts');
   $data   = array();
   echo $layout->render($data);
@@ -44,40 +44,40 @@ endif; ?>
 <div class="row">
 
 			<?php if($user->guest && $shownotice == 1) : ?>
-			<div class="col-12">
+			<div class="col-12 my-5">
 				<?php $link1 = 'index.php?option=com_botiga&view=register'; ?>
 				<div class="alert alert-warning"><?= JText::sprintf('COM_BOTIGA_PRICES_NOTICE', $link1); ?></div>
 			</div>
 			<?php endif; ?>
 
-			<div class="col-12 shop_filters mt-4">
+			<div class="col-12 shop_filters my-4">
 				<form name="filters" id="filters" method="get" action="index.php?option=com_botiga&view=botiga" class="form-inline" onchange="filters.submit();">
 					<input type="hidden" name="option" value="com_botiga" />
 					<input type="hidden" name="view" value="botiga" />
 					<input type="hidden" name="marca" value="<?= $marca; ?>" />
 					<input type="hidden" name="Itemid" value="<?= $itemid; ?>" />
-
-					<div class="form-group col-6 mx-auto">
-						<div class="styled-select">
-							<select name="catid" id="catid" class="form-control estil03 text-primary" style="width:100%;">
-								<option value=""><?= JText::_('COM_BOTIGA_SELECT_AN_OPTION'); ?></div>
-								<?php foreach(botigaHelper::getCategories() as $cat) : ?>
-								<option value="<?= $cat->id; ?>" <?php if($catid == $cat->id) : ?>selected<?php endif; ?>><?= $cat->title; ?></option>
-								<?php endforeach; ?>
-							</select>
+					<div class="row">
+						<div class="form-group col-12 col-md-6 mx-auto">
+							<div class="styled-select">
+								<select name="catid" id="catid" class="form-control text-primary" style="width:100%;">
+									<option value=""><?= JText::_('COM_BOTIGA_SELECT_AN_OPTION'); ?></div>
+									<?php foreach(botigaHelper::getCategories() as $cat) : ?>
+									<option value="<?= $cat->id; ?>" <?php if($catid == $cat->id) : ?>selected<?php endif; ?>><?= $cat->title; ?></option>
+									<?php endforeach; ?>
+								</select>
+							</div>
+						</div>
+						<div class="form-group col-12 col-md-6 mx-auto">
+							<div class="styled-select">
+								<select name="orderby" id="orderby" class="form-control text-primary" style="width:100%;">
+									<option value="id"><?= JText::_('COM_BOTIGA_ORDERBY'); ?></div>
+									<option value="ref" <?php if($orderby == 'ref') : ?>selected<?php endif; ?>><?= JText::_('COM_BOTIGA_FILTER_REF'); ?></option>
+									<option value="s_description" <?php if($orderby == 's_description') : ?>selected<?php endif; ?>><?= JText::_('COM_BOTIGA_FILTER_DESC'); ?></option>
+									<option value="pvp" <?php if($orderby == 'pvp') : ?>selected<?php endif; ?>><?= JText::_('COM_BOTIGA_FILTER_PRICE'); ?></option>
+								</select>
+							</div>
 						</div>
 					</div>
-					<div class="form-group col-6 mx-auto">
-						<div class="styled-select">
-							<select name="orderby" id="orderby" class="form-control estil03 text-primary" style="width:100%;">
-								<option value="id"><?= JText::_('COM_BOTIGA_ORDERBY'); ?></div>
-								<option value="ref" <?php if($orderby == 'ref') : ?>selected<?php endif; ?>><?= JText::_('COM_BOTIGA_FILTER_REF'); ?></option>
-								<option value="s_description" <?php if($orderby == 's_description') : ?>selected<?php endif; ?>><?= JText::_('COM_BOTIGA_FILTER_DESC'); ?></option>
-								<option value="pvp" <?php if($orderby == 'pvp') : ?>selected<?php endif; ?>><?= JText::_('COM_BOTIGA_FILTER_PRICE'); ?></option>
-							</select>
-						</div>
-					</div>
-
 				</form>
 			</div>
 
@@ -100,6 +100,13 @@ endif; ?>
             <div class="product-image4">
                 <a href="<?= JRoute::_('index.php?option=com_botiga&view=item&id='.$item->id); ?>">
                   <img class="pic-1" src="<?= $image; ?>">
+                  <?php
+        					$extra_images = botigaHelper::getImages($item->id);
+                  if(count($extra_images)) :
+        					foreach($extra_images as $k => $v) : ?>
+                  <img class="pic-2" src="<?= $v[0]; ?>">
+                  <?php break; endforeach; ?>
+                  <?php endif; ?>
                 </a>
                 <ul class="social">
                   <li><a href="<?= JRoute::_('index.php?option=com_botiga&view=item&id='.$item->id); ?>" data-tip="Quick View"><i class="fa fa-eye"></i></a></li>
@@ -152,7 +159,7 @@ endif; ?>
         						<?php endif; ?>
                   <?php endif; ?>
                 </div>
-                <a class="add-to-cart" href="index.php?view=botiga&task=botiga.setItem&id=<?= $item->id; ?>&return=<?= $uri; ?>&<?= JSession::getFormToken(); ?>=1"><?= JText::_('COM_BOTIGA_BTN_BUY'); ?></a>
+                <a class="add-to-cart btn btn-primary" href="index.php?view=botiga&task=botiga.setItem&id=<?= $item->id; ?>&return=<?= $uri; ?>&<?= JSession::getFormToken(); ?>=1"><?= JText::_('COM_BOTIGA_BTN_BUY'); ?></a>
             </div>
           </div>
         </div>

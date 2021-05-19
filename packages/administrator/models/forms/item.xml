@@ -9,13 +9,7 @@
 			readonly="true"
 			class="readonly"
 		/>
-		<field
-			name="ordering"
-			type="ordering"
-			label="JFIELD_ORDERING_LABEL"
-			table="#__botiga_items"
-		/>
-    <field
+    	<field
 			name="published"
 			type="list"
 			label="JSTATUS"
@@ -23,7 +17,7 @@
 			class="custom-select-color-state"
 			size="1"
 			default="1"
-      onchange="this.form.submit();"
+      		onchange="this.form.submit();"
 			>
 			<option value="1">JPUBLISHED</option>
 			<option value="0">JUNPUBLISHED</option>
@@ -51,7 +45,7 @@
 			label="COM_BOTIGA_ITEM_USERGROUP_LABEL"
 			description="COM_BOTIGA_ITEM_USERGROUP_DESC"
 		/>
-    <field
+    	<field
 			name="catid"
 			type="category"
 			label="COM_BOTIGA_ITEM_CATID_LABEL"
@@ -65,14 +59,6 @@
 			type="text"
 			label="COM_BOTIGA_ITEM_NAME_LABEL"
 			description="COM_BOTIGA_ITEM_NAME_DESC"
-			class="inputbox"
-			default=""
-		/>
-		<field
-			name="alias"
-			type="text"
-			label="COM_BOTIGA_ITEM_ALIAS_LABEL"
-			description="COM_BOTIGA_ITEM_ALIAS_DESC"
 			class="inputbox"
 			default=""
 		/>
@@ -102,14 +88,15 @@
 		/>
 		<field
 			name="price"
-			type="repeatable"
+			type="subform"
 			icon="list"
 			description="COM_BOTIGA_ITEM_PRICE_DESC"
 			label="COM_BOTIGA_ITEM_PRICE_LABEL"
-			default='{"usergroup":["default"],
-			"pricing":["0.0"]}'
+			min="1"
+			max="100"
+			multiple="true"
 		>
-		<fieldset hidden="true" name="price_modal" repeat="true">
+		<form>
 			<field
 				name="usergroup"
 				type="sql"
@@ -125,10 +112,10 @@
 				name="pricing"
 				label="COM_BOTIGA_ITEM_PRICE_LABEL"
 				description="COM_BOTIGA_ITEM_PRICE_DESC"
-				size="30"
 				type="text"
+				default=""
 			/>
-		</fieldset>
+		</form>
 	</field>
 	<field
 			name="pvp"
@@ -139,7 +126,7 @@
 			class="inputbox"
 			default=""
 		/>
-   <field
+   		<field
 			name="brand"
 			type="brands"
 			label="COM_BOTIGA_ITEM_MARCA_LABEL"
@@ -147,8 +134,8 @@
 			class="inputbox"
 			default=""
 		/>
-    <field
-      name="image1"
+    	<field
+      		name="image1"
 			type="media"
 			hide_none="1"
 			label="COM_BOTIGA_ITEM_IMAGE_LABEL"
@@ -157,13 +144,15 @@
 		/>
 		<field
 			name="images"
-			type="repeatable"
+			type="subform"
 			icon="list"
 			description="COM_BOTIGA_ITEM_IMAGES_DESC"
 			label="COM_BOTIGA_ITEM_IMAGES_LABEL"
-			default='{"image":[""]}'
+			min="1"
+			max="10"
+			multiple="true"
 			>
-			<fieldset hidden="true" name="price_modal" repeat="true">
+			<form>
 				<field
 					name="image"
 					type="media"
@@ -172,7 +161,7 @@
 					description="COM_BOTIGA_ITEM_IMAGE_DESC"
 					directory="products"
 				/>
-			</fieldset>
+			</form>
 		</field>
 		<field
 			name="garantia"
@@ -219,15 +208,16 @@
 		</field>
 		<field
 			name="extres"
-			type="repeatable"
+			type="subform"
 			icon="list"
 			filter="raw"
 			description="COM_BOTIGA_ITEM_EXTRES_DESC"
 			label="COM_BOTIGA_ITEM_EXTRES_LABEL"
-			default='{"title":[""],
-			"content":[""]}'
+			min="1"
+			max="20"
+			multiple="true"
 			>
-			<fieldset hidden="true" name="extres_modal" repeat="true">
+			<form>
 				<field
 					name="title"
 					type="text"
@@ -242,7 +232,7 @@
 					label="COM_BOTIGA_ITEM_EXTRA_CONTENT_LBL"
 					description="COM_BOTIGA_ITEM_EXTRA_CONTENT_DSC"
 				/>
-			</fieldset>
+			</form>
 		</field>
 		<field name="pdf"
 			type="filelist"

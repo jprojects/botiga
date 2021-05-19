@@ -109,7 +109,7 @@ class plgUserBotiga_users extends JPlugin
 		// Grab the current session ID
 		$oldSessionId = $session->getId();
 			
-		$db->setQuery('UPDATE #__botiga_comandes SET userid = '.$instance->id.' WHERE sessid = '.$db->quote($oldSessionId));
+		$db->setQuery('UPDATE `#__botiga_comandes` SET userid = '.$instance->id.' WHERE sessid = '.$db->quote($oldSessionId));
 		$db->Query();								
 
 		return true;

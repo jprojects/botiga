@@ -1,0 +1,77 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<extension type = "module" version = "1.1" client = "site" method="upgrade">
+	<name>Botiga Chat</name>
+   <author>ExtnBakers</author>
+   <version>1.4</version>
+   <creationDate>2019-01-30</creationDate>
+   <copyright>Copyright (C) 2020 aficat.com. All rights reserved.</copyright>
+   <authorEmail>kim@aficat.com</authorEmail>
+   <authorUrl>https://www.aficat.com</authorUrl>
+   <license>http://www.gnu.org/licenses/gpl-3.0.html</license>
+	<description>This module adds live Whatsapp chat option. <![CDATA[ <br /><br /><strong>NOTE:</strong> <em>This module needs to be enabled at DEBUG module position.</em><br /><br /> ]]> </description>
+	<namespace>Joomla\Module\debug</namespace>
+   <files>
+      <filename>mod_botiga_chat.xml</filename>
+      <filename module = "mod_botiga_chat">mod_botiga_chat.php</filename>
+      <filename>index.html</filename>
+      <filename>tmpl/default.php</filename>
+      <filename>tmpl/index.html</filename>
+      <filename>assets/index.html</filename>
+      <filename>assets/css/index.html</filename>
+      <filename>assets/images/index.html</filename>
+      <folder>assets</folder>
+      <folder>core</folder>
+      <folder>language</folder>
+      <folder>tmpl</folder>
+      <filename>LICENSE.txt</filename>
+   </files>
+   <languages/>
+   <config>
+      <fields name="params">
+         <fieldset name="basic">
+         </fieldset>
+         <fieldset name="button_setting" label="WHATSAPP_BUTTON_SETTING">            
+            <field name="icon_position" type="list" label="WHATSAPP_ICON_POSITION" >
+               <option value="bottom_right">POSITION_BOTTOM_RIGHT</option>
+               <option value="bottom_left">POSITION_BOTTOM_LEFT</option>
+               <option value="top_right">POSITION_TOP_RIGHT</option>
+               <option value="top_left">POSITION_TOP_LEFT</option>
+            </field>
+            <field name="backgroundcolor" type="color" label="WHATSAPP_ICON_BG_COLOR" />
+            <field name="textcolor" type="color" label="WHATSAPP_ICON_TEXT_COLOR" />
+            <field name="icon_withtext" type="text" label="WHATSAPP_ICON_WITH_TEXT" description="WHATSAPP_TEXT_DESC" filter="raw" />
+            <field name="icon_image" type="list" label="WHATSAPP_CHOOSE_ICON"  description="WHATSAPP_ICON_DESC" >
+               <option value="">WHATSAPP_ICON_SELECT</option>
+               <option value="style_1">WHATSAPP_ICON_STYLE_1</option>
+               <option value="style_2">WHATSAPP_ICON_STYLE_2</option>
+               <option value="style_3">WHATSAPP_ICON_STYLE_3</option>
+               <option value="style_4">WHATSAPP_ICON_STYLE_4</option>
+               <option value="style_5">WHATSAPP_ICON_STYLE_5</option>
+               <option value="upload_icon">WHATSAPP_UPLOAD_ICON</option>
+            </field>
+            <field name="upload_iconimg" type="media" label="WHATSAPP_UPLOAD_IMAGE" showon="icon_image:upload_icon"/>
+         </fieldset>
+         <fieldset name="popup_setting" label="WHATSAPP_POPUP_SETTING">
+
+            <field name="whatsapp_number" type="text" required="true" label="WHATSAPP_NUMBER" description="WHATSAPP_NUMBER_DESC" />
+            <field name="initial_message" type="text" label="WHATSAPP_INITIAL_MSG" description="WHATSAPP_INITIAL_MSG_DES" default="Hello" />
+            <field name="heading_option" type="list" label="WHATSAPP_HEADER_TYPE" >
+               <option value="username_image">WHATSAPP_USERNAME_IMAGE</option>
+               <option value="html_content">WHATSAPP_HTML_CONTENT</option>
+             </field>
+
+             <field name="heading_content" showon="heading_option:html_content" type="editor" label="WHATSAPP_HEADING_CONTENT" cols="20" rows="3" filter="raw" default="" description=""/> 
+
+             <field name="heading_name" type="text" label="WHATSAPP_USERNAME" showon="heading_option:username_image" />
+
+             <field name="heading_department" type="text" label="WHATSAPP_DEPARTMENT_NAME" showon="heading_option:username_image" />
+
+             <field name="heading_image" type="media" label="WHATSAPP_USER_IMAGE" showon="heading_option:username_image" />
+            
+
+            <field name="middle_content" type="editor" label="WHATSAPP_MIDDLE_CONTENT" cols="40" rows="3" filter="raw" default="" />
+         </fieldset>
+
+      </fields>
+   </config>
+</extension>

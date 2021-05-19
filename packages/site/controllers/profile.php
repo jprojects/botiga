@@ -83,6 +83,12 @@ class botigaControllerProfile extends botigaController {
 
 			if($mail || $pass) { $valid = $db->updateObject('#__users', $user, 'id'); }
 
+			//update botiga user
+			$query = "SELECT params FROM #__botiga_users WHERE userid=" . $data['userid'];
+			$db->setQuery($query);
+			$params = $db->loadResult();
+			$params = json_decode($params,true);
+
 			$params['metodo_pago'] = $data['metodo_pago'];
 			$params['re_equiv']    = $data['re_equiv'];
 

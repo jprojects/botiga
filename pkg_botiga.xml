@@ -16,6 +16,7 @@
    <file type="module" id="mod_botiga_related" client="site">mod_botiga_related.zip</file>
    <file type="module" id="mod_botiga_megamenu" client="site">mod_botiga_megamenu.zip</file>
    <file type="module" id="mod_botiga_search" client="site">mod_botiga_search.zip</file>
+   <file type="module" id="mod_botiga_chat" client="site">mod_botiga_chat.zip</file>
    <file type="library" id="fpdf">fpdf.zip</file>
    <file type="library" id="fpdfi">fpdfi.zip</file>
    <file type="library" id="PhpOffice">PhpOffice.zip</file>

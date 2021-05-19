@@ -49,11 +49,11 @@ class botigaModelCategories extends JModelList
 
         // List state information
 		//$value = $app->getUserStateFromRequest('global.list.limit', 'limit', $app->getCfg('list_limit'));
-		$value = JRequest::getInt('limit', $app->getCfg('list_limit', 0));
+		$value = $app->get('limit', $app->getCfg('list_limit', 0));
 		$this->setState('list.limit', $value);
 
 		//$value = $app->getUserStateFromRequest($this->context.'.limitstart', 'limitstart', 0);
-		$value = JRequest::getInt('limitstart', 0);
+		$value = $app->get('limitstart', 0);
 		$this->setState('list.start', $value);
 
 		// Load the parameters.
@@ -61,7 +61,7 @@ class botigaModelCategories extends JModelList
 		$this->setState('params', $params);
 
 		// List state information.
-		$this->setState('layout', JRequest::getCmd('layout'));
+		$this->setState('layout', $app->get('layout'));
 	}
 
     /**
@@ -94,17 +94,17 @@ class botigaModelCategories extends JModelList
     	$lang = JFactory::getLanguage()->getTag();
  
 		// Filters
-       	$catid  = $app->input->getInt('catid', 0);
+       	$catid  = $app->input->get('catid', 1);
         
 		$db    = $this->getDbo();
 
 		$query = $db->getQuery(true);
 		
-		$query->select('i.id, i.title, i.params ');
+		$query->select('i.id, i.title, i.params');
 			
-		$query->from('#__categories as i');        
+		$query->from('#__categories AS i');        
 
-		$query->where('i.parent_id = '.$catid.' AND language = '.$db->quote($lang).' AND published = 1 AND extension = '.$db->quote('com_botiga'));
+		$query->where('i.parent_id = '.$catid.' AND (i.language = '.$db->quote($lang).' OR i.language = '.$db->quote('*').') AND i.published = 1 AND i.extension = '.$db->quote('com_botiga'));
 
         $params = JComponentHelper::getParams( 'com_botiga' );
 		//echo $query;
@@ -129,7 +129,7 @@ class botigaModelCategories extends JModelList
 		$db   = JFactory::getDbo();
 		$lang = JFactory::getLanguage()->getTag();
 		
-		$db->setQuery('select id, title, parent_id from #__categories where parent_id = '.$id.' and published = 1 and language = '.$db->quote($lang));
+		$db->setQuery('SELECT i.id, i.title, i.parent_id FROM `#__categories` AS i WHERE i.parent_id = '.$id.' AND i.published = 1 AND (i.language = '.$db->quote($lang).' OR i.language = '.$db->quote('*').') AND i.extension = '.$db->quote('com_botiga'));
 		return $db->loadObjectList();
 	}
 }

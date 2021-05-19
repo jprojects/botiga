@@ -149,7 +149,7 @@ class botigaController extends JControllerLegacy
 	public function sincronitza() 
 	{
 		JLoader::import('joomla.plugin.helper');
-		JPluginHelper::importPlugin( 'botiga' );
+		JPluginHelper::importPlugin( 'botiga_sync' );
 
 		$dispatcher = JEventDispatcher::getInstance();
 		$dispatcher->trigger( 'sincronitza');
