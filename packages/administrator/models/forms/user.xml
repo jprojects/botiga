@@ -40,7 +40,7 @@
 		</field>
         <field 
         	name="usergroup"
-			type="usergroup"
+			type="usergrouplist"
 			label="COM_BOTIGA_USER_USERGROUP_LABEL"
 			description="COM_BOTIGA_USER_USERGROUP_DESC"
 			default="11"
@@ -113,7 +113,6 @@
 			type="sql" 
 			label="COM_BOTIGA_USER_PAIS_LABEL" 
 			description="COM_BOTIGA_USER_PAIS_DESC" 
-			size="40"
 			default=""
 			query="SELECT country_id, country_name FROM #__botiga_countries"
     		key_field="country_id"

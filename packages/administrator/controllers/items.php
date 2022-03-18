@@ -65,7 +65,7 @@ class botigaControllerItems extends JControllerAdmin
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 	
 		$pks = $this->input->post->get('cid', array(), 'array');
-		JArrayHelper::toInteger($pks);
+		//JArrayHelper::toInteger($pks);
 	
 		try
 		{

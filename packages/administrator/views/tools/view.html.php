@@ -54,7 +54,7 @@ class botigaViewTools extends JViewLegacy
 	*/
 	protected function addToolBar() 
 	{
-		JRequest::setVar('hidemainmenu', true);
+		JFactory::getApplication()->input->set('hidemainmenu', true);
 
 		JToolBarHelper::title(JText::_('COM_BOTIGA_MANAGER_TOOLS'), 'joomla');
 

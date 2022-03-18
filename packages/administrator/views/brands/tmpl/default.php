@@ -77,17 +77,17 @@ if ($saveOrder && !empty($this->items))
 							</th>
 							<?php endif; ?>
 							<th scope="col" style="width:10%" class="text-center d-none d-md-table-cell">
-									<?php echo HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>
+								<?php echo HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>
 							</th>
 						</tr>
 					</thead>
 					<tbody <?php if ($saveOrder) :?> class="js-draggable" data-url="<?php echo $saveOrderingUrl; ?>" data-direction="<?php echo strtolower($listDirn); ?>" data-nested="true"<?php endif; ?>>
 						<?php foreach ($this->items as $i => $item) :
 						$ordering   = ($listOrder == 'a.ordering');
-		        $canCreate	= $user->authorise('core.create',		'com_botiga');
-		        $canEdit	  = $user->authorise('core.edit',			'com_botiga');
-		        $canCheckin	= $user->authorise('core.manage',		'com_botiga');
-		        $canChange	= $user->authorise('core.edit.state',	'com_botiga');
+						$canCreate	= $user->authorise('core.create',		'com_botiga');
+						$canEdit	  = $user->authorise('core.edit',			'com_botiga');
+						$canCheckin	= $user->authorise('core.manage',		'com_botiga');
+						$canChange	= $user->authorise('core.edit.state',	'com_botiga');
 						?>
 						<tr class="row<?php echo $i % 2; ?>" data-dragable-group="<?php echo $item->catid; ?>">
 							<td class="text-center">
@@ -114,12 +114,12 @@ if ($saveOrder && !empty($this->items))
 										value="<?php echo $item->ordering; ?>" class="width-20 text-area-order">
 								<?php endif; ?>
 							</td>
-				      <?php if (isset($this->items[0]->published)): ?>
+				      		<?php if (isset($this->items[0]->published)): ?>
 							<td class="center">
 									<?php echo HTMLHelper::_('jgrid.published', $item->published, $i, 'brands.', $canChange, 'cb'); ?>
 							</td>
-				      <?php endif; ?>
-				      <td class="small d-none d-md-table-cell">
+				      		<?php endif; ?>
+				      		<td class="small d-none d-md-table-cell">
 								<?php if ($canEdit) : ?>
 								<a href="<?php echo JRoute::_('index.php?option=com_botiga&task=brand.edit&id='.(int) $item->id); ?>">
 								<?php echo $item->name; ?></a>
@@ -130,6 +130,7 @@ if ($saveOrder && !empty($this->items))
 							<td class="small d-none d-md-table-cell">
 								<?php echo $item->factusol_codfte; ?>
 							</td>
+							<?php if (Multilanguage::isEnabled()) : ?>
 							<td>
 								<?php if ($item->language == '*'):?>
 									<?= JText::alt('JALL', 'language'); ?>
@@ -137,6 +138,7 @@ if ($saveOrder && !empty($this->items))
 									<img src="<?= JURI::root(); ?>media/mod_languages/images/<?= str_replace('-', '_', strtolower($item->language)); ?>.gif" alt="<?= $item->language; ?>">
 								<?php endif;?>
 							</td>
+							<?php endif; ?>
 							<td class="small d-none d-md-table-cell">
 								<?php echo (int) $item->id; ?>
 							</td>

@@ -17,7 +17,7 @@
 			<option value="0">JUNPUBLISHED</option>
 		</field>
 		<field name="usergroup"
-			type="usergroup"
+			type="usergrouplist"
 			label="COM_BOTIGA_SHIPMENT_USERGROUP_LABEL"
 			description="COM_BOTIGA_SHIPMENT_USERGROUP_DESC"
 			required="true"
@@ -36,7 +36,6 @@
 			type="list"
 			label="COM_BOTIGA_SHIPMENT_CONDITION_LABEL"
 			description="COM_BOTIGA_SHIPMENT_CONDITION_DESC"
-			size="40"
 			class="inputbox"
 			default="0"
 		>
@@ -49,7 +48,6 @@
 			type="sql"
 			label="COM_BOTIGA_SHIPMENT_COUNTRY_LABEL"
 			description="COM_BOTIGA_SHIPMENT_COUNTRY_DESC"
-			size="40"
 			class="inputbox"
 			default=""
 			query="SELECT country_id, country_name FROM #__botiga_countries"
@@ -62,7 +60,6 @@
 			type="list"
 			label="COM_BOTIGA_SHIPMENT_TYPE_LABEL"
 			description="COM_BOTIGA_SHIPMENT_TYPE_DESC"
-			size="40"
 			class="inputbox"
 			default=""
 		>
@@ -94,7 +91,6 @@
 			type="list"
 			label="COM_BOTIGA_SHIPMENT_OPERATOR_LABEL"
 			description="COM_BOTIGA_SHIPMENT_OPERATOR_DESC"
-			size="40"
 			class="inputbox"
 			default=""
 		>

@@ -54,7 +54,8 @@ class plgBotiga_syncBotiga_sync_aws extends JPlugin
 				if ($product->validate()) {
 					$result = $client->postProduct($product);    
 				} else {
-					$errors = $product->getValidationErrors();        
+					$errors = $product->getValidationErrors();
+					JFactory::getApplication()->enqueueMessage('Error de validación', 'error');        
 				}
 			}
 

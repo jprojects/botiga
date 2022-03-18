@@ -12,33 +12,72 @@
 
  defined('_JEXEC') or die;
 
- use Joomla\CMS\HTML\HTMLHelper;
- use Joomla\CMS\Language\Text;
- use Joomla\CMS\Layout\LayoutHelper;
- use Joomla\CMS\Router\Route;
+ use \Joomla\CMS\HTML\HTMLHelper;
+ use \Joomla\CMS\Factory;
+ use \Joomla\CMS\Uri\Uri;
+ use \Joomla\CMS\Router\Route;
+ use \Joomla\CMS\Language\Text;
 
+ HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
  HTMLHelper::_('behavior.formvalidator');
  HTMLHelper::_('behavior.keepalive');
 ?>
 
-<form action="<?= JRoute::_('index.php?option=com_botiga&view=item&layout=edit&id='.(int) $this->item->id); ?>" method="post" name="adminForm" id="item-form" class="form-validate">
+<script type="text/javascript">
+	js = jQuery.noConflict();
+	js(document).ready(function () {
 
-	<div class="row-fluid">
-    <div class="col-12 form-horizontal">
-      <fieldset class="adminform">
-	      <legend><?= JText::_( 'COM_LAUNDRY_PRODUCT_DETAILS' ); ?></legend>
+		Joomla.submitbutton = function (task) {
+			if (task == 'item.cancel') {
+				Joomla.submitform(task, document.getElementById('item-form'));
+			}
+			else {
+				
+				if (task != 'item.cancel' && document.formvalidator.isValid('item-form')) {
+					
+					Joomla.submitform(task, document.getElementById('item-form'));
+				}
+				else {
+					alert('<?php echo $this->escape(Text::_('JGLOBAL_VALIDATION_FORM_FAILED')); ?>');
+				}
+			}
+		}
+	});
+</script>
 
-				<?php foreach($this->form->getFieldset('details') as $field): ?>
-					<div class="control-group">
-					<div class="control-label"><?= $field->label; ?></div>
-					<div class="controls"><?= $field->input ?></div>
-					</div>
-	    	<?php endforeach; ?>
+<form
+	action="<?php echo JRoute::_('index.php?option=com_botiga&view=item&layout=edit&id=' . (int) $this->item->id); ?>"
+	method="post" enctype="multipart/form-data" name="adminForm" id="item-form" class="form-validate form-horizontal">
 
-      </fieldset>
-    </div>
+	
+	<?php echo HTMLHelper::_('uitab.startTabSet', 'myTab', ['active' => 'details', 'recall' => true, 'breakpoint' => 768]); ?>
+	<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'details', Text::_('Detalls')); ?>
 
-    <input type="hidden" name="task" value="">
-  	<?php echo HTMLHelper::_('form.token'); ?>
+	<div class="row">
+		<div class="col-12">
+			<?php foreach($this->form->getFieldset('details') as $field): ?>
+				<?php echo $field->renderField() ?>
+			<?php endforeach; ?>
+		</div>
 	</div>
+
+	<?php echo HTMLHelper::_('uitab.endTab'); ?>
+
+	<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'params', Text::_('Params')); ?>
+
+	<div class="row">
+		<div class="col-12">
+			<?php foreach($this->form->getFieldset('params') as $field): ?>
+				<?php echo $field->renderField() ?>
+			<?php endforeach; ?>
+		</div>
+	</div>
+
+	<?php echo HTMLHelper::_('uitab.endTab'); ?>
+
+	<?php echo HTMLHelper::_('uitab.endTabSet'); ?>
+
+	<input type="hidden" name="task" value=""/>
+	<?php echo JHtml::_('form.token'); ?>
+
 </form>

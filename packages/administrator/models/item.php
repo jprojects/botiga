@@ -10,8 +10,6 @@
  *
  */
 
- namespace Joomla\Component\Botiga\Administrator\Model;
-
  defined('_JEXEC') or die;
 
  use Joomla\CMS\Factory;
@@ -21,7 +19,7 @@
  use Joomla\CMS\Table\Table;
  use Joomla\Component\Categories\Administrator\Helper\CategoriesHelper;
 
-class botigaModelItem extends AdminModel
+class botigaModelItem extends JModelAdmin
 {
     /**
 	 * Method override to check if you can edit an existing record.
@@ -92,64 +90,64 @@ class botigaModelItem extends AdminModel
 	 * method to store data into the database
 	 * @param boolean
 	*/
-  function store()
+  	function store()
 	{
 		$row =& $this->getTable();
 		$app = JFactory::getApplication();
-		$post_data  = $app->input->post;
-   	$data       = $post_data["jform"];
+
+		$data = Factory::getApplication()->input->get('jform', array(), 'array');
+
 		$data['id'] = $app->input->getInt('id', 0, 'get');
 
-    $categories = array();
+		if($data['child'] == '') { $data['child'] = 0; }
+		if($data['brand'] == '') { $data['brand'] = 0; }
 
-  	foreach($data['catid'] as $k) {
-  		$categories[] = $k;
-  	}
 
-    $data['catid'] = implode(',', $categories);
+		//categories
+    	$categories = array();
+
+		foreach($data['catid'] as $k) {
+			$categories[] = $k;
+		}
+
+    	$data['catid'] = implode(',', $categories);
+
+		//images
+		$data['images'] = json_encode($data['images']);
+
+		//images
+		if($data['price'] != '') { 
+			$data['price'] = json_encode($data['price']); 
+			$db     = JFactory::getDbo();
+			$preus  = json_decode($data['price']);
+
+			if($data['id'] == 0) { $itemid = $row->id; } else { $itemid = $data['id']; }
+
+		  	foreach($preus as $preu) {
+			  	$prices = new stdClass();
+				$prices->itemId = $itemid;
+				$prices->usergroup = $preu->usergroup;
+				$prices->price = $preu->pricing;
+
+				$db->setQuery('SELECT id FROM `#__botiga_items_prices` WHERE itemId = '.$itemid.' AND usergroup = '.$preu->usergroup);
+				if($id = $db->loadResult()) {
+					$prices->id = $id;
+					$db->updateObject('#__botiga_items_prices', $prices, 'id');
+				} else {
+					$db->insertObject('#__botiga_items_prices', $prices);
+				}
+		  	}
+		}
+
+		//extres
+		if($data['extres'] != '') { $data['extres'] = json_encode($data['extres']); }
 
 		if (!$row->bind( $data )) {
-			return JError::raiseWarning( 500, $row->getError() );
+			return JFactory::getApplication()->enqueueMessage($row->getError());
 		}
 
 		if (!$row->store()) {
-			return JError::raiseError(500, $row->getError() );
-		}
-
-		if($data['id'] == 0) { $itemid = $row->id; } else { $itemid = $data['id']; }
-
-		//ingresem preus a la taula aux. #__botiga_items_prices
-		if($data['price'] != '') {
-
-			$db     = JFactory::getDbo();
-			$result = array();
-			$preus  = json_decode($data['price'], true);
-
-			foreach ($preus as $preu)
-		  {
-				foreach ($preu as $k => $v)
-				{
-					if($v != '') {
-
-						$result[$k][] = $v;
-					}
-				}
-		  }
-
-		  foreach($result as $k => $v) {
-			  $prices = new stdClass();
-				$prices->itemId = $itemid;
-				$prices->usergroup = $v[0];
-				$prices->price = $v[1];
-
-				$db->setQuery('SELECT id FROM #__botiga_items_prices WHERE itemId = '.$itemid.' AND usergroup = '.$v[0]);
-		  	if($id = $db->loadResult()) {
-		  		$prices->id = $id;
-		  		$db->updateObject('#__botiga_items_prices', $prices, 'id');
-		  	} else {
-		  		$db->insertObject('#__botiga_items_prices', $prices);
-		  	}
-		  }
+			return JFactory::getApplication()->enqueueMessage($row->getError());
 		}
 
 		return true;

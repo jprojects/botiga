@@ -41,10 +41,15 @@
 		/>
 		<field
 			name="usergroup"
-			type="usergroup"
+			type="sql"
+			default=""
 			label="COM_BOTIGA_ITEM_USERGROUP_LABEL"
-			description="COM_BOTIGA_ITEM_USERGROUP_DESC"
-		/>
+			query="SELECT id, title FROM #__usergroups"
+			key_field="id"
+			value_field="title"
+		>
+		<option value="">Please select an option</option>
+		</field>
     	<field
 			name="catid"
 			type="category"
@@ -97,24 +102,26 @@
 			multiple="true"
 		>
 		<form>
-			<field
-				name="usergroup"
-				type="sql"
-				default=""
-				label="COM_BOTIGA_ITEM_USERGROUP_LABEL"
-				query="SELECT id, title FROM #__usergroups"
-				key_field="id"
-				value_field="title"
-			>
-  			<option value="">Please select an option</option>
-			</field>
-			<field
-				name="pricing"
-				label="COM_BOTIGA_ITEM_PRICE_LABEL"
-				description="COM_BOTIGA_ITEM_PRICE_DESC"
-				type="text"
-				default=""
-			/>
+			<fieldset name="price_rows" label="Usergroup Prices" repeat="true">
+				<field
+					name="usergroup"
+					type="sql"
+					default=""
+					label="COM_BOTIGA_ITEM_USERGROUP_LABEL"
+					query="SELECT id, title FROM #__usergroups"
+					key_field="id"
+					value_field="title"
+				>
+				<option value="">Please select an option</option>
+				</field>
+				<field
+					name="pricing"
+					label="COM_BOTIGA_ITEM_PRICE_LABEL"
+					description="COM_BOTIGA_ITEM_PRICE_DESC"
+					type="text"
+					default=""
+				/>
+			</fieldset>
 		</form>
 	</field>
 	<field
@@ -153,14 +160,16 @@
 			multiple="true"
 			>
 			<form>
-				<field
-					name="image"
-					type="media"
-					hide_none="1"
-					label="COM_BOTIGA_ITEM_IMAGE_LABEL"
-					description="COM_BOTIGA_ITEM_IMAGE_DESC"
-					directory="products"
-				/>
+				<fieldset name="extra_images" label="Images" repeat="true">
+					<field
+						name="image"
+						type="media"
+						hide_none="1"
+						label="COM_BOTIGA_ITEM_IMAGE_LABEL"
+						description="COM_BOTIGA_ITEM_IMAGE_DESC"
+						directory="products"
+					/>
+				</fieldset>
 			</form>
 		</field>
 		<field
@@ -218,20 +227,22 @@
 			multiple="true"
 			>
 			<form>
-				<field
-					name="title"
-					type="text"
-					label="COM_BOTIGA_ITEM_EXTRA_TITLE_LBL"
-					description="COM_BOTIGA_ITEM_EXTRA_TITLE_DSC"
-					default=""
-					size="30"
-				/>
-				<field
-					name="content"
-					type="textarea"
-					label="COM_BOTIGA_ITEM_EXTRA_CONTENT_LBL"
-					description="COM_BOTIGA_ITEM_EXTRA_CONTENT_DSC"
-				/>
+				<fieldset name="extra" label="Product extras" repeat="true">
+					<field
+						name="title"
+						type="text"
+						label="COM_BOTIGA_ITEM_EXTRA_TITLE_LBL"
+						description="COM_BOTIGA_ITEM_EXTRA_TITLE_DSC"
+						default=""
+						size="30"
+					/>
+					<field
+						name="content"
+						type="textarea"
+						label="COM_BOTIGA_ITEM_EXTRA_CONTENT_LBL"
+						description="COM_BOTIGA_ITEM_EXTRA_CONTENT_DSC"
+					/>
+				</fieldset>
 			</form>
 		</field>
 		<field name="pdf"
@@ -262,6 +273,17 @@
 			name="params"
 			label="JGLOBAL_FIELDSET_DISPLAY_OPTIONS"
 		>
+		<field
+			name="esborrableDespresDeSincro"
+			type="radio"
+			label="COM_BOTIGA_ITEM_DELETABLE_LABEL"
+			description="COM_BOTIGA_ITEM_DELETABLE_DESC"
+			default="0"
+			class="btn-group"
+		>
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
 		</fieldset>
 	</fields>
 </form>

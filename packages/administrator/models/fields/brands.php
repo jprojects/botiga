@@ -51,24 +51,32 @@ class JFormFieldBrands extends JFormField
 	*/
 	protected function getInput()
 	{
+		// Add the modal field script to the document head.
+		HTMLHelper::_('script', 'system/fields/modal-fields.min.js', array('version' => 'auto', 'relative' => true));
+
 		$script = array();
-		$script[] = '	function jSelectBrand_' . $this->id . '(name) {';
-		$script[] = '		document.getElementById("' . $this->id . '").value = name;';
-		$script[] = '		jModalClose();';
+		$script[] = '	function jSelectBrand_' . $this->id . '(id, name) {';
+		$script[] = '		document.getElementById("' . $this->id . '").value = id;';
+		$script[] = '		document.getElementById("' . $this->id . '_name").value = name;';
 		$script[] = '	}';
 
 		// Add the script to the document head.
-		JFactory::getDocument()->addScriptDeclaration(implode("\n", $script));
+		Factory::getDocument()->addScriptDeclaration(implode("\n", $script));
 
 		// Setup variables for display.
-		$link	= 'index.php?option=com_botiga&view=brands&layout=modal&tmpl=component&function=jSelectBrand_'.$this->id;
+		$html = array();
+		$link	= 'index.php?option=com_botiga&view=brands&amp;layout=modal&amp;tmpl=component&amp;function=jSelectBrand_'.$this->id;
 
-		// The current user display field.
-		$html[] = '<div class="input-append">';
-		$html[] = parent::getInput()
-			. '<a class="btn" title="' . Text::_('COM_BOTIGA_SELECT_BRAND') . '"  href="' . $link
-			. '"  data-toggle="modal" data-target="#brandsModal">'
-			. Text::_('COM_BOTIGA_SELECT_BRAND') . '</a>';
+		$db = Factory::getDbo();
+		$db->setQuery('SELECT `name` FROM `#__botiga_brands` WHERE id = '.$this->value);
+		$name = $db->loadResult();
+		if($this->value == '') { $this->value = 0; }
+
+		$html[] = '<div class="input-group mb-3">';
+		$html[] = '<input type="hidden" name="jform['.str_replace('jform_', '', $this->id).']" value="'.$this->value.'" id="'.$this->id.'">';
+		$html[] = '<input type="text" id="'.$this->id.'_name" class="form-control" value="'.$name.'" placeholder="'. Text::_('COM_BOTIGA_SELECT_BRAND') .'" aria-label="'. Text::_('COM_BOTIGA_SELECT_BRAND') .'" aria-describedby="button-addon2">';
+		$html[] = '<button data-toggle="modal" data-target="#brandsModal" class="btn btn-primary" type="button" id="button-addon2">'. Text::_('COM_BOTIGA_SELECT_BRAND') .'</button>';
+		$html[] = '</div>';
 
 		$html[] = HTMLHelper::_(
 			'bootstrap.renderModal',
@@ -78,8 +86,8 @@ class JFormFieldBrands extends JFormField
 				'title'  => Text::_('COM_BOTIGA_SELECT_BRAND'),
 				'height' => '100%',
 				'width'  => '100%',
-				'modalWidth'  => '800',
-				'bodyHeight'  => '450',
+				'modalWidth'  => '960',
+				'bodyHeight'  => '650',
 				'footer' => '<button type="button" class="btn btn-secondary" data-dismiss="modal" aria-hidden="true">'
 					. Text::_("JLIB_HTML_BEHAVIOR_CLOSE") . '</button>'
 			)

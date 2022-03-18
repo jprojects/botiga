@@ -13,10 +13,14 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
-JHtml::_('behavior.tooltip');
-JHtml::_('behavior.formvalidation');
-JHtml::_('formbehavior.chosen', 'select');
-JHtml::_('behavior.keepalive');
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\Router\Route;
+
+HTMLHelper::_('behavior.formvalidator');
+HTMLHelper::_('behavior.keepalive');
+
 $model = $this->getModel('coupon');
 ?>
 
@@ -32,9 +36,9 @@ if(task == 'coupon.cancel'){
     Joomla.submitform(task, document.getElementById('item-form'));
 }
 else{
-    
+
     if (task != 'coupon.cancel' && document.formvalidator.isValid(document.id('item-form'))) {
-        
+
         Joomla.submitform(task, document.getElementById('item-form'));
     }
     else {
@@ -46,12 +50,12 @@ else{
 
 
 <form action="<?php echo JRoute::_('index.php?option=com_botiga&view=doc&layout=edit&id='.(int) $this->item->id); ?>" method="post" name="adminForm" id="item-form" class="form-validate">
- 
+
 	<div class="row-fluid">
         <div class="span6 form-horizontal">
             <fieldset class="adminform">
 			<legend><?php echo JText::_( 'COM_BOTIGA_COUPON_TITLE' ); ?></legend>
-			
+
 				<?php foreach($this->form->getFieldset('details') as $field): ?>
 						<div class="control-group">
 						<div class="control-label"><?php echo $field->label; ?></div>

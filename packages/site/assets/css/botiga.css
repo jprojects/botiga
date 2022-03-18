@@ -1,9 +1,7 @@
-@CHARSET "UTF-8";
-
 /********************* Global **********************/
 .empty { color: #514B4B; }
 .nopadding { padding: 0 !important; }
-a { outline: 0; cursor pointer; }
+a { outline: 0; cursor: pointer; }
 .red { color: #e30613; }
 #page-header h2, #page-header h1 { font-size: 20px !important; }
 .head_botiga { min-height: 150px; border-bottom: 1px solid #683b2b; }
@@ -61,6 +59,10 @@ a { outline: 0; cursor pointer; }
 .item-ref { font-size: 10px; }
 .item-divider { height: 10px; }
 .item-title, .item-desc { height: 80px; }
+
+@media only screen and (max-width: 768px) {
+	.item-title, .item-desc { height: auto; }
+  }
 
 .brand { margin-top: 50px; }
 .brand img { height: 40px; }

@@ -28,7 +28,7 @@ class botigaModelItem extends JModelItem
         
         $id  = $app->input->get('id');
         
-        $db->setQuery('SELECT i.*, b.name AS bname FROM #__botiga_items AS i inner join #__botiga_brands AS b ON b.id = i.brand WHERE i.id = '.$id);
+        $db->setQuery('SELECT i.*, b.name AS bname FROM `#__botiga_items` AS i left join `#__botiga_brands` AS b ON b.id = i.brand WHERE i.id = '.$id);
         
         return $db->loadObject();
 	}

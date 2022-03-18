@@ -92,18 +92,18 @@ class botigaModelUser extends JModelAdmin
 	 * method to store data into the database
 	 * @param boolean
 	*/
-  function store()
+    function store()
 	{
 		$row =& $this->getTable();
 		$db  = JFactory::getDbo();
+		$app = JFactory::getApplication();
 
-		$post_data  = JRequest::get( 'post' );
-		$data       = $post_data["jform"];
+		$data = $app->input->get('jform', array(), 'array');
 
-		$params['metodo_pago'] 		= $data['metodo_pago'];
-		$params['aplicar_iva']		= $data['aplicar_iva'];
-		$params['re_equiv']    		= $data['re_equiv'];
-		$params['pago_habitual']    = $data['pago_habitual'];
+		$params['metodo_pago'] 		  = $data['metodo_pago'];
+		$params['aplicar_iva']		  = $data['aplicar_iva'];
+		$params['re_equiv']    		  = $data['re_equiv'];
+		$params['pago_habitual']      = $data['pago_habitual'];
 		$params['pago_habitual_desc'] = $data['pago_habitual_desc'];
 
 		unset($data['metodo_pago'], $data['aplicar_iva'], $data['re_equiv'], $data['pago_habitual'], $data['pago_habitual_desc']);
@@ -115,28 +115,29 @@ class botigaModelUser extends JModelAdmin
 		$userid    = $data['userid'];
 
 		if($userid != '' && $usergroup != '') {
-		  $db->setQuery('SELECT usergroup FROM #__botiga_users WHERE userid = '.$userid);
-		  $old_usergroup = $db->loadResult();
-		  if($old_usergroup != $usergroup) {
-			$db->setQuery("DELETE FROM `#__user_usergroup_map` WHERE group_id = ".$old_usergroup." AND user_id = ".$userid);
-			$db->query();
-			$group = new stdClass();
-			$group->group_id = $usergroup;
-			$group->user_id = $userid;
-			$db->insertObject('#__user_usergroup_map', $group);
-		  }
+		  	$db->setQuery('SELECT usergroup FROM `#__botiga_users` WHERE `userid` = '.$userid);
+		  	if($old_usergroup = $db->loadResult()) {
+				if($old_usergroup != $usergroup) {
+					$db->setQuery("DELETE FROM `#__user_usergroup_map` WHERE `group_id` = $old_usergroup AND `user_id` = $userid");
+					$db->Query();
+					$group = new stdClass();
+					$group->group_id = $usergroup;
+					$group->user_id  = $userid;
+					$db->insertObject('#__user_usergroup_map', $group);
+				}
+			}
 		}
 
 		if (!$row->bind( $data )) {
-			return JError::raiseWarning( 500, $row->getError() );
+			$app->enqueueMessage($row->getError() );
 		}
 
 		if (!$row->store()) {
-			return JError::raiseError(500, $row->getError() );
+			$app->enqueueMessage($row->getError() );
 		}
 
 		return true;
-  }
+    }
 
 }
 ?>

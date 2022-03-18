@@ -13,6 +13,10 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use \Joomla\CMS\Factory;
+use \Joomla\CMS\Router\Route;
+use \Joomla\CMS\Language\Text;
+
 JHtml::_('behavior.keepalive');
 $model = $this->getModel('tools');
 ?>
@@ -27,19 +31,46 @@ Joomla.submitbutton = function(task)
 </script>
 
 
-<form action="<?= JRoute::_('index.php?option=com_botiga'); ?>" method="post" name="adminForm" id="item-form">
-
+<form action="<?php echo JRoute::_('index.php?option=com_shop&task=tools.export'); ?>" method="post" name="adminForm" id="item-form" class="form-validate">
+ 
 	<div class="row-fluid">
-		<div class="span5">
-			<canvas id="canvas1"></canvas>
-			<canvas id="canvas3"></canvas>
+        <div class="span6 form-horizontal">
+            <fieldset class="adminform">
+			<legend><?php echo Text::_( 'Exportar csv' ); ?></legend>
+			<p><small>Al exportar es crea un arxiu csv amb tots els productes de la base de dades amb la tarifa escollida, cal omplir preus i fer servir el mètode d'importació per afegir nous preus.<br>No cal que siguin tots els productes es poden esborrar els que calgui i importar només la quantitat desitjada.</small></p>
+			<?php foreach($this->form->getFieldset('export') as $field): ?>
+				<div class="control-group">
+				<div class="control-label"><?php echo $field->label; ?></div>
+				<div class="controls"><?php echo $field->input ?></div>
+				</div>
+			<?php endforeach; ?>
+			<button type="submit" class="btn btn-primary">Exportar</button>
+			</fieldset>
 		</div>
-		<div class="span5">
-			<canvas id="canvas2"></canvas>
-			<canvas id="canvas4"></canvas>
-		</div>
+		<input type="hidden" name="task" value="tools.export" />
+		<?php echo JHtml::_('form.token'); ?>
 	</div>
+</form>
 
-	<input type="hidden" name="task" value="tools.cancel" />
-	<?= JHtml::_('form.token'); ?>
+<hr>
+
+<form action="<?php echo JRoute::_('index.php?option=com_shop&task=tools.import'); ?>" method="post" name="adminForm" id="item-form" class="form-validate" enctype="multipart/form-data">
+ 
+	<div class="row-fluid">
+        <div class="span6 form-horizontal">
+            <fieldset class="adminform">
+			<legend><?php echo Text::_( 'Importar csv' ); ?></legend>
+			<p><small>Una vegada omplert l'arxiu resultant de l'expotació pot pujar aquí l'arxiu per afegir les noves tarifes.</small></p>
+			<?php foreach($this->form->getFieldset('import') as $field): ?>
+				<div class="control-group">
+				<div class="control-label"><?php echo $field->label; ?></div>
+				<div class="controls"><?php echo $field->input ?></div>
+				</div>
+			<?php endforeach; ?>
+			<button type="submit" class="btn btn-primary">Importar</button>
+			</fieldset>
+		</div>
+		<input type="hidden" name="task" value="tools.import" />
+		<?php echo JHtml::_('form.token'); ?>
+	</div>
 </form>

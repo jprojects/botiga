@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="component" version="4.0" method="upgrade">
+	<name>Botiga</name>
+	<creationDate>2017-01-22</creationDate>
+	<author>Kim</author>
+	<authorEmail>kim@afi.cat</authorEmail>
+	<authorUrl>http://www.afi.cat</authorUrl>
+	<copyright>Copyright © 2017 - All rights reserved.</copyright>
+	<license>GNU/GPL</license>
+	<version>2.0.0</version>
+	<description><![CDATA[COM_BOTIGA_DESCRIPTION]]></description>
+    <files folder="site">
+		<filename>botiga.php</filename>
+		<filename>controller.php</filename>
+        <filename>metadata.xml</filename>
+		<folder>views/</folder>
+		<folder>models/</folder>
+		<folder>helpers/</folder>
+		<folder>controllers/</folder>
+		<folder>assets/</folder>
+	</files>
+	<media destination="com_botiga" folder="media">
+        <folder>icons/</folder>
+        <folder>docs/</folder>
+    </media>
+	<!-- Language frontend -->
+	<languages folder="site/languages/en-GB">
+		<language tag="en-GB">en-GB.com_botiga.ini</language>
+	</languages>
+        <install>
+		<sql>
+			<file driver="mysql" charset="utf8">sql/install.mysql.utf8.sql</file>
+		</sql>
+	</install>
+        <uninstall>
+		<sql>
+			<file driver="mysql" charset="utf8">sql/uninstall.mysql.utf8.sql</file>
+		</sql>
+	</uninstall>
+	<scriptfile>script.php</scriptfile>
+    <update>
+		<schemas>
+			<schemapath type="mysql">sql/updates/mysql</schemapath>
+		</schemas>
+	</update>
+	<administration>
+		<menu img="class:banners">Botiga</menu>
+		<submenu>
+			<menu link="option=com_botiga&amp;view=brands">Brands</menu>
+			<menu link="option=com_categories&amp;extension=com_botiga">Categories</menu>
+			<menu link="option=com_botiga&amp;view=items">Products</menu>
+			<menu link="option=com_botiga&amp;view=users">Users</menu>
+			<menu link="option=com_botiga&amp;view=orders">Orders</menu>
+			<menu link="option=com_botiga&amp;view=coupons">Coupons</menu>
+			<menu link="option=com_botiga&amp;view=shipments">Shippments</menu>
+			<menu link="option=com_botiga&amp;view=discounts">Discounts</menu>
+			<menu link="option=com_botiga&amp;view=docs">Documents</menu>
+			<menu link="option=com_botiga&amp;view=tools&amp;layout=edit">Tools</menu>
+		</submenu>
+		<files folder="administrator">
+			<filename>index.html</filename>
+			<filename>botiga.php</filename>
+			<filename>controller.php</filename>
+            <filename>config.xml</filename>
+            <filename>access.xml</filename>
+            <folder>controllers/</folder>
+			<folder>views/</folder>
+            <folder>helpers/</folder>
+			<folder>models/</folder>
+			<folder>libs/</folder>
+			<folder>assets/</folder>
+			<folder>tables/</folder>
+			<folder>sql/</folder>
+		</files>
+		<languages folder="administrator/languages/en-GB">
+			<language tag="en-GB">en-GB.com_botiga.ini</language>
+        </languages>
+	</administration>
+</extension>

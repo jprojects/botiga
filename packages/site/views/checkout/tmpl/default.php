@@ -417,6 +417,17 @@ endif; ?>
 				$data['iva_percent'] 	= $iva_percent;
 				$data['iva_total'] 		= $iva_total;
 				$data['total'] 			= $total;
+				$data['name'] 			= $adreca->name;
+				$data['adreca'] 		= $adreca->adreca;
+				$data['cp'] 			= $adreca->cp;
+				$data['poblacio'] 		= $adreca->poblacio;
+				$data['provincia'] 		= $adreca->provincia;
+				$data['pais'] 			= $adreca->pais;
+				$data['mail_empresa'] 	= $adreca->mail_empresa;
+				$data['nom_empresa'] 	= $adreca->nom_empresa;
+				$data['telefon'] 		= $adreca->telefon;
+				$data['ip']				= $_SERVER['REMOTE_ADDR'];
+				$data['browser']		= $_SERVER['HTTP_USER_AGENT'];
 				$serial 				= serialize($data);
 				?>
 				<input type="hidden" name="d" value='<?= base64_encode($serial); ?>'>

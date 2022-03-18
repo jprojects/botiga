@@ -21,28 +21,36 @@ use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
 
-$app = Factory::getApplication();
+HTMLHelper::_('behavior.multiselect');
 
-HTMLHelper::_('behavior.core');
-
-$function	 = $app->input->getCmd('function', 'jSelectProduct');
+$app    = JFactory::getApplication();
+$user      = Factory::getUser();
+$userId    = $user->get('id');
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
+$saveOrder = $listOrder == 'a.ordering';
+$function	= $app->input->getCmd('function', 'jSelectProduct');
 ?>
 
-<div class="container-popup">
 
-	<form action="<?php echo JRoute::_('index.php?option=com_botiga&view=items&layout=modal&tmpl=component&function='.$function . '&' . Session::getFormToken() . '=1');?>" method="post" name="adminForm" id="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_botiga&view=items&layout=modal&tmpl=component&function='.$function . '&' . Session::getFormToken() . '=1');?>" method="post" name="adminForm" id="adminForm">
+<div class="row">
+		<div class="col-md-12">
+			<div id="j-main-container" class="j-main-container">
 
-	  <?= JLayoutHelper::render('joomla.searchtools.default', array('view' => $this)); ?>
+				<?php
+				// Search tools bar
+				echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]);
+				?>
 
-		<?php if (empty($this->items)) : ?>
-			<div class="alert alert-info">
-				<span class="fa fa-info-circle" aria-hidden="true"></span><span class="sr-only"><?php echo Text::_('INFO'); ?></span>
-				<?php echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
-			</div>
-		<?php else : ?>
-	  <table class="table table-sm">
+				<?php if (empty($this->items)) : ?>
+					<div class="alert alert-info">
+						<span class="fa fa-info-circle" aria-hidden="true"></span><span class="sr-only"><?php echo Text::_('INFO'); ?></span>
+						<?php echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
+					</div>
+				<?php else : ?>
+	  		
+		<table class="table table-striped" id="adminList">
 			<thead>
 				<tr>
 					<th width="1%" class="nowrap center">
@@ -53,12 +61,6 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 					</th>
 					<th>
 						<?= HTMLHelper::_('grid.sort',  'COM_BOTIGA_ITEMS_HEADING_NAME', 'a.name', $listDirn, $listOrder); ?>
-					</th>
-					<th>
-						<?= HTMLHelper::_('grid.sort',  'COM_BOTIGA_ITEMS_HEADING_CHILD', 'a.child', $listDirn, $listOrder); ?>
-					</th>
-					<th>
-						<?= HTMLHelper::_('grid.sort',  'COM_BOTIGA_ITEMS_HEADING_PVP', 'a.pvp', $listDirn, $listOrder); ?>
 					</th>
 					<th>
 						<?= HTMLHelper::_('grid.sort',  'COM_BOTIGA_ITEMS_HEADING_BRAND', 'a.marca_name', $listDirn, $listOrder); ?>
@@ -74,31 +76,25 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 			<tbody>
 				<?php foreach ($this->items as $i => $item) :
 				$ordering   = ($listOrder == 'a.ordering');
-        $canCreate	= $user->authorise('core.create',		'com_botiga');
-        $canEdit	= $user->authorise('core.edit',			'com_botiga');
-        $canCheckin	= $user->authorise('core.manage',		'com_botiga');
-        $canChange	= $user->authorise('core.edit.state',	'com_botiga');
+				$canCreate	= $user->authorise('core.create',		'com_botiga');
+				$canEdit	= $user->authorise('core.edit',			'com_botiga');
+				$canCheckin	= $user->authorise('core.manage',		'com_botiga');
+				$canChange	= $user->authorise('core.edit.state',	'com_botiga');
 				?>
 				<tr class="row<?= $i % 2; ?>">
-					<td class="small d-none d-md-table-cell">
+					<td class="small">
 							<?php echo HTMLHelper::_('jgrid.published', $item->published, $i, 'items.', $canChange, 'cb'); ?>
 					</td>
-		      <td class="small d-none d-md-table-cell">
+		      		<td class="small">
 						<?= $item->ref; ?>
 					</td>
-					<td class="small d-none d-md-table-cell">
-						<a class="pointer" onclick="if (window.parent) window.parent.<?php echo $this->escape($function);?>('<?php echo $item->id; ?>', '<?php echo $this->escape(addslashes($item->name)); ?>');"><?= $item->name; ?></a>
+					<td class="small">
+						<a class="pointer" onclick="window.parent.<?= $this->escape($function);?>('<?= $item->id; ?>', '<?= addslashes($item->name); ?>');"><?= $item->name; ?></a>
 					</td>
-					<td class="small d-none d-md-table-cell">
-						<?= $item->child == 0 ? '<span class="icon-unpublish"></span>' : '<span class="icon-ok"></span>'; ?>
-					</td>
-					<td class="small d-none d-md-table-cell">
-						<?= $item->pvp; ?>&euro;
-					</td>
-					<td class="small d-none d-md-table-cell">
+					<td class="small">
 						<?= $item->bname; ?>
 					</td>
-					<td class="small d-none d-md-table-cell">
+					<td class="small">
 						<?= $item->ctitle; ?>
 					</td>
 					<td class="center nowrap">
@@ -113,13 +109,13 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 				</tbody>
 		</table>
 
-		<?php // load the pagination. ?>
+		<?php // Load the pagination. ?>
 		<?php echo $this->pagination->getListFooter(); ?>
 
-	<?php endif; ?>
+		<?php endif; ?>
 
-			<input type="hidden" name="task" value="" />
-			<?= HTMLHelper::_('form.token'); ?>
-		</div>
-	</form>
-</div>
+		<input type="hidden" name="task" value="">
+		<input type="hidden" name="boxchecked" value="0">
+		<?php echo HTMLHelper::_('form.token'); ?>
+	</div>
+</form>

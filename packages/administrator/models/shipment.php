@@ -12,9 +12,14 @@
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
+
+use Joomla\CMS\Factory;
+use Joomla\CMS\Form\Form;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\CMS\Table\Table;
+use Joomla\Component\Categories\Administrator\Helper\CategoriesHelper;
  
-// import Joomla modelform library
-jimport('joomla.application.component.modeladmin');
  
 class botigaModelShipment extends JModelAdmin
 {
@@ -90,10 +95,11 @@ class botigaModelShipment extends JModelAdmin
     function store()
 	{		
 		$row =& $this->getTable();
+
+		$app = JFactory::getApplication();
 		
-		$post_data  = JRequest::get( 'post' );
-   		$data       = $post_data["jform"];
-		$data['id'] = JRequest::getInt('id', 0, 'get');
+		$data = JFactory::getApplication()->input->get('jform', array(), 'array');
+		$data['id'] = $app->input->get('id', 0, 'get');
 
 		if($data['id'] != 0) {
 	    	
@@ -105,11 +111,11 @@ class botigaModelShipment extends JModelAdmin
 	    	$data['country'] = implode(';', $paises);
 		
 			if (!$row->bind( $data )) {
-				return JError::raiseWarning( 500, $row->getError() );
+				return $app->enqueueMessage($row->getError());
 			}
 
 			if (!$row->store()) {
-				return JError::raiseError(500, $row->getError() );
+				return $app->enqueueMessage($row->getError());
 			}
 		}
 		return true;

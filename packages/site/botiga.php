@@ -24,7 +24,7 @@ require_once (JPATH_COMPONENT.DS.'controller.php');
 
 JHtml::_('jquery.framework');
 
-JHTML::stylesheet('components/com_botiga/assets/css/botiga.css');
+JHTML::stylesheet('components/com_botiga/assets/css/botiga.css?v=1.1.1');
 JHTML::script('components/com_botiga/assets/js/botiga.js');
 
 // Perform the Request task

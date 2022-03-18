@@ -78,10 +78,9 @@ class botigaHelperPdf {
 		define('EURO', chr(128));
 
 		$db->setQuery(
-			'SELECT c.*, u.mail_empresa as email, u.nom_empresa, u.nombre, u.cif, u.telefon, u.adreca, u.cp, u.poblacio, ju.name ' .
+			'SELECT c.*, ju.name ' .
 			'FROM #__botiga_comandes c ' .
-				'INNER JOIN #__botiga_users u ON u.userid = c.userid ' .
-				'INNER JOIN #__users ju ON u.userid = ju.id ' .
+			'INNER JOIN #__users ju ON c.userid = ju.id ' .
 			'WHERE c.id = '.$id);
 		$com = $db->loadObject();
 		
@@ -130,7 +129,7 @@ class botigaHelperPdf {
 		$pdf->Cell(15, 5, utf8_decode($com->adreca), 0, 0, 'L');
 		$height += 5;
 		$pdf->SetXY(130, $height);
-		$pdf->Cell(15, 5, $com->email, 0, 0, 'L');
+		$pdf->Cell(15, 5, $com->mail_empresa, 0, 0, 'L');
 		$height += 5;
 		$pdf->SetXY(130, $height);
 		$pdf->Cell(15, 5, $com->cp.' - '.utf8_decode($com->poblacio), 0, 0, 'L');

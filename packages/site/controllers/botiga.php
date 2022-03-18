@@ -286,8 +286,9 @@ class botigaControllerBotiga extends botigaController {
 
 		$post = unserialize(base64_decode($data['d']));
 
-     	$order				= new stdClass();
-     	$order->id 			= $idComanda;
+		$order				= new stdClass();
+		$order->id 			= $idComanda;
+		$order->userid      = $user->id;
      	$order->subtotal 	= $post['subtotal'];
      	$order->shipment 	= $post['shipment'];
      	$order->iva_percent = $post['iva_percent'];
@@ -297,7 +298,20 @@ class botigaControllerBotiga extends botigaController {
      	$order->discount 	= $post['discount'];
      	$order->total 		= $post['total'];
      	$order->processor   = $data['processor'];
-     	$order->observa     = $data['observa'];
+		$order->observa     = $data['observa'];
+		$order->nombre 		= $data['name'];
+		$order->adreca 		= $data['adreca'];
+		$order->cp 			= $data['cp'];
+		$order->poblacio 	= $data['poblacio'];
+		$order->provincia 	= $data['provincia'];
+		$order->pais 		= $data['pais'];
+		$order->mail_empresa = $data['mail_empresa'];
+		$order->nom_empresa = $data['nom_empresa'];
+		$order->telefon 	= $data['telefon'];
+		$order->ip          = $data['ip'];
+		$order->browser		= $data['browser'];
+		$order->status      = 2;
+		$order->data 		= date('Y-m-d H:i:s');
 
      	//actualitza comanda
      	$db->updateObject('#__botiga_comandes', $order, 'id');

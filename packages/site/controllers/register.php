@@ -47,18 +47,18 @@ class botigaControllerRegister extends botigaController {
 
 		//Si el captcha es activat
 		if($validation == 1) {
-			if(isset($_POST['g-recaptcha-response'])) {
-			  $captcha = $_POST['g-recaptcha-response'];
-			}
-			if(!$captcha) {
-			  	$msg = JText::_('COM_BOTIGA_CAPTCHA_FAIL_MSG');
-			   	$type = 'error';
-				return false;
-			}
 
-			$ip = $_SERVER['REMOTE_ADDR'];
-			$response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=".$secretkey."&response=".$captcha."&remoteip=".$ip);
-			$responseKeys = json_decode($response, true);
+			$options['secret'] = $secretkey;
+			$options['response'] = $_POST['recaptcha_response'];
+	
+			$verify = curl_init();
+			curl_setopt($verify, CURLOPT_URL, "https://www.google.com/recaptcha/api/siteverify");
+			curl_setopt($verify, CURLOPT_POST, true);
+			curl_setopt($verify, CURLOPT_POSTFIELDS, http_build_query($options));
+			curl_setopt($verify, CURLOPT_SSL_VERIFYPEER, false);
+			curl_setopt($verify, CURLOPT_RETURNTRANSFER, true);
+			$response = curl_exec($verify);
+			$responseKeys   = json_decode($response, true);
 		}
 
 		$uparams = JComponentHelper::getParams( 'com_users' );
@@ -84,7 +84,7 @@ class botigaControllerRegister extends botigaController {
 			$valid = false;
 		}
 
-		if($valid && $uparams->get('allowUserRegistration') == 1 && ($validation == 0 || ($validation == 1 && intval($responseKeys["success"]) == 1))) {
+		if($valid && $uparams->get('allowUserRegistration') == 1 && ($validation == 0 || ($validation == 1 && $responseKeys['score'] >= 0.6))) {
 
 			//we need the encrypted password
 			jimport('joomla.user.helper');

@@ -55,7 +55,7 @@ endif; ?>
 	<div>
 
 		<form name="register" id="register" action="index.php?option=com_botiga&task=register.register" method="post" class="form-horizontal form-validate">
-
+			<?php if($validation == 1) : ?><input type="hidden" name="recaptcha_response" id="recaptchaResponse"><?php endif; ?>
 			<?php if($show_type == 1) : ?>
 			<div class="control-group" id="fieldType">
 				<div class="control-label"><?php echo $this->form->getLabel('type'); ?></div>
@@ -157,15 +157,9 @@ endif; ?>
 				</div>
 				<?php endif; ?>
 
-				<?php if($validation == 1) : ?>
-				<div class="form-group pt-4">
-	   		 		<div class="g-recaptcha" data-callback="recaptchaCallback" data-sitekey="<?= $sitekey; ?>"></div>
-				</div>
-				<?php endif; ?>
-
 				<div class="checkbox estil01 pt-4">
 				  <label>
-					<input type="checkbox" value=""  class="tos required" required="required">
+					<input type="checkbox" value="" id="tos" class="required" required="required">
 					<?= JText::sprintf('COM_BOTIGA_REGISTER_LOPD', ''); ?>
 				  </label>
 				</div>
@@ -181,7 +175,7 @@ endif; ?>
 
 				<div id="form-login-submit" class="control-group">
 					<div class="controls">
-						<button disabled="disabled" type="submit" class="btn btn-primary btn-block validate submit estil03"><?= JText::_('COM_BOTIGA_REGISTER'); ?></button>
+						<button disabled="disabled" type="submit" id="submit" class="btn btn-primary btn-block validate submit estil03"><?= JText::_('COM_BOTIGA_REGISTER'); ?></button>
 					</div>
 				</div>
 				<input type="hidden" name="option" value="com_botiga" />
@@ -197,3 +191,46 @@ endif; ?>
 	</div>
 
 </div>
+<script>
+(function() {
+	'use strict'
+
+	//count seconds
+	var counter = 0;
+	window.setInterval(function(){
+	counter++;
+	},1000);
+
+	var tos = document.getElementById('tos');
+	tos.addEventListener("click",function(e){
+		if(tos.checked) {
+			document.getElementById('submit').removeAttribute("disabled");
+			grecaptcha.ready(function() {
+				grecaptcha.execute('<?= $sitekey; ?>', {action: 'register'})
+				.then(function(token) {
+				var recaptchaResponse = document.getElementById('recaptchaResponse');
+				recaptchaResponse.value = token;
+				});
+			});
+		} else {
+			document.getElementById('submit').setAttribute("disabled", "true");
+		}
+	});
+
+	// Fetch all the forms we want to apply custom Bootstrap validation styles to
+	var forms = document.querySelectorAll('.needs-validation')
+
+	// Loop over them and prevent submission
+	Array.prototype.slice.call(forms)
+	.forEach(function (form) {
+		form.addEventListener('submit', function (event) {
+		if (!form.checkValidity()) {
+			event.preventDefault()
+			event.stopPropagation()
+		}
+
+		form.classList.add('was-validated')
+		}, false)
+	})
+})()
+</script>

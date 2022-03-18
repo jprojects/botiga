@@ -103,10 +103,10 @@ if ($saveOrder && !empty($this->items))
 					<tbody <?php if ($saveOrder) :?> class="js-draggable" data-url="<?php echo $saveOrderingUrl; ?>" data-direction="<?php echo strtolower($listDirn); ?>" data-nested="true"<?php endif; ?>>
 						<?php foreach ($this->items as $i => $item) :
 						$ordering   = ($listOrder == 'a.ordering');
-		        $canCreate	= $user->authorise('core.create',		'com_botiga');
-		        $canEdit	  = $user->authorise('core.edit',			'com_botiga');
-		        $canCheckin	= $user->authorise('core.manage',		'com_botiga');
-		        $canChange	= $user->authorise('core.edit.state',	'com_botiga');
+						$canCreate	= $user->authorise('core.create',		'com_botiga');
+						$canEdit	  = $user->authorise('core.edit',			'com_botiga');
+						$canCheckin	= $user->authorise('core.manage',		'com_botiga');
+						$canChange	= $user->authorise('core.edit.state',	'com_botiga');
 						?>
 						<tr class="row<?php echo $i % 2; ?>" data-dragable-group="<?php echo $item->catid; ?>">
 							<td class="text-center">
@@ -136,7 +136,7 @@ if ($saveOrder && !empty($this->items))
 							<td class="center">
 									<?php echo HTMLHelper::_('jgrid.published', $item->published, $i, 'users.', $canChange, 'cb'); ?>
 							</td>
-				      <td class="small d-none d-md-table-cell">
+				      		<td class="small d-none d-md-table-cell">
 								<a href="index.php?option=com_botiga&task=user.edit&id=<?= $item->id; ?>"><?= $item->nombre; ?></a>
 							</td>
 							<td class="small d-none d-md-table-cell">
@@ -173,7 +173,7 @@ if ($saveOrder && !empty($this->items))
 								<?php if($item->validate == 0) : ?>
 								<a class="btn btn-danger" href="index.php?option=com_botiga&task=users.validate&userid=<?= $item->userid; ?>"><?= JText::_('COM_BOTIGA_VALIDATE'); ?></a>
 								<?php else : ?>
-								<span class="label label-success"><?= JText::_('COM_BOTIGA_VALIDATED'); ?></span>
+								<span class="icon-publish" title="<?= JText::_('COM_BOTIGA_VALIDATED'); ?>"</span>
 								<?php endif; ?>
 							</td>
 						</tr>

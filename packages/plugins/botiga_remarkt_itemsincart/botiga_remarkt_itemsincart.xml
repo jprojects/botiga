@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="3.5" type="plugin" group="botiga_remarkt" method="upgrade">
+	<name>Remarketing items in cart</name>
+	<author>Afi</author>
+	<creationDate>April 2021</creationDate>
+	<copyright>(C) 2020. All rights reserved.</copyright>
+	<license>GNU General Public License version 3 or later; see LICENSE.txt</license>
+	<authorEmail>kim@aficat.com</authorEmail>
+	<authorUrl>www.afi.cat</authorUrl>
+	<version>1.0</version>
+	<description>Botiga remarketing recordar items al carro</description>
+	<files>
+		<filename plugin="botiga_remarkt_itemsincart">botiga_remarkt_itemsincart.php</filename>
+		<folder>aws</folder>
+	</files>
+	<config>
+		<fields name="params">
+			<fieldset name="basic">
+			
+			</fieldset>
+		</fields>
+	</config>
+</extension>

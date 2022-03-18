@@ -61,6 +61,18 @@ CREATE TABLE IF NOT EXISTS `#__botiga_comandes` (
   `total` float(10,2) NOT NULL DEFAULT '0.00',
   `processor` varchar(50) NOT NULL DEFAULT '',
   `observa` varchar(250) NOT NULL DEFAULT '' COMMENT 'Observacions del client',
+  `mail_empresa` varchar(100) NOT NULL DEFAULT '',
+  `nom_empresa` varchar(100) NOT NULL DEFAULT '',
+  `nombre` varchar(50) NOT NULL DEFAULT '',
+  `cif` varchar(50) NOT NULL DEFAULT '',
+  `telefon` varchar(50) NOT NULL DEFAULT '',
+  `adreca` varchar(100) NOT NULL DEFAULT '',
+  `cp` varchar(50) NOT NULL DEFAULT '',
+  `poblacio` varchar(50) NOT NULL DEFAULT '',
+  `pais` varchar(50) NOT NULL DEFAULT '',
+  `provincia` varchar(50) NOT NULL DEFAULT '',
+  `ip` varchar(50) NOT NULL DEFAULT '',
+  `browser` varchar(100) NOT NULL DEFAULT '',
   `published` tinyint(1) NOT NULL DEFAULT '0',
   `ordering` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
@@ -114,7 +126,7 @@ CREATE TABLE IF NOT EXISTS `#__botiga_items` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `catid` varchar(150) NOT NULL DEFAULT '0',
   `name` varchar(150) NOT NULL DEFAULT '',
-  `alias` varchar(150) NOT NULL DEFAULT '',
+  `barcode` varchar(150) NOT NULL DEFAULT '',
   `child` int(11) NOT NULL DEFAULT '0',
   `usergroup` int(11) NOT NULL DEFAULT '1',
   `brand` int(11) NOT NULL DEFAULT '0',
@@ -136,7 +148,10 @@ CREATE TABLE IF NOT EXISTS `#__botiga_items` (
   `mida` varchar(50) NOT NULL DEFAULT '',
   `stock` int(11) NOT NULL DEFAULT '0',
   `factusol_codart` varchar(13) DEFAULT NULL,
+  `aws` tinyint(1) DEFAULT '0',
+  `aws_sincronitzat` tinyint(1) DEFAULT '0',
   `sincronitzat` tinyint(1) DEFAULT '0',
+  `esborrableDespresDeSincro` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -276,6 +291,7 @@ CREATE TABLE IF NOT EXISTS `#__botiga_users` (
   `usergroup` int(11) DEFAULT NULL,
   `nom_empresa` varchar(255) DEFAULT NULL,
   `mail_empresa` varchar(255) DEFAULT NULL,
+  `nombre` varchar(150) DEFAULT '',
   `cif` varchar(50) DEFAULT NULL,
   `type` tinyint(1) NOT NULL DEFAULT '0',
   `userid` int(11) DEFAULT '0',
@@ -289,15 +305,38 @@ CREATE TABLE IF NOT EXISTS `#__botiga_users` (
   `published` tinyint(1) NOT NULL DEFAULT '0',
   `ordering` int(11) NOT NULL DEFAULT '0',
   `validate` tinyint(1) NOT NULL DEFAULT '0',
+  `remarketing` tinyint(1) NOT NULL DEFAULT '1',
   `dte_linia` float(10,2) NOT NULL DEFAULT '0.00',
-  `params` text NOT NULL,
+  `params` text NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+
+--
+-- Estructura de tabla para la tabla `#__botiga_user_address`
+--
+
+CREATE TABLE `#__botiga_user_address` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `userid` int(11) NOT NULL DEFAULT '0',
+  `name` varchar(150) NOT NULL DEFAULT '',
+  `adreca` varchar(150) NOT NULL DEFAULT '',
+  `cp` varchar(50) NOT NULL DEFAULT '',
+  `poblacio` varchar(50) NOT NULL DEFAULT '',
+  `provincia` varchar(50) NOT NULL DEFAULT '',
+  `pais` varchar(50) NOT NULL DEFAULT '',
+  `telefon` varchar(50) NOT NULL DEFAULT '',
+  `ref_externa` varchar(50) NOT NULL DEFAULT '',
+  `activa` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `#__botiga_users`
+-- Estructura de tabla para la tabla `#__botiga_savedCarts`
 --
 
 CREATE TABLE IF NOT EXISTS `#__botiga_savedCarts` (
