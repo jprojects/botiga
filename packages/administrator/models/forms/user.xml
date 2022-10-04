@@ -2,7 +2,7 @@
 <form
         addrulepath="/administrator/components/com_laundry/models/rules"
 >
-	<fieldset name="details" addfieldpath="/administrator/components/com_laundry/models/fields">
+	<fieldset name="details">
 		<field 
 			name="id"  
 			type="text" 

@@ -63,7 +63,7 @@ if ($saveOrder && !empty($this->items))
 								<?php echo HTMLHelper::_('searchtools.sort', '', 'a.ordering', $listDirn, $listOrder, null, 'asc', 'JGRID_HEADING_ORDERING', 'icon-menu-2'); ?>
 							</th>
 							<th scope="col" style="width:1%" class="text-center">
-								<?php echo HTMLHelper::_('searchtools.sort', 'JSTATUS', 'a.published', $listDirn, $listOrder); ?>
+								<?php echo HTMLHelper::_('searchtools.sort', 'ID', 'a.id', $listDirn, $listOrder); ?>
 							</th>
 							<th scope="col">
 								<?php echo HTMLHelper::_('searchtools.sort', 'COM_BOTIGA_ORDERS_HEADING_NOM', 'u.username', $listDirn, $listOrder); ?>
@@ -112,10 +112,10 @@ if ($saveOrder && !empty($this->items))
 					<tbody <?php if ($saveOrder) :?> class="js-draggable" data-url="<?php echo $saveOrderingUrl; ?>" data-direction="<?php echo strtolower($listDirn); ?>" data-nested="true"<?php endif; ?>>
 						<?php foreach ($this->items as $i => $item) :
 						$ordering   = ($listOrder == 'a.ordering');
-		        $canCreate	= $user->authorise('core.create',		'com_botiga');
-		        $canEdit	  = $user->authorise('core.edit',			'com_botiga');
-		        $canCheckin	= $user->authorise('core.manage',		'com_botiga');
-		        $canChange	= $user->authorise('core.edit.state',	'com_botiga');
+						$canCreate	= $user->authorise('core.create',		'com_botiga');
+						$canEdit	  = $user->authorise('core.edit',			'com_botiga');
+						$canCheckin	= $user->authorise('core.manage',		'com_botiga');
+						$canChange	= $user->authorise('core.edit.state',	'com_botiga');
 						?>
 						<tr class="row<?php echo $i % 2; ?>" data-dragable-group="<?php echo $item->catid; ?>">
 							<td class="text-center">
@@ -142,10 +142,7 @@ if ($saveOrder && !empty($this->items))
 										value="<?php echo $item->ordering; ?>" class="width-20 text-area-order">
 								<?php endif; ?>
 							</td>
-							<td class="center">
-									<?php echo HTMLHelper::_('jgrid.published', $item->published, $i, 'orders.', $canChange, 'cb'); ?>
-							</td>
-				      <td class="small d-none d-md-table-cell">
+				      		<td class="small d-none d-md-table-cell">
 								<?php if ($canEdit) : ?>
 								<a href="<?= JRoute::_('index.php?option=com_botiga&view=order&id='.(int) $item->id); ?>">
 								<?= $item->id; ?></a>

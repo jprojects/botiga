@@ -37,7 +37,7 @@ if(task == 'shipment.cancel'){
 }
 else{
 
-    if (task != 'shipment.cancel' && document.formvalidator.isValid(document.id('item-form'))) {
+    if (task != 'shipment.cancel' && document.formvalidator.isValid(document.getElementById('item-form'))) {
 
         Joomla.submitform(task, document.getElementById('item-form'));
     }

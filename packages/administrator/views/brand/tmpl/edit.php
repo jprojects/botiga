@@ -37,7 +37,7 @@ if(task == 'brand.cancel'){
 }
 else{
 
-    if (task != 'brand.cancel' && document.formvalidator.isValid(document.id('item-form'))) {
+    if (task != 'brand.cancel' && document.formvalidator.isValid(document.getElementById('item-form'))) {
 
         Joomla.submitform(task, document.getElementById('item-form'));
     }

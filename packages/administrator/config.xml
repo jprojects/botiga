@@ -15,6 +15,13 @@
         	label="COM_BOTIGA_SETTINGS_MAIL_LBL"
         	description="COM_BOTIGA_SETTINGS_MAIL_DSC"
         />
+		<field
+        	type="text"
+        	name="botiga_horari"
+        	default="Lun.Vie de 08.15-13.30 y 15-18h"
+        	label="Horari"
+        	description=""
+        />
         <field
         	type="text"
         	name="botiga_cif"
@@ -71,53 +78,6 @@
         	label="COM_BOTIGA_SETTINGS_ADDRESS_LBL"
         	description="COM_BOTIGA_SETTINGS_ADDRESS_DSC"
         />
-        <field
-        	type="text"
-        	name="iva"
-        	default="21"
-        	label="COM_BOTIGA_SETTINGS_IVA_LBL"
-        	description="COM_BOTIGA_SETTINGS_IVA_DSC"
-        />
-        <field
-        	type="radio"
-        	name="prices_iva"
-        	default="1"
-        	class="btn-group"
-        	label="COM_BOTIGA_SETTINGS_PRICES_IVA_LBL"
-        	description="COM_BOTIGA_SETTINGS_PRICE_IVA_DSC"
-		>
-		<option value="0">JNO</option>
-		<option value="1">JYES</option>
-        </field>
-        <field
-        	type="text"
-        	name="re_equiv"
-        	default="5.2"
-        	label="COM_BOTIGA_SETTINGS_RE_LBL"
-        	description="COM_BOTIGA_SETTINGS_RE_DSC"
-        />
-        <field
-        	type="radio"
-        	name="send_mail_admin_register"
-        	default="1"
-        	class="btn-group"
-        	label="COM_BOTIGA_SETTINGS_SEND_MAILS_ADMIN_REGISTER_LBL"
-        	description="COM_BOTIGA_SETTINGS_SEND_MAILS_ADMIN_REGISTER_DSC"
-		>
-		<option value="0">JNO</option>
-		<option value="1">JYES</option>
-        </field>
-        <field
-        	type="radio"
-        	name="show_header"
-        	default="1"
-        	class="btn-group"
-        	label="COM_BOTIGA_SETTINGS_HEADER_LBL"
-        	description="COM_BOTIGA_SETTINGS_HEADER_DSC"
-		>
-		<option value="0">JNO</option>
-		<option value="1">JYES</option>
-        </field>
 		<field
         	type="radio"
         	name="show_prices"
@@ -191,15 +151,103 @@
         	label="COM_BOTIGA_SETTINGS_TIME_REMOVE_ORDERS_LBL"
         	description="COM_BOTIGA_SETTINGS_TIME_REMOVE_ORDERS_DSC"
         />
+		<field
+        	type="radio"
+        	name="send_mail_admin_register"
+        	default="1"
+        	class="btn-group"
+        	label="COM_BOTIGA_SETTINGS_SEND_MAILS_ADMIN_REGISTER_LBL"
+        	description="COM_BOTIGA_SETTINGS_SEND_MAILS_ADMIN_REGISTER_DSC"
+		>
+		<option value="0">JNO</option>
+		<option value="1">JYES</option>
+        </field>
+        <field
+        	type="radio"
+        	name="show_header"
+        	default="1"
+        	class="btn-group"
+        	label="COM_BOTIGA_SETTINGS_HEADER_LBL"
+        	description="COM_BOTIGA_SETTINGS_HEADER_DSC"
+		>
+		<option value="0">JNO</option>
+		<option value="1">JYES</option>
+        </field>
+  </fieldset>
+  <fieldset name="taxes" label="COM_BOTIGA_TAXES_SETTINGS" description="COM_BOTIGA_TAXES_SETTINGS_DESC">
+  		<field
+        	type="text"
+        	name="iva"
+        	default="21"
+        	label="COM_BOTIGA_SETTINGS_IVA_LBL"
+        	description="COM_BOTIGA_SETTINGS_IVA_DSC"
+        />
+		<field
+        	type="text"
+        	name="iva_reduit"
+        	default="10"
+        	label="COM_BOTIGA_SETTINGS_IVA_REDUIT_LBL"
+        	description="COM_BOTIGA_SETTINGS_IVA_REDUIT_DSC"
+        />
+		<field
+        	type="text"
+        	name="iva_superreduit"
+        	default="4"
+        	label="COM_BOTIGA_SETTINGS_IVA_SUPERREDUIT_LBL"
+        	description="COM_BOTIGA_SETTINGS_IVA_SUPERREDUIT_DSC"
+        />
+        <field
+        	type="radio"
+        	name="prices_iva"
+        	default="0"
+        	class="btn-group"
+        	label="COM_BOTIGA_SETTINGS_PRICES_IVA_LBL"
+        	description="COM_BOTIGA_SETTINGS_PRICE_IVA_DSC"
+		>
+		<option value="0">JNO</option>
+		<option value="1">JYES</option>
+        </field>
+        <field
+        	type="text"
+        	name="re_equiv"
+        	default="5.2"
+        	label="COM_BOTIGA_SETTINGS_RE_LBL"
+        	description="COM_BOTIGA_SETTINGS_RE_DSC"
+        />
+		<field
+        	type="text"
+        	name="re_equiv_reduit"
+        	default="1.4"
+        	label="COM_BOTIGA_SETTINGS_RE_REDUIT_LBL"
+        	description="COM_BOTIGA_SETTINGS_RE_REDUIT_DSC"
+        />
+		<field
+        	type="text"
+        	name="re_equiv_superreduit"
+        	default="0.5"
+        	label="COM_BOTIGA_SETTINGS_RE_SUPERREDUIT_LBL"
+        	description="COM_BOTIGA_SETTINGS_RE_SUPERREDUIT_DSC"
+        />
   </fieldset>
   <fieldset name="items" label="COM_BOTIGA_ITEMS_SETTINGS" description="COM_BOTIGA_ITEMS_SETTINGS_DESC">
   		<field
-        	type="text"
+        	type="number"
         	name="days_new"
         	default="5"
         	label="COM_BOTIGA_SETTINGS_DAYS_NEW_LBL"
         	description="COM_BOTIGA_SETTINGS_DAYS_NEW_DSC"
 		/>
+		<field
+        	type="radio"
+        	name="show_btns"
+        	default="1"
+        	class="btn-group"
+        	label="COM_BOTIGA_SETTINGS_SHOW_BTNS_LBL"
+        	description="COM_BOTIGA_SETTINGS_SHOW_BTNS_DSC"
+		>
+		<option value="0">JNO</option>
+		<option value="1">JYES</option>
+        </field>
   		<field
         	type="radio"
         	name="show_ref"
@@ -257,6 +305,17 @@
         </field>
   </fieldset>
   <fieldset name="item" label="COM_BOTIGA_ITEM_SETTINGS" description="COM_BOTIGA_ITEM_SETTINGS_DESC">
+		<field
+        	type="radio"
+        	name="show_catimg_item"
+        	default="1"
+        	class="btn-group"
+        	label="COM_BOTIGA_SETTINGS_SHOW_CATIMG_LBL"
+        	description="COM_BOTIGA_SETTINGS_SHOW_CATIMG_DSC"
+		>
+		<option value="0">JNO</option>
+		<option value="1">JYES</option>
+        </field>
   		<field
         	type="radio"
         	name="show_ref_item"
@@ -286,6 +345,28 @@
         	class="btn-group"
         	label="COM_BOTIGA_SETTINGS_SHOW_BRAND_LBL"
         	description="COM_BOTIGA_SETTINGS_SHOW_BRAND_DSC"
+		>
+		<option value="0">JNO</option>
+		<option value="1">JYES</option>
+        </field>
+		<field
+        	type="radio"
+        	name="show_brand_item_img"
+        	default="1"
+        	class="btn-group"
+        	label="COM_BOTIGA_SETTINGS_SHOW_BRAND_IMG_LBL"
+        	description="COM_BOTIGA_SETTINGS_SHOW_BRAND_IMG_DSC"
+		>
+		<option value="0">JNO</option>
+		<option value="1">JYES</option>
+        </field>
+		<field
+        	type="radio"
+        	name="show_discount_badge_item"
+        	default="1"
+        	class="btn-group"
+        	label="COM_BOTIGA_SETTINGS_SHOW_DISCOUNT_BADGE_LBL"
+        	description="COM_BOTIGA_SETTINGS_SHOW_DISCOUNT_BADGE_DSC"
 		>
 		<option value="0">JNO</option>
 		<option value="1">JYES</option>
@@ -389,8 +470,45 @@
 		<option value="0">JNO</option>
 		<option value="1">JYES</option>
         </field>
+		<field
+        	type="radio"
+        	name="show_whatsapp"
+        	default="1"
+        	class="btn-group"
+        	label="COM_BOTIGA_SETTINGS_SHOW_WHATSAPP_LBL"
+        	description="COM_BOTIGA_SETTINGS_SHOW_WHATSAPP_DSC"
+		>
+		<option value="0">JNO</option>
+		<option value="1">JYES</option>
+        </field>
+		<field
+        	type="radio"
+        	name="show_email"
+        	default="1"
+        	class="btn-group"
+        	label="COM_BOTIGA_SETTINGS_SHOW_EMAIL_LBL"
+        	description="COM_BOTIGA_SETTINGS_SHOW_EMAIL_DSC"
+		>
+		<option value="0">JNO</option>
+		<option value="1">JYES</option>
+        </field>
   </fieldset>
   <fieldset name="register" label="COM_BOTIGA_REGISTER_SETTINGS" description="COM_BOTIGA_REGISTER_SETTINGS_DESC">
+		<field 
+			name="particular_usergroup_default" 
+			type="usergrouplist"
+			label="Grup defecte particulars"
+			default="2" 
+			description=""
+		/>
+		<field 
+			name="empresa_usergroup_default" 
+			type="usergrouplist"
+			label="Grup defecte empreses"
+			default="10" 
+			description=""
+		/>
+		<field type="spacer" name="myspacer" hr="true" />
   		<field
         	type="radio"
         	name="show_field_tipus"
@@ -610,7 +728,18 @@
 		>
 		<option value="0">JNO</option>
 		<option value="1">JYES</option>
-        </field>
+    </field>
+	<field
+        	type="radio"
+        	name="show_address"
+        	default="1"
+        	class="btn-group"
+        	label="COM_BOTIGA_SETTINGS_SHOW_ADDRESS_LBL"
+        	description="COM_BOTIGA_SETTINGS_SHOW_ADDRESS_DSC"
+		>
+		<option value="0">JNO</option>
+		<option value="1">JYES</option>
+    </field>
   </fieldset>
   <fieldset name="mail" label="COM_BOTIGA_MAIL_PDF" description="COM_BOTIGA_MAIL_PDF_DESC">
   		<field
@@ -620,8 +749,54 @@
         	label="COM_BOTIGA_SETTINGS_MAIL_LOGO_LBL"
         	description="COM_BOTIGA_SETTINGS_MAIL_LOGO_DSC"
         />
+		<field 
+			name="email_tpl_bg" 
+			type="color" 
+			label="Email template background" 
+			description=""
+			default="#00000" 
+		/>
+		<field 
+			name="email_register_subject" 
+			type="text" 
+			label="Email register subject" 
+			description=""
+			default="Nueva cuenta creada en [BOTIGA_NAME]" 
+		/>
+		<field 
+			name="email_register_subject" 
+			type="text" 
+			label="Email register subject" 
+			description=""
+			default="Nueva cuenta creada en [BOTIGA_NAME]" 
+		/>
+		<field 
+			name="email_register_body" 
+			type="editor" 
+			label="Email register body" 
+			description=""
+			default="Bienvenido/a, tu cuenta ha sido creada correctamente.Antes de iniciar sesión debes validar tu correo electrónico usando este enlace: [LINK]" 
+			width="300" 
+			filter="safehtml" 
+		/>
+		<field 
+			name="email_order_subject" 
+			type="text" 
+			label="Email order subject" 
+			description="" 
+			default="Nuevo pedido, número [ORDER]"
+		/>
+		<field 
+			name="email_order_body" 
+			type="editor" 
+			label="Email order body" 
+			description="Tu pedido se ha registrado correctamente, en breve nos pondremos en contacto contigo." 
+			default=""
+			width="300" 
+			filter="safehtml" 
+		/>
   </fieldset>
-  <fieldset name="mail" label="COM_BOTIGA_SINCRO_SETTINGS" description="COM_BOTIGA_SINCRO_SETTINGS_DESC">
+  <fieldset name="sync" label="COM_BOTIGA_SINCRO_SETTINGS" description="COM_BOTIGA_SINCRO_SETTINGS_DESC">
   		<field
         	type="radio"
         	name="sincro_brands"
@@ -666,7 +841,102 @@
 		<option value="0">JNO</option>
 		<option value="1">JYES</option>
         </field>
+		<field
+        	type="radio"
+        	name="sincro_comandes"
+        	default="1"
+        	class="btn-group"
+        	label="COM_BOTIGA_SETTINGS_SINCRO_COMANDES_LBL"
+        	description="COM_BOTIGA_SETTINGS_SINCRO_COMANDES_DSC"
+		>
+		<option value="0">JNO</option>
+		<option value="1">JYES</option>
+        </field>
+		<field
+        	type="radio"
+        	name="sincro_rebuts"
+        	default="1"
+        	class="btn-group"
+        	label="COM_BOTIGA_SETTINGS_SINCRO_REBUTS_LBL"
+        	description="COM_BOTIGA_SETTINGS_SINCRO_REBUTS_DSC"
+		>
+		<option value="0">JNO</option>
+		<option value="1">JYES</option>
+        </field>
+		<field
+        	type="radio"
+        	name="sincro_users"
+        	default="1"
+        	class="btn-group"
+        	label="COM_BOTIGA_SETTINGS_SINCRO_USERS_LBL"
+        	description="COM_BOTIGA_SETTINGS_SINCRO_USERS_DSC"
+		>
+		<option value="0">JNO</option>
+		<option value="1">JYES</option>
+        </field>
   </fieldset>
+  <fieldset
+		name="itemids"
+		label="Itemids"
+		description="Itemids of every view"
+	>
+		<field 
+			name="categories_menuitem" 
+			type="menuitem" 
+			default="" 
+			label="Categories view" 
+			description="Select a menu item" 
+		/>
+		<field 
+			name="items_menuitem" 
+			type="menuitem" 
+			default="" 
+			label="Items view" 
+			description="Select a menu item" 
+		/>
+		<field 
+			name="item_menuitem" 
+			type="menuitem" 
+			default="" 
+			label="Single item view" 
+			description="Select a menu item" 
+		/>
+		<field 
+			name="checkout_menuitem" 
+			type="menuitem" 
+			default="" 
+			label="Checkout view" 
+			description="Select a menu item" 
+		/>
+		<field 
+			name="history_menuitem" 
+			type="menuitem" 
+			default="" 
+			label="History view" 
+			description="Select a menu item" 
+		/>
+		<field 
+			name="ofertes_menuitem" 
+			type="menuitem" 
+			default="" 
+			label="Ofertes view" 
+			description="Select a menu item" 
+		/>
+		<field 
+			name="favs_menuitem" 
+			type="menuitem" 
+			default="" 
+			label="Favorites view" 
+			description="Select a menu item" 
+		/>
+		<field 
+			name="register_menuitem" 
+			type="menuitem" 
+			default="" 
+			label="Register view" 
+			description="Select a menu item" 
+		/>
+	</fieldset>
   <fieldset
 		name="permissions"
 		label="JCONFIG_PERMISSIONS_LABEL"

@@ -137,7 +137,7 @@ if ($saveOrder && !empty($this->items))
 									<?php echo HTMLHelper::_('jgrid.published', $item->published, $i, 'users.', $canChange, 'cb'); ?>
 							</td>
 				      		<td class="small d-none d-md-table-cell">
-								<a href="index.php?option=com_botiga&task=user.edit&id=<?= $item->id; ?>"><?= $item->nombre; ?></a>
+								<a href="index.php?option=com_botiga&task=user.edit&id=<?= $item->id; ?>"><?= $item->nombre == '' ? $item->nom_empresa : $item->nombre; ?></a>
 							</td>
 							<td class="small d-none d-md-table-cell">
 								<?= $item->type == 0 ? '<span class="label label-info">'.JText::_('COM_BOTIGA_TYPE_CUSTOMER').'</span>' : '<span class="label label-warning">'.JText::_('COM_BOTIGA_TYPE_COMPANY').'</span>'; ?>

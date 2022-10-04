@@ -10,7 +10,7 @@
 			name="published"
 			type="list"
 			label="JSTATUS"
-			description="COM_BANNERS_FIELD_STATE_DESC"
+			description=""
 			class="chzn-color-state"
 			size="1"
 			default="1"
@@ -33,7 +33,6 @@
 			type="list"
 			label="COM_BOTIGA_DISCOUNT_TYPE_LABEL"
 			description="COM_BOTIGA_DISCOUNT_TYPE_DESC"
-			size="40"
 			class="inputbox"
 			default="0"
 		>
@@ -41,12 +40,17 @@
 		<option value="1">COM_BOTIGA_SELECT_DISCOUNT_BOXES</option>
 		<option value="2">COM_BOTIGA_SELECT_DISCOUNT_N_ITEMS</option>
 		</field>
-		<field name="usergroup"
-			type="usergroup"
-			label="COM_BOTIGA_SHIPMENT_USERGROUP_LABEL"
-			description="COM_BOTIGA_SHIPMENT_USERGROUP_DESC"
-			required="true"
-		/>
+		<field
+			name="usergroup"
+			type="sql"
+			default=""
+			label="COM_BOTIGA_ITEM_USERGROUP_LABEL"
+			query="SELECT id, title FROM #__usergroups"
+			key_field="id"
+			value_field="title"
+		>
+		<option value="">Please select an option</option>
+		</field>
 		<field 
 			name="idItem"
 			type="products"

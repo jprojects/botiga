@@ -84,6 +84,9 @@ if ($saveOrder && !empty($this->items))
 								<?php echo HTMLHelper::_('searchtools.sort',  'COM_BOTIGA_ITEMS_HEADING_CAT', 'i.catid', $listDirn, $listOrder); ?>
 							</th>
 							<th scope="col">
+								<?php echo HTMLHelper::_('searchtools.sort',  'COM_BOTIGA_ITEMS_HEADING_FEATURED', 'i.featured', $listDirn, $listOrder); ?>
+							</th>
+							<th scope="col">
 								<?php echo HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_LANGUAGE', 'i.language', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
 							</th>
 						</tr>
@@ -91,10 +94,10 @@ if ($saveOrder && !empty($this->items))
 					<tbody <?php if ($saveOrder) :?> class="js-draggable" data-url="<?php echo $saveOrderingUrl; ?>" data-direction="<?php echo strtolower($listDirn); ?>" data-nested="true"<?php endif; ?>>
 						<?php foreach ($this->items as $i => $item) :
 						$ordering   = ($listOrder == 'a.ordering');
-		        $canCreate	= $user->authorise('core.create',		'com_botiga');
-		        $canEdit	  = $user->authorise('core.edit',			'com_botiga');
-		        $canCheckin	= $user->authorise('core.manage',		'com_botiga');
-		        $canChange	= $user->authorise('core.edit.state',	'com_botiga');
+						$canCreate	= $user->authorise('core.create',		'com_botiga');
+						$canEdit	  = $user->authorise('core.edit',			'com_botiga');
+						$canCheckin	= $user->authorise('core.manage',		'com_botiga');
+						$canChange	= $user->authorise('core.edit.state',	'com_botiga');
 						?>
 						<tr class="row<?php echo $i % 2; ?>" data-dragable-group="<?php echo $item->catid; ?>">
 							<td class="text-center">
@@ -124,7 +127,7 @@ if ($saveOrder && !empty($this->items))
 							<td class="center">
 									<?php echo HTMLHelper::_('jgrid.published', $item->published, $i, 'items.', $canChange, 'cb'); ?>
 							</td>
-				      <td class="small d-none d-md-table-cell">
+				      		<td class="small d-none d-md-table-cell">
 								<?= $item->ref; ?>
 							</td>
 							<td class="small d-none d-md-table-cell">
@@ -141,6 +144,9 @@ if ($saveOrder && !empty($this->items))
 							</td>
 							<td class="small d-none d-md-table-cell">
 								<?= $item->ctitle; ?>
+							</td>
+							<td class="small d-none d-md-table-cell">
+								<?= $item->featured == 1 ? '<span class="icon-color-featured icon-star" aria-hidden="true"></span>' : '<span class="icon-unfeatured" aria-hidden="true"></span>'; ?>
 							</td>
 							<td class="small d-none d-md-table-cell">
 								<?php if ($item->language == '*'):?>

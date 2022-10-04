@@ -89,7 +89,7 @@ $function	= $app->input->getCmd('function', 'jSelectProduct');
 						<?= $item->ref; ?>
 					</td>
 					<td class="small">
-						<a class="pointer" onclick="window.parent.<?= $this->escape($function);?>('<?= $item->id; ?>', '<?= addslashes($item->name); ?>');"><?= $item->name; ?></a>
+						<a style="cursor:pointer;" onclick="window.parent.<?= $this->escape($function);?>('<?= $item->id; ?>', '<?= addslashes($item->name); ?>');document.getElementById('productsModal').modal('hide');" data-bs-dismiss="modal" data-bs-target="#productsModal"><?= $item->name; ?></a>
 					</td>
 					<td class="small">
 						<?= $item->bname; ?>

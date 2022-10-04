@@ -13,11 +13,10 @@
 			name="published"
 			type="list"
 			label="JSTATUS"
-			description="COM_BANNERS_FIELD_STATE_DESC"
+			description=""
 			class="custom-select-color-state"
 			size="1"
 			default="1"
-      		onchange="this.form.submit();"
 			>
 			<option value="1">JPUBLISHED</option>
 			<option value="0">JUNPUBLISHED</option>
@@ -39,6 +38,18 @@
 			label="COM_BOTIGA_ITEM_CHILD_LBL"
 			description="COM_BOTIGA_ITEM_CHILD_DSC"
 		/>
+		<field
+			name="featured"
+			type="list"
+			label="Featured"
+			description=""
+			class="custom-select-color-state"
+			size="1"
+			default="0"
+			>
+			<option value="1">JYES</option>
+			<option value="0">JNO</option>
+		</field>
 		<field
 			name="usergroup"
 			type="sql"
@@ -76,6 +87,30 @@
 			default=""
 		/>
 		<field
+			name="sku"
+			type="text"
+			label="COM_BOTIGA_ITEM_SKU_LABEL"
+			description="COM_BOTIGA_ITEM_SKU_DESC"
+			class="inputbox"
+			default=""
+		/>
+		<field
+			name="units"
+			type="text"
+			label="COM_BOTIGA_ITEM_UNITS_LABEL"
+			description="COM_BOTIGA_ITEM_UNITS_DESC"
+			class="inputbox"
+			default=""
+		/>
+		<field
+			name="min_units"
+			type="text"
+			label="COM_BOTIGA_ITEM_MIN_UNITS_LABEL"
+			description="COM_BOTIGA_ITEM_MIN_UNITS_DESC"
+			class="inputbox"
+			default=""
+		/>
+		<field
 			name="pes"
 			type="text"
 			label="COM_BOTIGA_ITEM_WEIGHT_LABEL"
@@ -92,85 +127,15 @@
 			default=""
 		/>
 		<field
-			name="price"
-			type="subform"
-			icon="list"
-			description="COM_BOTIGA_ITEM_PRICE_DESC"
-			label="COM_BOTIGA_ITEM_PRICE_LABEL"
-			min="1"
-			max="100"
-			multiple="true"
-		>
-		<form>
-			<fieldset name="price_rows" label="Usergroup Prices" repeat="true">
-				<field
-					name="usergroup"
-					type="sql"
-					default=""
-					label="COM_BOTIGA_ITEM_USERGROUP_LABEL"
-					query="SELECT id, title FROM #__usergroups"
-					key_field="id"
-					value_field="title"
-				>
-				<option value="">Please select an option</option>
-				</field>
-				<field
-					name="pricing"
-					label="COM_BOTIGA_ITEM_PRICE_LABEL"
-					description="COM_BOTIGA_ITEM_PRICE_DESC"
-					type="text"
-					default=""
-				/>
-			</fieldset>
-		</form>
-	</field>
-	<field
-			name="pvp"
-			type="text"
-			label="COM_BOTIGA_ITEM_PVP_LABEL"
-			description="COM_BOTIGA_ITEM_PVP_DESC"
-			size="40"
-			class="inputbox"
-			default=""
-		/>
-   		<field
 			name="brand"
-			type="brands"
-			label="COM_BOTIGA_ITEM_MARCA_LABEL"
-			description="COM_BOTIGA_ITEM_MARCA_DESC"
-			class="inputbox"
+			type="sql"
 			default=""
-		/>
-    	<field
-      		name="image1"
-			type="media"
-			hide_none="1"
-			label="COM_BOTIGA_ITEM_IMAGE_LABEL"
-			description="COM_BOTIGA_ITEM_IMAGE_DESC"
-			directory="products"
-		/>
-		<field
-			name="images"
-			type="subform"
-			icon="list"
-			description="COM_BOTIGA_ITEM_IMAGES_DESC"
-			label="COM_BOTIGA_ITEM_IMAGES_LABEL"
-			min="1"
-			max="10"
-			multiple="true"
+			label="COM_BOTIGA_ITEM_MARCA_LABEL"
+			query="SELECT id, name FROM #__botiga_brands"
+			key_field="id"
+			value_field="name"
 			>
-			<form>
-				<fieldset name="extra_images" label="Images" repeat="true">
-					<field
-						name="image"
-						type="media"
-						hide_none="1"
-						label="COM_BOTIGA_ITEM_IMAGE_LABEL"
-						description="COM_BOTIGA_ITEM_IMAGE_DESC"
-						directory="products"
-					/>
-				</fieldset>
-			</form>
+			<option value="">COM_BOTIGA_ITEM_MARCA_LABEL</option>
 		</field>
 		<field
 			name="garantia"
@@ -225,6 +190,7 @@
 			min="1"
 			max="20"
 			multiple="true"
+			layout="joomla.form.field.subform.repeatable-table"
 			>
 			<form>
 				<fieldset name="extra" label="Product extras" repeat="true">
@@ -259,7 +225,7 @@
 			description="COM_BOTIGA_ITEM_SDESCRIPTION_DESC"
 			filter="raw"
 		/>
-    <field
+    	<field
 			name="description"
 			type="editor"
 			label="COM_BOTIGA_ITEM_DESCRIPTION_LABEL"
@@ -268,10 +234,128 @@
 			buttons="false"
 		/>
 	</fieldset>
-  <fields name="params">
-		<fieldset
+	<fieldset name="images" label="Images">
+		<field
+      		name="image1"
+			type="media"
+			hide_none="1"
+			label="COM_BOTIGA_ITEM_IMAGE_LABEL"
+			description="COM_BOTIGA_ITEM_IMAGE_DESC"
+			directory="products"
+		/>
+		<field
+			name="images"
+			type="subform"
+			icon="list"
+			description="COM_BOTIGA_ITEM_IMAGES_DESC"
+			label="COM_BOTIGA_ITEM_IMAGES_LABEL"
+			min="1"
+			max="10"
+			multiple="true"
+			layout="joomla.form.field.subform.repeatable-table"
+			>
+			<form>
+				<fieldset name="extra_images" label="Images" repeat="true">
+					<field
+						name="image"
+						type="media"
+						hide_none="1"
+						label="COM_BOTIGA_ITEM_IMAGE_LABEL"
+						description="COM_BOTIGA_ITEM_IMAGE_DESC"
+						directory="products"
+					/>
+				</fieldset>
+			</form>
+		</field>
+	</fieldset>
+	<fieldset name="prices" label="Prices">
+		<field
+			name="price"
+			type="subform"
+			icon="list"
+			description="COM_BOTIGA_ITEM_PRICE_DESC"
+			label="COM_BOTIGA_ITEM_PRICE_LABEL"
+			min="1"
+			max="100"
+			multiple="true"
+			layout="joomla.form.field.subform.repeatable-table"
+		>
+		<form>
+			<fieldset name="price_rows" label="Usergroup Prices" repeat="true">
+				<field
+					name="usergroup"
+					type="sql"
+					default=""
+					label="COM_BOTIGA_ITEM_USERGROUP_LABEL"
+					query="SELECT id, title FROM #__usergroups"
+					key_field="id"
+					value_field="title"
+				>
+				<option value="">Please select an option</option>
+				</field>
+				<field
+					name="pricing"
+					label="COM_BOTIGA_ITEM_PRICE_LABEL"
+					description="COM_BOTIGA_ITEM_PRICE_DESC"
+					type="text"
+					default=""
+				/>
+			</fieldset>
+		</form>
+		</field>
+		<field
+			name="tipus_iva"
+			type="list"
+			label="IVA"
+			description=""
+			default="1"
+			>
+			<option value="1">IVA General</option>
+			<option value="2">IVA reduït</option>
+			<option value="3">IVA superreduït</option>
+		</field>
+		<field
+			name="pvp"
+			type="text"
+			label="COM_BOTIGA_ITEM_PVP_LABEL"
+			description="COM_BOTIGA_ITEM_PVP_DESC"
+			size="40"
+			class="inputbox"
+			default=""
+		/>
+	</fieldset>
+	<fieldset name="related_products" label="Related products">
+		<field
+			name="related_products"
+			type="subform"
+			icon="list"
+			description="COM_BOTIGA_ITEM_RELATED_PRODUCTS_DESC"
+			label="COM_BOTIGA_ITEM_RELATED_PRODUCTS_LABEL"
+			min="1"
+			max="4"
+			multiple="true"
+			layout="joomla.form.field.subform.repeatable-table"
+			>
+			<form>
+				<fieldset name="related_products" label="Related products" repeat="true">
+					<field
+						name="related_products"
+						type="sql"
+						default=""
+						label="COM_BOTIGA_ITEM_RELATED_PRODUCTS_LABEL"
+						query="SELECT id, name FROM #__botiga_items WHERE published = 1"
+						key_field="id"
+						value_field="name"
+					>
+					<option value="">Please select an option</option>
+					</field>
+				</fieldset>
+			</form>
+		</field>
+	</fieldset>
+	<fieldset
 			name="params"
-			label="JGLOBAL_FIELDSET_DISPLAY_OPTIONS"
+			label="Settings"
 		>
 		<field
 			name="esborrableDespresDeSincro"
@@ -284,6 +368,16 @@
 			<option value="0">JNO</option>
 			<option value="1">JYES</option>
 		</field>
-		</fieldset>
-	</fields>
+		<field
+			name="aws"
+			type="radio"
+			label="COM_BOTIGA_ITEM_AWS_LABEL"
+			description="COM_BOTIGA_ITEM_AWS_DESC"
+			default="0"
+			class="btn-group"
+		>
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+	</fieldset>
 </form>

@@ -67,15 +67,18 @@ class JFormFieldProducts extends JFormField
 		$html = array();
 		$link	= 'index.php?option=com_botiga&view=items&amp;layout=modal&amp;tmpl=component&amp;function=jSelectProduct_'.$this->id;
 
-		$db = Factory::getDbo();
-		$db->setQuery('SELECT `name` FROM `#__botiga_items` WHERE id = '.$this->value);
-		$name = $db->loadResult();
-		if($this->value == '') { $this->value = 0; }
+		if($this->value != '') {
+			$db = Factory::getDbo();
+			$db->setQuery('SELECT `name` FROM `#__botiga_items` WHERE id = '.$this->value);
+			$name = $db->loadResult();
+			if($this->value == '') { $this->value = 0; }
+		}
 
+		$html[] = '<div>';
 		$html[] = '<div class="input-group mb-3">';
 		$html[] = '<input type="hidden" name="jform['.str_replace('jform_', '', $this->id).']" value="'.$this->value.'" id="'.$this->id.'">';
 		$html[] = '<input type="text" id="'.$this->id.'_name" class="form-control" value="'.$name.'" placeholder="'. Text::_('COM_BOTIGA_SELECT_ITEM') .'" aria-label="'. Text::_('COM_BOTIGA_SELECT_ITEM') .'" aria-describedby="button-addon2">';
-		$html[] = '<button data-toggle="modal" data-target="#productsModal" class="btn btn-primary" type="button" id="button-addon2">'. Text::_('COM_BOTIGA_SELECT_ITEM') .'</button>';
+		$html[] = '<button data-bs-toggle="modal" data-bs-target="#productsModal" class="btn btn-primary" type="button" id="button-addon2">'. Text::_('COM_BOTIGA_SELECT_ITEM') .'</button>';
 		$html[] = '</div>';
 
 		$html[] = HTMLHelper::_(
@@ -84,11 +87,11 @@ class JFormFieldProducts extends JFormField
 			array(
 				'url'    => $link,
 				'title'  => Text::_('COM_BOTIGA_SELECT_ITEM'),
-				'height' => '100%',
-				'width'  => '100%',
-				'modalWidth'  => '960',
-				'bodyHeight'  => '650',
-				'footer' => '<button type="button" class="btn btn-secondary" data-dismiss="modal" aria-hidden="true">'
+				'height' => '880px',
+				'width'  => '400px',
+				'modalWidth'  => 70,
+				'bodyHeight'  => 80,
+				'footer' => '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-hidden="true">'
 					. Text::_("JLIB_HTML_BEHAVIOR_CLOSE") . '</button>'
 			)
 		);

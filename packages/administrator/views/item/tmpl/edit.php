@@ -8,76 +8,83 @@
  * @author mail kim@aficat.com
  * @website		http://www.aficat.com
  *
- */
+*/
 
- defined('_JEXEC') or die;
+defined('_JEXEC') or die;
 
- use \Joomla\CMS\HTML\HTMLHelper;
- use \Joomla\CMS\Factory;
- use \Joomla\CMS\Uri\Uri;
- use \Joomla\CMS\Router\Route;
- use \Joomla\CMS\Language\Text;
+use \Joomla\CMS\HTML\HTMLHelper;
+use \Joomla\CMS\Factory;
+use \Joomla\CMS\Uri\Uri;
+use \Joomla\CMS\Router\Route;
+use \Joomla\CMS\Language\Text;
 
- HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
- HTMLHelper::_('behavior.formvalidator');
- HTMLHelper::_('behavior.keepalive');
+/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
+$wa = $this->document->getWebAssetManager();
+$wa->useScript('keepalive')
+	->useScript('form.validate');
+
 ?>
 
-<script type="text/javascript">
-	js = jQuery.noConflict();
-	js(document).ready(function () {
-
-		Joomla.submitbutton = function (task) {
-			if (task == 'item.cancel') {
-				Joomla.submitform(task, document.getElementById('item-form'));
-			}
-			else {
-				
-				if (task != 'item.cancel' && document.formvalidator.isValid('item-form')) {
-					
-					Joomla.submitform(task, document.getElementById('item-form'));
-				}
-				else {
-					alert('<?php echo $this->escape(Text::_('JGLOBAL_VALIDATION_FORM_FAILED')); ?>');
-				}
-			}
-		}
-	});
-</script>
-
 <form
-	action="<?php echo JRoute::_('index.php?option=com_botiga&view=item&layout=edit&id=' . (int) $this->item->id); ?>"
+	action="<?= JRoute::_('index.php?option=com_botiga&view=item&layout=edit&id=' . (int) $this->item->id); ?>"
 	method="post" enctype="multipart/form-data" name="adminForm" id="item-form" class="form-validate form-horizontal">
 
-	
-	<?php echo HTMLHelper::_('uitab.startTabSet', 'myTab', ['active' => 'details', 'recall' => true, 'breakpoint' => 768]); ?>
-	<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'details', Text::_('Detalls')); ?>
+	<div class="main-card">
+	<?= HTMLHelper::_('uitab.startTabSet', 'myTabs', ['active' => 'details', 'recall' => true, 'breakpoint' => 768]); ?>
+	<?= HTMLHelper::_('uitab.addTab', 'myTabs', 'details', Text::_('Detalls')); ?>
 
-	<div class="row">
-		<div class="col-12">
-			<?php foreach($this->form->getFieldset('details') as $field): ?>
-				<?php echo $field->renderField() ?>
-			<?php endforeach; ?>
+	<fieldset id="fieldset-details" class="options-form">
+		<legend><?php echo Text::_('Details'); ?></legend>
+		<div>
+			<?php echo $this->form->renderFieldset('details'); ?>
 		</div>
-	</div>
+	</fieldset>
 
-	<?php echo HTMLHelper::_('uitab.endTab'); ?>
+	<?= HTMLHelper::_('uitab.endTab'); ?>
+	<?= HTMLHelper::_('uitab.addTab', 'myTabs', 'prices', Text::_('Prices')); ?>
 
-	<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'params', Text::_('Params')); ?>
-
-	<div class="row">
-		<div class="col-12">
-			<?php foreach($this->form->getFieldset('params') as $field): ?>
-				<?php echo $field->renderField() ?>
-			<?php endforeach; ?>
+	<fieldset id="fieldset-prices" class="options-form">
+		<legend><?php echo Text::_('Prices'); ?></legend>
+		<div>
+			<?php echo $this->form->renderFieldset('prices'); ?>
 		</div>
+	</fieldset>
+
+	<?= HTMLHelper::_('uitab.endTab'); ?>
+	<?= HTMLHelper::_('uitab.addTab', 'myTabs', 'images', Text::_('Images')); ?>
+
+	<fieldset id="fieldset-images" class="options-form">
+		<legend><?php echo Text::_('Images'); ?></legend>
+		<div>
+			<?php echo $this->form->renderFieldset('images'); ?>
+		</div>
+	</fieldset>
+
+	<?= HTMLHelper::_('uitab.endTab'); ?>
+	<?= HTMLHelper::_('uitab.addTab', 'myTabs', 'related', Text::_('Related products')); ?>
+
+	<fieldset id="fieldset-related" class="options-form">
+		<legend><?php echo Text::_('Related products'); ?></legend>
+		<div>
+			<?php echo $this->form->renderFieldset('related_products'); ?>
+		</div>
+	</fieldset>
+
+	<?= HTMLHelper::_('uitab.endTab'); ?>
+	<?= HTMLHelper::_('uitab.addTab', 'myTabs', 'params', Text::_('Params')); ?>
+
+	<fieldset id="fieldset-params" class="options-form">
+		<legend><?php echo Text::_('Params'); ?></legend>
+		<div>
+			<?php echo $this->form->renderFieldset('params'); ?>
+		</div>
+	</fieldset>
+
+	<?= HTMLHelper::_('uitab.endTab'); ?>
+	<?= HTMLHelper::_('uitab.endTabSet'); ?>
 	</div>
-
-	<?php echo HTMLHelper::_('uitab.endTab'); ?>
-
-	<?php echo HTMLHelper::_('uitab.endTabSet'); ?>
 
 	<input type="hidden" name="task" value=""/>
-	<?php echo JHtml::_('form.token'); ?>
+	<?= JHtml::_('form.token'); ?>
 
 </form>

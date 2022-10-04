@@ -21,61 +21,38 @@ HTMLHelper::_('behavior.formvalidator');
 HTMLHelper::_('behavior.keepalive');
 
 ?>
-<script type="text/javascript">
-	js = jQuery.noConflict();
-	js(document).ready(function () {
-
-		Joomla.submitbutton = function (task) {
-			if (task == 'user.cancel') {
-				Joomla.submitform(task, document.getElementById('item-form'));
-			}
-			else {
-				
-				if (task != 'user.cancel' && document.formvalidator.isValid('item-form')) {
-					
-					Joomla.submitform(task, document.getElementById('item-form'));
-				}
-				else {
-					alert('<?php echo $this->escape(Text::_('JGLOBAL_VALIDATION_FORM_FAILED')); ?>');
-				}
-			}
-		}
-	});
-</script>
 
 <form
-	action="<?php echo JRoute::_('index.php?option=com_botiga&view=user&layout=edit&id=' . (int) $this->item->id); ?>"
+	action="<?= JRoute::_('index.php?option=com_botiga&view=user&layout=edit&id=' . (int) $this->item->id); ?>"
 	method="post" enctype="multipart/form-data" name="adminForm" id="item-form" class="form-validate form-horizontal">
 
 	
-	<?php echo HTMLHelper::_('uitab.startTabSet', 'myTab', ['active' => 'details', 'recall' => true, 'breakpoint' => 768]); ?>
-	<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'details', Text::_('COM_BOTIGA_USER_DETAILS')); ?>
+	<?= HTMLHelper::_('uitab.startTabSet', 'myTab', ['active' => 'details', 'recall' => true, 'breakpoint' => 768]); ?>
+	<?= HTMLHelper::_('uitab.addTab', 'myTab', 'details', Text::_('COM_BOTIGA_USER_DETAILS')); ?>
 
 	<div class="row">
 		<div class="col-12">
 			<?php foreach($this->form->getFieldset('details') as $field): ?>
-				<?php echo $field->renderField() ?>
+				<?= $field->renderField() ?>
 			<?php endforeach; ?>
 		</div>
 	</div>
 
-	<?php echo HTMLHelper::_('uitab.endTab'); ?>
-
-	<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'settings', Text::_('COM_BOTIGA_USER_SETTINGS')); ?>
+	<?= HTMLHelper::_('uitab.endTab'); ?>
+	<?= HTMLHelper::_('uitab.addTab', 'myTab', 'settings', Text::_('COM_BOTIGA_USER_SETTINGS')); ?>
 
 	<div class="row">
 		<div class="col-12">
 			<?php foreach($this->form->getFieldset('settings') as $field): ?>
-				<?php echo $field->renderField() ?>
+				<?= $field->renderField() ?>
 			<?php endforeach; ?>
 		</div>
 	</div>
 
-	<?php echo HTMLHelper::_('uitab.endTab'); ?>
-	
-	<?php echo HTMLHelper::_('uitab.endTabSet'); ?>
+	<?= HTMLHelper::_('uitab.endTab'); ?>
+	<?= HTMLHelper::_('uitab.endTabSet'); ?>
 
 	<input type="hidden" name="task" value=""/>
-	<?php echo JHtml::_('form.token'); ?>
+	<?= JHtml::_('form.token'); ?>
 
 </form>

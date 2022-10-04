@@ -29,7 +29,6 @@ class botigaModelOrders extends JModelList
 				'id', 'a.id',
 				'userid', 'a.userid',
 				'data', 'a.data',
-				'status', 'a.status',
 				'subtotal', 'a.subtotal',
 				'processor', 'a.processor',
 				'discount', 'a.discount',

@@ -21,45 +21,28 @@ use Joomla\CMS\Router\Route;
 HTMLHelper::_('behavior.formvalidator');
 HTMLHelper::_('behavior.keepalive');
 
-$model = $this->getModel('shipment');
 ?>
 
-<script type="text/javascript">
-js = jQuery.noConflict();
-js(document).ready(function(){
+<form
+	action="<?= Route::_('index.php?option=com_botiga&view=discount&layout=edit&id=' . (int) $this->item->id); ?>"
+	method="post" enctype="multipart/form-data" name="adminForm" id="item-form" class="form-validate form-horizontal">
 
-});
+	
+	<?= HTMLHelper::_('uitab.startTabSet', 'myTabs', ['active' => 'details', 'recall' => true, 'breakpoint' => 768]); ?>
+	<?= HTMLHelper::_('uitab.addTab', 'myTabs', 'details', Text::_('Detalls')); ?>
 
-Joomla.submitbutton = function(task)
-{
-if(task == 'shipment.cancel'){
-    Joomla.submitform(task, document.getElementById('item-form'));
-}
-else{
-
-    if (task != 'shipment.cancel' && document.formvalidator.isValid(document.id('item-form'))) {
-
-        Joomla.submitform(task, document.getElementById('item-form'));
-    }
-    else {
-        alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED')); ?>');
-    }
-}
-}
-</script>
-
-<form action="<?php echo JRoute::_('index.php?option=com_botiga&view=shipment&layout=edit&id='.(int) $this->item->id); ?>" method="post" name="adminForm" id="item-form" class="form-validate">
-
-	<div class="row-fluid">
-        <div class="span6 form-horizontal">
-            <fieldset class="adminform">
-			<legend><?php echo JText::_( 'COM_BOTIGA_DISCOUNT_DETAILS' ); ?></legend>
+	<div class="row">
+		<div class="col-12">
 			<?php foreach($this->form->getFieldset('details') as $field): ?>
-				<?php echo $field->renderField() ?>
-	    	<?php endforeach; ?>
-			</fieldset>
+				<?= $field->renderField(); ?>
+			<?php endforeach; ?>
 		</div>
-		<input type="hidden" name="task" value="shipment.edit" />
-		<?php echo JHtml::_('form.token'); ?>
 	</div>
+
+	<?= HTMLHelper::_('uitab.endTab'); ?>
+	<?= HTMLHelper::_('uitab.endTabSet'); ?>
+
+	<input type="hidden" name="task" value=""/>
+	<?= JHtml::_('form.token'); ?>
+
 </form>

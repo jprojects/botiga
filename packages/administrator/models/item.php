@@ -81,7 +81,7 @@ class botigaModelItem extends JModelAdmin
 		$data = JFactory::getApplication()->getUserState('com_botiga.edit.item.data', array());
 		if (empty($data)) {
 			$data = $this->getItem();
-			$data->catid = explode(',',$data->catid);
+			$data->catid = explode(',', $data->catid);
 		}
 		return $data;
 	}
@@ -94,6 +94,7 @@ class botigaModelItem extends JModelAdmin
 	{
 		$row =& $this->getTable();
 		$app = JFactory::getApplication();
+		$db   = JFactory::getDbo();
 
 		$data = Factory::getApplication()->input->get('jform', array(), 'array');
 
@@ -102,6 +103,8 @@ class botigaModelItem extends JModelAdmin
 		if($data['child'] == '') { $data['child'] = 0; }
 		if($data['brand'] == '') { $data['brand'] = 0; }
 
+		//if new set publish up date
+		if($data['id'] == 0) { $data['publish_up'] = date('Y-m-d H:i:s'); }
 
 		//categories
     	$categories = array();
@@ -115,10 +118,9 @@ class botigaModelItem extends JModelAdmin
 		//images
 		$data['images'] = json_encode($data['images']);
 
-		//images
+		//prices
 		if($data['price'] != '') { 
 			$data['price'] = json_encode($data['price']); 
-			$db     = JFactory::getDbo();
 			$preus  = json_decode($data['price']);
 
 			if($data['id'] == 0) { $itemid = $row->id; } else { $itemid = $data['id']; }
@@ -141,6 +143,9 @@ class botigaModelItem extends JModelAdmin
 
 		//extres
 		if($data['extres'] != '') { $data['extres'] = json_encode($data['extres']); }
+
+		//related
+		if($data['related_products'] != '') { $data['related_products'] = json_encode($data['related_products']); }
 
 		if (!$row->bind( $data )) {
 			return JFactory::getApplication()->enqueueMessage($row->getError());

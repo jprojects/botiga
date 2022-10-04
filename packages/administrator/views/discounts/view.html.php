@@ -32,9 +32,7 @@ class botigaViewDiscounts extends JViewLegacy
 			throw new Exception(implode("\n", $errors));
 		}
 
-    $this->addToolbar();
-
-    $this->sidebar = JHtmlSidebar::render();
+    	$this->addToolbar();
 
 		// Display the template
 		parent::display($tpl);
@@ -55,18 +53,18 @@ class botigaViewDiscounts extends JViewLegacy
 		if ($canDo->get('core.edit'))
 		{
 			JToolBarHelper::editList('discount.edit', 'JTOOLBAR_EDIT');
-      JToolBarHelper::divider();
-      JToolBarHelper::custom('discounts.publish', 'publish.png', 'publish_f2.png', 'JTOOLBAR_PUBLISH', true);
-      JToolBarHelper::custom('discounts.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
+      		JToolBarHelper::divider();
+      		JToolBarHelper::custom('discounts.publish', 'publish.png', 'publish_f2.png', 'JTOOLBAR_PUBLISH', true);
+      		JToolBarHelper::custom('discounts.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
 		}
 		if ($canDo->get('core.delete'))
 		{
-      JToolBarHelper::divider();
+      		JToolBarHelper::divider();
 			JToolBarHelper::deleteList('', 'discounts.delete', 'JTOOLBAR_DELETE');
 		}
 		if ($canDo->get('core.admin'))
 		{
-      JToolBarHelper::divider();
+      		JToolBarHelper::divider();
 			JToolBarHelper::preferences('com_botiga');
 		}
 	}

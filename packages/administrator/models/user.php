@@ -79,11 +79,6 @@ class botigaModelUser extends JModelAdmin
 		if (empty($data))
 		{
 			$data = $this->getItem();
-			$params = json_decode($data->params);
-			$data->metodo_pago = $data->params['metodo_pago'];
-			$data->aplicar_iva = $data->params['aplicar_iva'];
-			$data->re_equiv = $data->params['re_equiv'];
-			$data->pago_habitual = $data->params['pago_habitual'];
 		}
 		return $data;
 	}
@@ -100,31 +95,21 @@ class botigaModelUser extends JModelAdmin
 
 		$data = $app->input->get('jform', array(), 'array');
 
-		$params['metodo_pago'] 		  = $data['metodo_pago'];
-		$params['aplicar_iva']		  = $data['aplicar_iva'];
-		$params['re_equiv']    		  = $data['re_equiv'];
-		$params['pago_habitual']      = $data['pago_habitual'];
-		$params['pago_habitual_desc'] = $data['pago_habitual_desc'];
-
-		unset($data['metodo_pago'], $data['aplicar_iva'], $data['re_equiv'], $data['pago_habitual'], $data['pago_habitual_desc']);
-
-		$data['params'] = json_encode($params);
-
 		//save usergroup into joomla database
 		$usergroup = $data['usergroup'];
 		$userid    = $data['userid'];
 
 		if($userid != '' && $usergroup != '') {
 		  	$db->setQuery('SELECT usergroup FROM `#__botiga_users` WHERE `userid` = '.$userid);
-		  	if($old_usergroup = $db->loadResult()) {
-				if($old_usergroup != $usergroup) {
-					$db->setQuery("DELETE FROM `#__user_usergroup_map` WHERE `group_id` = $old_usergroup AND `user_id` = $userid");
-					$db->Query();
-					$group = new stdClass();
-					$group->group_id = $usergroup;
-					$group->user_id  = $userid;
-					$db->insertObject('#__user_usergroup_map', $group);
-				}
+			$old_usergroup = $db->loadResult();
+
+			if($old_usergroup != $usergroup) {
+				$db->setQuery("DELETE FROM `#__user_usergroup_map` WHERE `user_id` = $userid");
+				$db->execute();
+				$group = new stdClass();
+				$group->group_id = $usergroup;
+				$group->user_id  = $userid;
+				$db->insertObject('#__user_usergroup_map', $group);
 			}
 		}
 

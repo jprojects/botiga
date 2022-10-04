@@ -31,11 +31,10 @@ class botigaViewDoc extends JViewLegacy
 		$item = $this->get('Item');
 
 		// Check for errors.
-		if (count($errors = $this->get('Errors')))
-		{
-			JError::raiseError(500, implode('<br />', $errors));
-			return false;
+		if (count($errors = $this->get('Errors'))) {
+			throw new Exception(implode("\n", $errors));
 		}
+		
 		// Assign the Data
 		$this->form = $form;
 		$this->item = $item;

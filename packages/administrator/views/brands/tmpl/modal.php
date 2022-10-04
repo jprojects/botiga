@@ -116,7 +116,7 @@ $function	= $app->input->getCmd('function', 'jSelectBrand');
 							</td>
 							<?php endif; ?>
 							<td class="small">
-								<a class="pointer" onclick="window.parent.<?= $this->escape($function);?>('<?= $item->id; ?>', '<?= addslashes($item->name); ?>');"><?= $item->name; ?></a>
+								<a style="cursor:pointer;" onclick="window.parent.<?= $this->escape($function);?>('<?= $item->id; ?>', '<?= addslashes($item->name); ?>');" data-bs-dismiss="modal" data-bs-target="#brandsModal"><?= $item->name; ?></a>
 							</td>
 							<td class="small">
 								<?php echo $item->factusol_codfte; ?>

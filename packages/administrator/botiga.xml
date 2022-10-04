@@ -12,8 +12,9 @@
     <files folder="site">
 		<filename>botiga.php</filename>
 		<filename>controller.php</filename>
-        <filename>metadata.xml</filename>
+        <filename>router.php</filename>
 		<folder>views/</folder>
+		<folder>logs/</folder>
 		<folder>models/</folder>
 		<folder>helpers/</folder>
 		<folder>controllers/</folder>
@@ -25,7 +26,7 @@
     </media>
 	<!-- Language frontend -->
 	<languages folder="site/languages/en-GB">
-		<language tag="en-GB">en-GB.com_botiga.ini</language>
+		<language tag="en-GB">com_botiga.ini</language>
 	</languages>
         <install>
 		<sql>
@@ -73,7 +74,7 @@
 			<folder>sql/</folder>
 		</files>
 		<languages folder="administrator/languages/en-GB">
-			<language tag="en-GB">en-GB.com_botiga.ini</language>
+			<language tag="en-GB">com_botiga.ini</language>
         </languages>
 	</administration>
 </extension>

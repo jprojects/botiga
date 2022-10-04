@@ -30,11 +30,7 @@ class botigaViewOrder extends JViewLegacy
 			throw new Exception(implode("\n", $errors));
 		}
 
-		botigaHelper::addSubmenu('orders');
-
         $this->addToolbar();
-
-        $this->sidebar = JHtmlSidebar::render();
 
 		// Display the template
 		parent::display($tpl);
